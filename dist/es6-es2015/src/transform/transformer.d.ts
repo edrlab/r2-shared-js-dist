@@ -1,6 +1,6 @@
 import { Publication } from "../models/publication";
 import { Link } from "../models/publication-link";
-import { IStreamAndLength } from "../_utils/zip/zip";
+import { IStreamAndLength } from "r2-utils-js/dist/es6-es2015/src/_utils/zip/zip";
 export interface ITransformer {
     supports(publication: Publication, link: Link): boolean;
     transformStream(publication: Publication, link: Link, stream: IStreamAndLength, isPartialByteRangeRequest: boolean, partialByteBegin: number, partialByteEnd: number): Promise<IStreamAndLength>;

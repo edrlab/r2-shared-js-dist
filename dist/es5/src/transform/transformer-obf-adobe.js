@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var BufferUtils_1 = require("../_utils/stream/BufferUtils");
+var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var TransformerObfAdobe = (function () {
     function TransformerObfAdobe() {
     }

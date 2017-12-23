@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var ta_json_string_converter_1 = require("../_utils/ta-json-string-converter");
+var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var ta_json_1 = require("ta-json");
 var metadata_properties_1 = require("./metadata-properties");
 var Link = (function () {

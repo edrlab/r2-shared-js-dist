@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var xml_js_mapper_1 = require("../../_utils/xml-js-mapper");
+var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var ncx_navpoint_1 = require("./ncx-navpoint");
 var ncx_pagelist_1 = require("./ncx-pagelist");
 var NCX = (function () {

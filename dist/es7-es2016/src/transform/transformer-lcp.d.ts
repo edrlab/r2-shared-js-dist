@@ -1,6 +1,6 @@
 import { Publication } from "../models/publication";
 import { Link } from "../models/publication-link";
-import { IStreamAndLength } from "../_utils/zip/zip";
+import { IStreamAndLength } from "r2-utils-js/dist/es7-es2016/src/_utils/zip/zip";
 import { ITransformer } from "./transformer";
 export interface ICryptoInfo {
     length: number;

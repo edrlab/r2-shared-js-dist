@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var publication_1 = require("../src/models/publication");
-var opds2_1 = require("../src/opds/opds2/opds2");
+var opds2_1 = require("r2-opds-js/dist/es5/src/opds/opds2/opds2");
 var ava_1 = require("ava");
 var ta_json_1 = require("ta-json");
 var lcp_1 = require("../src/parser/epub/lcp");

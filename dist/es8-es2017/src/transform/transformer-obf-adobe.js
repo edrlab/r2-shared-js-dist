@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const BufferUtils_1 = require("../_utils/stream/BufferUtils");
+const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 class TransformerObfAdobe {
     supports(_publication, link) {
         return link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";

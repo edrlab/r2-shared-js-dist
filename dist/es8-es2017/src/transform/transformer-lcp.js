@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
 const zlib = require("zlib");
-const RangeStream_1 = require("../_utils/stream/RangeStream");
+const RangeStream_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/RangeStream");
 const debug_ = require("debug");
-const BufferUtils_1 = require("../_utils/stream/BufferUtils");
+const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const debug = debug_("r2:transformer:lcp");
 const AES_BLOCK_SIZE = 16;
 const readStream = async (s, n) => {
