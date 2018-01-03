@@ -6,7 +6,7 @@ var fs = require("fs");
 var path = require("path");
 var util = require("util");
 var publication_parser_1 = require("../parser/publication-parser");
-var lcp_1 = require("../parser/epub/lcp");
+var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var init_globals_1 = require("../init-globals");
 init_globals_1.initGlobals();
 lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));

@@ -1,4 +1,4 @@
-import { LCP } from "../parser/epub/lcp";
+import { LCP } from "r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp";
 import { IInternal } from "./internal";
 import { Metadata } from "./metadata";
 import { Link } from "./publication-link";

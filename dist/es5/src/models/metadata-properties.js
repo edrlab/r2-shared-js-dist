@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var ta_json_1 = require("ta-json");
-var metadata_encrypted_1 = require("./metadata-encrypted");
+var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var Properties = (function () {
     function Properties() {
     }

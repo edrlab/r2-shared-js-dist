@@ -7,7 +7,7 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var ava_1 = require("ava");
 var ta_json_1 = require("ta-json");
 var xmldom = require("xmldom");
-var lcp_1 = require("../src/parser/epub/lcp");
+var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var init_globals_1 = require("../src/init-globals");
 var helpers_1 = require("./helpers");
 init_globals_1.initGlobals();

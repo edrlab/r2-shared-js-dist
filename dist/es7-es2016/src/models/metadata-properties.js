@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const ta_json_1 = require("ta-json");
-const metadata_encrypted_1 = require("./metadata-encrypted");
+const metadata_encrypted_1 = require("r2-lcp-js/dist/es7-es2016/src/models/metadata-encrypted");
 let Properties = class Properties {
 };
 tslib_1.__decorate([
