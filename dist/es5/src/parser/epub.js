@@ -96,7 +96,7 @@ exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.
 }); };
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zip, err_3, publication, lcpl, lcplZipPath, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1;
+        var zip, err_3, publication, lcpl, lcplZipPath, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -158,7 +158,8 @@ function EpubParsePromise(filePath) {
                     lcpl.JsonSource = lcplStr;
                     lcpl.init();
                     publication.LCP = lcpl;
-                    publication.AddLink("application/vnd.readium.lcp.license-1.0+json", ["license"], lcpl.ZipPath, false);
+                    mime = "application/vnd.readium.lcp.license.v1.0+json";
+                    publication.AddLink(mime, ["license"], lcpl.ZipPath, false);
                     _a.label = 12;
                 case 12:
                     encZipPath = "META-INF/encryption.xml";
