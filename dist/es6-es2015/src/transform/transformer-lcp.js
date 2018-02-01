@@ -4,7 +4,8 @@ const tslib_1 = require("tslib");
 const transformer_lcp_1 = require("r2-lcp-js/dist/es6-es2015/src/transform/transformer-lcp");
 class TransformerLCP {
     supports(publication, link) {
-        return transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
+        return (typeof publication.LCP !== "undefined") &&
+            transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
     }
     transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {

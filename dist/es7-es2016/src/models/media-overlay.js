@@ -67,6 +67,9 @@ function timeStrToSeconds(timeStr) {
 }
 exports.timeStrToSeconds = timeStrToSeconds;
 let MediaOverlayNode = MediaOverlayNode_1 = class MediaOverlayNode {
+    constructor() {
+        this.initialized = false;
+    }
 };
 tslib_1.__decorate([
     ta_json_1.JsonProperty("text"),

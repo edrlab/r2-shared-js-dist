@@ -11,7 +11,7 @@ export declare class Link {
     Bitrate: number;
     Templated: boolean;
     Children: Link[];
-    MediaOverlays: MediaOverlayNode[];
+    MediaOverlays: MediaOverlayNode[] | undefined;
     Rel: string[];
     AddRels(rels: string[]): void;
     AddRel(rel: string): void;

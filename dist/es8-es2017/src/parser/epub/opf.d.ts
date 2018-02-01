@@ -10,5 +10,5 @@ export declare class OPF {
     UniqueIdentifier: string;
     Dir: string;
     Version: string;
-    ZipPath: string;
+    ZipPath: string | undefined;
 }

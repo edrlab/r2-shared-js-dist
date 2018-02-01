@@ -6,7 +6,8 @@ var TransformerLCP = (function () {
     function TransformerLCP() {
     }
     TransformerLCP.prototype.supports = function (publication, link) {
-        return transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
+        return (typeof publication.LCP !== "undefined") &&
+            transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
     };
     TransformerLCP.prototype.transformStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {

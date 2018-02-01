@@ -4,6 +4,6 @@ export declare class MediaOverlayNode {
     Audio: string;
     Role: string[];
     Children: MediaOverlayNode[];
-    SmilPathInZip: string;
+    SmilPathInZip: string | undefined;
     initialized: boolean;
 }

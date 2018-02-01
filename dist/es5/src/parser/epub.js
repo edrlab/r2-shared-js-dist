@@ -507,7 +507,7 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (mo.initialized) {
+                if (mo.initialized || !mo.SmilPathInZip) {
                     return [2];
                 }
                 if (publication.Resources) {
@@ -653,7 +653,7 @@ var fillMediaOverlay = function (publication, rootfile, opf, zip) { return tslib
                         }
                         return false;
                     });
-                    if (manItemSmil) {
+                    if (manItemSmil && opf.ZipPath) {
                         var smilFilePath2 = path.join(path.dirname(opf.ZipPath), manItemSmil.Href)
                             .replace(/\\/g, "/");
                         if (smilFilePath2 === item.Href) {
@@ -666,6 +666,9 @@ var fillMediaOverlay = function (publication, rootfile, opf, zip) { return tslib
             mo.SmilPathInZip = item.Href;
             mo.initialized = false;
             manItemsHtmlWithSmil.forEach(function (manItemHtmlWithSmil) {
+                if (!opf.ZipPath) {
+                    return;
+                }
                 var htmlPathInZip = path.join(path.dirname(opf.ZipPath), manItemHtmlWithSmil.Href)
                     .replace(/\\/g, "/");
                 var link = findLinKByHref(publication, rootfile, opf, htmlPathInZip);
@@ -702,6 +705,9 @@ var fillMediaOverlay = function (publication, rootfile, opf, zip) { return tslib
     });
 }); };
 var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
+    if (!smil.ZipPath) {
+        return;
+    }
     var moc = new media_overlay_1.MediaOverlayNode();
     moc.initialized = rootMO.initialized;
     mo.push(moc);
@@ -1256,7 +1262,7 @@ var findInManifestByID = function (publication, rootfile, opf, ID) { return tsli
                     }
                     return false;
                 });
-                if (!item) return [3, 2];
+                if (!(item && opf.ZipPath)) return [3, 2];
                 linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
                 zipPath = path.join(path.dirname(opf.ZipPath), item.Href)
@@ -1312,6 +1318,9 @@ var fillSpineAndResource = function (publication, rootfile, opf) { return tslib_
     return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
             case 0:
+                if (!opf.ZipPath) {
+                    return [2];
+                }
                 if (!(opf.Spine && opf.Spine.Items && opf.Spine.Items.length)) return [3, 7];
                 _a = 0, _b = opf.Spine.Items;
                 _e.label = 1;
@@ -1445,7 +1454,7 @@ var fillTOCFromNCX = function (publication, rootfile, opf, ncx) {
 var fillLandmarksFromGuide = function (publication, _rootfile, opf) {
     if (opf.Guide && opf.Guide.length) {
         opf.Guide.forEach(function (ref) {
-            if (ref.Href) {
+            if (ref.Href && opf.ZipPath) {
                 var link = new publication_link_1.Link();
                 var zipPath = path.join(path.dirname(opf.ZipPath), ref.Href)
                     .replace(/\\/g, "/");

@@ -13,5 +13,5 @@ export declare class ComicInfo {
     Year: number;
     PageCount: number;
     Pages: Page[];
-    ZipPath: string;
+    ZipPath: string | undefined;
 }

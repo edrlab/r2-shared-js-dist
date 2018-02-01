@@ -68,6 +68,7 @@ function timeStrToSeconds(timeStr) {
 exports.timeStrToSeconds = timeStrToSeconds;
 var MediaOverlayNode = (function () {
     function MediaOverlayNode() {
+        this.initialized = false;
     }
     MediaOverlayNode_1 = MediaOverlayNode;
     tslib_1.__decorate([

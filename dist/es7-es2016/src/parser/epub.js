@@ -382,7 +382,7 @@ function getMediaOverlay(publication, spineHref) {
 }
 exports.getMediaOverlay = getMediaOverlay;
 const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(this, void 0, void 0, function* () {
-    if (mo.initialized) {
+    if (mo.initialized || !mo.SmilPathInZip) {
         return;
     }
     let link;
@@ -511,7 +511,7 @@ const fillMediaOverlay = (publication, rootfile, opf, zip) => tslib_1.__awaiter(
                     }
                     return false;
                 });
-                if (manItemSmil) {
+                if (manItemSmil && opf.ZipPath) {
                     const smilFilePath2 = path.join(path.dirname(opf.ZipPath), manItemSmil.Href)
                         .replace(/\\/g, "/");
                     if (smilFilePath2 === item.Href) {
@@ -524,6 +524,9 @@ const fillMediaOverlay = (publication, rootfile, opf, zip) => tslib_1.__awaiter(
         mo.SmilPathInZip = item.Href;
         mo.initialized = false;
         manItemsHtmlWithSmil.forEach((manItemHtmlWithSmil) => {
+            if (!opf.ZipPath) {
+                return;
+            }
             const htmlPathInZip = path.join(path.dirname(opf.ZipPath), manItemHtmlWithSmil.Href)
                 .replace(/\\/g, "/");
             const link = findLinKByHref(publication, rootfile, opf, htmlPathInZip);
@@ -555,6 +558,9 @@ const fillMediaOverlay = (publication, rootfile, opf, zip) => tslib_1.__awaiter(
     return;
 });
 const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
+    if (!smil.ZipPath) {
+        return;
+    }
     const moc = new media_overlay_1.MediaOverlayNode();
     moc.initialized = rootMO.initialized;
     mo.push(moc);
@@ -1000,7 +1006,7 @@ const findInManifestByID = (publication, rootfile, opf, ID) => tslib_1.__awaiter
             }
             return false;
         });
-        if (item) {
+        if (item && opf.ZipPath) {
             const linkItem = new publication_link_1.Link();
             linkItem.TypeLink = item.MediaType;
             const zipPath = path.join(path.dirname(opf.ZipPath), item.Href)
@@ -1050,6 +1056,9 @@ const addRendition = (publication, _rootfile, opf) => {
     }
 };
 const fillSpineAndResource = (publication, rootfile, opf) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+    if (!opf.ZipPath) {
+        return;
+    }
     if (opf.Spine && opf.Spine.Items && opf.Spine.Items.length) {
         for (const item of opf.Spine.Items) {
             if (!item.Linear || item.Linear === "yes") {
@@ -1162,7 +1171,7 @@ const fillTOCFromNCX = (publication, rootfile, opf, ncx) => {
 const fillLandmarksFromGuide = (publication, _rootfile, opf) => {
     if (opf.Guide && opf.Guide.length) {
         opf.Guide.forEach((ref) => {
-            if (ref.Href) {
+            if (ref.Href && opf.ZipPath) {
                 const link = new publication_link_1.Link();
                 const zipPath = path.join(path.dirname(opf.ZipPath), ref.Href)
                     .replace(/\\/g, "/");

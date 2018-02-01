@@ -3,5 +3,5 @@ import { Par } from "./smil-par";
 export declare class SMIL {
     Body: Body;
     Par: Par;
-    ZipPath: string;
+    ZipPath: string | undefined;
 }
