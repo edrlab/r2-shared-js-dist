@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var media_overlay_1 = require("../src/models/media-overlay");
 var ava_1 = require("ava");
 var debug_ = require("debug");
-var debug = debug_("r2:test");
+var debug = debug_("r2:shared#test");
 function fn() {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         return tslib_1.__generator(this, function (_a) {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const media_overlay_1 = require("../src/models/media-overlay");
 const ava_1 = require("ava");
 const debug_ = require("debug");
-const debug = debug_("r2:test");
+const debug = debug_("r2:shared#test");
 async function fn() {
     return Promise.resolve("foo");
 }

@@ -4,7 +4,7 @@ const tslib_1 = require("tslib");
 const media_overlay_1 = require("../src/models/media-overlay");
 const ava_1 = require("ava");
 const debug_ = require("debug");
-const debug = debug_("r2:test");
+const debug = debug_("r2:shared#test");
 function fn() {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return Promise.resolve("foo");
