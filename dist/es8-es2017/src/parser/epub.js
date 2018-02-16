@@ -623,7 +623,10 @@ const fillPublicationDate = (publication, rootfile, opf) => {
         if (isEpub3OrMore(rootfile, opf) && opf.Metadata.Date[0] && opf.Metadata.Date[0].Data) {
             const token = opf.Metadata.Date[0].Data;
             try {
-                publication.Metadata.PublicationDate = moment(token).toDate();
+                const mom = moment(token);
+                if (mom.isValid()) {
+                    publication.Metadata.PublicationDate = mom.toDate();
+                }
             }
             catch (err) {
                 console.log("INVALID DATE/TIME? " + token);
@@ -634,7 +637,10 @@ const fillPublicationDate = (publication, rootfile, opf) => {
             if (date.Data && date.Event && date.Event.indexOf("publication") >= 0) {
                 const token = date.Data;
                 try {
-                    publication.Metadata.PublicationDate = moment(token).toDate();
+                    const mom = moment(token);
+                    if (mom.isValid()) {
+                        publication.Metadata.PublicationDate = mom.toDate();
+                    }
                 }
                 catch (err) {
                     console.log("INVALID DATE/TIME? " + token);
