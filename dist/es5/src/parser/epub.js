@@ -775,12 +775,24 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
 var fillPublicationDate = function (publication, rootfile, opf) {
     if (opf.Metadata && opf.Metadata.Date && opf.Metadata.Date.length) {
         if (isEpub3OrMore(rootfile, opf) && opf.Metadata.Date[0] && opf.Metadata.Date[0].Data) {
-            publication.Metadata.PublicationDate = moment(opf.Metadata.Date[0].Data).toDate();
+            var token = opf.Metadata.Date[0].Data;
+            try {
+                publication.Metadata.PublicationDate = moment(token).toDate();
+            }
+            catch (err) {
+                console.log("INVALID DATE/TIME? " + token);
+            }
             return;
         }
         opf.Metadata.Date.forEach(function (date) {
             if (date.Data && date.Event && date.Event.indexOf("publication") >= 0) {
-                publication.Metadata.PublicationDate = moment(date.Data).toDate();
+                var token = date.Data;
+                try {
+                    publication.Metadata.PublicationDate = moment(token).toDate();
+                }
+                catch (err) {
+                    console.log("INVALID DATE/TIME? " + token);
+                }
             }
         });
     }
