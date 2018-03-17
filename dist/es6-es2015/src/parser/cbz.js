@@ -34,7 +34,8 @@ function CbzParsePromise(filePath) {
         publication.AddToInternal("type", "cbz");
         publication.AddToInternal("zip", zip);
         let comicInfoEntryName;
-        zip.forEachEntry((entryName) => {
+        const entries = yield zip.getEntries();
+        for (const entryName of entries) {
             const link = new publication_link_1.Link();
             link.Href = entryName;
             const mediaType = mime.lookup(entryName);
@@ -53,7 +54,7 @@ function CbzParsePromise(filePath) {
             else if (entryName.endsWith("ComicInfo.xml")) {
                 comicInfoEntryName = entryName;
             }
-        });
+        }
         if (!publication.Metadata.Title) {
             publication.Metadata.Title = path.basename(filePath);
         }

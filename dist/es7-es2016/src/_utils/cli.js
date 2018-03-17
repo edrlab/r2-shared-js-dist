@@ -35,6 +35,11 @@ if (!fs.existsSync(filePath)) {
         }
     }
 }
+const stats = fs.lstatSync(filePath);
+if (!stats.isFile() && !stats.isDirectory()) {
+    console.log("FILEPATH MUST BE FILE OR DIRECTORY.");
+    process.exit(1);
+}
 const fileName = path.basename(filePath);
 const ext = path.extname(fileName).toLowerCase();
 (() => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -48,7 +53,9 @@ const ext = path.extname(fileName).toLowerCase();
         return;
     }
     console.log("== Publication Parser: resolve: " + publication.Links);
-    if (/\.epub[3]?$/.test(ext)) {
+    const isEPUB = /\.epub[3]?$/.test(ext) || fs.existsSync(path.join(filePath, "META-INF", "container.xml"));
+    if (isEPUB) {
+        dumpPublication(publication);
     }
     else if (ext === ".cbz") {
         dumpPublication(publication);
