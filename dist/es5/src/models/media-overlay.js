@@ -71,6 +71,7 @@ var MediaOverlayNode = (function () {
         this.initialized = false;
     }
     MediaOverlayNode_1 = MediaOverlayNode;
+    var MediaOverlayNode_1;
     tslib_1.__decorate([
         ta_json_1.JsonProperty("text"),
         tslib_1.__metadata("design:type", String)
@@ -93,7 +94,6 @@ var MediaOverlayNode = (function () {
         ta_json_1.JsonObject()
     ], MediaOverlayNode);
     return MediaOverlayNode;
-    var MediaOverlayNode_1;
 }());
 exports.MediaOverlayNode = MediaOverlayNode;
 //# sourceMappingURL=media-overlay.js.map

@@ -34,5 +34,5 @@ export declare class Metadata {
     BelongsTo: BelongsTo;
     Duration: number;
     MediaOverlay: MediaOverlay;
-    private _OnDeserialized();
+    private _OnDeserialized;
 }

@@ -26,5 +26,5 @@ export declare class Publication {
     searchLinkByRel(rel: string): Link | undefined;
     AddLink(typeLink: string, rel: string[], url: string, templated: boolean): void;
     GetPreFetchResources(): Link[];
-    private _OnDeserialized();
+    private _OnDeserialized;
 }

@@ -11,8 +11,8 @@ var TransformerObfIDPF = (function () {
     };
     TransformerObfIDPF.prototype.transformStream = function (publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var data, err_1, buff, err_2, sal;
+            var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:

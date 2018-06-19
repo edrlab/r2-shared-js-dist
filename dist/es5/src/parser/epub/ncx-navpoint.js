@@ -7,6 +7,7 @@ var NavPoint = (function () {
     function NavPoint() {
     }
     NavPoint_1 = NavPoint;
+    var NavPoint_1;
     tslib_1.__decorate([
         xml_js_mapper_1.XmlXPathSelector("ncx:navPoint"),
         xml_js_mapper_1.XmlItemType(NavPoint_1),
@@ -35,7 +36,6 @@ var NavPoint = (function () {
         })
     ], NavPoint);
     return NavPoint;
-    var NavPoint_1;
 }());
 exports.NavPoint = NavPoint;
 //# sourceMappingURL=ncx-navpoint.js.map

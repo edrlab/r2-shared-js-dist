@@ -33,6 +33,7 @@ var Link = (function () {
             console.log("Link.Href is not set!");
         }
     };
+    var Link_1;
     tslib_1.__decorate([
         ta_json_1.JsonProperty("href"),
         tslib_1.__metadata("design:type", String)
@@ -90,7 +91,6 @@ var Link = (function () {
         ta_json_1.JsonObject()
     ], Link);
     return Link;
-    var Link_1;
 }());
 exports.Link = Link;
 //# sourceMappingURL=publication-link.js.map

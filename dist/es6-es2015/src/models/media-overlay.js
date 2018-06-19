@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+var MediaOverlayNode_1;
+"use strict";
 const ta_json_1 = require("ta-json");
 function timeStrToSeconds(timeStr) {
     if (!timeStr) {
@@ -93,5 +95,4 @@ MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
     ta_json_1.JsonObject()
 ], MediaOverlayNode);
 exports.MediaOverlayNode = MediaOverlayNode;
-var MediaOverlayNode_1;
 //# sourceMappingURL=media-overlay.js.map

@@ -3,5 +3,5 @@ export declare class Subject {
     SortAs: string;
     Scheme: string;
     Code: string;
-    private _OnDeserialized();
+    private _OnDeserialized;
 }

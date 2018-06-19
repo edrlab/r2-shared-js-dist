@@ -3,5 +3,5 @@ export declare class Collection {
     SortAs: string;
     Identifier: string;
     Position: number;
-    private _OnDeserialized();
+    private _OnDeserialized;
 }

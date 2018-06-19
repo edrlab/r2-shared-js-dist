@@ -12,5 +12,5 @@ export declare class Transformers {
     private transformers;
     constructor();
     add(transformer: ITransformer): void;
-    private _tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+    private _tryStream;
 }
