@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const ta_json_1 = require("ta-json");
 const metadata_1 = require("./metadata");
 const publication_link_1 = require("./publication-link");
@@ -109,7 +108,6 @@ let Publication = class Publication {
 };
 tslib_1.__decorate([
     ta_json_1.JsonProperty("@context"),
-    ta_json_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
     ta_json_1.JsonElementType(String),
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "Context", void 0);
@@ -123,7 +121,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "Links", void 0);
 tslib_1.__decorate([
-    ta_json_1.JsonProperty("spine"),
+    ta_json_1.JsonProperty("readingOrder"),
     ta_json_1.JsonElementType(publication_link_1.Link),
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "Spine", void 0);
