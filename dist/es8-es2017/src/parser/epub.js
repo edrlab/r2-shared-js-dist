@@ -126,7 +126,7 @@ async function EpubParsePromise(filePath) {
         lcpl.init();
         publication.LCP = lcpl;
         const mime = "application/vnd.readium.lcp.license.v1.0+json";
-        publication.AddLink(mime, ["license"], lcpl.ZipPath, false);
+        publication.AddLink(mime, ["license"], lcpl.ZipPath, undefined);
     }
     let encryption;
     const encZipPath = "META-INF/encryption.xml";

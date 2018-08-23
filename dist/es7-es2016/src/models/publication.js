@@ -77,7 +77,9 @@ let Publication = class Publication {
         link.AddRels(rel);
         link.Href = url;
         link.TypeLink = typeLink;
-        link.Templated = templated;
+        if (typeof templated !== "undefined") {
+            link.Templated = templated;
+        }
         if (!this.Links) {
             this.Links = [];
         }

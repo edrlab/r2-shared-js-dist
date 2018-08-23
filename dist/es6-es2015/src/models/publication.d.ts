@@ -24,7 +24,7 @@ export declare class Publication {
     GetCover(): Link | undefined;
     GetNavDoc(): Link | undefined;
     searchLinkByRel(rel: string): Link | undefined;
-    AddLink(typeLink: string, rel: string[], url: string, templated: boolean): void;
+    AddLink(typeLink: string, rel: string[], url: string, templated: boolean | undefined): void;
     GetPreFetchResources(): Link[];
     private _OnDeserialized;
 }
