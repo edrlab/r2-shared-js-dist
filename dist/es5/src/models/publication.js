@@ -87,20 +87,6 @@ var Publication = (function () {
         }
         this.Links.push(link);
     };
-    Publication.prototype.GetPreFetchResources = function () {
-        var links = [];
-        if (this.Resources) {
-            var mediaTypes_1 = ["text/css", "application/vnd.ms-opentype", "text/javascript"];
-            this.Resources.forEach(function (link) {
-                mediaTypes_1.forEach(function (mediaType) {
-                    if (link.TypeLink === mediaType) {
-                        links.push(link);
-                    }
-                });
-            });
-        }
-        return links;
-    };
     Publication.prototype._OnDeserialized = function () {
         if (!this.Metadata) {
             console.log("Publication.Metadata is not set!");
@@ -168,11 +154,6 @@ var Publication = (function () {
         ta_json_1.JsonElementType(publication_link_1.Link),
         tslib_1.__metadata("design:type", Array)
     ], Publication.prototype, "LOT", void 0);
-    tslib_1.__decorate([
-        ta_json_1.JsonProperty("images"),
-        ta_json_1.JsonElementType(publication_link_1.Link),
-        tslib_1.__metadata("design:type", Array)
-    ], Publication.prototype, "Images", void 0);
     tslib_1.__decorate([
         ta_json_1.OnDeserialized(),
         tslib_1.__metadata("design:type", Function),

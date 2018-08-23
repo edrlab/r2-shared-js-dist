@@ -15,7 +15,6 @@ export declare class Publication {
     LOA: Link[];
     LOV: Link[];
     LOT: Link[];
-    Images: Link[];
     LCP: LCP | undefined;
     private Internal;
     freeDestroy(): void;
@@ -25,6 +24,5 @@ export declare class Publication {
     GetNavDoc(): Link | undefined;
     searchLinkByRel(rel: string): Link | undefined;
     AddLink(typeLink: string, rel: string[], url: string, templated: boolean | undefined): void;
-    GetPreFetchResources(): Link[];
     private _OnDeserialized;
 }

@@ -85,20 +85,6 @@ let Publication = class Publication {
         }
         this.Links.push(link);
     }
-    GetPreFetchResources() {
-        const links = [];
-        if (this.Resources) {
-            const mediaTypes = ["text/css", "application/vnd.ms-opentype", "text/javascript"];
-            this.Resources.forEach((link) => {
-                mediaTypes.forEach((mediaType) => {
-                    if (link.TypeLink === mediaType) {
-                        links.push(link);
-                    }
-                });
-            });
-        }
-        return links;
-    }
     _OnDeserialized() {
         if (!this.Metadata) {
             console.log("Publication.Metadata is not set!");
@@ -167,11 +153,6 @@ tslib_1.__decorate([
     ta_json_1.JsonElementType(publication_link_1.Link),
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "LOT", void 0);
-tslib_1.__decorate([
-    ta_json_1.JsonProperty("images"),
-    ta_json_1.JsonElementType(publication_link_1.Link),
-    tslib_1.__metadata("design:type", Array)
-], Publication.prototype, "Images", void 0);
 tslib_1.__decorate([
     ta_json_1.OnDeserialized(),
     tslib_1.__metadata("design:type", Function),
