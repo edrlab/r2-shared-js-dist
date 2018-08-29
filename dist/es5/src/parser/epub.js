@@ -114,7 +114,7 @@ function EpubParsePromise(filePath) {
                         return [2, Promise.reject("EPUB zip empty")];
                     }
                     publication = new publication_1.Publication();
-                    publication.Context = ["http://readium.org/webpub/default.jsonld"];
+                    publication.Context = ["https://readium.org/webpub-manifest/context.jsonld"];
                     publication.Metadata = new metadata_1.Metadata();
                     publication.Metadata.RDFType = "http://schema.org/Book";
                     publication.Metadata.Modified = moment(Date.now()).toDate();
