@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var ta_json_1 = require("ta-json");
+var ta_json_x_1 = require("ta-json-x");
 var MediaOverlay = (function () {
     function MediaOverlay() {
     }
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("active-class"),
+        ta_json_x_1.JsonProperty("active-class"),
         tslib_1.__metadata("design:type", String)
     ], MediaOverlay.prototype, "ActiveClass", void 0);
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("playback-active-class"),
+        ta_json_x_1.JsonProperty("playback-active-class"),
         tslib_1.__metadata("design:type", String)
     ], MediaOverlay.prototype, "PlaybackActiveClass", void 0);
     MediaOverlay = tslib_1.__decorate([
-        ta_json_1.JsonObject()
+        ta_json_x_1.JsonObject()
     ], MediaOverlay);
     return MediaOverlay;
 }());

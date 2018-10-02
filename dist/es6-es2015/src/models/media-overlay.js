@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 var MediaOverlayNode_1;
 "use strict";
-const ta_json_1 = require("ta-json");
+const ta_json_x_1 = require("ta-json-x");
 function timeStrToSeconds(timeStr) {
     if (!timeStr) {
         return 0;
@@ -74,25 +74,25 @@ let MediaOverlayNode = MediaOverlayNode_1 = class MediaOverlayNode {
     }
 };
 tslib_1.__decorate([
-    ta_json_1.JsonProperty("text"),
+    ta_json_x_1.JsonProperty("text"),
     tslib_1.__metadata("design:type", String)
 ], MediaOverlayNode.prototype, "Text", void 0);
 tslib_1.__decorate([
-    ta_json_1.JsonProperty("audio"),
+    ta_json_x_1.JsonProperty("audio"),
     tslib_1.__metadata("design:type", String)
 ], MediaOverlayNode.prototype, "Audio", void 0);
 tslib_1.__decorate([
-    ta_json_1.JsonProperty("role"),
-    ta_json_1.JsonElementType(String),
+    ta_json_x_1.JsonProperty("role"),
+    ta_json_x_1.JsonElementType(String),
     tslib_1.__metadata("design:type", Array)
 ], MediaOverlayNode.prototype, "Role", void 0);
 tslib_1.__decorate([
-    ta_json_1.JsonProperty("children"),
-    ta_json_1.JsonElementType(MediaOverlayNode_1),
+    ta_json_x_1.JsonProperty("children"),
+    ta_json_x_1.JsonElementType(MediaOverlayNode_1),
     tslib_1.__metadata("design:type", Array)
 ], MediaOverlayNode.prototype, "Children", void 0);
 MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
-    ta_json_1.JsonObject()
+    ta_json_x_1.JsonObject()
 ], MediaOverlayNode);
 exports.MediaOverlayNode = MediaOverlayNode;
 //# sourceMappingURL=media-overlay.js.map

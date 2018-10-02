@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ta_json_1 = require("ta-json");
+var ta_json_x_1 = require("ta-json-x");
 var metadata_contributor_1 = require("./metadata-contributor");
 var JsonContributorConverter = (function () {
     function JsonContributorConverter() {
     }
     JsonContributorConverter.prototype.serialize = function (property) {
-        return ta_json_1.JSON.serialize(property);
+        return ta_json_x_1.JSON.serialize(property);
     };
     JsonContributorConverter.prototype.deserialize = function (value) {
         if (typeof value === "string") {
@@ -15,7 +15,7 @@ var JsonContributorConverter = (function () {
             return c;
         }
         else {
-            return ta_json_1.JSON.deserialize(value, metadata_contributor_1.Contributor);
+            return ta_json_x_1.JSON.deserialize(value, metadata_contributor_1.Contributor);
         }
     };
     JsonContributorConverter.prototype.collapseArrayWithSingleItem = function () {

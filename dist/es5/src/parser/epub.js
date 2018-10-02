@@ -23,7 +23,7 @@ var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
 var debug_ = require("debug");
 var sizeOf = require("image-size");
 var moment = require("moment");
-var ta_json_1 = require("ta-json");
+var ta_json_x_1 = require("ta-json-x");
 var xmldom = require("xmldom");
 var xpath = require("xpath");
 var container_1 = require("./epub/container");
@@ -153,7 +153,7 @@ function EpubParsePromise(filePath) {
                     lcplStr = lcplZipData.toString("utf8");
                     lcplJson = global.JSON.parse(lcplStr);
                     debug(lcplJson);
-                    lcpl = ta_json_1.JSON.deserialize(lcplJson, lcp_1.LCP);
+                    lcpl = ta_json_x_1.JSON.deserialize(lcplJson, lcp_1.LCP);
                     lcpl.ZipPath = lcplZipPath;
                     lcpl.JsonSource = lcplStr;
                     lcpl.init();

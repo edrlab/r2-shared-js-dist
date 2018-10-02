@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var ta_json_1 = require("ta-json");
+var ta_json_x_1 = require("ta-json-x");
 var Collection = (function () {
     function Collection() {
     }
@@ -11,29 +11,29 @@ var Collection = (function () {
         }
     };
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("name"),
+        ta_json_x_1.JsonProperty("name"),
         tslib_1.__metadata("design:type", String)
     ], Collection.prototype, "Name", void 0);
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("sort_as"),
+        ta_json_x_1.JsonProperty("sort_as"),
         tslib_1.__metadata("design:type", String)
     ], Collection.prototype, "SortAs", void 0);
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("identifier"),
+        ta_json_x_1.JsonProperty("identifier"),
         tslib_1.__metadata("design:type", String)
     ], Collection.prototype, "Identifier", void 0);
     tslib_1.__decorate([
-        ta_json_1.JsonProperty("position"),
+        ta_json_x_1.JsonProperty("position"),
         tslib_1.__metadata("design:type", Number)
     ], Collection.prototype, "Position", void 0);
     tslib_1.__decorate([
-        ta_json_1.OnDeserialized(),
+        ta_json_x_1.OnDeserialized(),
         tslib_1.__metadata("design:type", Function),
         tslib_1.__metadata("design:paramtypes", []),
         tslib_1.__metadata("design:returntype", void 0)
     ], Collection.prototype, "_OnDeserialized", null);
     Collection = tslib_1.__decorate([
-        ta_json_1.JsonObject()
+        ta_json_x_1.JsonObject()
     ], Collection);
     return Collection;
 }());

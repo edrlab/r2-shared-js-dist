@@ -5,7 +5,7 @@ const metadata_belongsto_1 = require("../src/models/metadata-belongsto");
 const metadata_collection_1 = require("../src/models/metadata-collection");
 const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
 const ava_1 = require("ava");
-const ta_json_1 = require("ta-json");
+const ta_json_x_1 = require("ta-json-x");
 const init_globals_1 = require("../src/init-globals");
 const helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();
@@ -27,7 +27,7 @@ ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     b.Series.push(col1);
     b.Series.push(col2);
     helpers_1.inspect(b);
-    const json = ta_json_1.JSON.serialize(b);
+    const json = ta_json_x_1.JSON.serialize(b);
     helpers_1.logJSON(json);
     helpers_1.checkType_Array(t, json.series);
     t.is(json.series.length, 2);
@@ -46,7 +46,7 @@ ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[1] collapse-array", (
     const b = new metadata_belongsto_1.BelongsTo();
     b.Series = [col1];
     helpers_1.inspect(b);
-    const json = ta_json_1.JSON.serialize(b);
+    const json = ta_json_x_1.JSON.serialize(b);
     helpers_1.logJSON(json);
     helpers_1.checkType_Object(t, json.series);
     helpers_1.checkType_String(t, json.series.name);
@@ -58,7 +58,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     const json = {};
     json.series = [{ name: colName1, identifier: colID1 }, { name: colName2, identifier: colID2 }];
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 2);
@@ -77,7 +77,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[1]", (t) => {
     const json = {};
     json.series = [{ name: colName1, identifier: colID1 }];
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -91,7 +91,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection", (t) => {
     const json = {};
     json.series = { name: colName2, identifier: colID2 };
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -105,7 +105,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[]", (t) => {
     const json = {};
     json.series = [colName1, colName2];
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 2);
@@ -120,7 +120,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[1]", (t) => {
     const json = {};
     json.series = [colName1];
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -132,7 +132,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR", (t) => {
     const json = {};
     json.series = colName2;
     helpers_1.logJSON(json);
-    const b = ta_json_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    const b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
