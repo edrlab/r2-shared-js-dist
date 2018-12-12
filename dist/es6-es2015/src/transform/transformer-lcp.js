@@ -5,6 +5,7 @@ const transformer_lcp_1 = require("r2-lcp-js/dist/es6-es2015/src/transform/trans
 class TransformerLCP {
     supports(publication, link) {
         return (typeof publication.LCP !== "undefined") &&
+            link.Properties && link.Properties.Encrypted &&
             transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
     }
     transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {

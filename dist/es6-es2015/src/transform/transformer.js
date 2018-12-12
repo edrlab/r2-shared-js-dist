@@ -24,20 +24,27 @@ class Transformers {
     _tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let transformedData;
-            const transformer = this.transformers.find((t) => {
-                if (!t.supports(publication, link)) {
-                    return false;
+            let atLeastOne = false;
+            let s = stream;
+            for (const t of this.transformers) {
+                if (t.supports(publication, link)) {
+                    atLeastOne = true;
+                    if (transformedData) {
+                        try {
+                            s = yield transformedData;
+                        }
+                        catch (err) {
+                            transformedData = undefined;
+                            break;
+                        }
+                    }
+                    transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
                 }
-                transformedData = t.transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
-                if (transformedData) {
-                    return true;
-                }
-                return false;
-            });
-            if (transformer && transformedData) {
+            }
+            if (transformedData) {
                 return transformedData;
             }
-            return Promise.reject("transformers fail (stream)");
+            return atLeastOne ? Promise.reject("transformers fail") : Promise.resolve(stream);
         });
     }
 }

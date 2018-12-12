@@ -4,7 +4,8 @@ const crypto = require("crypto");
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 class TransformerObfIDPF {
     supports(_publication, link) {
-        return link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
+        return link.Properties && link.Properties.Encrypted &&
+            link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
     }
     async transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
         let data;

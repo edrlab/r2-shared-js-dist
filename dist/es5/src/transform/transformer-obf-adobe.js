@@ -6,7 +6,8 @@ var TransformerObfAdobe = (function () {
     function TransformerObfAdobe() {
     }
     TransformerObfAdobe.prototype.supports = function (_publication, link) {
-        return link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
+        return link.Properties && link.Properties.Encrypted &&
+            link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
     };
     TransformerObfAdobe.prototype.transformStream = function (publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {

@@ -4,7 +4,8 @@ const tslib_1 = require("tslib");
 const BufferUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/stream/BufferUtils");
 class TransformerObfAdobe {
     supports(_publication, link) {
-        return link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
+        return link.Properties && link.Properties.Encrypted &&
+            link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
     }
     transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {

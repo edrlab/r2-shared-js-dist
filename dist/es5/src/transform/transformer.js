@@ -25,22 +25,43 @@ var Transformers = (function () {
     };
     Transformers.prototype._tryStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var transformedData, transformer;
-            return tslib_1.__generator(this, function (_a) {
-                transformer = this.transformers.find(function (t) {
-                    if (!t.supports(publication, link)) {
-                        return false;
-                    }
-                    transformedData = t.transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
-                    if (transformedData) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (transformer && transformedData) {
-                    return [2, transformedData];
+            var transformedData, atLeastOne, s, _i, _a, t, err_1;
+            return tslib_1.__generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        atLeastOne = false;
+                        s = stream;
+                        _i = 0, _a = this.transformers;
+                        _b.label = 1;
+                    case 1:
+                        if (!(_i < _a.length)) return [3, 7];
+                        t = _a[_i];
+                        if (!t.supports(publication, link)) return [3, 6];
+                        atLeastOne = true;
+                        if (!transformedData) return [3, 5];
+                        _b.label = 2;
+                    case 2:
+                        _b.trys.push([2, 4, , 5]);
+                        return [4, transformedData];
+                    case 3:
+                        s = _b.sent();
+                        return [3, 5];
+                    case 4:
+                        err_1 = _b.sent();
+                        transformedData = undefined;
+                        return [3, 7];
+                    case 5:
+                        transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+                        _b.label = 6;
+                    case 6:
+                        _i++;
+                        return [3, 1];
+                    case 7:
+                        if (transformedData) {
+                            return [2, transformedData];
+                        }
+                        return [2, atLeastOne ? Promise.reject("transformers fail") : Promise.resolve(stream)];
                 }
-                return [2, Promise.reject("transformers fail (stream)")];
             });
         });
     };

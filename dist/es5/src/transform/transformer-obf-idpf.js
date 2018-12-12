@@ -7,7 +7,8 @@ var TransformerObfIDPF = (function () {
     function TransformerObfIDPF() {
     }
     TransformerObfIDPF.prototype.supports = function (_publication, link) {
-        return link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
+        return link.Properties && link.Properties.Encrypted &&
+            link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
     };
     TransformerObfIDPF.prototype.transformStream = function (publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
