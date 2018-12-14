@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const mime = require("mime-types");
-const xmldom = require("xmldom");
 const debug_ = require("debug");
 const debug = debug_("r2:shared#transform/transformer-html");
 class TransformerHTML {
+    constructor(transformerFunction) {
+        this.transformString = transformerFunction;
+    }
     supports(publication, link) {
         let mediaType = mime.lookup(link.Href);
         if (link && link.TypeLink) {
@@ -48,17 +50,10 @@ class TransformerHTML {
         };
         return Promise.resolve(sal);
     }
-    async transformBuffer(_publication, link, data) {
-        let mediaType = mime.lookup(link.Href);
-        if (link && link.TypeLink) {
-            mediaType = link.TypeLink;
-        }
+    async transformBuffer(publication, link, data) {
         try {
             const str = data.toString("utf8");
-            const dom = typeof mediaType === "string" ?
-                new xmldom.DOMParser().parseFromString(str, mediaType) :
-                new xmldom.DOMParser().parseFromString(str);
-            const str_ = new xmldom.XMLSerializer().serializeToString(dom) + "\n\n<!-- JUST TESTING -->";
+            const str_ = this.transformString(publication, link, str);
             return Promise.resolve(Buffer.from(str_));
         }
         catch (err) {

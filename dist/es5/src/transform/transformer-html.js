@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var mime = require("mime-types");
-var xmldom = require("xmldom");
 var debug_ = require("debug");
 var debug = debug_("r2:shared#transform/transformer-html");
 var TransformerHTML = (function () {
-    function TransformerHTML() {
+    function TransformerHTML(transformerFunction) {
+        this.transformString = transformerFunction;
     }
     TransformerHTML.prototype.supports = function (publication, link) {
         var mediaType = mime.lookup(link.Href);
@@ -66,20 +66,13 @@ var TransformerHTML = (function () {
             });
         });
     };
-    TransformerHTML.prototype.transformBuffer = function (_publication, link, data) {
+    TransformerHTML.prototype.transformBuffer = function (publication, link, data) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var mediaType, str, dom, str_;
+            var str, str_;
             return tslib_1.__generator(this, function (_a) {
-                mediaType = mime.lookup(link.Href);
-                if (link && link.TypeLink) {
-                    mediaType = link.TypeLink;
-                }
                 try {
                     str = data.toString("utf8");
-                    dom = typeof mediaType === "string" ?
-                        new xmldom.DOMParser().parseFromString(str, mediaType) :
-                        new xmldom.DOMParser().parseFromString(str);
-                    str_ = new xmldom.XMLSerializer().serializeToString(dom) + "\n\n<!-- JUST TESTING -->";
+                    str_ = this.transformString(publication, link, str);
                     return [2, Promise.resolve(Buffer.from(str_))];
                 }
                 catch (err) {
