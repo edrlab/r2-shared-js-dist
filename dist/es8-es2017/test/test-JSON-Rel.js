@@ -12,7 +12,7 @@ init_globals_1.initGlobalConverters_GENERIC();
 lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
 const relStr1 = "rel1";
 const relStr2 = "rel2";
-ava_1.test("JSON SERIALIZE: Publication Link.Rel => string[]", (t) => {
+ava_1.default("JSON SERIALIZE: Publication Link.Rel => string[]", (t) => {
     const link = new publication_link_1.Link();
     link.AddRel(relStr1);
     link.AddRel(relStr2);
@@ -26,7 +26,7 @@ ava_1.test("JSON SERIALIZE: Publication Link.Rel => string[]", (t) => {
     helpers_1.checkType_String(t, json.rel[1]);
     t.is(json.rel[1], relStr2);
 });
-ava_1.test("JSON SERIALIZE: Publication Link.Rel => string", (t) => {
+ava_1.default("JSON SERIALIZE: Publication Link.Rel => string", (t) => {
     const link = new publication_link_1.Link();
     link.AddRel(relStr1);
     helpers_1.inspect(link);
@@ -35,7 +35,7 @@ ava_1.test("JSON SERIALIZE: Publication Link.Rel => string", (t) => {
     helpers_1.checkType_String(t, json.rel);
     t.is(json.rel, relStr1);
 });
-ava_1.test("JSON DESERIALIZE: Publication Link.Rel => string[]", (t) => {
+ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[]", (t) => {
     const json = {};
     json.rel = [relStr1, relStr2];
     helpers_1.logJSON(json);
@@ -48,7 +48,7 @@ ava_1.test("JSON DESERIALIZE: Publication Link.Rel => string[]", (t) => {
     helpers_1.checkType_String(t, link.Rel[1]);
     t.is(link.Rel[1], relStr2);
 });
-ava_1.test("JSON DESERIALIZE: Publication Link.Rel => string[1]", (t) => {
+ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[1]", (t) => {
     const json = {};
     json.rel = [relStr1];
     helpers_1.logJSON(json);
@@ -59,7 +59,7 @@ ava_1.test("JSON DESERIALIZE: Publication Link.Rel => string[1]", (t) => {
     helpers_1.checkType_String(t, link.Rel[0]);
     t.is(link.Rel[0], relStr1);
 });
-ava_1.test("JSON DESERIALIZE: Publication Link.Rel => string", (t) => {
+ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string", (t) => {
     const json = {};
     json.rel = relStr1;
     helpers_1.logJSON(json);

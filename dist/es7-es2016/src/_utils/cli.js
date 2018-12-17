@@ -4,9 +4,13 @@ const tslib_1 = require("tslib");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const url_1 = require("url");
 const util = require("util");
+const publication_link_1 = require("../models/publication-link");
+const epub_1 = require("../parser/epub");
 const publication_parser_1 = require("../parser/publication-parser");
 const lcp_1 = require("r2-lcp-js/dist/es7-es2016/src/parser/epub/lcp");
+const UrlUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/http/UrlUtils");
 const BufferUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/stream/BufferUtils");
 const transformer_1 = require("../transform/transformer");
 const ta_json_x_1 = require("ta-json-x");
@@ -28,8 +32,7 @@ if (!args[0]) {
 const argPath = args[0].trim();
 let filePath = argPath;
 console.log(filePath);
-const isHTTP = filePath.startsWith("http");
-if (!isHTTP) {
+if (!UrlUtils_1.isHTTP(filePath)) {
     if (!fs.existsSync(filePath)) {
         filePath = path.join(__dirname, argPath);
         console.log(filePath);
@@ -48,11 +51,14 @@ if (!isHTTP) {
         process.exit(1);
     }
 }
-const fileName = path.basename(filePath);
-const ext = path.extname(fileName).toLowerCase();
-const isEPUBPacked = /\.epub[3]?$/.test(ext);
-const isEPUBExploded = isHTTP ? false : fs.existsSync(path.join(filePath, "META-INF", "container.xml"));
-const isEPUB = isEPUBPacked || isEPUBExploded;
+let fileName = filePath;
+if (UrlUtils_1.isHTTP(filePath)) {
+    const url = new url_1.URL(filePath);
+    fileName = url.pathname;
+}
+fileName = fileName.replace(/META-INF[\/|\\]container.xml$/, "");
+fileName = path.basename(fileName);
+const isAnEPUB = epub_1.isEPUBlication(filePath);
 let outputDirPath;
 if (args[1]) {
     const argDir = args[1].trim();
@@ -100,7 +106,7 @@ if (args[2]) {
         console.log(err);
         return;
     }
-    if (isEPUB) {
+    if (isAnEPUB) {
         if (outputDirPath) {
             try {
                 yield extractEPUB(publication, outputDirPath, decryptKeys);
@@ -112,11 +118,11 @@ if (args[2]) {
             }
         }
     }
-    else if (ext === ".cbz") {
+    else {
         dumpPublication(publication);
     }
 }))();
-function extractEPUB_ManifestJSON(pub, outDir) {
+function extractEPUB_ManifestJSON(pub, outDir, keys) {
     const manifestJson = ta_json_x_1.JSON.serialize(pub);
     const arrLinks = [];
     if (manifestJson.readingOrder) {
@@ -125,8 +131,49 @@ function extractEPUB_ManifestJSON(pub, outDir) {
     if (manifestJson.resources) {
         arrLinks.push(...manifestJson.resources);
     }
+    if (keys) {
+        arrLinks.forEach((link) => {
+            if (link.properties && link.properties.encrypted &&
+                link.properties.encrypted.scheme === "http://readium.org/2014/01/lcp") {
+                delete link.properties.encrypted;
+                let atLeastOne = false;
+                const jsonProps = Object.keys(link.properties);
+                if (jsonProps) {
+                    jsonProps.forEach((jsonProp) => {
+                        if (link.properties.hasOwnProperty(jsonProp)) {
+                            atLeastOne = true;
+                            return false;
+                        }
+                        return true;
+                    });
+                }
+                if (!atLeastOne) {
+                    delete link.properties;
+                }
+            }
+        });
+        if (manifestJson.links) {
+            let index = -1;
+            for (let i = 0; i < manifestJson.links.length; i++) {
+                const link = manifestJson.links[i];
+                if (link.type === "application/vnd.readium.lcp.license.v1.0+json"
+                    && link.rel === "license") {
+                    index = i;
+                    break;
+                }
+            }
+            if (index >= 0) {
+                manifestJson.links.splice(index, 1);
+            }
+            if (manifestJson.links.length === 0) {
+                delete manifestJson.links;
+            }
+        }
+    }
     arrLinks.forEach((link) => {
-        if (link.properties && link.properties.encrypted) {
+        if (link.properties && link.properties.encrypted &&
+            (link.properties.encrypted.algorithm === "http://www.idpf.org/2008/embedding" ||
+                link.properties.encrypted.algorithm === "http://ns.adobe.com/pdf/enc#RC")) {
             delete link.properties.encrypted;
             let atLeastOne = false;
             const jsonProps = Object.keys(link.properties);
@@ -253,13 +300,18 @@ function extractEPUB(pub, outDir, keys) {
             throw err;
         }
         fs.mkdirSync(outDir);
-        extractEPUB_ManifestJSON(pub, outDir);
+        extractEPUB_ManifestJSON(pub, outDir, keys);
         const links = [];
         if (pub.Resources) {
             links.push(...pub.Resources);
         }
         if (pub.Spine) {
             links.push(...pub.Spine);
+        }
+        if (!keys && zip.hasEntry("META-INF/license.lcpl")) {
+            const l = new publication_link_1.Link();
+            l.Href = "META-INF/license.lcpl";
+            links.push(l);
         }
         for (const link of links) {
             try {

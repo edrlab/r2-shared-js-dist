@@ -7,11 +7,11 @@ const debug = debug_("r2:shared#test");
 async function fn() {
     return Promise.resolve("foo");
 }
-ava_1.test("dummy async test", async (t) => {
+ava_1.default("dummy async test", async (t) => {
     debug("test ASYNC");
     t.is(await fn(), "foo");
 });
-ava_1.test("SMIL clock values", (t) => {
+ava_1.default("SMIL clock values", (t) => {
     t.plan(16);
     t.is(media_overlay_1.timeStrToSeconds("12.345"), 12.345);
     t.is(media_overlay_1.timeStrToSeconds("2345ms"), 2.345);

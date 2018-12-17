@@ -2,8 +2,10 @@
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var fs = require("fs");
 var path = require("path");
 var querystring = require("querystring");
+var url_1 = require("url");
 var media_overlay_1 = require("../models/media-overlay");
 var metadata_1 = require("../models/metadata");
 var metadata_belongsto_1 = require("../models/metadata-belongsto");
@@ -16,6 +18,7 @@ var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
 var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
+var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
@@ -94,22 +97,63 @@ exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.
         }
     });
 }); };
+var EPUBis;
+(function (EPUBis) {
+    EPUBis["LocalExploded"] = "LocalExploded";
+    EPUBis["LocalPacked"] = "LocalPacked";
+    EPUBis["RemoteExploded"] = "RemoteExploded";
+    EPUBis["RemotePacked"] = "RemotePacked";
+})(EPUBis = exports.EPUBis || (exports.EPUBis = {}));
+function isEPUBlication(urlOrPath) {
+    var p = urlOrPath;
+    var http = UrlUtils_1.isHTTP(urlOrPath);
+    if (http) {
+        var url = new url_1.URL(urlOrPath);
+        p = url.pathname;
+    }
+    else if (fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
+        return EPUBis.LocalExploded;
+    }
+    var fileName = path.basename(p);
+    var ext = path.extname(fileName).toLowerCase();
+    var epub = /\.epub[3]?$/.test(ext);
+    if (epub) {
+        return http ? EPUBis.RemotePacked : EPUBis.LocalPacked;
+    }
+    if (p.replace(/\//, "/").endsWith("META-INF/container.xml")) {
+        return http ? EPUBis.RemoteExploded : EPUBis.LocalExploded;
+    }
+    return undefined;
+}
+exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zip, err_3, publication, lcpl, lcplZipPath, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1;
+        var isAnEPUB, canLoad, err, filePathToLoad, zip, err_3, publication, lcpl, lcplZipPath, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4, zipFactory_1.zipLoadPromise(filePath)];
+                    isAnEPUB = isEPUBlication(filePath);
+                    canLoad = isAnEPUB === EPUBis.LocalExploded ||
+                        isAnEPUB === EPUBis.LocalPacked ||
+                        isAnEPUB === EPUBis.RemotePacked;
+                    if (!canLoad) {
+                        err = "Cannot load exploded remote EPUB (needs filesystem access to list directory contents).";
+                        debug(err);
+                        return [2, Promise.reject(err)];
+                    }
+                    filePathToLoad = filePath.replace(/META-INF[\/|\\]container.xml$/, "");
+                    _a.label = 1;
                 case 1:
-                    zip = _a.sent();
-                    return [3, 3];
+                    _a.trys.push([1, 3, , 4]);
+                    return [4, zipFactory_1.zipLoadPromise(filePathToLoad)];
                 case 2:
+                    zip = _a.sent();
+                    return [3, 4];
+                case 3:
                     err_3 = _a.sent();
                     debug(err_3);
                     return [2, Promise.reject(err_3)];
-                case 3:
+                case 4:
                     if (!zip.hasEntries()) {
                         return [2, Promise.reject("EPUB zip empty")];
                     }
@@ -122,34 +166,34 @@ function EpubParsePromise(filePath) {
                     publication.AddToInternal("type", "epub");
                     publication.AddToInternal("zip", zip);
                     lcplZipPath = "META-INF/license.lcpl";
-                    if (!zip.hasEntry(lcplZipPath)) return [3, 12];
+                    if (!zip.hasEntry(lcplZipPath)) return [3, 13];
                     lcplZipStream_ = void 0;
-                    _a.label = 4;
-                case 4:
-                    _a.trys.push([4, 6, , 7]);
-                    return [4, zip.entryStreamPromise(lcplZipPath)];
+                    _a.label = 5;
                 case 5:
-                    lcplZipStream_ = _a.sent();
-                    return [3, 7];
+                    _a.trys.push([5, 7, , 8]);
+                    return [4, zip.entryStreamPromise(lcplZipPath)];
                 case 6:
+                    lcplZipStream_ = _a.sent();
+                    return [3, 8];
+                case 7:
                     err_4 = _a.sent();
                     debug(err_4);
                     return [2, Promise.reject(err_4)];
-                case 7:
+                case 8:
                     lcplZipStream = lcplZipStream_.stream;
                     lcplZipData = void 0;
-                    _a.label = 8;
-                case 8:
-                    _a.trys.push([8, 10, , 11]);
-                    return [4, BufferUtils_1.streamToBufferPromise(lcplZipStream)];
+                    _a.label = 9;
                 case 9:
-                    lcplZipData = _a.sent();
-                    return [3, 11];
+                    _a.trys.push([9, 11, , 12]);
+                    return [4, BufferUtils_1.streamToBufferPromise(lcplZipStream)];
                 case 10:
+                    lcplZipData = _a.sent();
+                    return [3, 12];
+                case 11:
                     err_5 = _a.sent();
                     debug(err_5);
                     return [2, Promise.reject(err_5)];
-                case 11:
+                case 12:
                     lcplStr = lcplZipData.toString("utf8");
                     lcplJson = global.JSON.parse(lcplStr);
                     debug(lcplJson);
@@ -160,143 +204,143 @@ function EpubParsePromise(filePath) {
                     publication.LCP = lcpl;
                     mime = "application/vnd.readium.lcp.license.v1.0+json";
                     publication.AddLink(mime, ["license"], lcpl.ZipPath, undefined);
-                    _a.label = 12;
-                case 12:
-                    encZipPath = "META-INF/encryption.xml";
-                    if (!zip.hasEntry(encZipPath)) return [3, 21];
-                    encryptionXmlZipStream_ = void 0;
                     _a.label = 13;
                 case 13:
-                    _a.trys.push([13, 15, , 16]);
-                    return [4, zip.entryStreamPromise(encZipPath)];
+                    encZipPath = "META-INF/encryption.xml";
+                    if (!zip.hasEntry(encZipPath)) return [3, 22];
+                    encryptionXmlZipStream_ = void 0;
+                    _a.label = 14;
                 case 14:
-                    encryptionXmlZipStream_ = _a.sent();
-                    return [3, 16];
+                    _a.trys.push([14, 16, , 17]);
+                    return [4, zip.entryStreamPromise(encZipPath)];
                 case 15:
+                    encryptionXmlZipStream_ = _a.sent();
+                    return [3, 17];
+                case 16:
                     err_6 = _a.sent();
                     debug(err_6);
                     return [2, Promise.reject(err_6)];
-                case 16:
+                case 17:
                     encryptionXmlZipStream = encryptionXmlZipStream_.stream;
                     encryptionXmlZipData = void 0;
-                    _a.label = 17;
-                case 17:
-                    _a.trys.push([17, 19, , 20]);
-                    return [4, BufferUtils_1.streamToBufferPromise(encryptionXmlZipStream)];
+                    _a.label = 18;
                 case 18:
-                    encryptionXmlZipData = _a.sent();
-                    return [3, 20];
+                    _a.trys.push([18, 20, , 21]);
+                    return [4, BufferUtils_1.streamToBufferPromise(encryptionXmlZipStream)];
                 case 19:
+                    encryptionXmlZipData = _a.sent();
+                    return [3, 21];
+                case 20:
                     err_7 = _a.sent();
                     debug(err_7);
                     return [2, Promise.reject(err_7)];
-                case 20:
+                case 21:
                     encryptionXmlStr = encryptionXmlZipData.toString("utf8");
                     encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr);
                     encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
                     encryption.ZipPath = encZipPath;
-                    _a.label = 21;
-                case 21:
-                    containerZipPath = "META-INF/container.xml";
                     _a.label = 22;
                 case 22:
-                    _a.trys.push([22, 24, , 25]);
-                    return [4, zip.entryStreamPromise(containerZipPath)];
+                    containerZipPath = "META-INF/container.xml";
+                    _a.label = 23;
                 case 23:
-                    containerXmlZipStream_ = _a.sent();
-                    return [3, 25];
+                    _a.trys.push([23, 25, , 26]);
+                    return [4, zip.entryStreamPromise(containerZipPath)];
                 case 24:
+                    containerXmlZipStream_ = _a.sent();
+                    return [3, 26];
+                case 25:
                     err_8 = _a.sent();
                     debug(err_8);
                     return [2, Promise.reject(err_8)];
-                case 25:
-                    containerXmlZipStream = containerXmlZipStream_.stream;
-                    _a.label = 26;
                 case 26:
-                    _a.trys.push([26, 28, , 29]);
-                    return [4, BufferUtils_1.streamToBufferPromise(containerXmlZipStream)];
+                    containerXmlZipStream = containerXmlZipStream_.stream;
+                    _a.label = 27;
                 case 27:
-                    containerXmlZipData = _a.sent();
-                    return [3, 29];
+                    _a.trys.push([27, 29, , 30]);
+                    return [4, BufferUtils_1.streamToBufferPromise(containerXmlZipStream)];
                 case 28:
+                    containerXmlZipData = _a.sent();
+                    return [3, 30];
+                case 29:
                     err_9 = _a.sent();
                     debug(err_9);
                     return [2, Promise.reject(err_9)];
-                case 29:
+                case 30:
                     containerXmlStr = containerXmlZipData.toString("utf8");
                     containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr);
                     container = xml_js_mapper_1.XML.deserialize(containerXmlDoc, container_1.Container);
                     container.ZipPath = containerZipPath;
                     rootfile = container.Rootfile[0];
-                    _a.label = 30;
-                case 30:
-                    _a.trys.push([30, 32, , 33]);
-                    return [4, zip.entryStreamPromise(rootfile.Path)];
+                    _a.label = 31;
                 case 31:
-                    opfZipStream_ = _a.sent();
-                    return [3, 33];
+                    _a.trys.push([31, 33, , 34]);
+                    return [4, zip.entryStreamPromise(rootfile.Path)];
                 case 32:
+                    opfZipStream_ = _a.sent();
+                    return [3, 34];
+                case 33:
                     err_10 = _a.sent();
                     debug(err_10);
                     return [2, Promise.reject(err_10)];
-                case 33:
-                    opfZipStream = opfZipStream_.stream;
-                    _a.label = 34;
                 case 34:
-                    _a.trys.push([34, 36, , 37]);
-                    return [4, BufferUtils_1.streamToBufferPromise(opfZipStream)];
+                    opfZipStream = opfZipStream_.stream;
+                    _a.label = 35;
                 case 35:
-                    opfZipData = _a.sent();
-                    return [3, 37];
+                    _a.trys.push([35, 37, , 38]);
+                    return [4, BufferUtils_1.streamToBufferPromise(opfZipStream)];
                 case 36:
+                    opfZipData = _a.sent();
+                    return [3, 38];
+                case 37:
                     err_11 = _a.sent();
                     debug(err_11);
                     return [2, Promise.reject(err_11)];
-                case 37:
+                case 38:
                     opfStr = opfZipData.toString("utf8");
                     opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
                     opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
                     opf.ZipPath = rootfile.Path;
-                    if (!opf.Spine.Toc) return [3, 46];
+                    if (!opf.Spine.Toc) return [3, 47];
                     ncxManItem = opf.Manifest.find(function (manifestItem) {
                         return manifestItem.ID === opf.Spine.Toc;
                     });
-                    if (!ncxManItem) return [3, 46];
+                    if (!ncxManItem) return [3, 47];
                     ncxFilePath = path.join(path.dirname(opf.ZipPath), ncxManItem.Href)
                         .replace(/\\/g, "/");
                     ncxZipStream_ = void 0;
-                    _a.label = 38;
-                case 38:
-                    _a.trys.push([38, 40, , 41]);
-                    return [4, zip.entryStreamPromise(ncxFilePath)];
+                    _a.label = 39;
                 case 39:
-                    ncxZipStream_ = _a.sent();
-                    return [3, 41];
+                    _a.trys.push([39, 41, , 42]);
+                    return [4, zip.entryStreamPromise(ncxFilePath)];
                 case 40:
+                    ncxZipStream_ = _a.sent();
+                    return [3, 42];
+                case 41:
                     err_12 = _a.sent();
                     debug(err_12);
                     return [2, Promise.reject(err_12)];
-                case 41:
+                case 42:
                     ncxZipStream = ncxZipStream_.stream;
                     ncxZipData = void 0;
-                    _a.label = 42;
-                case 42:
-                    _a.trys.push([42, 44, , 45]);
-                    return [4, BufferUtils_1.streamToBufferPromise(ncxZipStream)];
+                    _a.label = 43;
                 case 43:
-                    ncxZipData = _a.sent();
-                    return [3, 45];
+                    _a.trys.push([43, 45, , 46]);
+                    return [4, BufferUtils_1.streamToBufferPromise(ncxZipStream)];
                 case 44:
+                    ncxZipData = _a.sent();
+                    return [3, 46];
+                case 45:
                     err_13 = _a.sent();
                     debug(err_13);
                     return [2, Promise.reject(err_13)];
-                case 45:
+                case 46:
                     ncxStr = ncxZipData.toString("utf8");
                     ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
                     ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
                     ncx.ZipPath = ncxFilePath;
-                    _a.label = 46;
-                case 46:
+                    _a.label = 47;
+                case 47:
                     addTitle(publication, rootfile, opf);
                     addIdentifier(publication, rootfile, opf);
                     if (opf.Metadata) {
@@ -383,17 +427,17 @@ function EpubParsePromise(filePath) {
                         findContributorInMeta(publication, rootfile, opf);
                     }
                     return [4, fillSpineAndResource(publication, rootfile, opf)];
-                case 47:
+                case 48:
                     _a.sent();
                     addRendition(publication, rootfile, opf);
                     return [4, addCoverRel(publication, rootfile, opf)];
-                case 48:
+                case 49:
                     _a.sent();
                     if (encryption) {
                         fillEncryptionInfo(publication, rootfile, opf, encryption, lcpl);
                     }
                     return [4, fillTOCFromNavDoc(publication, rootfile, opf, zip)];
-                case 49:
+                case 50:
                     _a.sent();
                     if (!publication.TOC || !publication.TOC.length) {
                         if (ncx) {
@@ -406,7 +450,7 @@ function EpubParsePromise(filePath) {
                     fillSubject(publication, rootfile, opf);
                     fillPublicationDate(publication, rootfile, opf);
                     return [4, fillMediaOverlay(publication, rootfile, opf, zip)];
-                case 50:
+                case 51:
                     _a.sent();
                     return [2, publication];
             }

@@ -21,7 +21,7 @@ const contRole2 = "theRole2";
 const cont2 = new metadata_contributor_1.Contributor();
 cont2.Name = contName2;
 cont2.Role = contRole2;
-ava_1.test("JSON SERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
+ava_1.default("JSON SERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
     const md = new metadata_1.Metadata();
     md.Imprint = [];
     md.Imprint.push(cont1);
@@ -42,7 +42,7 @@ ava_1.test("JSON SERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
     helpers_1.checkType_String(t, json.imprint[1].role);
     t.is(json.imprint[1].role, contRole2);
 });
-ava_1.test("JSON SERIALIZE: Metadata.Imprint => Contributor[1] collapse-array", (t) => {
+ava_1.default("JSON SERIALIZE: Metadata.Imprint => Contributor[1] collapse-array", (t) => {
     const md = new metadata_1.Metadata();
     md.Imprint = [cont1];
     helpers_1.inspect(md);
@@ -54,7 +54,7 @@ ava_1.test("JSON SERIALIZE: Metadata.Imprint => Contributor[1] collapse-array", 
     helpers_1.checkType_String(t, json.imprint.role);
     t.is(json.imprint.role, contRole1);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
     const json = {};
     json.imprint = [{ name: contName1, role: contRole1 }, { name: contName2, role: contRole2 }];
     helpers_1.logJSON(json);
@@ -73,7 +73,7 @@ ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
     helpers_1.checkType_String(t, md.Imprint[1].Role);
     t.is(md.Imprint[1].Role, contRole2);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor[1]", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor[1]", (t) => {
     const json = {};
     json.imprint = [{ name: contName1, role: contRole1 }];
     helpers_1.logJSON(json);
@@ -87,7 +87,7 @@ ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor[1]", (t) => {
     helpers_1.checkType_String(t, md.Imprint[0].Role);
     t.is(md.Imprint[0].Role, contRole1);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor", (t) => {
     const json = {};
     json.imprint = { name: contName2, role: contRole2 };
     helpers_1.logJSON(json);
@@ -101,7 +101,7 @@ ava_1.test("JSON DESERIALIZE: Metadata.Imprint => Contributor", (t) => {
     helpers_1.checkType_String(t, md.Imprint[0].Role);
     t.is(md.Imprint[0].Role, contRole2);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[]", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[]", (t) => {
     const json = {};
     json.imprint = [contName1, contName2];
     helpers_1.logJSON(json);
@@ -116,7 +116,7 @@ ava_1.test("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[]", (t) => {
     helpers_1.checkType_String(t, md.Imprint[1].Name);
     t.is(md.Imprint[1].Name, contName2);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[1]", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[1]", (t) => {
     const json = {};
     json.imprint = [contName1];
     helpers_1.logJSON(json);
@@ -128,7 +128,7 @@ ava_1.test("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR[1]", (t) => {
     helpers_1.checkType_String(t, md.Imprint[0].Name);
     t.is(md.Imprint[0].Name, contName1);
 });
-ava_1.test("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR", (t) => {
+ava_1.default("JSON DESERIALIZE: Metadata.Imprint => ContributorSTR", (t) => {
     const json = {};
     json.imprint = contName2;
     helpers_1.logJSON(json);

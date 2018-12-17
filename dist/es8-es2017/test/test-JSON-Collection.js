@@ -21,7 +21,7 @@ const colID2 = "theID2";
 const col2 = new metadata_collection_1.Collection();
 col2.Name = colName2;
 col2.Identifier = colID2;
-ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[]", (t) => {
+ava_1.default("JSON SERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     const b = new metadata_belongsto_1.BelongsTo();
     b.Series = [];
     b.Series.push(col1);
@@ -42,7 +42,7 @@ ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     helpers_1.checkType_String(t, json.series[1].identifier);
     t.is(json.series[1].identifier, colID2);
 });
-ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[1] collapse-array", (t) => {
+ava_1.default("JSON SERIALIZE: BelongsTo.Series => Collection[1] collapse-array", (t) => {
     const b = new metadata_belongsto_1.BelongsTo();
     b.Series = [col1];
     helpers_1.inspect(b);
@@ -54,7 +54,7 @@ ava_1.test("JSON SERIALIZE: BelongsTo.Series => Collection[1] collapse-array", (
     helpers_1.checkType_String(t, json.series.identifier);
     t.is(json.series.identifier, colID1);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[]", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     const json = {};
     json.series = [{ name: colName1, identifier: colID1 }, { name: colName2, identifier: colID2 }];
     helpers_1.logJSON(json);
@@ -73,7 +73,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[]", (t) => {
     helpers_1.checkType_String(t, b.Series[1].Identifier);
     t.is(b.Series[1].Identifier, colID2);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[1]", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Collection[1]", (t) => {
     const json = {};
     json.series = [{ name: colName1, identifier: colID1 }];
     helpers_1.logJSON(json);
@@ -87,7 +87,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection[1]", (t) => {
     helpers_1.checkType_String(t, b.Series[0].Identifier);
     t.is(b.Series[0].Identifier, colID1);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Collection", (t) => {
     const json = {};
     json.series = { name: colName2, identifier: colID2 };
     helpers_1.logJSON(json);
@@ -101,7 +101,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => Collection", (t) => {
     helpers_1.checkType_String(t, b.Series[0].Identifier);
     t.is(b.Series[0].Identifier, colID2);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[]", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[]", (t) => {
     const json = {};
     json.series = [colName1, colName2];
     helpers_1.logJSON(json);
@@ -116,7 +116,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[]", (t) => {
     helpers_1.checkType_String(t, b.Series[1].Name);
     t.is(b.Series[1].Name, colName2);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[1]", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[1]", (t) => {
     const json = {};
     json.series = [colName1];
     helpers_1.logJSON(json);
@@ -128,7 +128,7 @@ ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR[1]", (t) => {
     helpers_1.checkType_String(t, b.Series[0].Name);
     t.is(b.Series[0].Name, colName1);
 });
-ava_1.test("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR", (t) => {
+ava_1.default("JSON DESERIALIZE: BelongsTo.Series => CollectionSTR", (t) => {
     const json = {};
     json.series = colName2;
     helpers_1.logJSON(json);

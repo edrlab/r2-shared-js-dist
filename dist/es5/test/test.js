@@ -13,7 +13,7 @@ function fn() {
         });
     });
 }
-ava_1.test("dummy async test", function (t) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+ava_1.default("dummy async test", function (t) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var _a, _b;
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
@@ -27,7 +27,7 @@ ava_1.test("dummy async test", function (t) { return tslib_1.__awaiter(_this, vo
         }
     });
 }); });
-ava_1.test("SMIL clock values", function (t) {
+ava_1.default("SMIL clock values", function (t) {
     t.plan(16);
     t.is(media_overlay_1.timeStrToSeconds("12.345"), 12.345);
     t.is(media_overlay_1.timeStrToSeconds("2345ms"), 2.345);

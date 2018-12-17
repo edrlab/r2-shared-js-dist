@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const fs = require("fs");
 const path = require("path");
 const querystring = require("querystring");
+const url_1 = require("url");
 const media_overlay_1 = require("../models/media-overlay");
 const metadata_1 = require("../models/metadata");
 const metadata_belongsto_1 = require("../models/metadata-belongsto");
@@ -15,6 +17,7 @@ const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es7-es2016/src/models/metadata-encrypted");
 const lcp_1 = require("r2-lcp-js/dist/es7-es2016/src/parser/epub/lcp");
+const UrlUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/http/UrlUtils");
 const BufferUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const zipFactory_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/zip/zipFactory");
@@ -78,11 +81,50 @@ exports.addCoverDimensions = (publication, coverLink) => tslib_1.__awaiter(this,
         }
     }
 });
+var EPUBis;
+(function (EPUBis) {
+    EPUBis["LocalExploded"] = "LocalExploded";
+    EPUBis["LocalPacked"] = "LocalPacked";
+    EPUBis["RemoteExploded"] = "RemoteExploded";
+    EPUBis["RemotePacked"] = "RemotePacked";
+})(EPUBis = exports.EPUBis || (exports.EPUBis = {}));
+function isEPUBlication(urlOrPath) {
+    let p = urlOrPath;
+    const http = UrlUtils_1.isHTTP(urlOrPath);
+    if (http) {
+        const url = new url_1.URL(urlOrPath);
+        p = url.pathname;
+    }
+    else if (fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
+        return EPUBis.LocalExploded;
+    }
+    const fileName = path.basename(p);
+    const ext = path.extname(fileName).toLowerCase();
+    const epub = /\.epub[3]?$/.test(ext);
+    if (epub) {
+        return http ? EPUBis.RemotePacked : EPUBis.LocalPacked;
+    }
+    if (p.replace(/\//, "/").endsWith("META-INF/container.xml")) {
+        return http ? EPUBis.RemoteExploded : EPUBis.LocalExploded;
+    }
+    return undefined;
+}
+exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        const isAnEPUB = isEPUBlication(filePath);
+        const canLoad = isAnEPUB === EPUBis.LocalExploded ||
+            isAnEPUB === EPUBis.LocalPacked ||
+            isAnEPUB === EPUBis.RemotePacked;
+        if (!canLoad) {
+            const err = "Cannot load exploded remote EPUB (needs filesystem access to list directory contents).";
+            debug(err);
+            return Promise.reject(err);
+        }
+        const filePathToLoad = filePath.replace(/META-INF[\/|\\]container.xml$/, "");
         let zip;
         try {
-            zip = yield zipFactory_1.zipLoadPromise(filePath);
+            zip = yield zipFactory_1.zipLoadPromise(filePathToLoad);
         }
         catch (err) {
             debug(err);
