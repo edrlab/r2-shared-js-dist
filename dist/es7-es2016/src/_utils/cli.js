@@ -106,16 +106,14 @@ if (args[2]) {
         console.log(err);
         return;
     }
-    if (isAnEPUB) {
-        if (outputDirPath) {
-            try {
-                yield extractEPUB(publication, outputDirPath, decryptKeys);
-            }
-            catch (err) {
-                console.log("== Publication extract FAIL");
-                console.log(err);
-                return;
-            }
+    if (isAnEPUB && outputDirPath) {
+        try {
+            yield extractEPUB(publication, outputDirPath, decryptKeys);
+        }
+        catch (err) {
+            console.log("== Publication extract FAIL");
+            console.log(err);
+            return;
         }
     }
     else {
@@ -197,14 +195,22 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
 }
 function extractEPUB_Check(zip, outDir) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        const zipEntries = yield zip.getEntries();
-        for (const zipEntry of zipEntries) {
-            if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
-                zipEntry !== ".DS_Store") {
-                const expectedOutputPath = path.join(outDir, zipEntry);
-                if (!fs.existsSync(expectedOutputPath)) {
-                    console.log("Zip entry not extracted??");
-                    console.log(expectedOutputPath);
+        let zipEntries;
+        try {
+            zipEntries = yield zip.getEntries();
+        }
+        catch (err) {
+            console.log(err);
+        }
+        if (zipEntries) {
+            for (const zipEntry of zipEntries) {
+                if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
+                    zipEntry !== ".DS_Store") {
+                    const expectedOutputPath = path.join(outDir, zipEntry);
+                    if (!fs.existsSync(expectedOutputPath)) {
+                        console.log("Zip entry not extracted??");
+                        console.log(expectedOutputPath);
+                    }
                 }
             }
         }
@@ -308,10 +314,22 @@ function extractEPUB(pub, outDir, keys) {
         if (pub.Spine) {
             links.push(...pub.Spine);
         }
-        if (!keys && zip.hasEntry("META-INF/license.lcpl")) {
-            const l = new publication_link_1.Link();
-            l.Href = "META-INF/license.lcpl";
-            links.push(l);
+        if (!keys) {
+            const lic = "META-INF/license.lcpl";
+            let has = zip.hasEntry(lic);
+            if (zip.hasEntryAsync) {
+                try {
+                    has = yield zip.hasEntryAsync(lic);
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            if (has) {
+                const l = new publication_link_1.Link();
+                l.Href = lic;
+                links.push(l);
+            }
         }
         for (const link of links) {
             try {

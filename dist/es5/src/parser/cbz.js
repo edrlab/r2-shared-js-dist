@@ -17,7 +17,7 @@ var comicrack_1 = require("./comicrack/comicrack");
 var epub_1 = require("./epub");
 function CbzParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zip, err_1, publication, comicInfoEntryName, entries, _i, entries_1, entryName, link, mediaType, _b, err_2;
+        var zip, err_1, publication, comicInfoEntryName, entries, err_2, _i, entries_1, entryName, link, mediaType, _b, err_3;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -40,47 +40,58 @@ function CbzParsePromise(filePath) {
                     publication.Metadata.Identifier = filePathToTitle(filePath);
                     publication.AddToInternal("type", "cbz");
                     publication.AddToInternal("zip", zip);
-                    return [4, zip.getEntries()];
+                    _a.label = 4;
                 case 4:
+                    _a.trys.push([4, 6, , 7]);
+                    return [4, zip.getEntries()];
+                case 5:
                     entries = _a.sent();
-                    for (_i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
-                        entryName = entries_1[_i];
-                        link = new publication_link_1.Link();
-                        link.Href = entryName;
-                        mediaType = mime.lookup(entryName);
-                        if (mediaType) {
-                            link.TypeLink = mediaType;
-                        }
-                        else {
-                            console.log("!!!!!! NO MEDIA TYPE?!");
-                        }
-                        if (link.TypeLink && link.TypeLink.startsWith("image/")) {
-                            if (!publication.Spine) {
-                                publication.Spine = [];
+                    return [3, 7];
+                case 6:
+                    err_2 = _a.sent();
+                    console.log(err_2);
+                    return [2, Promise.reject("Problem getting CBZ zip entries")];
+                case 7:
+                    if (entries) {
+                        for (_i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                            entryName = entries_1[_i];
+                            link = new publication_link_1.Link();
+                            link.Href = entryName;
+                            mediaType = mime.lookup(entryName);
+                            if (mediaType) {
+                                link.TypeLink = mediaType;
                             }
-                            publication.Spine.push(link);
-                        }
-                        else if (entryName.endsWith("ComicInfo.xml")) {
-                            comicInfoEntryName = entryName;
+                            else {
+                                console.log("!!!!!! NO MEDIA TYPE?!");
+                            }
+                            if (link.TypeLink && link.TypeLink.startsWith("image/")) {
+                                if (!publication.Spine) {
+                                    publication.Spine = [];
+                                }
+                                publication.Spine.push(link);
+                            }
+                            else if (entryName.endsWith("ComicInfo.xml")) {
+                                comicInfoEntryName = entryName;
+                            }
                         }
                     }
                     if (!publication.Metadata.Title) {
                         publication.Metadata.Title = path.basename(filePath);
                     }
-                    if (!comicInfoEntryName) return [3, 8];
-                    _a.label = 5;
-                case 5:
-                    _a.trys.push([5, 7, , 8]);
+                    if (!comicInfoEntryName) return [3, 11];
+                    _a.label = 8;
+                case 8:
+                    _a.trys.push([8, 10, , 11]);
                     return [4, comicRackMetadata(zip, comicInfoEntryName, publication)];
-                case 6:
+                case 9:
                     _b = _a.sent();
                     console.log(_b);
-                    return [3, 8];
-                case 7:
-                    err_2 = _a.sent();
-                    console.log(err_2);
-                    return [3, 8];
-                case 8: return [2, publication];
+                    return [3, 11];
+                case 10:
+                    err_3 = _a.sent();
+                    console.log(err_3);
+                    return [3, 11];
+                case 11: return [2, publication];
             }
         });
     });
@@ -91,7 +102,7 @@ var filePathToTitle = function (filePath) {
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
 var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-    var comicZipStream_, err_3, comicZipStream, comicZipData, err_4, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _i, _a, p, l;
+    var comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _i, _a, p, l;
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -101,8 +112,8 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 comicZipStream_ = _c.sent();
                 return [3, 3];
             case 2:
-                err_3 = _c.sent();
-                console.log(err_3);
+                err_4 = _c.sent();
+                console.log(err_4);
                 return [2];
             case 3:
                 comicZipStream = comicZipStream_.stream;
@@ -114,8 +125,8 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 comicZipData = _c.sent();
                 return [3, 7];
             case 6:
-                err_4 = _c.sent();
-                console.log(err_4);
+                err_5 = _c.sent();
+                console.log(err_5);
                 return [2];
             case 7:
                 comicXmlStr = comicZipData.toString("utf8");

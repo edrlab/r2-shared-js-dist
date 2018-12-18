@@ -48,7 +48,16 @@ exports.addCoverDimensions = (publication, coverLink) => tslib_1.__awaiter(this,
     const zipInternal = publication.findFromInternal("zip");
     if (zipInternal) {
         const zip = zipInternal.Value;
-        if (zip.hasEntry(coverLink.Href)) {
+        let has = zip.hasEntry(coverLink.Href);
+        if (zip.hasEntryAsync) {
+            try {
+                has = yield zip.hasEntryAsync(coverLink.Href);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        if (has) {
             let zipStream;
             try {
                 zipStream = yield zip.entryStreamPromise(coverLink.Href);
@@ -104,7 +113,7 @@ function isEPUBlication(urlOrPath) {
     if (epub) {
         return http ? EPUBis.RemotePacked : EPUBis.LocalPacked;
     }
-    if (p.replace(/\//, "/").endsWith("META-INF/container.xml")) {
+    if (/META-INF[\/|\\]container.xml$/.test(p)) {
         return http ? EPUBis.RemoteExploded : EPUBis.LocalExploded;
     }
     return undefined;
@@ -113,15 +122,15 @@ exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const isAnEPUB = isEPUBlication(filePath);
-        const canLoad = isAnEPUB === EPUBis.LocalExploded ||
-            isAnEPUB === EPUBis.LocalPacked ||
-            isAnEPUB === EPUBis.RemotePacked;
-        if (!canLoad) {
-            const err = "Cannot load exploded remote EPUB (needs filesystem access to list directory contents).";
-            debug(err);
-            return Promise.reject(err);
+        let filePathToLoad = filePath;
+        if (isAnEPUB === EPUBis.LocalExploded) {
+            filePathToLoad = filePathToLoad.replace(/META-INF[\/|\\]container.xml$/, "");
         }
-        const filePathToLoad = filePath.replace(/META-INF[\/|\\]container.xml$/, "");
+        else if (isAnEPUB === EPUBis.RemoteExploded) {
+            const url = new url_1.URL(filePathToLoad);
+            url.pathname = url.pathname.replace(/META-INF[\/|\\]container.xml$/, "");
+            filePathToLoad = url.toString();
+        }
         let zip;
         try {
             zip = yield zipFactory_1.zipLoadPromise(filePathToLoad);
@@ -143,7 +152,16 @@ function EpubParsePromise(filePath) {
         publication.AddToInternal("zip", zip);
         let lcpl;
         const lcplZipPath = "META-INF/license.lcpl";
-        if (zip.hasEntry(lcplZipPath)) {
+        let has = zip.hasEntry(lcplZipPath);
+        if (zip.hasEntryAsync) {
+            try {
+                has = yield zip.hasEntryAsync(lcplZipPath);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        if (has) {
             let lcplZipStream_;
             try {
                 lcplZipStream_ = yield zip.entryStreamPromise(lcplZipPath);
@@ -174,7 +192,16 @@ function EpubParsePromise(filePath) {
         }
         let encryption;
         const encZipPath = "META-INF/encryption.xml";
-        if (zip.hasEntry(encZipPath)) {
+        has = zip.hasEntry(encZipPath);
+        if (zip.hasEntryAsync) {
+            try {
+                has = yield zip.hasEntryAsync(encZipPath);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        if (has) {
             let encryptionXmlZipStream_;
             try {
                 encryptionXmlZipStream_ = yield zip.entryStreamPromise(encZipPath);
@@ -541,7 +568,16 @@ const fillMediaOverlay = (publication, rootfile, opf, zip) => tslib_1.__awaiter(
         if (item.TypeLink !== "application/smil+xml") {
             continue;
         }
-        if (!zip.hasEntry(item.Href)) {
+        let has = zip.hasEntry(item.Href);
+        if (zip.hasEntryAsync) {
+            try {
+                has = yield zip.hasEntryAsync(item.Href);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        if (!has) {
             continue;
         }
         const manItemsHtmlWithSmil = [];
@@ -1309,7 +1345,16 @@ const fillTOCFromNavDoc = (publication, _rootfile, _opf, zip) => tslib_1.__await
         return;
     }
     const navDocFilePath = navLink.Href;
-    if (!zip.hasEntry(navDocFilePath)) {
+    let has = zip.hasEntry(navDocFilePath);
+    if (zip.hasEntryAsync) {
+        try {
+            has = yield zip.hasEntryAsync(navDocFilePath);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    if (!has) {
         return;
     }
     let navDocZipStream_;

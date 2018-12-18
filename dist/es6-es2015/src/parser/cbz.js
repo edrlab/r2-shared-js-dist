@@ -34,25 +34,34 @@ function CbzParsePromise(filePath) {
         publication.AddToInternal("type", "cbz");
         publication.AddToInternal("zip", zip);
         let comicInfoEntryName;
-        const entries = yield zip.getEntries();
-        for (const entryName of entries) {
-            const link = new publication_link_1.Link();
-            link.Href = entryName;
-            const mediaType = mime.lookup(entryName);
-            if (mediaType) {
-                link.TypeLink = mediaType;
-            }
-            else {
-                console.log("!!!!!! NO MEDIA TYPE?!");
-            }
-            if (link.TypeLink && link.TypeLink.startsWith("image/")) {
-                if (!publication.Spine) {
-                    publication.Spine = [];
+        let entries;
+        try {
+            entries = yield zip.getEntries();
+        }
+        catch (err) {
+            console.log(err);
+            return Promise.reject("Problem getting CBZ zip entries");
+        }
+        if (entries) {
+            for (const entryName of entries) {
+                const link = new publication_link_1.Link();
+                link.Href = entryName;
+                const mediaType = mime.lookup(entryName);
+                if (mediaType) {
+                    link.TypeLink = mediaType;
                 }
-                publication.Spine.push(link);
-            }
-            else if (entryName.endsWith("ComicInfo.xml")) {
-                comicInfoEntryName = entryName;
+                else {
+                    console.log("!!!!!! NO MEDIA TYPE?!");
+                }
+                if (link.TypeLink && link.TypeLink.startsWith("image/")) {
+                    if (!publication.Spine) {
+                        publication.Spine = [];
+                    }
+                    publication.Spine.push(link);
+                }
+                else if (entryName.endsWith("ComicInfo.xml")) {
+                    comicInfoEntryName = entryName;
+                }
             }
         }
         if (!publication.Metadata.Title) {
