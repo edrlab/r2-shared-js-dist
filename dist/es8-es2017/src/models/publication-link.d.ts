@@ -11,10 +11,10 @@ export declare class Link {
     Bitrate: number;
     Templated: boolean;
     Children: Link[];
-    MediaOverlays: MediaOverlayNode[] | undefined;
     Rel: string[];
+    MediaOverlays: MediaOverlayNode[] | undefined;
     AddRels(rels: string[]): void;
     AddRel(rel: string): void;
     HasRel(rel: string): boolean;
-    private _OnDeserialized;
+    protected _OnDeserialized(): void;
 }

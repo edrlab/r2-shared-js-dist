@@ -1,12 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var ta_json_x_1 = require("ta-json-x");
 var metadata_1 = require("./metadata");
 var publication_link_1 = require("./publication-link");
 var Publication = (function () {
     function Publication() {
     }
+    Object.defineProperty(Publication.prototype, "Spine", {
+        get: function () {
+            return this.Spine2 ? this.Spine2 : this.Spine1;
+        },
+        set: function (spine) {
+            if (spine) {
+                this.Spine1 = undefined;
+                this.Spine2 = spine;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Publication.prototype.freeDestroy = function () {
         console.log("freeDestroy: Publication");
         if (this.Internal) {
@@ -91,13 +105,14 @@ var Publication = (function () {
         if (!this.Metadata) {
             console.log("Publication.Metadata is not set!");
         }
-        if (!this.Links) {
-            console.log("Publication.Links is not set!");
+        if (!this.Spine) {
+            console.log("Publication.Spine/ReadingOrder is not set!");
         }
     };
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("@context"),
         ta_json_x_1.JsonElementType(String),
+        ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
         tslib_1.__metadata("design:type", Array)
     ], Publication.prototype, "Context", void 0);
     tslib_1.__decorate([
@@ -113,7 +128,12 @@ var Publication = (function () {
         ta_json_x_1.JsonProperty("readingOrder"),
         ta_json_x_1.JsonElementType(publication_link_1.Link),
         tslib_1.__metadata("design:type", Array)
-    ], Publication.prototype, "Spine", void 0);
+    ], Publication.prototype, "Spine2", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("spine"),
+        ta_json_x_1.JsonElementType(publication_link_1.Link),
+        tslib_1.__metadata("design:type", Object)
+    ], Publication.prototype, "Spine1", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("resources"),
         ta_json_x_1.JsonElementType(publication_link_1.Link),

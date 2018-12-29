@@ -1,10 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const ta_json_string_converter_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/ta-json-string-converter");
 const ta_json_x_1 = require("ta-json-x");
 const metadata_1 = require("./metadata");
 const publication_link_1 = require("./publication-link");
 let Publication = class Publication {
+    get Spine() {
+        return this.Spine2 ? this.Spine2 : this.Spine1;
+    }
+    set Spine(spine) {
+        if (spine) {
+            this.Spine1 = undefined;
+            this.Spine2 = spine;
+        }
+    }
     freeDestroy() {
         console.log("freeDestroy: Publication");
         if (this.Internal) {
@@ -89,14 +99,15 @@ let Publication = class Publication {
         if (!this.Metadata) {
             console.log("Publication.Metadata is not set!");
         }
-        if (!this.Links) {
-            console.log("Publication.Links is not set!");
+        if (!this.Spine) {
+            console.log("Publication.Spine/ReadingOrder is not set!");
         }
     }
 };
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty("@context"),
     ta_json_x_1.JsonElementType(String),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "Context", void 0);
 tslib_1.__decorate([
@@ -112,7 +123,12 @@ tslib_1.__decorate([
     ta_json_x_1.JsonProperty("readingOrder"),
     ta_json_x_1.JsonElementType(publication_link_1.Link),
     tslib_1.__metadata("design:type", Array)
-], Publication.prototype, "Spine", void 0);
+], Publication.prototype, "Spine2", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("spine"),
+    ta_json_x_1.JsonElementType(publication_link_1.Link),
+    tslib_1.__metadata("design:type", Object)
+], Publication.prototype, "Spine1", void 0);
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty("resources"),
     ta_json_x_1.JsonElementType(publication_link_1.Link),

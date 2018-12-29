@@ -194,7 +194,9 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 _c.sent();
                 _c.label = 10;
             case 10:
-                l.Href = publication.Spine[p.Image].Href;
+                if (publication.Spine) {
+                    l.Href = publication.Spine[p.Image].Href;
+                }
                 if (p.ImageHeight) {
                     l.Height = p.ImageHeight;
                 }

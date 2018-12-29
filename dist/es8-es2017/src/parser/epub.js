@@ -7,7 +7,6 @@ const url_1 = require("url");
 const media_overlay_1 = require("../models/media-overlay");
 const metadata_1 = require("../models/metadata");
 const metadata_belongsto_1 = require("../models/metadata-belongsto");
-const metadata_collection_1 = require("../models/metadata-collection");
 const metadata_contributor_1 = require("../models/metadata-contributor");
 const metadata_media_overlay_1 = require("../models/metadata-media-overlay");
 const metadata_properties_1 = require("../models/metadata-properties");
@@ -179,7 +178,6 @@ async function EpubParsePromise(filePath) {
         }
         const lcplStr = lcplZipData.toString("utf8");
         const lcplJson = global.JSON.parse(lcplStr);
-        debug(lcplJson);
         lcpl = ta_json_x_1.JSON.deserialize(lcplJson, lcp_1.LCP);
         lcpl.ZipPath = lcplZipPath;
         lcpl.JsonSource = lcplStr;
@@ -855,7 +853,7 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
                 break;
             }
             default: {
-                contributor.Role = role;
+                contributor.Role = [role];
                 if (!publication.Metadata.Contributor) {
                     publication.Metadata.Contributor = [];
                 }
@@ -1106,7 +1104,7 @@ const findInManifestByID = async (publication, rootfile, opf, ID) => {
             return linkItem;
         }
     }
-    return Promise.reject(`${ID} not found`);
+    return Promise.reject(`ID ${ID} not found`);
 };
 const addRendition = (publication, _rootfile, opf) => {
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
@@ -1221,15 +1219,17 @@ const fillEncryptionInfo = (publication, _rootfile, _opf, encryption, lcp) => {
                 l.Properties.Encrypted = encrypted;
             }
         });
-        publication.Spine.forEach((l, _i, _arr) => {
-            const filePath = l.Href;
-            if (filePath === encInfo.CipherData.CipherReference.URI) {
-                if (!l.Properties) {
-                    l.Properties = new metadata_properties_1.Properties();
+        if (publication.Spine) {
+            publication.Spine.forEach((l, _i, _arr) => {
+                const filePath = l.Href;
+                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                    if (!l.Properties) {
+                        l.Properties = new metadata_properties_1.Properties();
+                    }
+                    l.Properties.Encrypted = encrypted;
                 }
-                l.Properties.Encrypted = encrypted;
-            }
-        });
+            });
+        }
     });
 };
 const fillPageListFromNCX = (publication, _rootfile, _opf, ncx) => {
@@ -1318,10 +1318,10 @@ const fillCalibreSerieInfo = (publication, _rootfile, opf) => {
         });
     }
     if (serie) {
-        const collection = new metadata_collection_1.Collection();
-        collection.Name = serie;
+        const contributor = new metadata_contributor_1.Contributor();
+        contributor.Name = serie;
         if (seriePosition) {
-            collection.Position = seriePosition;
+            contributor.Position = seriePosition;
         }
         if (!publication.Metadata.BelongsTo) {
             publication.Metadata.BelongsTo = new metadata_belongsto_1.BelongsTo();
@@ -1329,7 +1329,7 @@ const fillCalibreSerieInfo = (publication, _rootfile, opf) => {
         if (!publication.Metadata.BelongsTo.Series) {
             publication.Metadata.BelongsTo.Series = [];
         }
-        publication.Metadata.BelongsTo.Series.push(collection);
+        publication.Metadata.BelongsTo.Series.push(contributor);
     }
 };
 const fillTOCFromNavDoc = async (publication, _rootfile, _opf, zip) => {

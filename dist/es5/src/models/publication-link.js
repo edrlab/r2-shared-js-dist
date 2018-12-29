@@ -29,8 +29,8 @@ var Link = (function () {
         return this.Rel && this.Rel.indexOf(rel) >= 0;
     };
     Link.prototype._OnDeserialized = function () {
-        if (!this.Href) {
-            console.log("Link.Href is not set!");
+        if (!this.Href && (!this.Children || !this.Children.length)) {
+            console.log("Link.Href is not set! (and no child Links)");
         }
     };
     var Link_1;

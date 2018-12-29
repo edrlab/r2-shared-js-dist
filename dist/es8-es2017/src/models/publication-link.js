@@ -27,8 +27,8 @@ let Link = Link_1 = class Link {
         return this.Rel && this.Rel.indexOf(rel) >= 0;
     }
     _OnDeserialized() {
-        if (!this.Href) {
-            console.log("Link.Href is not set!");
+        if (!this.Href && (!this.Children || !this.Children.length)) {
+            console.log("Link.Href is not set! (and no child Links)");
         }
     }
 };

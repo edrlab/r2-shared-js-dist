@@ -1,6 +1,6 @@
 {
   "name": "r2-shared-js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Readium 2 'shared' for NodeJS (TypeScript)",
   "keywords": [
     "readium",
@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/readium/r2-shared-js",
   "dependencies": {
-    "debug": "^4.1.0",
+    "debug": "^4.1.1",
     "image-size": "^0.6.3",
     "mime-types": "^2.1.21",
     "moment": "^2.23.0",
@@ -72,6 +72,7 @@
     "filehound": "^1.16.5",
     "git-rev-sync": "^1.12.0",
     "json": "^9.0.6",
+    "json-diff": "^0.5.3",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.1",
@@ -94,7 +95,7 @@
   ],
   "scripts": {
     "cson2json": "sed -E \"s/#ECMASCRIPT#/es5/g\" package-scripts-build.cson > tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es6-es2015/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es7-es2016/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es8-es2017/g\" package-scripts-build.cson >> tmp-build.cson && json -I -f package.json -e \"this.scripts=$(cat package-scripts.cson tmp-build.cson | node node_modules/cson/bin/cson2json)\" && rimraf tmp-*.cson",
-    "copydist": "cpy \"./dist/**/*\" ../r2-opds-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-streamer-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-navigator-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-testapp-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir",
+    "copydist": "cpy \"./dist/**/*\" ../r2-opds-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-streamer-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-navigator-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-testapp-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../readium-desktop/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir",
     "quick-build-dist": "npm run transpile:typescript:es8-es2017+afterdist && npm run copydist",
     "_pregitdist": "npm run build:all",
     "gitdist": "cd ../r2-shared-js-dist/ && git checkout -B develop && (git pull || echo \"pull\") && (git --no-pager status || echo status) && ((rimraf \"*\" && echo rimrafOK) || echo rimrafNOK) && cpy ../r2-shared-js/package.json . && cpy ../r2-shared-js/package-lock.json . && cpy ../r2-shared-js/LICENSE . && cpy ../r2-shared-js/README.md . && cpy \"./docs/**/*\" ../r2-shared-js-dist/ --cwd=../r2-shared-js/ --parents --no-dir && cpy \"./dist/**/*\" ../r2-shared-js-dist/ --cwd=../r2-shared-js/ --parents --no-dir && (git add * || echo add) && (git commit -a -m \"add new dist\" || echo commit) && (git push --set-upstream origin develop || echo push) && (git --no-pager status || echo status) && cd ../r2-shared-js",

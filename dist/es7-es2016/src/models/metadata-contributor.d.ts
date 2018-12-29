@@ -1,7 +1,13 @@
 import { IStringMap } from "./metadata-multilang";
+import { Link } from "./publication-link";
 export declare class Contributor {
     Name: string | IStringMap;
-    SortAs: string;
+    SortAs2: string;
+    SortAs1: string | undefined;
+    SortAs: string | undefined;
+    Role: string[];
     Identifier: string;
-    Role: string;
+    Position: number;
+    Links: Link[];
+    protected _OnDeserialized(): void;
 }

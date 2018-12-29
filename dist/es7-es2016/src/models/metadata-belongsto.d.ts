@@ -1,5 +1,5 @@
-import { Collection } from "./metadata-collection";
+import { Contributor } from "./metadata-contributor";
 export declare class BelongsTo {
-    Series: Collection[];
-    Collection: Collection[];
+    Series: Contributor[];
+    Collection: Contributor[];
 }

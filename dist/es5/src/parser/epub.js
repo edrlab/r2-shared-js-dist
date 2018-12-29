@@ -9,7 +9,6 @@ var url_1 = require("url");
 var media_overlay_1 = require("../models/media-overlay");
 var metadata_1 = require("../models/metadata");
 var metadata_belongsto_1 = require("../models/metadata-belongsto");
-var metadata_collection_1 = require("../models/metadata-collection");
 var metadata_contributor_1 = require("../models/metadata-contributor");
 var metadata_media_overlay_1 = require("../models/metadata-media-overlay");
 var metadata_properties_1 = require("../models/metadata-properties");
@@ -224,7 +223,6 @@ function EpubParsePromise(filePath) {
                 case 16:
                     lcplStr = lcplZipData.toString("utf8");
                     lcplJson = global.JSON.parse(lcplStr);
-                    debug(lcplJson);
                     lcpl = ta_json_x_1.JSON.deserialize(lcplJson, lcp_1.LCP);
                     lcpl.ZipPath = lcplZipPath;
                     lcpl.JsonSource = lcplStr;
@@ -1049,7 +1047,7 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
                 break;
             }
             default: {
-                contributor.Role = role;
+                contributor.Role = [role];
                 if (!publication.Metadata.Contributor) {
                     publication.Metadata.Contributor = [];
                 }
@@ -1409,7 +1407,7 @@ var findInManifestByID = function (publication, rootfile, opf, ID) { return tsli
                 _a.sent();
                 addMediaOverlay(linkItem, item, rootfile, opf);
                 return [2, linkItem];
-            case 2: return [2, Promise.reject(ID + " not found")];
+            case 2: return [2, Promise.reject("ID " + ID + " not found")];
         }
     });
 }); };
@@ -1551,15 +1549,17 @@ var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp
                 l.Properties.Encrypted = encrypted;
             }
         });
-        publication.Spine.forEach(function (l, _i, _arr) {
-            var filePath = l.Href;
-            if (filePath === encInfo.CipherData.CipherReference.URI) {
-                if (!l.Properties) {
-                    l.Properties = new metadata_properties_1.Properties();
+        if (publication.Spine) {
+            publication.Spine.forEach(function (l, _i, _arr) {
+                var filePath = l.Href;
+                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                    if (!l.Properties) {
+                        l.Properties = new metadata_properties_1.Properties();
+                    }
+                    l.Properties.Encrypted = encrypted;
                 }
-                l.Properties.Encrypted = encrypted;
-            }
-        });
+            });
+        }
     });
 };
 var fillPageListFromNCX = function (publication, _rootfile, _opf, ncx) {
@@ -1648,10 +1648,10 @@ var fillCalibreSerieInfo = function (publication, _rootfile, opf) {
         });
     }
     if (serie) {
-        var collection = new metadata_collection_1.Collection();
-        collection.Name = serie;
+        var contributor = new metadata_contributor_1.Contributor();
+        contributor.Name = serie;
         if (seriePosition) {
-            collection.Position = seriePosition;
+            contributor.Position = seriePosition;
         }
         if (!publication.Metadata.BelongsTo) {
             publication.Metadata.BelongsTo = new metadata_belongsto_1.BelongsTo();
@@ -1659,7 +1659,7 @@ var fillCalibreSerieInfo = function (publication, _rootfile, opf) {
         if (!publication.Metadata.BelongsTo.Series) {
             publication.Metadata.BelongsTo.Series = [];
         }
-        publication.Metadata.BelongsTo.Series.push(collection);
+        publication.Metadata.BelongsTo.Series.push(contributor);
     }
 };
 var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return tslib_1.__awaiter(_this, void 0, void 0, function () {

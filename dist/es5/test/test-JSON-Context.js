@@ -27,14 +27,14 @@ ava_1.default("JSON SERIALIZE: Publication.Context => string[]", function (t) {
     helpers_1.checkType_String(t, json["@context"][1]);
     t.is(json["@context"][1], contextStr2);
 });
-ava_1.default("JSON SERIALIZE: Publication.Context => string[1] NO collapse-array", function (t) {
+ava_1.default("JSON SERIALIZE: Publication.Context => string[1] collapse-array", function (t) {
     var pub = new publication_1.Publication();
     pub.Context = [contextStr1];
     helpers_1.inspect(pub);
     var json = ta_json_x_1.JSON.serialize(pub);
     helpers_1.logJSON(json);
-    helpers_1.checkType_Array(t, json["@context"]);
-    t.is(json["@context"][0], contextStr1);
+    helpers_1.checkType_String(t, json["@context"]);
+    t.is(json["@context"], contextStr1);
 });
 ava_1.default("JSON DESERIALIZE: Publication.Context => string[]", function (t) {
     var json = {};
@@ -52,6 +52,17 @@ ava_1.default("JSON DESERIALIZE: Publication.Context => string[]", function (t) 
 ava_1.default("JSON DESERIALIZE: Publication.Context => string[1]", function (t) {
     var json = {};
     json["@context"] = [contextStr1];
+    helpers_1.logJSON(json);
+    var pub = ta_json_x_1.JSON.deserialize(json, publication_1.Publication);
+    helpers_1.inspect(pub);
+    helpers_1.checkType_Array(t, pub.Context);
+    t.is(pub.Context.length, 1);
+    helpers_1.checkType_String(t, pub.Context[0]);
+    t.is(pub.Context[0], contextStr1);
+});
+ava_1.default("JSON DESERIALIZE: Publication.Context => string", function (t) {
+    var json = {};
+    json["@context"] = contextStr1;
     helpers_1.logJSON(json);
     var pub = ta_json_x_1.JSON.deserialize(json, publication_1.Publication);
     helpers_1.inspect(pub);

@@ -7,6 +7,7 @@ import { Subject } from "./metadata-subject";
 export declare class Metadata {
     RDFType: string;
     Title: string | IStringMap;
+    SubTitle: string | IStringMap;
     Identifier: string;
     Author: Contributor[];
     Translator: Contributor[];
@@ -24,15 +25,22 @@ export declare class Metadata {
     Language: string[];
     Modified: Date;
     PublicationDate: Date;
+    SortAs2: string;
+    SortAs1: string | undefined;
+    SortAs: string | undefined;
     Description: string;
-    Direction: string;
+    Direction2: string;
+    Direction1: string | undefined;
+    Direction: string | undefined;
+    BelongsTo2: BelongsTo;
+    BelongsTo1: BelongsTo | undefined;
+    BelongsTo: BelongsTo | undefined;
+    Duration: number;
+    NumberOfPages: number;
+    MediaOverlay: MediaOverlay;
+    Rights: string;
     Rendition: Properties;
     Source: string;
-    EpubType: string[];
-    Rights: string;
     Subject: Subject[];
-    BelongsTo: BelongsTo;
-    Duration: number;
-    MediaOverlay: MediaOverlay;
-    private _OnDeserialized;
+    protected _OnDeserialized(): void;
 }

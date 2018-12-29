@@ -6,7 +6,9 @@ export declare class Publication {
     Context: string[];
     Metadata: Metadata;
     Links: Link[];
-    Spine: Link[];
+    Spine2: Link[];
+    Spine1: Link[] | undefined;
+    Spine: Link[] | undefined;
     Resources: Link[];
     TOC: Link[];
     PageList: Link[];
@@ -24,5 +26,5 @@ export declare class Publication {
     GetNavDoc(): Link | undefined;
     searchLinkByRel(rel: string): Link | undefined;
     AddLink(typeLink: string, rel: string[], url: string, templated: boolean | undefined): void;
-    private _OnDeserialized;
+    protected _OnDeserialized(): void;
 }

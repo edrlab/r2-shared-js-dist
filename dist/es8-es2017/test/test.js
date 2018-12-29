@@ -1,8 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
 const media_overlay_1 = require("../src/models/media-overlay");
+const publication_1 = require("../src/models/publication");
+const publication_parser_1 = require("../src/parser/publication-parser");
 const ava_1 = require("ava");
 const debug_ = require("debug");
+const filehound = require("filehound");
+const jsonDiff = require("json-diff");
+const ta_json_x_1 = require("ta-json-x");
+const init_globals_1 = require("../src/init-globals");
+init_globals_1.initGlobalConverters_SHARED();
+init_globals_1.initGlobalConverters_GENERIC();
 const debug = debug_("r2:shared#test");
 async function fn() {
     return Promise.resolve("foo");
@@ -29,5 +38,49 @@ ava_1.default("SMIL clock values", (t) => {
     t.is(media_overlay_1.timeStrToSeconds("7.5z"), 7.5);
     t.is(media_overlay_1.timeStrToSeconds("4:5:34:31.396"), 0);
     t.is(media_overlay_1.timeStrToSeconds(""), 0);
+});
+async function delay(okay) {
+    return new Promise((resolve, _reject) => {
+        setTimeout(() => {
+            resolve(okay);
+        }, 1000);
+    });
+}
+ava_1.default("EPUB parsing (de)serialize roundtrip", async (t) => {
+    const dirPath = path.join(process.cwd(), "misc/epubs/");
+    const filePaths = await filehound.create()
+        .discard("node_modules")
+        .depth(5)
+        .paths(dirPath)
+        .ext([".epub", ".epub3"])
+        .find();
+    for (const filePath of filePaths) {
+        debug("------------------------");
+        debug(filePath);
+        let pub;
+        try {
+            pub = await publication_parser_1.PublicationParsePromise(filePath);
+        }
+        catch (err) {
+            console.log(err);
+            continue;
+        }
+        const publicationJson1 = ta_json_x_1.JSON.serialize(pub);
+        const publication = ta_json_x_1.JSON.deserialize(publicationJson1, publication_1.Publication);
+        const publicationJson2 = ta_json_x_1.JSON.serialize(publication);
+        const str1 = JSON.stringify(publicationJson1, null, 2);
+        const str2 = JSON.stringify(publicationJson2, null, 2);
+        if (str1 !== str2) {
+            process.stdout.write("###########################\n");
+            process.stdout.write("###########################\n");
+            process.stdout.write("#### JSON DIFF\n");
+            process.stdout.write(jsonDiff.diffString(publicationJson1, publicationJson2) + "\n");
+            process.stdout.write("###########################\n");
+            process.stdout.write("###########################\n");
+            t.true(await delay(false));
+            return;
+        }
+    }
+    t.true(await delay(true));
 });
 //# sourceMappingURL=test.js.map

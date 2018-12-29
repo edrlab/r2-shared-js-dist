@@ -1,21 +1,60 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var ta_json_x_1 = require("ta-json-x");
 var metadata_belongsto_1 = require("./metadata-belongsto");
 var metadata_contributor_1 = require("./metadata-contributor");
+var metadata_contributor_json_converter_1 = require("./metadata-contributor-json-converter");
 var metadata_media_overlay_1 = require("./metadata-media-overlay");
 var metadata_properties_1 = require("./metadata-properties");
 var metadata_subject_1 = require("./metadata-subject");
+var metadata_subject_json_converter_1 = require("./metadata-subject-json-converter");
 var Metadata = (function () {
     function Metadata() {
     }
+    Object.defineProperty(Metadata.prototype, "SortAs", {
+        get: function () {
+            return this.SortAs2 ? this.SortAs2 : this.SortAs1;
+        },
+        set: function (sortas) {
+            if (sortas) {
+                this.SortAs1 = undefined;
+                this.SortAs2 = sortas;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Metadata.prototype, "Direction", {
+        get: function () {
+            return this.Direction2 ? this.Direction2 : this.Direction1;
+        },
+        set: function (direction) {
+            if (direction) {
+                this.Direction1 = undefined;
+                this.Direction2 = direction;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Metadata.prototype, "BelongsTo", {
+        get: function () {
+            return this.BelongsTo2 ? this.BelongsTo2 : this.BelongsTo1;
+        },
+        set: function (belongsto) {
+            if (belongsto) {
+                this.BelongsTo1 = undefined;
+                this.BelongsTo2 = belongsto;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Metadata.prototype._OnDeserialized = function () {
         if (!this.Title) {
             console.log("Metadata.Title is not set!");
-        }
-        if (!this.Identifier) {
-            console.log("Metadata.Identifier is not set!");
         }
     };
     tslib_1.__decorate([
@@ -27,77 +66,95 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "Title", void 0);
     tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("subtitle"),
+        tslib_1.__metadata("design:type", Object)
+    ], Metadata.prototype, "SubTitle", void 0);
+    tslib_1.__decorate([
         ta_json_x_1.JsonProperty("identifier"),
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Identifier", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("author"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Author", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("translator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Translator", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("editor"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Editor", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("artist"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Artist", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("illustrator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Illustrator", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("letterer"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Letterer", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("penciler"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Penciler", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("colorist"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Colorist", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("inker"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Inker", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("narrator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Narrator", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("contributor"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Contributor", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("publisher"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Publisher", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("imprint"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
+        ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Imprint", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("language"),
         ta_json_x_1.JsonElementType(String),
+        ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Language", void 0);
     tslib_1.__decorate([
@@ -109,13 +166,49 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", Date)
     ], Metadata.prototype, "PublicationDate", void 0);
     tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("sortAs"),
+        tslib_1.__metadata("design:type", String)
+    ], Metadata.prototype, "SortAs2", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("sort_as"),
+        tslib_1.__metadata("design:type", Object)
+    ], Metadata.prototype, "SortAs1", void 0);
+    tslib_1.__decorate([
         ta_json_x_1.JsonProperty("description"),
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Description", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("direction"),
+        ta_json_x_1.JsonProperty("readingProgression"),
         tslib_1.__metadata("design:type", String)
-    ], Metadata.prototype, "Direction", void 0);
+    ], Metadata.prototype, "Direction2", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("direction"),
+        tslib_1.__metadata("design:type", Object)
+    ], Metadata.prototype, "Direction1", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("belongsTo"),
+        tslib_1.__metadata("design:type", metadata_belongsto_1.BelongsTo)
+    ], Metadata.prototype, "BelongsTo2", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("belongs_to"),
+        tslib_1.__metadata("design:type", Object)
+    ], Metadata.prototype, "BelongsTo1", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("duration"),
+        tslib_1.__metadata("design:type", Number)
+    ], Metadata.prototype, "Duration", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("numberOfPages"),
+        tslib_1.__metadata("design:type", Number)
+    ], Metadata.prototype, "NumberOfPages", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("media-overlay"),
+        tslib_1.__metadata("design:type", metadata_media_overlay_1.MediaOverlay)
+    ], Metadata.prototype, "MediaOverlay", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("rights"),
+        tslib_1.__metadata("design:type", String)
+    ], Metadata.prototype, "Rights", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("rendition"),
         tslib_1.__metadata("design:type", metadata_properties_1.Properties)
@@ -125,31 +218,11 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Source", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("epub-type"),
-        ta_json_x_1.JsonElementType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "EpubType", void 0);
-    tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("rights"),
-        tslib_1.__metadata("design:type", String)
-    ], Metadata.prototype, "Rights", void 0);
-    tslib_1.__decorate([
         ta_json_x_1.JsonProperty("subject"),
+        ta_json_x_1.JsonConverter(metadata_subject_json_converter_1.JsonSubjectConverter),
         ta_json_x_1.JsonElementType(metadata_subject_1.Subject),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Subject", void 0);
-    tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("belongs_to"),
-        tslib_1.__metadata("design:type", metadata_belongsto_1.BelongsTo)
-    ], Metadata.prototype, "BelongsTo", void 0);
-    tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("duration"),
-        tslib_1.__metadata("design:type", Number)
-    ], Metadata.prototype, "Duration", void 0);
-    tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("media-overlay"),
-        tslib_1.__metadata("design:type", metadata_media_overlay_1.MediaOverlay)
-    ], Metadata.prototype, "MediaOverlay", void 0);
     tslib_1.__decorate([
         ta_json_x_1.OnDeserialized(),
         tslib_1.__metadata("design:type", Function),

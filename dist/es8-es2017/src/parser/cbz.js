@@ -157,7 +157,9 @@ const comicRackMetadata = async (zip, entryName, publication) => {
                 l.AddRel("cover");
                 await epub_1.addCoverDimensions(publication, l);
             }
-            l.Href = publication.Spine[p.Image].Href;
+            if (publication.Spine) {
+                l.Href = publication.Spine[p.Image].Href;
+            }
             if (p.ImageHeight) {
                 l.Height = p.ImageHeight;
             }

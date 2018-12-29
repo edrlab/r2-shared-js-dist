@@ -16,10 +16,6 @@ var Properties = (function () {
         tslib_1.__metadata("design:type", String)
     ], Properties.prototype, "Layout", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("media-overlay"),
-        tslib_1.__metadata("design:type", String)
-    ], Properties.prototype, "MediaOverlay", void 0);
-    tslib_1.__decorate([
         ta_json_x_1.JsonProperty("orientation"),
         tslib_1.__metadata("design:type", String)
     ], Properties.prototype, "Orientation", void 0);
@@ -39,6 +35,10 @@ var Properties = (function () {
         ta_json_x_1.JsonProperty("encrypted"),
         tslib_1.__metadata("design:type", metadata_encrypted_1.Encrypted)
     ], Properties.prototype, "Encrypted", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("media-overlay"),
+        tslib_1.__metadata("design:type", String)
+    ], Properties.prototype, "MediaOverlay", void 0);
     Properties = tslib_1.__decorate([
         ta_json_x_1.JsonObject()
     ], Properties);
