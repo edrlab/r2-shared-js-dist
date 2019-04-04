@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const ta_json_x_1 = require("ta-json-x");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es7-es2016/src/models/metadata-encrypted");
+const ta_json_x_1 = require("ta-json-x");
 let Properties = class Properties {
 };
 tslib_1.__decorate([

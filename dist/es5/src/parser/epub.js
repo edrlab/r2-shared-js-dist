@@ -1290,7 +1290,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                 _c.label = 17;
             case 17:
                 {
-                    propertiesStruct.Spread = "portrait";
+                    propertiesStruct.Spread = "both";
                     return [3, 29];
                 }
                 _c.label = 18;
@@ -1431,6 +1431,9 @@ var addRendition = function (publication, _rootfile, opf) {
                 }
                 case "rendition:spread": {
                     rendition_1.Spread = meta.Data;
+                    if (rendition_1.Spread === "portrait") {
+                        rendition_1.Spread = "both";
+                    }
                     break;
                 }
                 case "rendition:flow": {

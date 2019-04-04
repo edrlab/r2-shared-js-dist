@@ -1027,7 +1027,7 @@ const addToLinkFromProperties = (publication, link, propertiesString) => tslib_1
                 break;
             }
             case "rendition:spread-portrait": {
-                propertiesStruct.Spread = "portrait";
+                propertiesStruct.Spread = "both";
                 break;
             }
             case "rendition:spread-both": {
@@ -1133,6 +1133,9 @@ const addRendition = (publication, _rootfile, opf) => {
                 }
                 case "rendition:spread": {
                     rendition.Spread = meta.Data;
+                    if (rendition.Spread === "portrait") {
+                        rendition.Spread = "both";
+                    }
                     break;
                 }
                 case "rendition:flow": {
