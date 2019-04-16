@@ -10,6 +10,12 @@ var metadata_media_overlay_1 = require("./metadata-media-overlay");
 var metadata_properties_1 = require("./metadata-properties");
 var metadata_subject_1 = require("./metadata-subject");
 var metadata_subject_json_converter_1 = require("./metadata-subject-json-converter");
+var DirectionEnum;
+(function (DirectionEnum) {
+    DirectionEnum["Auto"] = "auto";
+    DirectionEnum["RTL"] = "rtl";
+    DirectionEnum["LTR"] = "ltr";
+})(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
 var Metadata = (function () {
     function Metadata() {
     }

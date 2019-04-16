@@ -4,6 +4,11 @@ import { MediaOverlay } from "./metadata-media-overlay";
 import { IStringMap } from "./metadata-multilang";
 import { Properties } from "./metadata-properties";
 import { Subject } from "./metadata-subject";
+export declare enum DirectionEnum {
+    Auto = "auto",
+    RTL = "rtl",
+    LTR = "ltr"
+}
 export declare class Metadata {
     RDFType: string;
     Title: string | IStringMap;

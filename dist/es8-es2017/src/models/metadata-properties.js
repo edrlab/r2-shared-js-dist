@@ -3,6 +3,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es8-es2017/src/models/metadata-encrypted");
 const ta_json_x_1 = require("ta-json-x");
+var LayoutEnum;
+(function (LayoutEnum) {
+    LayoutEnum["Fixed"] = "fixed";
+    LayoutEnum["Reflowable"] = "reflowable";
+})(LayoutEnum = exports.LayoutEnum || (exports.LayoutEnum = {}));
+var OrientationEnum;
+(function (OrientationEnum) {
+    OrientationEnum["Auto"] = "auto";
+    OrientationEnum["Landscape"] = "landscape";
+    OrientationEnum["Portrait"] = "portrait";
+})(OrientationEnum = exports.OrientationEnum || (exports.OrientationEnum = {}));
+var OverflowEnum;
+(function (OverflowEnum) {
+    OverflowEnum["Auto"] = "auto";
+    OverflowEnum["Paginated"] = "paginated";
+    OverflowEnum["Scrolled"] = "scrolled";
+    OverflowEnum["ScrolledContinuous"] = "scrolled-continuous";
+})(OverflowEnum = exports.OverflowEnum || (exports.OverflowEnum = {}));
+var PageEnum;
+(function (PageEnum) {
+    PageEnum["Left"] = "left";
+    PageEnum["Right"] = "right";
+    PageEnum["Center"] = "center";
+})(PageEnum = exports.PageEnum || (exports.PageEnum = {}));
+var SpreadEnum;
+(function (SpreadEnum) {
+    SpreadEnum["Auto"] = "auto";
+    SpreadEnum["Both"] = "both";
+    SpreadEnum["None"] = "none";
+    SpreadEnum["Landscape"] = "landscape";
+})(SpreadEnum = exports.SpreadEnum || (exports.SpreadEnum = {}));
 let Properties = class Properties {
 };
 tslib_1.__decorate([

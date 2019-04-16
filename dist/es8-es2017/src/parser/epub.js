@@ -27,6 +27,7 @@ const ta_json_x_1 = require("ta-json-x");
 const xmldom = require("xmldom");
 const xpath = require("xpath");
 const container_1 = require("./epub/container");
+const display_options_1 = require("./epub/display-options");
 const encryption_1 = require("./epub/encryption");
 const ncx_1 = require("./epub/ncx");
 const opf_1 = require("./epub/opf");
@@ -37,9 +38,6 @@ const debug = debug_("r2:shared#parser/epub");
 const epub3 = "3.0";
 const epub301 = "3.0.1";
 const epub31 = "3.1";
-const autoMeta = "auto";
-const noneMeta = "none";
-const reflowableMeta = "reflowable";
 exports.mediaOverlayURLPath = "media-overlay.json";
 exports.mediaOverlayURLParam = "resource";
 exports.addCoverDimensions = async (publication, coverLink) => {
@@ -375,13 +373,26 @@ async function EpubParsePromise(filePath) {
         }
     }
     if (opf.Spine && opf.Spine.PageProgression) {
-        publication.Metadata.Direction = opf.Spine.PageProgression;
+        switch (opf.Spine.PageProgression) {
+            case "auto": {
+                publication.Metadata.Direction = metadata_1.DirectionEnum.Auto;
+                break;
+            }
+            case "ltr": {
+                publication.Metadata.Direction = metadata_1.DirectionEnum.LTR;
+                break;
+            }
+            case "rtl": {
+                publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
+                break;
+            }
+        }
     }
     if (isEpub3OrMore(rootfile, opf)) {
         findContributorInMeta(publication, rootfile, opf);
     }
     await fillSpineAndResource(publication, rootfile, opf);
-    addRendition(publication, rootfile, opf);
+    await addRendition(publication, rootfile, opf, zip);
     await addCoverRel(publication, rootfile, opf);
     if (encryption) {
         fillEncryptionInfo(publication, rootfile, opf, encryption, lcpl);
@@ -390,9 +401,20 @@ async function EpubParsePromise(filePath) {
     if (!publication.TOC || !publication.TOC.length) {
         if (ncx) {
             fillTOCFromNCX(publication, rootfile, opf, ncx);
-            fillPageListFromNCX(publication, rootfile, opf, ncx);
+            if (!publication.PageList) {
+                fillPageListFromNCX(publication, rootfile, opf, ncx);
+            }
         }
         fillLandmarksFromGuide(publication, rootfile, opf);
+    }
+    if (!publication.PageList) {
+        const pageMapLink = publication.Resources.find((item) => {
+            return item.TypeLink === "application/oebps-page-map+xml";
+        });
+        if (pageMapLink) {
+            const zipPathHref = pageMapLink.Href;
+            await fillPageListFromAdobePageMap(publication, rootfile, opf, zip, zipPathHref);
+        }
     }
     fillCalibreSerieInfo(publication, rootfile, opf);
     fillSubject(publication, rootfile, opf);
@@ -879,6 +901,8 @@ const addIdentifier = (publication, _rootfile, opf) => {
 const addTitle = (publication, rootfile, opf) => {
     if (isEpub3OrMore(rootfile, opf)) {
         let mainTitle;
+        let subTitle;
+        let subTitleDisplaySeq = 0;
         if (opf.Metadata &&
             opf.Metadata.Title &&
             opf.Metadata.Title.length) {
@@ -899,6 +923,46 @@ const addTitle = (publication, rootfile, opf) => {
                 if (tt) {
                     mainTitle = tt;
                 }
+                opf.Metadata.Title.forEach((title) => {
+                    const refineID = "#" + title.ID;
+                    const m = opf.Metadata.Meta.find((meta) => {
+                        if (meta.Data === "subtitle" && meta.Refine === refineID) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    if (m) {
+                        let titleDisplaySeq = 0;
+                        const mds = opf.Metadata.Meta.find((meta) => {
+                            if (meta.Property === "display-seq" && meta.Refine === refineID) {
+                                return true;
+                            }
+                            return false;
+                        });
+                        if (mds) {
+                            try {
+                                titleDisplaySeq = parseInt(mds.Data, 10);
+                            }
+                            catch (err) {
+                                debug(err);
+                                debug(mds.Data);
+                                titleDisplaySeq = 0;
+                            }
+                            if (isNaN(titleDisplaySeq)) {
+                                debug("NaN");
+                                debug(mds.Data);
+                                titleDisplaySeq = 0;
+                            }
+                        }
+                        else {
+                            titleDisplaySeq = 0;
+                        }
+                        if (!subTitle || titleDisplaySeq < subTitleDisplaySeq) {
+                            subTitle = title;
+                            subTitleDisplaySeq = titleDisplaySeq;
+                        }
+                    }
+                });
             }
             if (!mainTitle) {
                 mainTitle = opf.Metadata.Title[0];
@@ -919,6 +983,23 @@ const addTitle = (publication, rootfile, opf) => {
             }
             else {
                 publication.Metadata.Title = mainTitle.Data;
+            }
+        }
+        if (subTitle) {
+            const metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, subTitle.ID, "alternate-script");
+            if (metaAlt && metaAlt.length) {
+                publication.Metadata.SubTitle = {};
+                if (subTitle.Lang) {
+                    publication.Metadata.SubTitle[subTitle.Lang.toLowerCase()] = subTitle.Data;
+                }
+                metaAlt.forEach((m) => {
+                    if (m.Lang) {
+                        publication.Metadata.SubTitle[m.Lang.toLowerCase()] = m.Data;
+                    }
+                });
+            }
+            else {
+                publication.Metadata.SubTitle = subTitle.Data;
             }
         }
     }
@@ -996,71 +1077,71 @@ const addToLinkFromProperties = async (publication, link, propertiesString) => {
                 break;
             }
             case "page-spread-left": {
-                propertiesStruct.Page = "left";
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
                 break;
             }
             case "page-spread-right": {
-                propertiesStruct.Page = "right";
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
                 break;
             }
             case "page-spread-center": {
-                propertiesStruct.Page = "center";
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
                 break;
             }
             case "rendition:spread-none": {
-                propertiesStruct.Spread = noneMeta;
+                propertiesStruct.Spread = metadata_properties_1.SpreadEnum.None;
                 break;
             }
             case "rendition:spread-auto": {
-                propertiesStruct.Spread = autoMeta;
+                propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Auto;
                 break;
             }
             case "rendition:spread-landscape": {
-                propertiesStruct.Spread = "landscape";
+                propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Landscape;
                 break;
             }
             case "rendition:spread-portrait": {
-                propertiesStruct.Spread = "both";
+                propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
                 break;
             }
             case "rendition:spread-both": {
-                propertiesStruct.Spread = "both";
+                propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
                 break;
             }
             case "rendition:layout-reflowable": {
-                propertiesStruct.Layout = reflowableMeta;
+                propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Reflowable;
                 break;
             }
             case "rendition:layout-pre-paginated": {
-                propertiesStruct.Layout = "fixed";
+                propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Fixed;
                 break;
             }
             case "rendition:orientation-auto": {
-                propertiesStruct.Orientation = "auto";
+                propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Auto;
                 break;
             }
             case "rendition:orientation-landscape": {
-                propertiesStruct.Orientation = "landscape";
+                propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Landscape;
                 break;
             }
             case "rendition:orientation-portrait": {
-                propertiesStruct.Orientation = "portrait";
+                propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Portrait;
                 break;
             }
             case "rendition:flow-auto": {
-                propertiesStruct.Overflow = autoMeta;
+                propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Auto;
                 break;
             }
             case "rendition:flow-paginated": {
-                propertiesStruct.Overflow = "paginated";
+                propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Paginated;
                 break;
             }
             case "rendition:flow-scrolled-continuous": {
-                propertiesStruct.Overflow = "scrolled-continuous";
+                propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.ScrolledContinuous;
                 break;
             }
             case "rendition:flow-scrolled-doc": {
-                propertiesStruct.Overflow = "scrolled";
+                propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Scrolled;
                 break;
             }
             default: {
@@ -1106,33 +1187,85 @@ const findInManifestByID = async (publication, rootfile, opf, ID) => {
     }
     return Promise.reject(`ID ${ID} not found`);
 };
-const addRendition = (publication, _rootfile, opf) => {
+const addRendition = async (publication, _rootfile, opf, zip) => {
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
         const rendition = new metadata_properties_1.Properties();
         opf.Metadata.Meta.forEach((meta) => {
             switch (meta.Property) {
                 case "rendition:layout": {
-                    if (meta.Data === "pre-paginated") {
-                        rendition.Layout = "fixed";
-                    }
-                    else if (meta.Data === "reflowable") {
-                        rendition.Layout = "reflowable";
+                    switch (meta.Data) {
+                        case "pre-paginated": {
+                            rendition.Layout = metadata_properties_1.LayoutEnum.Fixed;
+                            break;
+                        }
+                        case "reflowable": {
+                            rendition.Layout = metadata_properties_1.LayoutEnum.Reflowable;
+                            break;
+                        }
                     }
                     break;
                 }
                 case "rendition:orientation": {
-                    rendition.Orientation = meta.Data;
+                    switch (meta.Data) {
+                        case "auto": {
+                            rendition.Orientation = metadata_properties_1.OrientationEnum.Auto;
+                            break;
+                        }
+                        case "landscape": {
+                            rendition.Orientation = metadata_properties_1.OrientationEnum.Landscape;
+                            break;
+                        }
+                        case "portrait": {
+                            rendition.Orientation = metadata_properties_1.OrientationEnum.Portrait;
+                            break;
+                        }
+                    }
                     break;
                 }
                 case "rendition:spread": {
-                    rendition.Spread = meta.Data;
-                    if (rendition.Spread === "portrait") {
-                        rendition.Spread = "both";
+                    switch (meta.Data) {
+                        case "auto": {
+                            rendition.Spread = metadata_properties_1.SpreadEnum.Auto;
+                            break;
+                        }
+                        case "both": {
+                            rendition.Spread = metadata_properties_1.SpreadEnum.Both;
+                            break;
+                        }
+                        case "none": {
+                            rendition.Spread = metadata_properties_1.SpreadEnum.None;
+                            break;
+                        }
+                        case "landscape": {
+                            rendition.Spread = metadata_properties_1.SpreadEnum.Landscape;
+                            break;
+                        }
+                        case "portrait": {
+                            rendition.Spread = metadata_properties_1.SpreadEnum.Both;
+                            break;
+                        }
                     }
                     break;
                 }
                 case "rendition:flow": {
-                    rendition.Overflow = meta.Data;
+                    switch (meta.Data) {
+                        case "auto": {
+                            rendition.Overflow = metadata_properties_1.OverflowEnum.Auto;
+                            break;
+                        }
+                        case "paginated": {
+                            rendition.Overflow = metadata_properties_1.OverflowEnum.Paginated;
+                            break;
+                        }
+                        case "scrolled": {
+                            rendition.Overflow = metadata_properties_1.OverflowEnum.Scrolled;
+                            break;
+                        }
+                        case "scrolled-continuous": {
+                            rendition.Overflow = metadata_properties_1.OverflowEnum.ScrolledContinuous;
+                            break;
+                        }
+                    }
                     break;
                 }
                 default: {
@@ -1140,6 +1273,125 @@ const addRendition = (publication, _rootfile, opf) => {
                 }
             }
         });
+        if (!rendition.Layout || !rendition.Orientation) {
+            let displayOptionsZipPath = "META-INF/com.apple.ibooks.display-options.xml";
+            let has = zip.hasEntry(displayOptionsZipPath);
+            if (zip.hasEntryAsync) {
+                try {
+                    has = await zip.hasEntryAsync(displayOptionsZipPath);
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+            if (has) {
+                debug("Info: found iBooks display-options XML");
+            }
+            else {
+                displayOptionsZipPath = "META-INF/com.kobobooks.display-options.xml";
+                has = zip.hasEntry(displayOptionsZipPath);
+                if (zip.hasEntryAsync) {
+                    try {
+                        has = await zip.hasEntryAsync(displayOptionsZipPath);
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
+                }
+                if (has) {
+                    debug("Info: found Kobo display-options XML");
+                }
+            }
+            if (!has) {
+                debug("Info: not found iBooks or Kobo display-options XML");
+            }
+            else {
+                let displayOptionsZipStream_;
+                try {
+                    displayOptionsZipStream_ = await zip.entryStreamPromise(displayOptionsZipPath);
+                }
+                catch (err) {
+                    debug(err);
+                }
+                if (displayOptionsZipStream_) {
+                    const displayOptionsZipStream = displayOptionsZipStream_.stream;
+                    let displayOptionsZipData;
+                    try {
+                        displayOptionsZipData = await BufferUtils_1.streamToBufferPromise(displayOptionsZipStream);
+                    }
+                    catch (err) {
+                        debug(err);
+                    }
+                    if (displayOptionsZipData) {
+                        try {
+                            const displayOptionsStr = displayOptionsZipData.toString("utf8");
+                            const displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr);
+                            const displayOptions = xml_js_mapper_1.XML.deserialize(displayOptionsDoc, display_options_1.DisplayOptions);
+                            displayOptions.ZipPath = displayOptionsZipPath;
+                            if (displayOptions && displayOptions.Platforms) {
+                                const renditionPlatformAll = new metadata_properties_1.Properties();
+                                const renditionPlatformIpad = new metadata_properties_1.Properties();
+                                const renditionPlatformIphone = new metadata_properties_1.Properties();
+                                displayOptions.Platforms.forEach((platform) => {
+                                    if (platform.Options) {
+                                        platform.Options.forEach((option) => {
+                                            if (!rendition.Layout) {
+                                                if (option.Name === "fixed-layout") {
+                                                    if (option.Value === "true") {
+                                                        rendition.Layout = metadata_properties_1.LayoutEnum.Fixed;
+                                                    }
+                                                    else {
+                                                        rendition.Layout = metadata_properties_1.LayoutEnum.Reflowable;
+                                                    }
+                                                }
+                                            }
+                                            if (!rendition.Orientation) {
+                                                if (option.Name === "orientation-lock") {
+                                                    const rend = platform.Name === "*" ? renditionPlatformAll :
+                                                        (platform.Name === "ipad" ? renditionPlatformIpad :
+                                                            (platform.Name === "iphone" ? renditionPlatformIphone :
+                                                                renditionPlatformAll));
+                                                    switch (option.Value) {
+                                                        case "none": {
+                                                            rend.Orientation = metadata_properties_1.OrientationEnum.Auto;
+                                                            break;
+                                                        }
+                                                        case "landscape-only": {
+                                                            rend.Orientation = metadata_properties_1.OrientationEnum.Landscape;
+                                                            break;
+                                                        }
+                                                        case "portrait-only": {
+                                                            rend.Orientation = metadata_properties_1.OrientationEnum.Portrait;
+                                                            break;
+                                                        }
+                                                        default: {
+                                                            rend.Orientation = metadata_properties_1.OrientationEnum.Auto;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                                if (renditionPlatformAll.Orientation) {
+                                    rendition.Orientation = renditionPlatformAll.Orientation;
+                                }
+                                else if (renditionPlatformIpad.Orientation) {
+                                    rendition.Orientation = renditionPlatformIpad.Orientation;
+                                }
+                                else if (renditionPlatformIphone.Orientation) {
+                                    rendition.Orientation = renditionPlatformIphone.Orientation;
+                                }
+                            }
+                        }
+                        catch (err) {
+                            debug(err);
+                        }
+                    }
+                }
+            }
+        }
         if (rendition.Layout || rendition.Orientation || rendition.Overflow || rendition.Page || rendition.Spread) {
             publication.Metadata.Rendition = rendition;
         }
@@ -1249,6 +1501,65 @@ const fillPageListFromNCX = (publication, _rootfile, _opf, ncx) => {
             publication.PageList.push(link);
         });
     }
+};
+const fillPageListFromAdobePageMap = async (publication, _rootfile, _opf, zip, pageMapZipPath) => {
+    const pageMapDocStr = await createDocStringFromZipPath(pageMapZipPath, zip);
+    if (!pageMapDocStr) {
+        return;
+    }
+    const pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapDocStr);
+    const pages = pageMapXmlDoc.getElementsByTagName("page");
+    if (pages && pages.length) {
+        for (let i = 0; i < pages.length; i += 1) {
+            const page = pages.item(i);
+            const link = new publication_link_1.Link();
+            const href = page.getAttribute("href");
+            const title = page.getAttribute("name");
+            if (href === null || title === null) {
+                continue;
+            }
+            if (!publication.PageList) {
+                publication.PageList = [];
+            }
+            const zipPath = path.join(path.dirname(pageMapZipPath), href)
+                .replace(/\\/g, "/");
+            link.Href = zipPath;
+            link.Title = title;
+            publication.PageList.push(link);
+        }
+    }
+};
+const createDocStringFromZipPath = async (filePath, zip) => {
+    let has = zip.hasEntry(filePath);
+    if (zip.hasEntryAsync) {
+        try {
+            has = await zip.hasEntryAsync(filePath);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    if (!has) {
+        return undefined;
+    }
+    let zipStream_;
+    try {
+        zipStream_ = await zip.entryStreamPromise(filePath);
+    }
+    catch (err) {
+        debug(err);
+        return Promise.reject(err);
+    }
+    const zipStream = zipStream_.stream;
+    let zipData;
+    try {
+        zipData = await BufferUtils_1.streamToBufferPromise(zipStream);
+    }
+    catch (err) {
+        debug(err);
+        return Promise.reject(err);
+    }
+    return zipData.toString("utf8");
 };
 const fillTOCFromNCX = (publication, rootfile, opf, ncx) => {
     if (ncx.Points && ncx.Points.length) {
