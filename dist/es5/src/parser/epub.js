@@ -139,7 +139,7 @@ function isEPUBlication(urlOrPath) {
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnEPUB, filePathToLoad, url, zip, err_4, publication, lcpl, lcplZipPath, has, err_5, lcplZipStream_, err_6, lcplZipStream, lcplZipData, err_7, lcplStr, lcplJson, mime, encryption, encZipPath, err_8, encryptionXmlZipStream_, err_9, encryptionXmlZipStream, encryptionXmlZipData, err_10, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_11, containerXmlZipStream, containerXmlZipData, err_12, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_13, opfZipStream, opfZipData, err_14, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_15, ncxZipStream, ncxZipData, err_16, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1, pageMapLink, zipPathHref;
+        var isAnEPUB, filePathToLoad, url, zip, err_4, publication, lcpl, lcplZipPath, has, err_5, lcplZipStream_, err_6, lcplZipStream, lcplZipData, err_7, lcplStr, lcplJson, mime, encryption, encZipPath, err_8, encryptionXmlZipStream_, err_9, encryptionXmlZipStream, encryptionXmlZipData, err_10, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_11, containerXmlZipStream, containerXmlZipData, err_12, containerXmlStr, containerXmlDoc, container, rootfile, opfZipStream_, err_13, opfZipStream, opfZipData, err_14, opfStr, opfDoc, opf, ncx, ncxManItem, ncxFilePath, ncxZipStream_, err_15, ncxZipStream, ncxZipData, err_16, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1, lang, pageMapLink, zipPathHref;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -472,6 +472,17 @@ function EpubParsePromise(filePath) {
                                 publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
                                 break;
                             }
+                        }
+                    }
+                    if (publication.Metadata.Language && publication.Metadata.Language.length &&
+                        (!publication.Metadata.Direction || publication.Metadata.Direction === metadata_1.DirectionEnum.Auto)) {
+                        lang = publication.Metadata.Language[0].toLowerCase();
+                        if ((lang === "ar" || lang.startsWith("ar-") ||
+                            lang === "he" || lang.startsWith("he-") ||
+                            lang === "fa" || lang.startsWith("fa-")) ||
+                            lang === "zh-Hant" ||
+                            lang === "zh-TW") {
+                            publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
                         }
                     }
                     if (isEpub3OrMore(rootfile, opf)) {

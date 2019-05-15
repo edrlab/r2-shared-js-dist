@@ -388,6 +388,17 @@ async function EpubParsePromise(filePath) {
             }
         }
     }
+    if (publication.Metadata.Language && publication.Metadata.Language.length &&
+        (!publication.Metadata.Direction || publication.Metadata.Direction === metadata_1.DirectionEnum.Auto)) {
+        const lang = publication.Metadata.Language[0].toLowerCase();
+        if ((lang === "ar" || lang.startsWith("ar-") ||
+            lang === "he" || lang.startsWith("he-") ||
+            lang === "fa" || lang.startsWith("fa-")) ||
+            lang === "zh-Hant" ||
+            lang === "zh-TW") {
+            publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
+        }
+    }
     if (isEpub3OrMore(rootfile, opf)) {
         findContributorInMeta(publication, rootfile, opf);
     }
