@@ -1,7 +1,7 @@
 "use strict";
+var NavPoint_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-var NavPoint_1;
 "use strict";
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const ncx_content_1 = require("./ncx-content");
