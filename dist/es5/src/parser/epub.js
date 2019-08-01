@@ -512,7 +512,7 @@ function EpubParsePromise(filePath) {
                         }
                         fillLandmarksFromGuide(publication, rootfile, opf);
                     }
-                    if (!!publication.PageList) return [3, 61];
+                    if (!(!publication.PageList && publication.Resources)) return [3, 61];
                     pageMapLink = publication.Resources.find(function (item) {
                         return item.TypeLink === "application/oebps-page-map+xml";
                     });
@@ -633,14 +633,12 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                 }
                 if (publication.Resources) {
                     relativePath_1 = mo.SmilPathInZip;
-                    if (publication.Resources) {
-                        link = publication.Resources.find(function (l) {
-                            if (l.Href === relativePath_1) {
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
+                    link = publication.Resources.find(function (l) {
+                        if (l.Href === relativePath_1) {
+                            return true;
+                        }
+                        return false;
+                    });
                     if (!link) {
                         if (publication.Spine) {
                             link = publication.Spine.find(function (l) {
@@ -1839,15 +1837,17 @@ var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp
                 }
             });
         }
-        publication.Resources.forEach(function (l, _i, _arr) {
-            var filePath = l.Href;
-            if (filePath === encInfo.CipherData.CipherReference.URI) {
-                if (!l.Properties) {
-                    l.Properties = new metadata_properties_1.Properties();
+        if (publication.Resources) {
+            publication.Resources.forEach(function (l, _i, _arr) {
+                var filePath = l.Href;
+                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                    if (!l.Properties) {
+                        l.Properties = new metadata_properties_1.Properties();
+                    }
+                    l.Properties.Encrypted = encrypted;
                 }
-                l.Properties.Encrypted = encrypted;
-            }
-        });
+            });
+        }
         if (publication.Spine) {
             publication.Spine.forEach(function (l, _i, _arr) {
                 var filePath = l.Href;

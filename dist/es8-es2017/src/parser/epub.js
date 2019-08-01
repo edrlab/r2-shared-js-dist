@@ -418,7 +418,7 @@ async function EpubParsePromise(filePath) {
         }
         fillLandmarksFromGuide(publication, rootfile, opf);
     }
-    if (!publication.PageList) {
+    if (!publication.PageList && publication.Resources) {
         const pageMapLink = publication.Resources.find((item) => {
             return item.TypeLink === "application/oebps-page-map+xml";
         });
@@ -481,14 +481,12 @@ const fillMediaOverlayParse = async (publication, mo) => {
     let link;
     if (publication.Resources) {
         const relativePath = mo.SmilPathInZip;
-        if (publication.Resources) {
-            link = publication.Resources.find((l) => {
-                if (l.Href === relativePath) {
-                    return true;
-                }
-                return false;
-            });
-        }
+        link = publication.Resources.find((l) => {
+            if (l.Href === relativePath) {
+                return true;
+            }
+            return false;
+        });
         if (!link) {
             if (publication.Spine) {
                 link = publication.Spine.find((l) => {
@@ -1476,15 +1474,17 @@ const fillEncryptionInfo = (publication, _rootfile, _opf, encryption, lcp) => {
                 }
             });
         }
-        publication.Resources.forEach((l, _i, _arr) => {
-            const filePath = l.Href;
-            if (filePath === encInfo.CipherData.CipherReference.URI) {
-                if (!l.Properties) {
-                    l.Properties = new metadata_properties_1.Properties();
+        if (publication.Resources) {
+            publication.Resources.forEach((l, _i, _arr) => {
+                const filePath = l.Href;
+                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                    if (!l.Properties) {
+                        l.Properties = new metadata_properties_1.Properties();
+                    }
+                    l.Properties.Encrypted = encrypted;
                 }
-                l.Properties.Encrypted = encrypted;
-            }
-        });
+            });
+        }
         if (publication.Spine) {
             publication.Spine.forEach((l, _i, _arr) => {
                 const filePath = l.Href;
