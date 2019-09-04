@@ -19,7 +19,7 @@ function fn() {
         return Promise.resolve("foo");
     });
 }
-ava_1.default("dummy async test", (t) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+ava_1.default("dummy async test", (t) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     debug("test ASYNC");
     t.is(yield fn(), "foo");
 }));
@@ -51,7 +51,7 @@ function delay(okay) {
         });
     });
 }
-ava_1.default("EPUB parsing (de)serialize roundtrip", (t) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+ava_1.default("EPUB parsing (de)serialize roundtrip", (t) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const dirPath = path.join(process.cwd(), "misc/epubs/");
     const filePaths = yield filehound.create()
         .discard("node_modules")

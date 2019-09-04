@@ -96,7 +96,7 @@ let decryptKeys;
 if (args[2]) {
     decryptKeys = args[2].trim().split(";");
 }
-(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
+(() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let publication;
     try {
         publication = yield publication_parser_1.PublicationParsePromise(filePath);

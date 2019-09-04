@@ -1,5 +1,4 @@
 "use strict";
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var path = require("path");
@@ -101,7 +100,7 @@ var filePathToTitle = function (filePath) {
     var fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _i, _a, p, l;
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {

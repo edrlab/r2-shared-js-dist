@@ -84,7 +84,7 @@ const filePathToTitle = (filePath) => {
     const fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let comicZipStream_;
     try {
         comicZipStream_ = yield zip.entryStreamPromise(entryName);

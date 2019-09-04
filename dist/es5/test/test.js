@@ -1,5 +1,4 @@
 "use strict";
-var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var path = require("path");
@@ -22,7 +21,7 @@ function fn() {
         });
     });
 }
-ava_1.default("dummy async test", function (t) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+ava_1.default("dummy async test", function (t) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _a, _b;
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
@@ -66,7 +65,7 @@ function delay(okay) {
         });
     });
 }
-ava_1.default("EPUB parsing (de)serialize roundtrip", function (t) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+ava_1.default("EPUB parsing (de)serialize roundtrip", function (t) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var dirPath, filePaths, _i, filePaths_1, filePath, pub, err_1, publicationJson1, publication, publicationJson2, str1, str2, _a, _b, _c, _d;
     return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
