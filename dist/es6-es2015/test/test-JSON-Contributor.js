@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ava_1 = require("ava");
 const path = require("path");
+const ta_json_x_1 = require("ta-json-x");
 const metadata_1 = require("../src/models/metadata");
 const metadata_contributor_1 = require("../src/models/metadata-contributor");
 const lcp_1 = require("r2-lcp-js/dist/es6-es2015/src/parser/epub/lcp");
-const ava_1 = require("ava");
-const ta_json_x_1 = require("ta-json-x");
 const init_globals_1 = require("../src/init-globals");
 const helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();

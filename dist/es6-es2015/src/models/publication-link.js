@@ -2,9 +2,8 @@
 var Link_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-"use strict";
-const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const ta_json_x_1 = require("ta-json-x");
+const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const metadata_properties_1 = require("./metadata-properties");
 let Link = Link_1 = class Link {
     AddRels(rels) {

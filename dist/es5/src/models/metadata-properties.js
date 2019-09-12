@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var ta_json_x_1 = require("ta-json-x");
+var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var LayoutEnum;
 (function (LayoutEnum) {
     LayoutEnum["Fixed"] = "fixed";

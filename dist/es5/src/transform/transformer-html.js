@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
-var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
-var mime = require("mime-types");
 var debug_ = require("debug");
+var mime = require("mime-types");
+var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var debug = debug_("r2:shared#transform/transformer-html");
 var TransformerHTML = (function () {
     function TransformerHTML(transformerFunction) {

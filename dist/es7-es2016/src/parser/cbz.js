@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
+const mime = require("mime-types");
 const path = require("path");
+const slugify = require("slugify");
+const xmldom = require("xmldom");
 const metadata_1 = require("../models/metadata");
 const metadata_contributor_1 = require("../models/metadata-contributor");
 const publication_1 = require("../models/publication");
@@ -9,9 +12,6 @@ const publication_link_1 = require("../models/publication-link");
 const BufferUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const zipFactory_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/zip/zipFactory");
-const mime = require("mime-types");
-const slugify = require("slugify");
-const xmldom = require("xmldom");
 const comicrack_1 = require("./comicrack/comicrack");
 const epub_1 = require("./epub");
 function CbzParsePromise(filePath) {
