@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const fs = require("fs");
-const sizeOf = require("image-size");
+const image_size_1 = require("image-size");
 const moment = require("moment");
 const path = require("path");
 const querystring = require("querystring");
@@ -68,8 +68,8 @@ exports.addCoverDimensions = (publication, coverLink) => tslib_1.__awaiter(void 
             let zipData;
             try {
                 zipData = yield BufferUtils_1.streamToBufferPromise(zipStream.stream);
-                const imageInfo = sizeOf(zipData);
-                if (imageInfo) {
+                const imageInfo = image_size_1.imageSize(zipData);
+                if (imageInfo && imageInfo.width && imageInfo.height) {
                     coverLink.Width = imageInfo.width;
                     coverLink.Height = imageInfo.height;
                     if (coverLink.TypeLink &&
