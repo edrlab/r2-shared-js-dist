@@ -293,12 +293,14 @@ async function EpubParsePromise(filePath) {
             ncx.ZipPath = ncxFilePath;
         }
     }
-    addTitle(publication, rootfile, opf);
-    addIdentifier(publication, rootfile, opf);
     if (opf.Metadata) {
         if (opf.Metadata.Language) {
             publication.Metadata.Language = opf.Metadata.Language;
         }
+    }
+    addTitle(publication, rootfile, opf);
+    addIdentifier(publication, rootfile, opf);
+    if (opf.Metadata) {
         if (opf.Metadata.Rights && opf.Metadata.Rights.length) {
             publication.Metadata.Rights = opf.Metadata.Rights.join(" ");
         }
@@ -772,9 +774,18 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
     const contributor = new metadata_contributor_1.Contributor();
     let role;
     if (isEpub3OrMore(rootfile, opf)) {
-        const meta = findMetaByRefineAndProperty(rootfile, opf, cont.ID, "role");
-        if (meta && meta.Property === "role") {
-            role = meta.Data;
+        if (cont.FileAs) {
+            contributor.SortAs = cont.FileAs;
+        }
+        else {
+            const metaFileAs = findMetaByRefineAndProperty(rootfile, opf, cont.ID, "file-as");
+            if (metaFileAs && metaFileAs.Property === "file-as") {
+                contributor.SortAs = metaFileAs.Data;
+            }
+        }
+        const metaRole = findMetaByRefineAndProperty(rootfile, opf, cont.ID, "role");
+        if (metaRole && metaRole.Property === "role") {
+            role = metaRole.Data;
         }
         if (!role && forcedRole) {
             role = forcedRole;
@@ -782,16 +793,20 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
         const metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, cont.ID, "alternate-script");
         if (metaAlt && metaAlt.length) {
             contributor.Name = {};
-            if (publication.Metadata &&
-                publication.Metadata.Language &&
-                publication.Metadata.Language.length) {
-                contributor.Name[publication.Metadata.Language[0].toLowerCase()] = cont.Data;
-            }
             metaAlt.forEach((m) => {
                 if (m.Lang) {
                     contributor.Name[m.Lang] = m.Data;
                 }
             });
+            if (publication.Metadata &&
+                publication.Metadata.Language &&
+                publication.Metadata.Language.length &&
+                !contributor.Name[publication.Metadata.Language[0].toLowerCase()]) {
+                contributor.Name[publication.Metadata.Language[0].toLowerCase()] = cont.Data;
+            }
+            else {
+                contributor.Name["_"] = cont.Data;
+            }
         }
         else {
             contributor.Name = cont.Data;
@@ -981,14 +996,22 @@ const addTitle = (publication, rootfile, opf) => {
             const metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, mainTitle.ID, "alternate-script");
             if (metaAlt && metaAlt.length) {
                 publication.Metadata.Title = {};
-                if (mainTitle.Lang) {
-                    publication.Metadata.Title[mainTitle.Lang.toLowerCase()] = mainTitle.Data;
-                }
                 metaAlt.forEach((m) => {
                     if (m.Lang) {
                         publication.Metadata.Title[m.Lang.toLowerCase()] = m.Data;
                     }
                 });
+                if (mainTitle.Lang) {
+                    publication.Metadata.Title[mainTitle.Lang.toLowerCase()] = mainTitle.Data;
+                }
+                else if (publication.Metadata.Language &&
+                    publication.Metadata.Language.length &&
+                    !publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()]) {
+                    publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()] = mainTitle.Data;
+                }
+                else {
+                    publication.Metadata.Title["_"] = mainTitle.Data;
+                }
             }
             else {
                 publication.Metadata.Title = mainTitle.Data;
@@ -998,14 +1021,22 @@ const addTitle = (publication, rootfile, opf) => {
             const metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, subTitle.ID, "alternate-script");
             if (metaAlt && metaAlt.length) {
                 publication.Metadata.SubTitle = {};
-                if (subTitle.Lang) {
-                    publication.Metadata.SubTitle[subTitle.Lang.toLowerCase()] = subTitle.Data;
-                }
                 metaAlt.forEach((m) => {
                     if (m.Lang) {
                         publication.Metadata.SubTitle[m.Lang.toLowerCase()] = m.Data;
                     }
                 });
+                if (subTitle.Lang) {
+                    publication.Metadata.SubTitle[subTitle.Lang.toLowerCase()] = subTitle.Data;
+                }
+                else if (publication.Metadata.Language &&
+                    publication.Metadata.Language.length &&
+                    !publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()]) {
+                    publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()] = subTitle.Data;
+                }
+                else {
+                    publication.Metadata.SubTitle["_"] = subTitle.Data;
+                }
             }
             else {
                 publication.Metadata.SubTitle = subTitle.Data;
@@ -1619,7 +1650,13 @@ const fillSubject = (publication, _rootfile, opf) => {
     if (opf.Metadata && opf.Metadata.Subject && opf.Metadata.Subject.length) {
         opf.Metadata.Subject.forEach((s) => {
             const sub = new metadata_subject_1.Subject();
-            sub.Name = s.Data;
+            if (s.Lang) {
+                sub.Name = {};
+                sub.Name[s.Lang] = s.Data;
+            }
+            else {
+                sub.Name = s.Data;
+            }
             sub.Code = s.Term;
             sub.Scheme = s.Authority;
             if (!publication.Metadata.Subject) {
