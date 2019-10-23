@@ -3,4 +3,5 @@ export declare class Author {
     FileAs: string;
     Role: string;
     ID: string;
+    Lang: string;
 }

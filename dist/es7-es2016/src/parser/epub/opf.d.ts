@@ -9,6 +9,7 @@ export declare class OPF {
     Guide: Reference[];
     UniqueIdentifier: string;
     Dir: string;
+    Lang: string;
     Version: string;
     ZipPath: string | undefined;
 }

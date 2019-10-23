@@ -805,7 +805,11 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
                     contributor.Name[m.Lang] = m.Data;
                 }
             });
-            if (publication.Metadata &&
+            const xmlLang = cont.Lang || opf.Lang;
+            if (xmlLang) {
+                contributor.Name[xmlLang.toLowerCase()] = cont.Data;
+            }
+            else if (publication.Metadata &&
                 publication.Metadata.Language &&
                 publication.Metadata.Language.length &&
                 !contributor.Name[publication.Metadata.Language[0].toLowerCase()]) {
@@ -1008,8 +1012,9 @@ const addTitle = (publication, rootfile, opf) => {
                         publication.Metadata.Title[m.Lang.toLowerCase()] = m.Data;
                     }
                 });
-                if (mainTitle.Lang) {
-                    publication.Metadata.Title[mainTitle.Lang.toLowerCase()] = mainTitle.Data;
+                const xmlLang = mainTitle.Lang || opf.Lang;
+                if (xmlLang) {
+                    publication.Metadata.Title[xmlLang.toLowerCase()] = mainTitle.Data;
                 }
                 else if (publication.Metadata.Language &&
                     publication.Metadata.Language.length &&
@@ -1033,8 +1038,9 @@ const addTitle = (publication, rootfile, opf) => {
                         publication.Metadata.SubTitle[m.Lang.toLowerCase()] = m.Data;
                     }
                 });
-                if (subTitle.Lang) {
-                    publication.Metadata.SubTitle[subTitle.Lang.toLowerCase()] = subTitle.Data;
+                const xmlLang = subTitle.Lang || opf.Lang;
+                if (xmlLang) {
+                    publication.Metadata.SubTitle[xmlLang.toLowerCase()] = subTitle.Data;
                 }
                 else if (publication.Metadata.Language &&
                     publication.Metadata.Language.length &&

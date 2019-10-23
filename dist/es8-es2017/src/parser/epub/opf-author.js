@@ -20,6 +20,10 @@ tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("@id | @xml:id"),
     tslib_1.__metadata("design:type", String)
 ], Author.prototype, "ID", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@lang | @xml:lang"),
+    tslib_1.__metadata("design:type", String)
+], Author.prototype, "Lang", void 0);
 Author = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         dc: "http://purl.org/dc/elements/1.1/",

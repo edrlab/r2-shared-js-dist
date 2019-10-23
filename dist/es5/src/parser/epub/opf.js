@@ -36,6 +36,10 @@ var OPF = (function () {
         tslib_1.__metadata("design:type", String)
     ], OPF.prototype, "Dir", void 0);
     tslib_1.__decorate([
+        xml_js_mapper_1.XmlXPathSelector("@lang | @xml:lang"),
+        tslib_1.__metadata("design:type", String)
+    ], OPF.prototype, "Lang", void 0);
+    tslib_1.__decorate([
         xml_js_mapper_1.XmlXPathSelector("@version"),
         tslib_1.__metadata("design:type", String)
     ], OPF.prototype, "Version", void 0);
@@ -43,6 +47,7 @@ var OPF = (function () {
         xml_js_mapper_1.XmlObject({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",
+            xml: "http://www.w3.org/XML/1998/namespace",
         })
     ], OPF);
     return OPF;
