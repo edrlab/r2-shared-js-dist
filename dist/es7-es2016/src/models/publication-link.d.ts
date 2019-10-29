@@ -1,7 +1,6 @@
 import { MediaOverlayNode } from "./media-overlay";
 import { Properties } from "./metadata-properties";
 export declare class Link {
-    Href: string;
     TypeLink: string;
     Height: number;
     Width: number;
@@ -13,6 +12,11 @@ export declare class Link {
     Children: Link[];
     Rel: string[];
     MediaOverlays: MediaOverlayNode[] | undefined;
+    Href1: string;
+    Href: string;
+    private _urlDecoded;
+    HrefDecoded: string | undefined;
+    setHrefDecoded(href: string): void;
     AddRels(rels: string[]): void;
     AddRel(rel: string): void;
     HasRel(rel: string): boolean;

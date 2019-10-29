@@ -91,7 +91,7 @@ var Publication = (function () {
     Publication.prototype.AddLink = function (typeLink, rel, url, templated) {
         var link = new publication_link_1.Link();
         link.AddRels(rel);
-        link.Href = url;
+        link.setHrefDecoded(url);
         link.TypeLink = typeLink;
         if (typeof templated !== "undefined") {
             link.Templated = templated;

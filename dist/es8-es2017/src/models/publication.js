@@ -85,7 +85,7 @@ let Publication = class Publication {
     AddLink(typeLink, rel, url, templated) {
         const link = new publication_link_1.Link();
         link.AddRels(rel);
-        link.Href = url;
+        link.setHrefDecoded(url);
         link.TypeLink = typeLink;
         if (typeof templated !== "undefined") {
             link.Templated = templated;

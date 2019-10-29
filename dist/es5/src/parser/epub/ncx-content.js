@@ -2,13 +2,50 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
+var decodeURI_1 = require("../../_utils/decodeURI");
 var Content = (function () {
     function Content() {
     }
+    Object.defineProperty(Content.prototype, "Src", {
+        get: function () {
+            return this.Src1;
+        },
+        set: function (href) {
+            this.Src1 = href;
+            this._urlDecoded = undefined;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Content.prototype, "SrcDecoded", {
+        get: function () {
+            if (this._urlDecoded) {
+                return this._urlDecoded;
+            }
+            if (this._urlDecoded === null) {
+                return undefined;
+            }
+            if (!this.Src) {
+                this._urlDecoded = null;
+                return undefined;
+            }
+            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Src);
+            return !this._urlDecoded ? undefined : this._urlDecoded;
+        },
+        set: function (href) {
+            this._urlDecoded = href;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Content.prototype.setSrcDecoded = function (href) {
+        this.Src = href;
+        this.SrcDecoded = href;
+    };
     tslib_1.__decorate([
         xml_js_mapper_1.XmlXPathSelector("@src"),
         tslib_1.__metadata("design:type", String)
-    ], Content.prototype, "Src", void 0);
+    ], Content.prototype, "Src1", void 0);
     Content = tslib_1.__decorate([
         xml_js_mapper_1.XmlObject({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",

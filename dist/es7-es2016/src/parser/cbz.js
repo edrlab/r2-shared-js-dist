@@ -12,6 +12,8 @@ const publication_link_1 = require("../models/publication-link");
 const BufferUtils_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const zipFactory_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/zip/zipFactory");
+const decodeURI_1 = require("../_utils/decodeURI");
+const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const comicrack_1 = require("./comicrack/comicrack");
 const epub_1 = require("./epub");
 function CbzParsePromise(filePath) {
@@ -45,7 +47,7 @@ function CbzParsePromise(filePath) {
         if (entries) {
             for (const entryName of entries) {
                 const link = new publication_link_1.Link();
-                link.Href = entryName;
+                link.setHrefDecoded(entryName);
                 const mediaType = mime.lookup(entryName);
                 if (mediaType) {
                     link.TypeLink = mediaType;
@@ -85,9 +87,22 @@ const filePathToTitle = (filePath) => {
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
 const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const entryNameDecoded = decodeURI_1.tryDecodeURI(entryName);
+    if (!entryNameDecoded) {
+        return;
+    }
+    const has = yield zipHasEntry_1.zipHasEntry(zip, entryNameDecoded, entryName);
+    if (!has) {
+        console.log(`NOT IN ZIP: ${entryName} --- ${entryNameDecoded}`);
+        const zipEntries = yield zip.getEntries();
+        for (const zipEntry of zipEntries) {
+            console.log(zipEntry);
+        }
+        return;
+    }
     let comicZipStream_;
     try {
-        comicZipStream_ = yield zip.entryStreamPromise(entryName);
+        comicZipStream_ = yield zip.entryStreamPromise(entryNameDecoded);
     }
     catch (err) {
         console.log(err);
@@ -105,7 +120,7 @@ const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(voi
     const comicXmlStr = comicZipData.toString("utf8");
     const comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr);
     const comicMeta = xml_js_mapper_1.XML.deserialize(comicXmlDoc, comicrack_1.ComicInfo);
-    comicMeta.ZipPath = entryName;
+    comicMeta.ZipPath = entryNameDecoded;
     if (!publication.Metadata) {
         publication.Metadata = new metadata_1.Metadata();
     }
@@ -161,7 +176,7 @@ const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(voi
                 yield epub_1.addCoverDimensions(publication, l);
             }
             if (publication.Spine) {
-                l.Href = publication.Spine[p.Image].Href;
+                l.setHrefDecoded(publication.Spine[p.Image].Href);
             }
             if (p.ImageHeight) {
                 l.Height = p.ImageHeight;

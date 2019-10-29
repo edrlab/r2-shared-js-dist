@@ -14,6 +14,7 @@ const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const transformer_1 = require("../transform/transformer");
 const init_globals_1 = require("../init-globals");
+const zipHasEntry_1 = require("./zipHasEntry");
 init_globals_1.initGlobalConverters_SHARED();
 init_globals_1.initGlobalConverters_GENERIC();
 lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
@@ -203,7 +204,7 @@ async function extractEPUB_Check(zip, outDir) {
     if (zipEntries) {
         for (const zipEntry of zipEntries) {
             if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
-                zipEntry !== ".DS_Store") {
+                !zipEntry.endsWith(".DS_Store")) {
                 const expectedOutputPath = path.join(outDir, zipEntry);
                 if (!fs.existsSync(expectedOutputPath)) {
                     console.log("Zip entry not extracted??");
@@ -249,14 +250,27 @@ async function extractEPUB_ProcessKeys(pub, keys) {
     }
 }
 async function extractEPUB_Link(pub, zip, outDir, link) {
-    const pathInZip = link.Href;
-    console.log("===== " + pathInZip);
+    const hrefDecoded = link.HrefDecoded;
+    console.log("===== " + hrefDecoded);
+    if (!hrefDecoded) {
+        console.log("!?link.HrefDecoded");
+        return;
+    }
+    const has = await zipHasEntry_1.zipHasEntry(zip, hrefDecoded, link.Href);
+    if (!has) {
+        console.log(`NOT IN ZIP (extractEPUB_Link): ${link.Href} --- ${hrefDecoded}`);
+        const zipEntries = await zip.getEntries();
+        for (const zipEntry of zipEntries) {
+            console.log(zipEntry);
+        }
+        return;
+    }
     let zipStream_;
     try {
-        zipStream_ = await zip.entryStreamPromise(pathInZip);
+        zipStream_ = await zip.entryStreamPromise(hrefDecoded);
     }
     catch (err) {
-        console.log(pathInZip);
+        console.log(hrefDecoded);
         console.log(err);
         return;
     }
@@ -265,7 +279,7 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
         transformedStream = await transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0);
     }
     catch (err) {
-        console.log(pathInZip);
+        console.log(hrefDecoded);
         console.log(err);
         return;
     }
@@ -275,11 +289,11 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
         zipData = await BufferUtils_1.streamToBufferPromise(zipStream_.stream);
     }
     catch (err) {
-        console.log(pathInZip);
+        console.log(hrefDecoded);
         console.log(err);
         return;
     }
-    const linkOutputPath = path.join(outDir, pathInZip);
+    const linkOutputPath = path.join(outDir, hrefDecoded);
     ensureDirs(linkOutputPath);
     fs.writeFileSync(linkOutputPath, zipData);
 }
@@ -308,18 +322,10 @@ async function extractEPUB(pub, outDir, keys) {
     }
     if (!keys) {
         const lic = "META-INF/license.lcpl";
-        let has = zip.hasEntry(lic);
-        if (zip.hasEntryAsync) {
-            try {
-                has = await zip.hasEntryAsync(lic);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        }
+        const has = await zipHasEntry_1.zipHasEntry(zip, lic, undefined);
         if (has) {
             const l = new publication_link_1.Link();
-            l.Href = lic;
+            l.setHrefDecoded(lic);
             links.push(l);
         }
     }

@@ -15,6 +15,7 @@ var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var transformer_1 = require("../transform/transformer");
 var init_globals_1 = require("../init-globals");
+var zipHasEntry_1 = require("./zipHasEntry");
 init_globals_1.initGlobalConverters_SHARED();
 init_globals_1.initGlobalConverters_GENERIC();
 lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
@@ -226,7 +227,7 @@ function extractEPUB_Check(zip, outDir) {
                         for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                             zipEntry = zipEntries_1[_i];
                             if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
-                                zipEntry !== ".DS_Store") {
+                                !zipEntry.endsWith(".DS_Store")) {
                                 expectedOutputPath = path.join(outDir, zipEntry);
                                 if (!fs.existsSync(expectedOutputPath)) {
                                     console.log("Zip entry not extracted??");
@@ -290,51 +291,67 @@ function extractEPUB_ProcessKeys(pub, keys) {
 }
 function extractEPUB_Link(pub, zip, outDir, link) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var pathInZip, zipStream_, err_5, transformedStream, err_6, zipData, err_7, linkOutputPath;
+        var hrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, zipStream_, err_5, transformedStream, err_6, zipData, err_7, linkOutputPath;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    pathInZip = link.Href;
-                    console.log("===== " + pathInZip);
-                    _a.label = 1;
+                    hrefDecoded = link.HrefDecoded;
+                    console.log("===== " + hrefDecoded);
+                    if (!hrefDecoded) {
+                        console.log("!?link.HrefDecoded");
+                        return [2];
+                    }
+                    return [4, zipHasEntry_1.zipHasEntry(zip, hrefDecoded, link.Href)];
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
-                    return [4, zip.entryStreamPromise(pathInZip)];
+                    has = _a.sent();
+                    if (!!has) return [3, 3];
+                    console.log("NOT IN ZIP (extractEPUB_Link): " + link.Href + " --- " + hrefDecoded);
+                    return [4, zip.getEntries()];
                 case 2:
-                    zipStream_ = _a.sent();
-                    return [3, 4];
+                    zipEntries = _a.sent();
+                    for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
+                        zipEntry = zipEntries_2[_i];
+                        console.log(zipEntry);
+                    }
+                    return [2];
                 case 3:
+                    _a.trys.push([3, 5, , 6]);
+                    return [4, zip.entryStreamPromise(hrefDecoded)];
+                case 4:
+                    zipStream_ = _a.sent();
+                    return [3, 6];
+                case 5:
                     err_5 = _a.sent();
-                    console.log(pathInZip);
+                    console.log(hrefDecoded);
                     console.log(err_5);
                     return [2];
-                case 4:
-                    _a.trys.push([4, 6, , 7]);
-                    return [4, transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0)];
-                case 5:
-                    transformedStream = _a.sent();
-                    return [3, 7];
                 case 6:
+                    _a.trys.push([6, 8, , 9]);
+                    return [4, transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0)];
+                case 7:
+                    transformedStream = _a.sent();
+                    return [3, 9];
+                case 8:
                     err_6 = _a.sent();
-                    console.log(pathInZip);
+                    console.log(hrefDecoded);
                     console.log(err_6);
                     return [2];
-                case 7:
-                    zipStream_ = transformedStream;
-                    _a.label = 8;
-                case 8:
-                    _a.trys.push([8, 10, , 11]);
-                    return [4, BufferUtils_1.streamToBufferPromise(zipStream_.stream)];
                 case 9:
-                    zipData = _a.sent();
-                    return [3, 11];
+                    zipStream_ = transformedStream;
+                    _a.label = 10;
                 case 10:
+                    _a.trys.push([10, 12, , 13]);
+                    return [4, BufferUtils_1.streamToBufferPromise(zipStream_.stream)];
+                case 11:
+                    zipData = _a.sent();
+                    return [3, 13];
+                case 12:
                     err_7 = _a.sent();
-                    console.log(pathInZip);
+                    console.log(hrefDecoded);
                     console.log(err_7);
                     return [2];
-                case 11:
-                    linkOutputPath = path.join(outDir, pathInZip);
+                case 13:
+                    linkOutputPath = path.join(outDir, hrefDecoded);
                     ensureDirs(linkOutputPath);
                     fs.writeFileSync(linkOutputPath, zipData);
                     return [2];
@@ -344,7 +361,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
 }
 function extractEPUB(pub, outDir, keys) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zipInternal, zip, err_8, links, lic, has, err_9, l, _i, links_1, link, err_10, err_11;
+        var zipInternal, zip, err_8, links, lic, has, l, _i, links_1, link, err_9, err_10;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -375,59 +392,48 @@ function extractEPUB(pub, outDir, keys) {
                     if (pub.Spine) {
                         links.push.apply(links, pub.Spine);
                     }
-                    if (!!keys) return [3, 9];
+                    if (!!keys) return [3, 6];
                     lic = "META-INF/license.lcpl";
-                    has = zip.hasEntry(lic);
-                    if (!zip.hasEntryAsync) return [3, 8];
-                    _a.label = 5;
+                    return [4, zipHasEntry_1.zipHasEntry(zip, lic, undefined)];
                 case 5:
-                    _a.trys.push([5, 7, , 8]);
-                    return [4, zip.hasEntryAsync(lic)];
-                case 6:
                     has = _a.sent();
-                    return [3, 8];
-                case 7:
-                    err_9 = _a.sent();
-                    console.log(err_9);
-                    return [3, 8];
-                case 8:
                     if (has) {
                         l = new publication_link_1.Link();
-                        l.Href = lic;
+                        l.setHrefDecoded(lic);
                         links.push(l);
                     }
-                    _a.label = 9;
-                case 9:
+                    _a.label = 6;
+                case 6:
                     _i = 0, links_1 = links;
-                    _a.label = 10;
-                case 10:
-                    if (!(_i < links_1.length)) return [3, 15];
+                    _a.label = 7;
+                case 7:
+                    if (!(_i < links_1.length)) return [3, 12];
                     link = links_1[_i];
-                    _a.label = 11;
-                case 11:
-                    _a.trys.push([11, 13, , 14]);
+                    _a.label = 8;
+                case 8:
+                    _a.trys.push([8, 10, , 11]);
                     return [4, extractEPUB_Link(pub, zip, outDir, link)];
-                case 12:
+                case 9:
                     _a.sent();
-                    return [3, 14];
+                    return [3, 11];
+                case 10:
+                    err_9 = _a.sent();
+                    console.log(err_9);
+                    return [3, 11];
+                case 11:
+                    _i++;
+                    return [3, 7];
+                case 12:
+                    _a.trys.push([12, 14, , 15]);
+                    return [4, extractEPUB_Check(zip, outDir)];
                 case 13:
+                    _a.sent();
+                    return [3, 15];
+                case 14:
                     err_10 = _a.sent();
                     console.log(err_10);
-                    return [3, 14];
-                case 14:
-                    _i++;
-                    return [3, 10];
-                case 15:
-                    _a.trys.push([15, 17, , 18]);
-                    return [4, extractEPUB_Check(zip, outDir)];
-                case 16:
-                    _a.sent();
-                    return [3, 18];
-                case 17:
-                    err_11 = _a.sent();
-                    console.log(err_11);
-                    return [3, 18];
-                case 18: return [2];
+                    return [3, 15];
+                case 15: return [2];
             }
         });
     });

@@ -4,8 +4,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/ta-json-string-converter");
+const decodeURI_1 = require("../_utils/decodeURI");
 const metadata_properties_1 = require("./metadata-properties");
 let Link = Link_1 = class Link {
+    get Href() {
+        return this.Href1;
+    }
+    set Href(href) {
+        this.Href1 = href;
+        this._urlDecoded = undefined;
+    }
+    get HrefDecoded() {
+        if (this._urlDecoded) {
+            return this._urlDecoded;
+        }
+        if (this._urlDecoded === null) {
+            return undefined;
+        }
+        if (!this.Href) {
+            this._urlDecoded = null;
+            return undefined;
+        }
+        this._urlDecoded = decodeURI_1.tryDecodeURI(this.Href);
+        return !this._urlDecoded ? undefined : this._urlDecoded;
+    }
+    set HrefDecoded(href) {
+        this._urlDecoded = href;
+    }
+    setHrefDecoded(href) {
+        this.Href = href;
+        this.HrefDecoded = href;
+    }
     AddRels(rels) {
         rels.forEach((rel) => {
             this.AddRel(rel);
@@ -31,10 +60,6 @@ let Link = Link_1 = class Link {
         }
     }
 };
-tslib_1.__decorate([
-    ta_json_x_1.JsonProperty("href"),
-    tslib_1.__metadata("design:type", String)
-], Link.prototype, "Href", void 0);
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty("type"),
     tslib_1.__metadata("design:type", String)
@@ -78,6 +103,10 @@ tslib_1.__decorate([
     ta_json_x_1.JsonElementType(String),
     tslib_1.__metadata("design:type", Array)
 ], Link.prototype, "Rel", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("href"),
+    tslib_1.__metadata("design:type", String)
+], Link.prototype, "Href1", void 0);
 tslib_1.__decorate([
     ta_json_x_1.OnDeserialized(),
     tslib_1.__metadata("design:type", Function),

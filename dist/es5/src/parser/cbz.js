@@ -12,6 +12,8 @@ var publication_link_1 = require("../models/publication-link");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
+var decodeURI_1 = require("../_utils/decodeURI");
+var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var comicrack_1 = require("./comicrack/comicrack");
 var epub_1 = require("./epub");
 function CbzParsePromise(filePath) {
@@ -55,7 +57,7 @@ function CbzParsePromise(filePath) {
                         for (_i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                             entryName = entries_1[_i];
                             link = new publication_link_1.Link();
-                            link.Href = entryName;
+                            link.setHrefDecoded(entryName);
                             mediaType = mime.lookup(entryName);
                             if (mediaType) {
                                 link.TypeLink = mediaType;
@@ -101,37 +103,55 @@ var filePathToTitle = function (filePath) {
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
 var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _i, _a, p, l;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
+    var entryNameDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _a, _c, p, l;
+    return tslib_1.__generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
-                _c.trys.push([0, 2, , 3]);
-                return [4, zip.entryStreamPromise(entryName)];
+                entryNameDecoded = decodeURI_1.tryDecodeURI(entryName);
+                if (!entryNameDecoded) {
+                    return [2];
+                }
+                return [4, zipHasEntry_1.zipHasEntry(zip, entryNameDecoded, entryName)];
             case 1:
-                comicZipStream_ = _c.sent();
-                return [3, 3];
+                has = _d.sent();
+                if (!!has) return [3, 3];
+                console.log("NOT IN ZIP: " + entryName + " --- " + entryNameDecoded);
+                return [4, zip.getEntries()];
             case 2:
-                err_4 = _c.sent();
-                console.log(err_4);
+                zipEntries = _d.sent();
+                for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
+                    zipEntry = zipEntries_1[_i];
+                    console.log(zipEntry);
+                }
                 return [2];
             case 3:
-                comicZipStream = comicZipStream_.stream;
-                _c.label = 4;
+                _d.trys.push([3, 5, , 6]);
+                return [4, zip.entryStreamPromise(entryNameDecoded)];
             case 4:
-                _c.trys.push([4, 6, , 7]);
-                return [4, BufferUtils_1.streamToBufferPromise(comicZipStream)];
+                comicZipStream_ = _d.sent();
+                return [3, 6];
             case 5:
-                comicZipData = _c.sent();
-                return [3, 7];
+                err_4 = _d.sent();
+                console.log(err_4);
+                return [2];
             case 6:
-                err_5 = _c.sent();
+                comicZipStream = comicZipStream_.stream;
+                _d.label = 7;
+            case 7:
+                _d.trys.push([7, 9, , 10]);
+                return [4, BufferUtils_1.streamToBufferPromise(comicZipStream)];
+            case 8:
+                comicZipData = _d.sent();
+                return [3, 10];
+            case 9:
+                err_5 = _d.sent();
                 console.log(err_5);
                 return [2];
-            case 7:
+            case 10:
                 comicXmlStr = comicZipData.toString("utf8");
                 comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr);
                 comicMeta = xml_js_mapper_1.XML.deserialize(comicXmlDoc, comicrack_1.ComicInfo);
-                comicMeta.ZipPath = entryName;
+                comicMeta.ZipPath = entryNameDecoded;
                 if (!publication.Metadata) {
                     publication.Metadata = new metadata_1.Metadata();
                 }
@@ -179,22 +199,22 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                         publication.Metadata.Title = title;
                     }
                 }
-                if (!comicMeta.Pages) return [3, 12];
-                _i = 0, _a = comicMeta.Pages;
-                _c.label = 8;
-            case 8:
-                if (!(_i < _a.length)) return [3, 12];
-                p = _a[_i];
+                if (!comicMeta.Pages) return [3, 15];
+                _a = 0, _c = comicMeta.Pages;
+                _d.label = 11;
+            case 11:
+                if (!(_a < _c.length)) return [3, 15];
+                p = _c[_a];
                 l = new publication_link_1.Link();
-                if (!(p.Type === "FrontCover")) return [3, 10];
+                if (!(p.Type === "FrontCover")) return [3, 13];
                 l.AddRel("cover");
                 return [4, epub_1.addCoverDimensions(publication, l)];
-            case 9:
-                _c.sent();
-                _c.label = 10;
-            case 10:
+            case 12:
+                _d.sent();
+                _d.label = 13;
+            case 13:
                 if (publication.Spine) {
-                    l.Href = publication.Spine[p.Image].Href;
+                    l.setHrefDecoded(publication.Spine[p.Image].Href);
                 }
                 if (p.ImageHeight) {
                     l.Height = p.ImageHeight;
@@ -209,11 +229,11 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                     publication.TOC = [];
                 }
                 publication.TOC.push(l);
-                _c.label = 11;
-            case 11:
-                _i++;
-                return [3, 8];
-            case 12: return [2];
+                _d.label = 14;
+            case 14:
+                _a++;
+                return [3, 11];
+            case 15: return [2];
         }
     });
 }); };

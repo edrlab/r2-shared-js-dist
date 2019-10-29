@@ -3,11 +3,48 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
+var decodeURI_1 = require("../_utils/decodeURI");
 var metadata_properties_1 = require("./metadata-properties");
 var Link = (function () {
     function Link() {
     }
     Link_1 = Link;
+    Object.defineProperty(Link.prototype, "Href", {
+        get: function () {
+            return this.Href1;
+        },
+        set: function (href) {
+            this.Href1 = href;
+            this._urlDecoded = undefined;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Link.prototype, "HrefDecoded", {
+        get: function () {
+            if (this._urlDecoded) {
+                return this._urlDecoded;
+            }
+            if (this._urlDecoded === null) {
+                return undefined;
+            }
+            if (!this.Href) {
+                this._urlDecoded = null;
+                return undefined;
+            }
+            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Href);
+            return !this._urlDecoded ? undefined : this._urlDecoded;
+        },
+        set: function (href) {
+            this._urlDecoded = href;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Link.prototype.setHrefDecoded = function (href) {
+        this.Href = href;
+        this.HrefDecoded = href;
+    };
     Link.prototype.AddRels = function (rels) {
         var _this = this;
         rels.forEach(function (rel) {
@@ -34,10 +71,6 @@ var Link = (function () {
         }
     };
     var Link_1;
-    tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("href"),
-        tslib_1.__metadata("design:type", String)
-    ], Link.prototype, "Href", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("type"),
         tslib_1.__metadata("design:type", String)
@@ -81,6 +114,10 @@ var Link = (function () {
         ta_json_x_1.JsonElementType(String),
         tslib_1.__metadata("design:type", Array)
     ], Link.prototype, "Rel", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty("href"),
+        tslib_1.__metadata("design:type", String)
+    ], Link.prototype, "Href1", void 0);
     tslib_1.__decorate([
         ta_json_x_1.OnDeserialized(),
         tslib_1.__metadata("design:type", Function),
