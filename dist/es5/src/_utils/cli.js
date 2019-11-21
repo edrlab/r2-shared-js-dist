@@ -4,13 +4,13 @@ var tslib_1 = require("tslib");
 var crypto = require("crypto");
 var fs = require("fs");
 var path = require("path");
-var ta_json_x_1 = require("ta-json-x");
 var url_1 = require("url");
 var util = require("util");
 var publication_link_1 = require("../models/publication-link");
 var epub_1 = require("../parser/epub");
 var publication_parser_1 = require("../parser/publication-parser");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var transformer_1 = require("../transform/transformer");
@@ -135,7 +135,7 @@ if (args[2]) {
     });
 }); })();
 function extractEPUB_ManifestJSON(pub, outDir, keys) {
-    var manifestJson = ta_json_x_1.JSON.serialize(pub);
+    var manifestJson = serializable_1.TaJsonSerialize(pub);
     var arrLinks = [];
     if (manifestJson.readingOrder) {
         arrLinks.push.apply(arrLinks, manifestJson.readingOrder);
@@ -165,9 +165,10 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
             }
         });
         if (manifestJson.links) {
+            var lks = manifestJson.links;
             var index = -1;
-            for (var i = 0; i < manifestJson.links.length; i++) {
-                var link = manifestJson.links[i];
+            for (var i = 0; i < lks.length; i++) {
+                var link = lks[i];
                 if (link.type === "application/vnd.readium.lcp.license.v1.0+json"
                     && link.rel === "license") {
                     index = i;
@@ -175,9 +176,9 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
                 }
             }
             if (index >= 0) {
-                manifestJson.links.splice(index, 1);
+                lks.splice(index, 1);
             }
-            if (manifestJson.links.length === 0) {
+            if (lks.length === 0) {
                 delete manifestJson.links;
             }
         }

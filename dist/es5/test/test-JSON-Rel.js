@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var ava_1 = require("ava");
 var path = require("path");
-var ta_json_x_1 = require("ta-json-x");
 var publication_link_1 = require("../src/models/publication-link");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var init_globals_1 = require("../src/init-globals");
 var helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();
@@ -17,20 +17,21 @@ ava_1.default("JSON SERIALIZE: Publication Link.Rel => string[]", function (t) {
     link.AddRel(relStr1);
     link.AddRel(relStr2);
     helpers_1.inspect(link);
-    var json = ta_json_x_1.JSON.serialize(link);
+    var json = serializable_1.TaJsonSerialize(link);
     helpers_1.logJSON(json);
     helpers_1.checkType_Array(t, json.rel);
-    t.is(json.rel.length, 2);
-    helpers_1.checkType_String(t, json.rel[0]);
-    t.is(json.rel[0], relStr1);
-    helpers_1.checkType_String(t, json.rel[1]);
-    t.is(json.rel[1], relStr2);
+    var arr = json.rel;
+    t.is(arr.length, 2);
+    helpers_1.checkType_String(t, arr[0]);
+    t.is(arr[0], relStr1);
+    helpers_1.checkType_String(t, arr[1]);
+    t.is(arr[1], relStr2);
 });
 ava_1.default("JSON SERIALIZE: Publication Link.Rel => string", function (t) {
     var link = new publication_link_1.Link();
     link.AddRel(relStr1);
     helpers_1.inspect(link);
-    var json = ta_json_x_1.JSON.serialize(link);
+    var json = serializable_1.TaJsonSerialize(link);
     helpers_1.logJSON(json);
     helpers_1.checkType_String(t, json.rel);
     t.is(json.rel, relStr1);
@@ -39,7 +40,7 @@ ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[]", function (t)
     var json = {};
     json.rel = [relStr1, relStr2];
     helpers_1.logJSON(json);
-    var link = ta_json_x_1.JSON.deserialize(json, publication_link_1.Link);
+    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
     helpers_1.inspect(link);
     helpers_1.checkType_Array(t, link.Rel);
     t.is(link.Rel.length, 2);
@@ -52,7 +53,7 @@ ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[1]", function (t
     var json = {};
     json.rel = [relStr1];
     helpers_1.logJSON(json);
-    var link = ta_json_x_1.JSON.deserialize(json, publication_link_1.Link);
+    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
     helpers_1.inspect(link);
     helpers_1.checkType_Array(t, link.Rel);
     t.is(link.Rel.length, 1);
@@ -63,7 +64,7 @@ ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string", function (t) {
     var json = {};
     json.rel = relStr1;
     helpers_1.logJSON(json);
-    var link = ta_json_x_1.JSON.deserialize(json, publication_link_1.Link);
+    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
     helpers_1.inspect(link);
     helpers_1.checkType_Array(t, link.Rel);
     t.is(link.Rel.length, 1);

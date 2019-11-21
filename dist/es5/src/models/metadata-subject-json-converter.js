@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ta_json_x_1 = require("ta-json-x");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var metadata_subject_1 = require("./metadata-subject");
 var JsonSubjectConverter = (function () {
     function JsonSubjectConverter() {
@@ -15,7 +15,7 @@ var JsonSubjectConverter = (function () {
                 return s.Name;
             }
         }
-        return ta_json_x_1.JSON.serialize(s);
+        return serializable_1.TaJsonSerialize(s);
     };
     JsonSubjectConverter.prototype.deserialize = function (value) {
         if (typeof value === "string") {
@@ -23,7 +23,7 @@ var JsonSubjectConverter = (function () {
             s.Name = value;
             return s;
         }
-        return ta_json_x_1.JSON.deserialize(value, metadata_subject_1.Subject);
+        return serializable_1.TaJsonDeserialize(value, metadata_subject_1.Subject);
     };
     JsonSubjectConverter.prototype.collapseArrayWithSingleItem = function () {
         return true;

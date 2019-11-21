@@ -6,7 +6,6 @@ const image_size_1 = require("image-size");
 const moment = require("moment");
 const path = require("path");
 const querystring = require("querystring");
-const ta_json_x_1 = require("ta-json-x");
 const url_1 = require("url");
 const xmldom = require("xmldom");
 const xpath = require("xpath");
@@ -21,6 +20,7 @@ const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es8-es2017/src/models/metadata-encrypted");
 const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
+const serializable_1 = require("r2-lcp-js/dist/es8-es2017/src/serializable");
 const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils");
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
@@ -172,7 +172,7 @@ async function EpubParsePromise(filePath) {
         }
         const lcplStr = lcplZipData.toString("utf8");
         const lcplJson = global.JSON.parse(lcplStr);
-        lcpl = ta_json_x_1.JSON.deserialize(lcplJson, lcp_1.LCP);
+        lcpl = serializable_1.TaJsonDeserialize(lcplJson, lcp_1.LCP);
         lcpl.ZipPath = lcplZipPath;
         lcpl.JsonSource = lcplStr;
         lcpl.init();

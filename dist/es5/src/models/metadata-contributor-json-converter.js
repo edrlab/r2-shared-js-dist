@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ta_json_x_1 = require("ta-json-x");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var metadata_contributor_1 = require("./metadata-contributor");
 var JsonContributorConverter = (function () {
     function JsonContributorConverter() {
@@ -16,7 +16,7 @@ var JsonContributorConverter = (function () {
                 return c.Name;
             }
         }
-        return ta_json_x_1.JSON.serialize(c);
+        return serializable_1.TaJsonSerialize(c);
     };
     JsonContributorConverter.prototype.deserialize = function (value) {
         if (typeof value === "string") {
@@ -24,7 +24,7 @@ var JsonContributorConverter = (function () {
             c.Name = value;
             return c;
         }
-        return ta_json_x_1.JSON.deserialize(value, metadata_contributor_1.Contributor);
+        return serializable_1.TaJsonDeserialize(value, metadata_contributor_1.Contributor);
     };
     JsonContributorConverter.prototype.collapseArrayWithSingleItem = function () {
         return true;

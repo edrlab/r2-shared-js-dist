@@ -1,3 +1,4 @@
+import { IWithAdditionalJSON, JsonMap } from "r2-lcp-js/dist/es8-es2017/src/serializable";
 import { BelongsTo } from "./metadata-belongsto";
 import { Contributor } from "./metadata-contributor";
 import { MediaOverlay } from "./metadata-media-overlay";
@@ -9,7 +10,7 @@ export declare enum DirectionEnum {
     RTL = "rtl",
     LTR = "ltr"
 }
-export declare class Metadata {
+export declare class Metadata implements IWithAdditionalJSON {
     RDFType: string;
     Title: string | IStringMap;
     SubTitle: string | IStringMap;
@@ -32,14 +33,17 @@ export declare class Metadata {
     PublicationDate: Date;
     SortAs2: string;
     SortAs1: string | undefined;
-    SortAs: string | undefined;
+    get SortAs(): string | undefined;
+    set SortAs(sortas: string | undefined);
     Description: string;
     Direction2: string;
     Direction1: string | undefined;
-    Direction: string | undefined;
+    get Direction(): string | undefined;
+    set Direction(direction: string | undefined);
     BelongsTo2: BelongsTo;
     BelongsTo1: BelongsTo | undefined;
-    BelongsTo: BelongsTo | undefined;
+    get BelongsTo(): BelongsTo | undefined;
+    set BelongsTo(belongsto: BelongsTo | undefined);
     Duration: number;
     NumberOfPages: number;
     MediaOverlay: MediaOverlay;
@@ -47,5 +51,6 @@ export declare class Metadata {
     Rendition: Properties;
     Source: string;
     Subject: Subject[];
+    AdditionalJSON: JsonMap;
     protected _OnDeserialized(): void;
 }

@@ -5,6 +5,8 @@ var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var decodeURI_1 = require("../_utils/decodeURI");
 var metadata_properties_1 = require("./metadata-properties");
+var PROPERTIES_JSON_PROP = "properties";
+var CHILDREN_JSON_PROP = "children";
 var Link = (function () {
     function Link() {
     }
@@ -88,7 +90,7 @@ var Link = (function () {
         tslib_1.__metadata("design:type", String)
     ], Link.prototype, "Title", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("properties"),
+        ta_json_x_1.JsonProperty(PROPERTIES_JSON_PROP),
         tslib_1.__metadata("design:type", metadata_properties_1.Properties)
     ], Link.prototype, "Properties", void 0);
     tslib_1.__decorate([
@@ -104,7 +106,7 @@ var Link = (function () {
         tslib_1.__metadata("design:type", Boolean)
     ], Link.prototype, "Templated", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("children"),
+        ta_json_x_1.JsonProperty(CHILDREN_JSON_PROP),
         ta_json_x_1.JsonElementType(Link_1),
         tslib_1.__metadata("design:type", Array)
     ], Link.prototype, "Children", void 0);

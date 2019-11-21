@@ -4,13 +4,13 @@ const tslib_1 = require("tslib");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-const ta_json_x_1 = require("ta-json-x");
 const url_1 = require("url");
 const util = require("util");
 const publication_link_1 = require("../models/publication-link");
 const epub_1 = require("../parser/epub");
 const publication_parser_1 = require("../parser/publication-parser");
 const lcp_1 = require("r2-lcp-js/dist/es6-es2015/src/parser/epub/lcp");
+const serializable_1 = require("r2-lcp-js/dist/es6-es2015/src/serializable");
 const UrlUtils_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/http/UrlUtils");
 const BufferUtils_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/stream/BufferUtils");
 const transformer_1 = require("../transform/transformer");
@@ -122,7 +122,7 @@ if (args[2]) {
     }
 }))();
 function extractEPUB_ManifestJSON(pub, outDir, keys) {
-    const manifestJson = ta_json_x_1.JSON.serialize(pub);
+    const manifestJson = serializable_1.TaJsonSerialize(pub);
     const arrLinks = [];
     if (manifestJson.readingOrder) {
         arrLinks.push(...manifestJson.readingOrder);
@@ -152,9 +152,10 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
             }
         });
         if (manifestJson.links) {
+            const lks = manifestJson.links;
             let index = -1;
-            for (let i = 0; i < manifestJson.links.length; i++) {
-                const link = manifestJson.links[i];
+            for (let i = 0; i < lks.length; i++) {
+                const link = lks[i];
                 if (link.type === "application/vnd.readium.lcp.license.v1.0+json"
                     && link.rel === "license") {
                     index = i;
@@ -162,9 +163,9 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
                 }
             }
             if (index >= 0) {
-                manifestJson.links.splice(index, 1);
+                lks.splice(index, 1);
             }
-            if (manifestJson.links.length === 0) {
+            if (lks.length === 0) {
                 delete manifestJson.links;
             }
         }

@@ -13,9 +13,11 @@ export declare class Link {
     Rel: string[];
     MediaOverlays: MediaOverlayNode[] | undefined;
     Href1: string;
-    Href: string;
+    get Href(): string;
+    set Href(href: string);
     private _urlDecoded;
-    HrefDecoded: string | undefined;
+    get HrefDecoded(): string | undefined;
+    set HrefDecoded(href: string | undefined);
     setHrefDecoded(href: string): void;
     AddRels(rels: string[]): void;
     AddRel(rel: string): void;

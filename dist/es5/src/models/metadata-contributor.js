@@ -4,6 +4,7 @@ var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var publication_link_1 = require("./publication-link");
+var LINKS_JSON_PROP = "links";
 var Contributor = (function () {
     function Contributor() {
     }
@@ -52,7 +53,7 @@ var Contributor = (function () {
         tslib_1.__metadata("design:type", Number)
     ], Contributor.prototype, "Position", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("links"),
+        ta_json_x_1.JsonProperty(LINKS_JSON_PROP),
         ta_json_x_1.JsonElementType(publication_link_1.Link),
         tslib_1.__metadata("design:type", Array)
     ], Contributor.prototype, "Links", void 0);

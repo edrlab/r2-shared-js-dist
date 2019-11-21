@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const publication_link_1 = require("./publication-link");
+const LINKS_JSON_PROP = "links";
 let Subject = class Subject {
     get SortAs() {
         return this.SortAs2 ? this.SortAs2 : this.SortAs1;
@@ -40,7 +41,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], Subject.prototype, "Code", void 0);
 tslib_1.__decorate([
-    ta_json_x_1.JsonProperty("links"),
+    ta_json_x_1.JsonProperty(LINKS_JSON_PROP),
     ta_json_x_1.JsonElementType(publication_link_1.Link),
     tslib_1.__metadata("design:type", Array)
 ], Subject.prototype, "Links", void 0);

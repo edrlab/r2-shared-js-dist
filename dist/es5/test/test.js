@@ -6,10 +6,10 @@ var debug_ = require("debug");
 var filehound = require("filehound");
 var jsonDiff = require("json-diff");
 var path = require("path");
-var ta_json_x_1 = require("ta-json-x");
 var media_overlay_1 = require("../src/models/media-overlay");
 var publication_1 = require("../src/models/publication");
 var publication_parser_1 = require("../src/parser/publication-parser");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var init_globals_1 = require("../src/init-globals");
 init_globals_1.initGlobalConverters_SHARED();
 init_globals_1.initGlobalConverters_GENERIC();
@@ -99,9 +99,9 @@ ava_1.default("EPUB parsing (de)serialize roundtrip", function (t) { return tsli
                 console.log(err_1);
                 return [3, 8];
             case 6:
-                publicationJson1 = ta_json_x_1.JSON.serialize(pub);
-                publication = ta_json_x_1.JSON.deserialize(publicationJson1, publication_1.Publication);
-                publicationJson2 = ta_json_x_1.JSON.serialize(publication);
+                publicationJson1 = serializable_1.TaJsonSerialize(pub);
+                publication = serializable_1.TaJsonDeserialize(publicationJson1, publication_1.Publication);
+                publicationJson2 = serializable_1.TaJsonSerialize(publication);
                 str1 = JSON.stringify(publicationJson1, null, 2);
                 str2 = JSON.stringify(publicationJson2, null, 2);
                 if (!(str1 !== str2)) return [3, 8];

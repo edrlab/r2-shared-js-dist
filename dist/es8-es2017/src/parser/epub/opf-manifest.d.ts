@@ -5,8 +5,10 @@ export declare class Manifest {
     Properties: string;
     MediaOverlay: string;
     Href1: string;
-    Href: string;
+    get Href(): string;
+    set Href(href: string);
     private _urlDecoded;
-    HrefDecoded: string | undefined;
+    get HrefDecoded(): string | undefined;
+    set HrefDecoded(href: string | undefined);
     setHrefDecoded(href: string): void;
 }

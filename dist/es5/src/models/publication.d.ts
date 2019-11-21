@@ -8,7 +8,8 @@ export declare class Publication {
     Links: Link[];
     Spine2: Link[];
     Spine1: Link[] | undefined;
-    Spine: Link[] | undefined;
+    get Spine(): Link[] | undefined;
+    set Spine(spine: Link[] | undefined);
     Resources: Link[];
     TOC: Link[];
     PageList: Link[];
@@ -18,7 +19,6 @@ export declare class Publication {
     LOV: Link[];
     LOT: Link[];
     LCP: LCP | undefined;
-    private Internal;
     freeDestroy(): void;
     findFromInternal(key: string): IInternal | undefined;
     AddToInternal(key: string, value: any): void;
@@ -27,4 +27,5 @@ export declare class Publication {
     searchLinkByRel(rel: string): Link | undefined;
     AddLink(typeLink: string, rel: string[], url: string, templated: boolean | undefined): void;
     protected _OnDeserialized(): void;
+    private Internal;
 }

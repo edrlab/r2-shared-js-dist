@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var ava_1 = require("ava");
 var path = require("path");
-var ta_json_x_1 = require("ta-json-x");
 var metadata_belongsto_1 = require("../src/models/metadata-belongsto");
 var metadata_contributor_1 = require("../src/models/metadata-contributor");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
+var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var init_globals_1 = require("../src/init-globals");
 var helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();
@@ -87,18 +87,19 @@ ava_1.default("JSON SERIALIZE: BelongsTo.Series => Contributor[]", function (t) 
     b.Series.push(contributor1);
     b.Series.push(contributor2);
     helpers_1.inspect(b);
-    var json = ta_json_x_1.JSON.serialize(b);
+    var json = serializable_1.TaJsonSerialize(b);
     helpers_1.logJSON(json);
     helpers_1.checkType_Array(t, json.series);
-    t.is(json.series.length, 2);
-    checkJsonContributor1(t, json.series[0]);
-    checkJsonContributor2(t, json.series[1]);
+    var arr = json.series;
+    t.is(arr.length, 2);
+    checkJsonContributor1(t, arr[0]);
+    checkJsonContributor2(t, arr[1]);
 });
 ava_1.default("JSON SERIALIZE: BelongsTo.Series => Contributor[1] collapse-array", function (t) {
     var b = new metadata_belongsto_1.BelongsTo();
     b.Series = [contributor1];
     helpers_1.inspect(b);
-    var json = ta_json_x_1.JSON.serialize(b);
+    var json = serializable_1.TaJsonSerialize(b);
     helpers_1.logJSON(json);
     checkJsonContributor1(t, json.series);
 });
@@ -109,7 +110,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor[]", function (t
         { name: contributor2NameMap, identifier: contributor2Id, role: contributor2RoleStr },
     ];
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 2);
@@ -122,7 +123,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor[1]", function (
         { name: contributor1NameStr, identifier: contributor1Id, position: contributor1Pos, role: contributor1RoleArr },
     ];
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -132,7 +133,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor", function (t) 
     var json = {};
     json.series = { name: contributor1NameStr, identifier: contributor1Id, position: contributor1Pos, role: contributor1RoleArr };
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -142,7 +143,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor NAME []", funct
     var json = {};
     json.series = [contributor1NameStr, contributor2NameObj];
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 2);
@@ -155,7 +156,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor NAME [1] A", fu
     var json = {};
     json.series = [contributor1NameStr];
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -166,7 +167,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor NAME [1] B", fu
     var json = {};
     json.series = [contributor2NameObj];
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -177,7 +178,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor NAME A", functi
     var json = {};
     json.series = contributor1NameStr;
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);
@@ -188,7 +189,7 @@ ava_1.default("JSON DESERIALIZE: BelongsTo.Series => Contributor NAME B", functi
     var json = {};
     json.series = contributor2NameObj;
     helpers_1.logJSON(json);
-    var b = ta_json_x_1.JSON.deserialize(json, metadata_belongsto_1.BelongsTo);
+    var b = serializable_1.TaJsonDeserialize(json, metadata_belongsto_1.BelongsTo);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Series);
     t.is(b.Series.length, 1);

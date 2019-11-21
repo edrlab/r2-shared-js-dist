@@ -6,6 +6,8 @@ const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const decodeURI_1 = require("../_utils/decodeURI");
 const metadata_properties_1 = require("./metadata-properties");
+const PROPERTIES_JSON_PROP = "properties";
+const CHILDREN_JSON_PROP = "children";
 let Link = Link_1 = class Link {
     get Href() {
         return this.Href1;
@@ -77,7 +79,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], Link.prototype, "Title", void 0);
 tslib_1.__decorate([
-    ta_json_x_1.JsonProperty("properties"),
+    ta_json_x_1.JsonProperty(PROPERTIES_JSON_PROP),
     tslib_1.__metadata("design:type", metadata_properties_1.Properties)
 ], Link.prototype, "Properties", void 0);
 tslib_1.__decorate([
@@ -93,7 +95,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Boolean)
 ], Link.prototype, "Templated", void 0);
 tslib_1.__decorate([
-    ta_json_x_1.JsonProperty("children"),
+    ta_json_x_1.JsonProperty(CHILDREN_JSON_PROP),
     ta_json_x_1.JsonElementType(Link_1),
     tslib_1.__metadata("design:type", Array)
 ], Link.prototype, "Children", void 0);

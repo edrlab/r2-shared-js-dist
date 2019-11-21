@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
 const path = require("path");
-const ta_json_x_1 = require("ta-json-x");
 const publication_1 = require("../src/models/publication");
 const lcp_1 = require("r2-lcp-js/dist/es7-es2016/src/parser/epub/lcp");
+const serializable_1 = require("r2-lcp-js/dist/es7-es2016/src/serializable");
 const init_globals_1 = require("../src/init-globals");
 const helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();
@@ -18,20 +18,21 @@ ava_1.default("JSON SERIALIZE: Publication.Context => string[]", (t) => {
     pub.Context.push(contextStr1);
     pub.Context.push(contextStr2);
     helpers_1.inspect(pub);
-    const json = ta_json_x_1.JSON.serialize(pub);
+    const json = serializable_1.TaJsonSerialize(pub);
     helpers_1.logJSON(json);
     helpers_1.checkType_Array(t, json["@context"]);
-    t.is(json["@context"].length, 2);
-    helpers_1.checkType_String(t, json["@context"][0]);
-    t.is(json["@context"][0], contextStr1);
-    helpers_1.checkType_String(t, json["@context"][1]);
-    t.is(json["@context"][1], contextStr2);
+    const arr = json["@context"];
+    t.is(arr.length, 2);
+    helpers_1.checkType_String(t, arr[0]);
+    t.is(arr[0], contextStr1);
+    helpers_1.checkType_String(t, arr[1]);
+    t.is(arr[1], contextStr2);
 });
 ava_1.default("JSON SERIALIZE: Publication.Context => string[1] collapse-array", (t) => {
     const pub = new publication_1.Publication();
     pub.Context = [contextStr1];
     helpers_1.inspect(pub);
-    const json = ta_json_x_1.JSON.serialize(pub);
+    const json = serializable_1.TaJsonSerialize(pub);
     helpers_1.logJSON(json);
     helpers_1.checkType_String(t, json["@context"]);
     t.is(json["@context"], contextStr1);
@@ -40,7 +41,7 @@ ava_1.default("JSON DESERIALIZE: Publication.Context => string[]", (t) => {
     const json = {};
     json["@context"] = [contextStr1, contextStr2];
     helpers_1.logJSON(json);
-    const pub = ta_json_x_1.JSON.deserialize(json, publication_1.Publication);
+    const pub = serializable_1.TaJsonDeserialize(json, publication_1.Publication);
     helpers_1.inspect(pub);
     helpers_1.checkType_Array(t, pub.Context);
     t.is(pub.Context.length, 2);
@@ -53,7 +54,7 @@ ava_1.default("JSON DESERIALIZE: Publication.Context => string[1]", (t) => {
     const json = {};
     json["@context"] = [contextStr1];
     helpers_1.logJSON(json);
-    const pub = ta_json_x_1.JSON.deserialize(json, publication_1.Publication);
+    const pub = serializable_1.TaJsonDeserialize(json, publication_1.Publication);
     helpers_1.inspect(pub);
     helpers_1.checkType_Array(t, pub.Context);
     t.is(pub.Context.length, 1);
@@ -64,7 +65,7 @@ ava_1.default("JSON DESERIALIZE: Publication.Context => string", (t) => {
     const json = {};
     json["@context"] = contextStr1;
     helpers_1.logJSON(json);
-    const pub = ta_json_x_1.JSON.deserialize(json, publication_1.Publication);
+    const pub = serializable_1.TaJsonDeserialize(json, publication_1.Publication);
     helpers_1.inspect(pub);
     helpers_1.checkType_Array(t, pub.Context);
     t.is(pub.Context.length, 1);

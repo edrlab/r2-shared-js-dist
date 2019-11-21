@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ava_1 = require("ava");
 const path = require("path");
-const ta_json_x_1 = require("ta-json-x");
 const metadata_1 = require("../src/models/metadata");
 const metadata_contributor_1 = require("../src/models/metadata-contributor");
 const lcp_1 = require("r2-lcp-js/dist/es7-es2016/src/parser/epub/lcp");
+const serializable_1 = require("r2-lcp-js/dist/es7-es2016/src/serializable");
 const init_globals_1 = require("../src/init-globals");
 const helpers_1 = require("./helpers");
 init_globals_1.initGlobalConverters_SHARED();
@@ -87,18 +87,19 @@ ava_1.default("JSON SERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
     b.Imprint.push(contributor1);
     b.Imprint.push(contributor2);
     helpers_1.inspect(b);
-    const json = ta_json_x_1.JSON.serialize(b);
+    const json = serializable_1.TaJsonSerialize(b);
     helpers_1.logJSON(json);
     helpers_1.checkType_Array(t, json.imprint);
-    t.is(json.imprint.length, 2);
-    checkJsonContributor1(t, json.imprint[0]);
-    checkJsonContributor2(t, json.imprint[1]);
+    const arr = json.imprint;
+    t.is(arr.length, 2);
+    checkJsonContributor1(t, arr[0]);
+    checkJsonContributor2(t, arr[1]);
 });
 ava_1.default("JSON SERIALIZE: Metadata.Imprint => Contributor[1] collapse-array", (t) => {
     const b = new metadata_1.Metadata();
     b.Imprint = [contributor1];
     helpers_1.inspect(b);
-    const json = ta_json_x_1.JSON.serialize(b);
+    const json = serializable_1.TaJsonSerialize(b);
     helpers_1.logJSON(json);
     checkJsonContributor1(t, json.imprint);
 });
@@ -109,7 +110,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor[]", (t) => {
         { name: contributor2NameMap, identifier: contributor2Id, role: contributor2RoleStr },
     ];
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 2);
@@ -122,7 +123,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor[1]", (t) => {
         { name: contributor1NameStr, identifier: contributor1Id, position: contributor1Pos, role: contributor1RoleArr },
     ];
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
@@ -132,7 +133,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor", (t) => {
     const json = {};
     json.imprint = { name: contributor1NameStr, identifier: contributor1Id, position: contributor1Pos, role: contributor1RoleArr };
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
@@ -142,7 +143,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor NAME []", (t) =
     const json = {};
     json.imprint = [contributor1NameStr, contributor2NameObj];
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 2);
@@ -155,7 +156,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor NAME [1] A", (t
     const json = {};
     json.imprint = [contributor1NameStr];
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
@@ -166,7 +167,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor NAME [1] B", (t
     const json = {};
     json.imprint = [contributor2NameObj];
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
@@ -177,7 +178,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor NAME A", (t) =>
     const json = {};
     json.imprint = contributor1NameStr;
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
@@ -188,7 +189,7 @@ ava_1.default("JSON DESERIALIZE: Metadata.Imprint => Contributor NAME B", (t) =>
     const json = {};
     json.imprint = contributor2NameObj;
     helpers_1.logJSON(json);
-    const b = ta_json_x_1.JSON.deserialize(json, metadata_1.Metadata);
+    const b = serializable_1.TaJsonDeserialize(json, metadata_1.Metadata);
     helpers_1.inspect(b);
     helpers_1.checkType_Array(t, b.Imprint);
     t.is(b.Imprint.length, 1);
