@@ -328,7 +328,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                     return [2];
                 case 6:
                     _a.trys.push([6, 8, , 9]);
-                    return [4, transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0)];
+                    return [4, transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0, undefined)];
                 case 7:
                     transformedStream = _a.sent();
                     return [3, 9];

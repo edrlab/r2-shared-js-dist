@@ -10,15 +10,15 @@ class Transformers {
     static instance() {
         return Transformers._instance;
     }
-    static async tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
-        return Transformers.instance()._tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+    static async tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
+        return Transformers.instance()._tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
     }
     add(transformer) {
         if (this.transformers.indexOf(transformer) < 0) {
             this.transformers.push(transformer);
         }
     }
-    async _tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
+    async _tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         let transformedData;
         let atLeastOne = false;
         let s = stream;
@@ -34,7 +34,7 @@ class Transformers {
                         break;
                     }
                 }
-                transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+                transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
             }
         }
         if (transformedData) {

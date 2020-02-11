@@ -554,7 +554,7 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
         let decryptFail = false;
         let transformedStream;
         try {
-            transformedStream = yield transformer_1.Transformers.tryStream(publication, link, smilZipStream_, false, 0, 0);
+            transformedStream = yield transformer_1.Transformers.tryStream(publication, link, smilZipStream_, false, 0, 0, undefined);
         }
         catch (err) {
             debug(err);

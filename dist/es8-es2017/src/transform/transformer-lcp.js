@@ -7,7 +7,7 @@ class TransformerLCP {
             link.Properties && link.Properties.Encrypted &&
             transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
     }
-    async transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
+    async transformStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, _sessionInfo) {
         return transformer_lcp_1.transformStream(publication.LCP, link.Href, link.Properties.Encrypted, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
     }
 }

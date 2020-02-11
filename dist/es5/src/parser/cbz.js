@@ -16,6 +16,13 @@ var decodeURI_1 = require("../_utils/decodeURI");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var comicrack_1 = require("./comicrack/comicrack");
 var epub_1 = require("./epub");
+function isCBZPublication(filePath) {
+    var fileName = path.basename(filePath);
+    var ext = path.extname(fileName).toLowerCase();
+    var cbz = /\.cbz$/.test(ext);
+    return cbz;
+}
+exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zip, err_1, publication, comicInfoEntryName, entries, err_2, _i, entries_1, entryName, link, mediaType, _b, err_3;

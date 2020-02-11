@@ -11,10 +11,10 @@ var Transformers = (function () {
     Transformers.instance = function () {
         return Transformers._instance;
     };
-    Transformers.tryStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
+    Transformers.tryStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
-                return [2, Transformers.instance()._tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd)];
+                return [2, Transformers.instance()._tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo)];
             });
         });
     };
@@ -23,7 +23,7 @@ var Transformers = (function () {
             this.transformers.push(transformer);
         }
     };
-    Transformers.prototype._tryStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd) {
+    Transformers.prototype._tryStream = function (publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var transformedData, atLeastOne, s, _i, _a, t, err_1;
             return tslib_1.__generator(this, function (_b) {
@@ -51,7 +51,7 @@ var Transformers = (function () {
                         transformedData = undefined;
                         return [3, 7];
                     case 5:
-                        transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+                        transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
                         _b.label = 6;
                     case 6:
                         _i++;

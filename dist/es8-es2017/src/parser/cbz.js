@@ -15,6 +15,13 @@ const decodeURI_1 = require("../_utils/decodeURI");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const comicrack_1 = require("./comicrack/comicrack");
 const epub_1 = require("./epub");
+function isCBZPublication(filePath) {
+    const fileName = path.basename(filePath);
+    const ext = path.extname(fileName).toLowerCase();
+    const cbz = /\.cbz$/.test(ext);
+    return cbz;
+}
+exports.isCBZPublication = isCBZPublication;
 async function CbzParsePromise(filePath) {
     let zip;
     try {

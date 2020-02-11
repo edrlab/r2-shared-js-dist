@@ -6,7 +6,7 @@ class TransformerObfAdobe {
         return link.Properties && link.Properties.Encrypted &&
             link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
     }
-    async transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
+    async transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
         let data;
         try {
             data = await BufferUtils_1.streamToBufferPromise(stream.stream);

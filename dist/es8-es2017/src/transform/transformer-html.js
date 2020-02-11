@@ -26,7 +26,7 @@ class TransformerHTML {
         }
         return false;
     }
-    async transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd) {
+    async transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
         let data;
         try {
             data = await BufferUtils_1.streamToBufferPromise(stream.stream);
@@ -36,7 +36,7 @@ class TransformerHTML {
         }
         let buff;
         try {
-            buff = await this.transformBuffer(publication, link, data);
+            buff = await this.transformBuffer(publication, link, data, sessionInfo);
         }
         catch (err) {
             return Promise.reject(err);
@@ -50,10 +50,10 @@ class TransformerHTML {
         };
         return Promise.resolve(sal);
     }
-    async transformBuffer(publication, link, data) {
+    async transformBuffer(publication, link, data, sessionInfo) {
         try {
             const str = data.toString("utf8");
-            const str_ = this.transformString(publication, link, str);
+            const str_ = this.transformString(publication, link, str, sessionInfo);
             return Promise.resolve(Buffer.from(str_));
         }
         catch (err) {
