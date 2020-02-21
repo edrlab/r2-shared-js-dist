@@ -5,7 +5,7 @@ function tryDecodeURI(url) {
         return null;
     }
     try {
-        return decodeURI(url);
+        return decodeURIComponent(url);
     }
     catch (err) {
         console.log(url);
