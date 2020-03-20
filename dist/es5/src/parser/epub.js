@@ -43,6 +43,14 @@ var epub301 = "3.0.1";
 var epub31 = "3.1";
 exports.mediaOverlayURLPath = "media-overlay.json";
 exports.mediaOverlayURLParam = "resource";
+exports.BCP47_UNKNOWN_LANG = "und";
+function parseSpaceSeparatedString(str) {
+    return str ? str.trim().split(" ").map(function (role) {
+        return role.trim();
+    }).filter(function (role) {
+        return role.length > 0;
+    }) : [];
+}
 exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var zipInternal, zip, coverLinkHrefDecoded, has, zipEntries, _a, zipEntries_1, zipEntry, zipStream, err_1, zipData, imageInfo, err_2;
     return tslib_1.__generator(this, function (_b) {
@@ -643,9 +651,9 @@ function getMediaOverlay(publication, spineHref) {
 }
 exports.getMediaOverlay = getMediaOverlay;
 var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, relativePath_1, err, zipInternal, zip, has, err, zipEntries, _a, zipEntries_4, zipEntry, smilZipStream_, err_16, decryptFail, transformedStream, err_17, err, smilZipStream, smilZipData, err_18, smilStr, smilXmlDoc, smil, smilBodyTextRefDecoded, zipPath;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
+    var link, relativePath_1, err, zipInternal, zip, has, err, zipEntries, _a, zipEntries_4, zipEntry, smilZipStream_, err_16, decryptFail, transformedStream, err_17, err, smilZipStream, smilZipData, err_18, smilStr, smilXmlDoc, smil, roles, _b, roles_1, role, smilBodyTextRefDecoded, zipPath;
+    return tslib_1.__generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 if (mo.initialized || !mo.SmilPathInZip) {
                     return [2];
@@ -681,41 +689,41 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                 zip = zipInternal.Value;
                 return [4, zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined)];
             case 1:
-                has = _b.sent();
+                has = _c.sent();
                 if (!!has) return [3, 3];
                 err = "NOT IN ZIP (fillMediaOverlayParse): " + mo.SmilPathInZip;
                 console.log(err);
                 return [4, zip.getEntries()];
             case 2:
-                zipEntries = _b.sent();
+                zipEntries = _c.sent();
                 for (_a = 0, zipEntries_4 = zipEntries; _a < zipEntries_4.length; _a++) {
                     zipEntry = zipEntries_4[_a];
                     console.log(zipEntry);
                 }
                 return [2, Promise.reject(err)];
             case 3:
-                _b.trys.push([3, 5, , 6]);
+                _c.trys.push([3, 5, , 6]);
                 return [4, zip.entryStreamPromise(mo.SmilPathInZip)];
             case 4:
-                smilZipStream_ = _b.sent();
+                smilZipStream_ = _c.sent();
                 return [3, 6];
             case 5:
-                err_16 = _b.sent();
+                err_16 = _c.sent();
                 debug(err_16);
                 return [2, Promise.reject(err_16)];
             case 6:
                 if (!(link && link.Properties && link.Properties.Encrypted)) return [3, 11];
                 decryptFail = false;
                 transformedStream = void 0;
-                _b.label = 7;
+                _c.label = 7;
             case 7:
-                _b.trys.push([7, 9, , 10]);
+                _c.trys.push([7, 9, , 10]);
                 return [4, transformer_1.Transformers.tryStream(publication, link, smilZipStream_, false, 0, 0, undefined)];
             case 8:
-                transformedStream = _b.sent();
+                transformedStream = _c.sent();
                 return [3, 10];
             case 9:
-                err_17 = _b.sent();
+                err_17 = _c.sent();
                 debug(err_17);
                 return [2, Promise.reject(err_17)];
             case 10:
@@ -730,18 +738,18 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                     debug(err);
                     return [2, Promise.reject(err)];
                 }
-                _b.label = 11;
+                _c.label = 11;
             case 11:
                 smilZipStream = smilZipStream_.stream;
-                _b.label = 12;
+                _c.label = 12;
             case 12:
-                _b.trys.push([12, 14, , 15]);
+                _c.trys.push([12, 14, , 15]);
                 return [4, BufferUtils_1.streamToBufferPromise(smilZipStream)];
             case 13:
-                smilZipData = _b.sent();
+                smilZipData = _c.sent();
                 return [3, 15];
             case 14:
-                err_18 = _b.sent();
+                err_18 = _c.sent();
                 debug(err_18);
                 return [2, Promise.reject(err_18)];
             case 15:
@@ -755,14 +763,16 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                 mo.Role.push("section");
                 if (smil.Body) {
                     if (smil.Body.EpubType) {
-                        smil.Body.EpubType.trim().split(" ").forEach(function (role) {
+                        roles = parseSpaceSeparatedString(smil.Body.EpubType);
+                        for (_b = 0, roles_1 = roles; _b < roles_1.length; _b++) {
+                            role = roles_1[_b];
                             if (!role.length) {
-                                return;
+                                return [2];
                             }
                             if (mo.Role.indexOf(role) < 0) {
                                 mo.Role.push(role);
                             }
-                        });
+                        }
                     }
                     if (smil.Body.TextRef) {
                         smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
@@ -917,14 +927,16 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         moc.Role.push("section");
         var seq = seqChild;
         if (seq.EpubType) {
-            seq.EpubType.trim().split(" ").forEach(function (role) {
+            var roles = parseSpaceSeparatedString(seq.EpubType);
+            for (var _a = 0, roles_2 = roles; _a < roles_2.length; _a++) {
+                var role = roles_2[_a];
                 if (!role.length) {
                     return;
                 }
                 if (moc.Role.indexOf(role) < 0) {
                     moc.Role.push(role);
                 }
-            });
+            }
         }
         if (seq.TextRef) {
             var seqTextRefDecoded = seq.TextRefDecoded;
@@ -949,7 +961,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     else {
         var par = seqChild;
         if (par.EpubType) {
-            par.EpubType.trim().split(" ").forEach(function (role) {
+            var roles = parseSpaceSeparatedString(par.EpubType);
+            for (var _b = 0, roles_3 = roles; _b < roles_3.length; _b++) {
+                var role = roles_3[_b];
                 if (!role.length) {
                     return;
                 }
@@ -959,7 +973,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                 if (moc.Role.indexOf(role) < 0) {
                     moc.Role.push(role);
                 }
-            });
+            }
         }
         if (par.Text && par.Text.Src) {
             var parTextSrcDcoded = par.Text.SrcDecoded;
@@ -1073,7 +1087,7 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
                 contributor.Name[publication.Metadata.Language[0].toLowerCase()] = cont.Data;
             }
             else {
-                contributor.Name["_"] = cont.Data;
+                contributor.Name[exports.BCP47_UNKNOWN_LANG] = cont.Data;
             }
         }
         else {
@@ -1279,7 +1293,7 @@ var addTitle = function (publication, rootfile, opf) {
                     publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()] = mainTitle.Data;
                 }
                 else {
-                    publication.Metadata.Title["_"] = mainTitle.Data;
+                    publication.Metadata.Title[exports.BCP47_UNKNOWN_LANG] = mainTitle.Data;
                 }
             }
             else {
@@ -1305,7 +1319,7 @@ var addTitle = function (publication, rootfile, opf) {
                     publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()] = subTitle_1.Data;
                 }
                 else {
-                    publication.Metadata.SubTitle["_"] = subTitle_1.Data;
+                    publication.Metadata.SubTitle[exports.BCP47_UNKNOWN_LANG] = subTitle_1.Data;
                 }
             }
             else {
@@ -1347,7 +1361,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                properties = propertiesString.trim().split(" ");
+                properties = parseSpaceSeparatedString(propertiesString);
                 propertiesStruct = new metadata_properties_1.Properties();
                 _a = 0, properties_1 = properties;
                 _c.label = 1;
@@ -2224,49 +2238,54 @@ var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return ts
                 navs = select("/xhtml:html/xhtml:body//xhtml:nav", navXmlDoc);
                 if (navs && navs.length) {
                     navs.forEach(function (navElement) {
-                        var typeNav = select("@epub:type", navElement);
-                        if (typeNav && typeNav.length) {
+                        var epubType = select("@epub:type", navElement);
+                        if (epubType && epubType.length) {
                             var olElem = select("xhtml:ol", navElement);
-                            var roles = typeNav[0].value;
-                            var role = roles.trim().split(" ")[0];
-                            switch (role) {
-                                case "toc": {
-                                    publication.TOC = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.TOC, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "page-list": {
-                                    publication.PageList = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "landmarks": {
-                                    publication.Landmarks = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.Landmarks, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "lot": {
-                                    publication.LOT = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.LOT, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "loa": {
-                                    publication.LOA = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.LOA, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "loi": {
-                                    publication.LOI = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.LOI, navLinkHrefDecoded);
-                                    break;
-                                }
-                                case "lov": {
-                                    publication.LOV = [];
-                                    fillTOCFromNavDocWithOL(select, olElem, publication.LOV, navLinkHrefDecoded);
-                                    break;
-                                }
-                                default: {
-                                    break;
+                            var rolesString = epubType[0].value;
+                            var rolesArray = parseSpaceSeparatedString(rolesString);
+                            if (rolesArray.length) {
+                                for (var _a = 0, rolesArray_1 = rolesArray; _a < rolesArray_1.length; _a++) {
+                                    var role = rolesArray_1[_a];
+                                    switch (role) {
+                                        case "toc": {
+                                            publication.TOC = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.TOC, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "page-list": {
+                                            publication.PageList = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "landmarks": {
+                                            publication.Landmarks = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.Landmarks, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "lot": {
+                                            publication.LOT = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.LOT, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "loa": {
+                                            publication.LOA = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.LOA, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "loi": {
+                                            publication.LOI = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.LOI, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        case "lov": {
+                                            publication.LOV = [];
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.LOV, navLinkHrefDecoded);
+                                            break;
+                                        }
+                                        default: {
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2276,15 +2295,23 @@ var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return ts
         }
     });
 }); };
-var fillTOCFromNavDocWithOL = function (select, olElems, node, navDocPath) {
+var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
     olElems.forEach(function (olElem) {
         var liElems = select("xhtml:li", olElem);
         if (liElems && liElems.length) {
             liElems.forEach(function (liElem) {
                 var link = new publication_link_1.Link();
-                node.push(link);
+                children.push(link);
                 var aElems = select("xhtml:a", liElem);
                 if (aElems && aElems.length > 0) {
+                    var epubType = select("@epub:type", aElems[0]);
+                    if (epubType && epubType.length) {
+                        var rolesString = epubType[0].value;
+                        var rolesArray = parseSpaceSeparatedString(rolesString);
+                        if (rolesArray.length) {
+                            link.AddRels(rolesArray);
+                        }
+                    }
                     var aHref = select("@href", aElems[0]);
                     if (aHref && aHref.length) {
                         var val = aHref[0].value;

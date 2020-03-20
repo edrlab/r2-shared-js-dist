@@ -42,6 +42,14 @@ const epub301 = "3.0.1";
 const epub31 = "3.1";
 exports.mediaOverlayURLPath = "media-overlay.json";
 exports.mediaOverlayURLParam = "resource";
+exports.BCP47_UNKNOWN_LANG = "und";
+function parseSpaceSeparatedString(str) {
+    return str ? str.trim().split(" ").map((role) => {
+        return role.trim();
+    }).filter((role) => {
+        return role.length > 0;
+    }) : [];
+}
 exports.addCoverDimensions = async (publication, coverLink) => {
     const zipInternal = publication.findFromInternal("zip");
     if (zipInternal) {
@@ -584,14 +592,15 @@ const fillMediaOverlayParse = async (publication, mo) => {
     mo.Role.push("section");
     if (smil.Body) {
         if (smil.Body.EpubType) {
-            smil.Body.EpubType.trim().split(" ").forEach((role) => {
+            const roles = parseSpaceSeparatedString(smil.Body.EpubType);
+            for (const role of roles) {
                 if (!role.length) {
                     return;
                 }
                 if (mo.Role.indexOf(role) < 0) {
                     mo.Role.push(role);
                 }
-            });
+            }
         }
         if (smil.Body.TextRef) {
             const smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
@@ -714,14 +723,15 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
         moc.Role.push("section");
         const seq = seqChild;
         if (seq.EpubType) {
-            seq.EpubType.trim().split(" ").forEach((role) => {
+            const roles = parseSpaceSeparatedString(seq.EpubType);
+            for (const role of roles) {
                 if (!role.length) {
                     return;
                 }
                 if (moc.Role.indexOf(role) < 0) {
                     moc.Role.push(role);
                 }
-            });
+            }
         }
         if (seq.TextRef) {
             const seqTextRefDecoded = seq.TextRefDecoded;
@@ -746,7 +756,8 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
     else {
         const par = seqChild;
         if (par.EpubType) {
-            par.EpubType.trim().split(" ").forEach((role) => {
+            const roles = parseSpaceSeparatedString(par.EpubType);
+            for (const role of roles) {
                 if (!role.length) {
                     return;
                 }
@@ -756,7 +767,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 if (moc.Role.indexOf(role) < 0) {
                     moc.Role.push(role);
                 }
-            });
+            }
         }
         if (par.Text && par.Text.Src) {
             const parTextSrcDcoded = par.Text.SrcDecoded;
@@ -870,7 +881,7 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
                 contributor.Name[publication.Metadata.Language[0].toLowerCase()] = cont.Data;
             }
             else {
-                contributor.Name["_"] = cont.Data;
+                contributor.Name[exports.BCP47_UNKNOWN_LANG] = cont.Data;
             }
         }
         else {
@@ -1076,7 +1087,7 @@ const addTitle = (publication, rootfile, opf) => {
                     publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()] = mainTitle.Data;
                 }
                 else {
-                    publication.Metadata.Title["_"] = mainTitle.Data;
+                    publication.Metadata.Title[exports.BCP47_UNKNOWN_LANG] = mainTitle.Data;
                 }
             }
             else {
@@ -1102,7 +1113,7 @@ const addTitle = (publication, rootfile, opf) => {
                     publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()] = subTitle.Data;
                 }
                 else {
-                    publication.Metadata.SubTitle["_"] = subTitle.Data;
+                    publication.Metadata.SubTitle[exports.BCP47_UNKNOWN_LANG] = subTitle.Data;
                 }
             }
             else {
@@ -1128,7 +1139,7 @@ const addRelAndPropertiesToLink = async (publication, link, linkEpub, rootfile, 
     }
 };
 const addToLinkFromProperties = async (publication, link, propertiesString) => {
-    const properties = propertiesString.trim().split(" ");
+    const properties = parseSpaceSeparatedString(propertiesString);
     const propertiesStruct = new metadata_properties_1.Properties();
     for (const p of properties) {
         switch (p) {
@@ -1822,64 +1833,76 @@ const fillTOCFromNavDoc = async (publication, _rootfile, _opf, zip) => {
     const navs = select("/xhtml:html/xhtml:body//xhtml:nav", navXmlDoc);
     if (navs && navs.length) {
         navs.forEach((navElement) => {
-            const typeNav = select("@epub:type", navElement);
-            if (typeNav && typeNav.length) {
+            const epubType = select("@epub:type", navElement);
+            if (epubType && epubType.length) {
                 const olElem = select("xhtml:ol", navElement);
-                const roles = typeNav[0].value;
-                const role = roles.trim().split(" ")[0];
-                switch (role) {
-                    case "toc": {
-                        publication.TOC = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.TOC, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "page-list": {
-                        publication.PageList = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "landmarks": {
-                        publication.Landmarks = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.Landmarks, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "lot": {
-                        publication.LOT = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.LOT, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "loa": {
-                        publication.LOA = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.LOA, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "loi": {
-                        publication.LOI = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.LOI, navLinkHrefDecoded);
-                        break;
-                    }
-                    case "lov": {
-                        publication.LOV = [];
-                        fillTOCFromNavDocWithOL(select, olElem, publication.LOV, navLinkHrefDecoded);
-                        break;
-                    }
-                    default: {
-                        break;
+                const rolesString = epubType[0].value;
+                const rolesArray = parseSpaceSeparatedString(rolesString);
+                if (rolesArray.length) {
+                    for (const role of rolesArray) {
+                        switch (role) {
+                            case "toc": {
+                                publication.TOC = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.TOC, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "page-list": {
+                                publication.PageList = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "landmarks": {
+                                publication.Landmarks = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.Landmarks, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "lot": {
+                                publication.LOT = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.LOT, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "loa": {
+                                publication.LOA = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.LOA, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "loi": {
+                                publication.LOI = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.LOI, navLinkHrefDecoded);
+                                break;
+                            }
+                            case "lov": {
+                                publication.LOV = [];
+                                fillTOCFromNavDocWithOL(select, olElem, publication.LOV, navLinkHrefDecoded);
+                                break;
+                            }
+                            default: {
+                                break;
+                            }
+                        }
                     }
                 }
             }
         });
     }
 };
-const fillTOCFromNavDocWithOL = (select, olElems, node, navDocPath) => {
+const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
     olElems.forEach((olElem) => {
         const liElems = select("xhtml:li", olElem);
         if (liElems && liElems.length) {
             liElems.forEach((liElem) => {
                 const link = new publication_link_1.Link();
-                node.push(link);
+                children.push(link);
                 const aElems = select("xhtml:a", liElem);
                 if (aElems && aElems.length > 0) {
+                    const epubType = select("@epub:type", aElems[0]);
+                    if (epubType && epubType.length) {
+                        const rolesString = epubType[0].value;
+                        const rolesArray = parseSpaceSeparatedString(rolesString);
+                        if (rolesArray.length) {
+                            link.AddRels(rolesArray);
+                        }
+                    }
                     const aHref = select("@href", aElems[0]);
                     if (aHref && aHref.length) {
                         const val = aHref[0].value;
