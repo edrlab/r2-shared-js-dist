@@ -283,7 +283,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
         }
         let transformedStream;
         try {
-            transformedStream = yield transformer_1.Transformers.tryStream(pub, link, zipStream_, false, 0, 0, undefined);
+            transformedStream = yield transformer_1.Transformers.tryStream(pub, link, undefined, zipStream_, false, 0, 0, undefined);
         }
         catch (err) {
             console.log(hrefDecoded);

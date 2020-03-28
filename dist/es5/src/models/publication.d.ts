@@ -12,7 +12,10 @@ export declare class Publication {
     set Spine(spine: Link[] | undefined);
     Resources: Link[];
     TOC: Link[];
-    PageList: Link[];
+    PageList2: Link[];
+    PageList1: Link[] | undefined;
+    get PageList(): Link[] | undefined;
+    set PageList(pagelist: Link[] | undefined);
     Landmarks: Link[];
     LOI: Link[];
     LOA: Link[];

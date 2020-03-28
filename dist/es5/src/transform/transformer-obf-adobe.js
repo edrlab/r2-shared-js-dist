@@ -9,7 +9,7 @@ var TransformerObfAdobe = (function () {
         return link.Properties && link.Properties.Encrypted &&
             link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
     };
-    TransformerObfAdobe.prototype.transformStream = function (publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
+    TransformerObfAdobe.prototype.transformStream = function (publication, link, _url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var data, err_1, buff, err_2, sal;
             var _this = this;

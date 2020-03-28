@@ -8,7 +8,7 @@ class TransformerObfIDPF {
         return link.Properties && link.Properties.Encrypted &&
             link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
     }
-    transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
+    transformStream(publication, link, _url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let data;
             try {

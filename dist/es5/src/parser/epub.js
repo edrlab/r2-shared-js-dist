@@ -718,7 +718,7 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                 _c.label = 7;
             case 7:
                 _c.trys.push([7, 9, , 10]);
-                return [4, transformer_1.Transformers.tryStream(publication, link, smilZipStream_, false, 0, 0, undefined)];
+                return [4, transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined)];
             case 8:
                 transformedStream = _c.sent();
                 return [3, 10];

@@ -9,25 +9,17 @@ var TransformerHTML = (function () {
     function TransformerHTML(transformerFunction) {
         this.transformString = transformerFunction;
     }
-    TransformerHTML.prototype.supports = function (publication, link) {
+    TransformerHTML.prototype.supports = function (_publication, link) {
         var mediaType = mime.lookup(link.Href);
         if (link && link.TypeLink) {
             mediaType = link.TypeLink;
         }
         if (mediaType === "text/html" || mediaType === "application/xhtml+xml") {
-            var pubDefinesLayout = publication.Metadata && publication.Metadata.Rendition
-                && publication.Metadata.Rendition.Layout;
-            var pubIsFixed = pubDefinesLayout && publication.Metadata.Rendition.Layout === "fixed";
-            var linkDefinesLayout = link.Properties && link.Properties.Layout;
-            var linkIsFixed = linkDefinesLayout && link.Properties.Layout === "fixed";
-            if (linkIsFixed || pubIsFixed) {
-                return false;
-            }
             return true;
         }
         return false;
     };
-    TransformerHTML.prototype.transformStream = function (publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
+    TransformerHTML.prototype.transformStream = function (publication, link, url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var data, err_1, buff, err_2, sal;
             var _this = this;
@@ -44,7 +36,7 @@ var TransformerHTML = (function () {
                         return [2, Promise.reject(err_1)];
                     case 3:
                         _a.trys.push([3, 5, , 6]);
-                        return [4, this.transformBuffer(publication, link, data, sessionInfo)];
+                        return [4, this.transformBuffer(publication, link, url, data, sessionInfo)];
                     case 4:
                         buff = _a.sent();
                         return [3, 6];
@@ -66,13 +58,13 @@ var TransformerHTML = (function () {
             });
         });
     };
-    TransformerHTML.prototype.transformBuffer = function (publication, link, data, sessionInfo) {
+    TransformerHTML.prototype.transformBuffer = function (publication, link, url, data, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var str, str_;
             return tslib_1.__generator(this, function (_a) {
                 try {
                     str = data.toString("utf8");
-                    str_ = this.transformString(publication, link, str, sessionInfo);
+                    str_ = this.transformString(publication, link, url, str, sessionInfo);
                     return [2, Promise.resolve(Buffer.from(str_))];
                 }
                 catch (err) {

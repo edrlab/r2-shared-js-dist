@@ -11,9 +11,9 @@ class Transformers {
     static instance() {
         return Transformers._instance;
     }
-    static tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
+    static tryStream(publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return Transformers.instance()._tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
+            return Transformers.instance()._tryStream(publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
         });
     }
     add(transformer) {
@@ -21,7 +21,7 @@ class Transformers {
             this.transformers.push(transformer);
         }
     }
-    _tryStream(publication, link, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
+    _tryStream(publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let transformedData;
             let atLeastOne = false;
@@ -38,7 +38,7 @@ class Transformers {
                             break;
                         }
                     }
-                    transformedData = t.transformStream(publication, link, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
+                    transformedData = t.transformStream(publication, link, url, s, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
                 }
             }
             if (transformedData) {

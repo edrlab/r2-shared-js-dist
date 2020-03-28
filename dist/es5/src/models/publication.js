@@ -12,6 +12,7 @@ var SPINE_JSON_PROP = "spine";
 var RESOURCES_JSON_PROP = "resources";
 var TOC_JSON_PROP = "toc";
 var PAGELIST_JSON_PROP = "page-list";
+var PAGELIST_CAMEL_JSON_PROP = "pageList";
 var LANDMARKS_JSON_PROP = "landmarks";
 var LOI_JSON_PROP = "loi";
 var LOA_JSON_PROP = "loa";
@@ -28,6 +29,19 @@ var Publication = (function () {
             if (spine) {
                 this.Spine1 = undefined;
                 this.Spine2 = spine;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Publication.prototype, "PageList", {
+        get: function () {
+            return this.PageList2 ? this.PageList2 : this.PageList1;
+        },
+        set: function (pagelist) {
+            if (pagelist) {
+                this.PageList1 = undefined;
+                this.PageList2 = pagelist;
             }
         },
         enumerable: true,
@@ -157,10 +171,15 @@ var Publication = (function () {
         tslib_1.__metadata("design:type", Array)
     ], Publication.prototype, "TOC", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(PAGELIST_JSON_PROP),
+        ta_json_x_1.JsonProperty(PAGELIST_CAMEL_JSON_PROP),
         ta_json_x_1.JsonElementType(publication_link_1.Link),
         tslib_1.__metadata("design:type", Array)
-    ], Publication.prototype, "PageList", void 0);
+    ], Publication.prototype, "PageList2", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty(PAGELIST_JSON_PROP),
+        ta_json_x_1.JsonElementType(publication_link_1.Link),
+        tslib_1.__metadata("design:type", Object)
+    ], Publication.prototype, "PageList1", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty(LANDMARKS_JSON_PROP),
         ta_json_x_1.JsonElementType(publication_link_1.Link),

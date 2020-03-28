@@ -12,6 +12,7 @@ const SPINE_JSON_PROP = "spine";
 const RESOURCES_JSON_PROP = "resources";
 const TOC_JSON_PROP = "toc";
 const PAGELIST_JSON_PROP = "page-list";
+const PAGELIST_CAMEL_JSON_PROP = "pageList";
 const LANDMARKS_JSON_PROP = "landmarks";
 const LOI_JSON_PROP = "loi";
 const LOA_JSON_PROP = "loa";
@@ -25,6 +26,15 @@ let Publication = class Publication {
         if (spine) {
             this.Spine1 = undefined;
             this.Spine2 = spine;
+        }
+    }
+    get PageList() {
+        return this.PageList2 ? this.PageList2 : this.PageList1;
+    }
+    set PageList(pagelist) {
+        if (pagelist) {
+            this.PageList1 = undefined;
+            this.PageList2 = pagelist;
         }
     }
     freeDestroy() {
@@ -152,10 +162,15 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Array)
 ], Publication.prototype, "TOC", void 0);
 tslib_1.__decorate([
-    ta_json_x_1.JsonProperty(PAGELIST_JSON_PROP),
+    ta_json_x_1.JsonProperty(PAGELIST_CAMEL_JSON_PROP),
     ta_json_x_1.JsonElementType(publication_link_1.Link),
     tslib_1.__metadata("design:type", Array)
-], Publication.prototype, "PageList", void 0);
+], Publication.prototype, "PageList2", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty(PAGELIST_JSON_PROP),
+    ta_json_x_1.JsonElementType(publication_link_1.Link),
+    tslib_1.__metadata("design:type", Object)
+], Publication.prototype, "PageList1", void 0);
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty(LANDMARKS_JSON_PROP),
     ta_json_x_1.JsonElementType(publication_link_1.Link),

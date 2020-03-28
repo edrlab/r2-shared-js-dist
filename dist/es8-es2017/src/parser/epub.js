@@ -555,7 +555,7 @@ const fillMediaOverlayParse = async (publication, mo) => {
         let decryptFail = false;
         let transformedStream;
         try {
-            transformedStream = await transformer_1.Transformers.tryStream(publication, link, smilZipStream_, false, 0, 0, undefined);
+            transformedStream = await transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined);
         }
         catch (err) {
             debug(err);

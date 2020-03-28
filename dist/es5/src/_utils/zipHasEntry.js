@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
+var debug_ = require("debug");
+var debug = debug_("r2:shared#utils/zipHasEntry");
 function zipHasEntry(zip, zipPath, zipPathOther) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var has, err_1, err_2;
@@ -22,13 +24,13 @@ function zipHasEntry(zip, zipPath, zipPathOther) {
                     return [3, 4];
                 case 4:
                     if (!(!has && zipPathOther && zipPathOther !== zipPath)) return [3, 8];
-                    console.log("zipHasEntry: " + zipPath + " => " + zipPathOther);
-                    has = zip.hasEntry(zipPath);
+                    debug("zipHasEntry: " + zipPath + " => " + zipPathOther);
+                    has = zip.hasEntry(zipPathOther);
                     if (!zip.hasEntryAsync) return [3, 8];
                     _a.label = 5;
                 case 5:
                     _a.trys.push([5, 7, , 8]);
-                    return [4, zip.hasEntryAsync(zipPath)];
+                    return [4, zip.hasEntryAsync(zipPathOther)];
                 case 6:
                     has = _a.sent();
                     return [3, 8];

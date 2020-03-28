@@ -9,25 +9,17 @@ class TransformerHTML {
     constructor(transformerFunction) {
         this.transformString = transformerFunction;
     }
-    supports(publication, link) {
+    supports(_publication, link) {
         let mediaType = mime.lookup(link.Href);
         if (link && link.TypeLink) {
             mediaType = link.TypeLink;
         }
         if (mediaType === "text/html" || mediaType === "application/xhtml+xml") {
-            const pubDefinesLayout = publication.Metadata && publication.Metadata.Rendition
-                && publication.Metadata.Rendition.Layout;
-            const pubIsFixed = pubDefinesLayout && publication.Metadata.Rendition.Layout === "fixed";
-            const linkDefinesLayout = link.Properties && link.Properties.Layout;
-            const linkIsFixed = linkDefinesLayout && link.Properties.Layout === "fixed";
-            if (linkIsFixed || pubIsFixed) {
-                return false;
-            }
             return true;
         }
         return false;
     }
-    transformStream(publication, link, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
+    transformStream(publication, link, url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let data;
             try {
@@ -38,7 +30,7 @@ class TransformerHTML {
             }
             let buff;
             try {
-                buff = yield this.transformBuffer(publication, link, data, sessionInfo);
+                buff = yield this.transformBuffer(publication, link, url, data, sessionInfo);
             }
             catch (err) {
                 return Promise.reject(err);
@@ -53,11 +45,11 @@ class TransformerHTML {
             return Promise.resolve(sal);
         });
     }
-    transformBuffer(publication, link, data, sessionInfo) {
+    transformBuffer(publication, link, url, data, sessionInfo) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             try {
                 const str = data.toString("utf8");
-                const str_ = this.transformString(publication, link, str, sessionInfo);
+                const str_ = this.transformString(publication, link, url, str, sessionInfo);
                 return Promise.resolve(Buffer.from(str_));
             }
             catch (err) {
