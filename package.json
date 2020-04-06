@@ -1,6 +1,6 @@
 {
   "name": "r2-shared-js",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Readium 2 'shared' for NodeJS (TypeScript)",
   "keywords": [
     "readium",
@@ -62,7 +62,7 @@
     "@types/debug": "^4.1.5",
     "@types/image-size": "^0.8.0",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^12.12.32",
+    "@types/node": "^12.12.34",
     "@types/xmldom": "^0.1.29",
     "ava": "^2.4.0",
     "cpy-cli": "^3.1.0",
@@ -73,9 +73,9 @@
     "git-rev-sync": "^2.0.0",
     "json": "^9.0.6",
     "json-diff": "^0.5.4",
-    "mkdirp": "^1.0.3",
+    "mkdirp": "^1.0.4",
     "rimraf": "^3.0.2",
-    "ts-node": "^8.8.1",
+    "ts-node": "^8.8.2",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.20.1",
     "tslint-language-service": "^0.9.9",
@@ -94,7 +94,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "cson2json": "sed -E \"s/#ECMASCRIPT#/es5/g\" package-scripts-build.cson > tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es6-es2015/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es7-es2016/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es8-es2017/g\" package-scripts-build.cson >> tmp-build.cson && json -I -f package.json -e \"this.scripts=$(cat package-scripts.cson tmp-build.cson | node node_modules/cson/bin/cson2json)\" && rimraf tmp-*.cson",
+    "cson2json": "sed -E \"s/#ECMASCRIPT#/es5/g\" package-scripts-build.cson > tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es6-es2015/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es7-es2016/g\" package-scripts-build.cson >> tmp-build.cson && sed -E \"s/#ECMASCRIPT#/es8-es2017/g\" package-scripts-build.cson >> tmp-build.cson && json -I -f package.json -e \"this.scripts=$(cat package-scripts.cson tmp-build.cson | node node_modules/.bin/cson2json)\" && rimraf tmp-*.cson",
     "copydist": "cpy \"./dist/**/*\" ../r2-opds-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-streamer-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-navigator-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../r2-testapp-js/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir && cpy \"./dist/**/*\" ../readium-desktop/node_modules/r2-shared-js/ --cwd=./ --parents --no-dir",
     "quick-build-dist": "npm run transpile:typescript:es8-es2017+afterdist && npm run copydist",
     "_pregitdist": "npm run build:all",

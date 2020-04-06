@@ -7,6 +7,7 @@ var path = require("path");
 var url_1 = require("url");
 var util = require("util");
 var publication_link_1 = require("../models/publication-link");
+var audiobook_1 = require("../parser/audiobook");
 var epub_1 = require("../parser/epub");
 var publication_parser_1 = require("../parser/publication-parser");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
@@ -59,7 +60,6 @@ if (UrlUtils_1.isHTTP(filePath)) {
 }
 fileName = fileName.replace(/META-INF[\/|\\]container.xml$/, "");
 fileName = path.basename(fileName);
-var isAnEPUB = epub_1.isEPUBlication(filePath);
 var outputDirPath;
 if (args[1]) {
     var argDir = args[1].trim();
@@ -98,7 +98,7 @@ if (args[2]) {
     decryptKeys = args[2].trim().split(";");
 }
 (function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var publication, err_1, err_2;
+    var publication, err_1, isAnEPUB, isAnAudioBook, err_2;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -113,24 +113,28 @@ if (args[2]) {
                 console.log(err_1);
                 return [2];
             case 3:
-                if (!(isAnEPUB && outputDirPath)) return [3, 8];
-                _a.label = 4;
+                isAnEPUB = epub_1.isEPUBlication(filePath);
+                return [4, audiobook_1.isAudioBookPublication(filePath)];
             case 4:
-                _a.trys.push([4, 6, , 7]);
-                return [4, extractEPUB(publication, outputDirPath, decryptKeys)];
+                isAnAudioBook = _a.sent();
+                if (!((isAnEPUB || isAnAudioBook) && outputDirPath)) return [3, 9];
+                _a.label = 5;
             case 5:
-                _a.sent();
-                return [3, 7];
+                _a.trys.push([5, 7, , 8]);
+                return [4, extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys)];
             case 6:
+                _a.sent();
+                return [3, 8];
+            case 7:
                 err_2 = _a.sent();
                 console.log("== Publication extract FAIL");
                 console.log(err_2);
                 return [2];
-            case 7: return [3, 9];
-            case 8:
+            case 8: return [3, 10];
+            case 9:
                 dumpPublication(publication);
-                _a.label = 9;
-            case 9: return [2];
+                _a.label = 10;
+            case 10: return [2];
         }
     });
 }); })();
@@ -227,8 +231,13 @@ function extractEPUB_Check(zip, outDir) {
                     if (zipEntries) {
                         for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                             zipEntry = zipEntries_1[_i];
-                            if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
-                                !zipEntry.endsWith(".DS_Store")) {
+                            if (zipEntry !== "mimetype" &&
+                                !zipEntry.startsWith("META-INF/") &&
+                                !zipEntry.endsWith(".opf") &&
+                                zipEntry !== "publication.json" &&
+                                zipEntry !== "license.lcpl" &&
+                                !zipEntry.endsWith(".DS_Store") &&
+                                !zipEntry.startsWith("__MACOSX/")) {
                                 expectedOutputPath = path.join(outDir, zipEntry);
                                 if (!fs.existsSync(expectedOutputPath)) {
                                     console.log("Zip entry not extracted??");
@@ -360,7 +369,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
         });
     });
 }
-function extractEPUB(pub, outDir, keys) {
+function extractEPUB(isEPUB, pub, outDir, keys) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zipInternal, zip, err_8, links, lic, has, l, _i, links_1, link, err_9, err_10;
         return tslib_1.__generator(this, function (_a) {
@@ -394,7 +403,7 @@ function extractEPUB(pub, outDir, keys) {
                         links.push.apply(links, pub.Spine);
                     }
                     if (!!keys) return [3, 6];
-                    lic = "META-INF/license.lcpl";
+                    lic = (isEPUB ? "META-INF/" : "") + "license.lcpl";
                     return [4, zipHasEntry_1.zipHasEntry(zip, lic, undefined)];
                 case 5:
                     has = _a.sent();

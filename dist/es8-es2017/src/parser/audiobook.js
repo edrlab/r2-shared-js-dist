@@ -6,6 +6,7 @@ const http = require("http");
 const https = require("https");
 const path = require("path");
 const publication_1 = require("../models/publication");
+const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
 const serializable_1 = require("r2-lcp-js/dist/es8-es2017/src/serializable");
 const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils");
 const JsonUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/JsonUtils");
@@ -82,6 +83,53 @@ async function AudioBookParsePromise(filePath, isAudio) {
     const publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
     publication.AddToInternal("type", "audiobook");
     publication.AddToInternal("zip", zip);
+    const lcpEntryName = "license.lcpl";
+    let checkLCP = true;
+    let hasLCP = false;
+    if (isAnAudioBook === AudioBookis.LocalExploded ||
+        isAnAudioBook === AudioBookis.LocalPacked) {
+        const has = await zipHasEntry_1.zipHasEntry(zip, lcpEntryName, undefined);
+        if (!has) {
+            checkLCP = false;
+        }
+        else {
+            hasLCP = true;
+        }
+    }
+    if (checkLCP) {
+        let lcpZipStream_;
+        try {
+            lcpZipStream_ = await zip.entryStreamPromise(lcpEntryName);
+        }
+        catch (err) {
+            if (hasLCP) {
+                debug(err);
+                return Promise.reject(`Problem streaming AudioBook LCP zip entry?! ${entryName}`);
+            }
+            else {
+                debug("Audiobook no LCP.");
+            }
+            checkLCP = false;
+        }
+        if (checkLCP && lcpZipStream_) {
+            const lcpZipStream = lcpZipStream_.stream;
+            let lcpZipData;
+            try {
+                lcpZipData = await BufferUtils_1.streamToBufferPromise(lcpZipStream);
+            }
+            catch (err) {
+                debug(err);
+                return Promise.reject(`Problem buffering AudioBook LCP zip entry?! ${entryName}`);
+            }
+            const lcpJsonStr = lcpZipData.toString("utf8");
+            const lcpJson = JSON.parse(lcpJsonStr);
+            const lcpl = serializable_1.TaJsonDeserialize(lcpJson, lcp_1.LCP);
+            lcpl.ZipPath = lcpEntryName;
+            lcpl.JsonSource = lcpJsonStr;
+            lcpl.init();
+            publication.LCP = lcpl;
+        }
+    }
     return Promise.resolve(publication);
 }
 exports.AudioBookParsePromise = AudioBookParsePromise;

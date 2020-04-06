@@ -6,6 +6,7 @@ const path = require("path");
 const url_1 = require("url");
 const util = require("util");
 const publication_link_1 = require("../models/publication-link");
+const audiobook_1 = require("../parser/audiobook");
 const epub_1 = require("../parser/epub");
 const publication_parser_1 = require("../parser/publication-parser");
 const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
@@ -58,7 +59,6 @@ if (UrlUtils_1.isHTTP(filePath)) {
 }
 fileName = fileName.replace(/META-INF[\/|\\]container.xml$/, "");
 fileName = path.basename(fileName);
-const isAnEPUB = epub_1.isEPUBlication(filePath);
 let outputDirPath;
 if (args[1]) {
     const argDir = args[1].trim();
@@ -106,9 +106,11 @@ if (args[2]) {
         console.log(err);
         return;
     }
-    if (isAnEPUB && outputDirPath) {
+    const isAnEPUB = epub_1.isEPUBlication(filePath);
+    const isAnAudioBook = await audiobook_1.isAudioBookPublication(filePath);
+    if ((isAnEPUB || isAnAudioBook) && outputDirPath) {
         try {
-            await extractEPUB(publication, outputDirPath, decryptKeys);
+            await extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys);
         }
         catch (err) {
             console.log("== Publication extract FAIL");
@@ -204,8 +206,13 @@ async function extractEPUB_Check(zip, outDir) {
     }
     if (zipEntries) {
         for (const zipEntry of zipEntries) {
-            if (zipEntry !== "mimetype" && !zipEntry.startsWith("META-INF/") && !zipEntry.endsWith(".opf") &&
-                !zipEntry.endsWith(".DS_Store")) {
+            if (zipEntry !== "mimetype" &&
+                !zipEntry.startsWith("META-INF/") &&
+                !zipEntry.endsWith(".opf") &&
+                zipEntry !== "publication.json" &&
+                zipEntry !== "license.lcpl" &&
+                !zipEntry.endsWith(".DS_Store") &&
+                !zipEntry.startsWith("__MACOSX/")) {
                 const expectedOutputPath = path.join(outDir, zipEntry);
                 if (!fs.existsSync(expectedOutputPath)) {
                     console.log("Zip entry not extracted??");
@@ -298,7 +305,7 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
     ensureDirs(linkOutputPath);
     fs.writeFileSync(linkOutputPath, zipData);
 }
-async function extractEPUB(pub, outDir, keys) {
+async function extractEPUB(isEPUB, pub, outDir, keys) {
     const zipInternal = pub.findFromInternal("zip");
     if (!zipInternal) {
         console.log("No publication zip!?");
@@ -322,7 +329,7 @@ async function extractEPUB(pub, outDir, keys) {
         links.push(...pub.Spine);
     }
     if (!keys) {
-        const lic = "META-INF/license.lcpl";
+        const lic = (isEPUB ? "META-INF/" : "") + "license.lcpl";
         const has = await zipHasEntry_1.zipHasEntry(zip, lic, undefined);
         if (has) {
             const l = new publication_link_1.Link();

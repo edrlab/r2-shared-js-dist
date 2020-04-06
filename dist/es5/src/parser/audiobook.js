@@ -7,6 +7,7 @@ var http = require("http");
 var https = require("https");
 var path = require("path");
 var publication_1 = require("../models/publication");
+var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var JsonUtils_1 = require("r2-utils-js/dist/es5/src/_utils/JsonUtils");
@@ -24,7 +25,7 @@ function absolutizeURLs(rootUrl, jsonObj) {
 }
 function AudioBookParsePromise(filePath, isAudio) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnAudioBook, _a, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication;
+        var isAnAudioBook, _a, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication, lcpEntryName, checkLCP, hasLCP, has, lcpZipStream_, err_4, lcpZipStream, lcpZipData, err_5, lcpJsonStr, lcpJson, lcpl;
         return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -109,7 +110,67 @@ function AudioBookParsePromise(filePath, isAudio) {
                     publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
                     publication.AddToInternal("type", "audiobook");
                     publication.AddToInternal("zip", zip);
-                    return [2, Promise.resolve(publication)];
+                    lcpEntryName = "license.lcpl";
+                    checkLCP = true;
+                    hasLCP = false;
+                    if (!(isAnAudioBook === AudioBookis.LocalExploded ||
+                        isAnAudioBook === AudioBookis.LocalPacked)) return [3, 18];
+                    return [4, zipHasEntry_1.zipHasEntry(zip, lcpEntryName, undefined)];
+                case 17:
+                    has = _b.sent();
+                    if (!has) {
+                        checkLCP = false;
+                    }
+                    else {
+                        hasLCP = true;
+                    }
+                    _b.label = 18;
+                case 18:
+                    if (!checkLCP) return [3, 27];
+                    lcpZipStream_ = void 0;
+                    _b.label = 19;
+                case 19:
+                    _b.trys.push([19, 21, , 22]);
+                    return [4, zip.entryStreamPromise(lcpEntryName)];
+                case 20:
+                    lcpZipStream_ = _b.sent();
+                    return [3, 22];
+                case 21:
+                    err_4 = _b.sent();
+                    if (hasLCP) {
+                        debug(err_4);
+                        return [2, Promise.reject("Problem streaming AudioBook LCP zip entry?! " + entryName)];
+                    }
+                    else {
+                        debug("Audiobook no LCP.");
+                    }
+                    checkLCP = false;
+                    return [3, 22];
+                case 22:
+                    if (!(checkLCP && lcpZipStream_)) return [3, 27];
+                    lcpZipStream = lcpZipStream_.stream;
+                    lcpZipData = void 0;
+                    _b.label = 23;
+                case 23:
+                    _b.trys.push([23, 25, , 26]);
+                    return [4, BufferUtils_1.streamToBufferPromise(lcpZipStream)];
+                case 24:
+                    lcpZipData = _b.sent();
+                    return [3, 26];
+                case 25:
+                    err_5 = _b.sent();
+                    debug(err_5);
+                    return [2, Promise.reject("Problem buffering AudioBook LCP zip entry?! " + entryName)];
+                case 26:
+                    lcpJsonStr = lcpZipData.toString("utf8");
+                    lcpJson = JSON.parse(lcpJsonStr);
+                    lcpl = serializable_1.TaJsonDeserialize(lcpJson, lcp_1.LCP);
+                    lcpl.ZipPath = lcpEntryName;
+                    lcpl.JsonSource = lcpJsonStr;
+                    lcpl.init();
+                    publication.LCP = lcpl;
+                    _b.label = 27;
+                case 27: return [2, Promise.resolve(publication)];
             }
         });
     });
@@ -154,7 +215,7 @@ function doRequest(u) {
                             if (loc && loc.length) {
                                 var l_1 = Array.isArray(loc) ? loc[0] : loc;
                                 process.nextTick(function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
-                                    var redirectRes, err_4;
+                                    var redirectRes, err_6;
                                     return tslib_1.__generator(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
@@ -165,8 +226,8 @@ function doRequest(u) {
                                                 resolve(redirectRes);
                                                 return [3, 3];
                                             case 2:
-                                                err_4 = _a.sent();
-                                                reject("HTTP audiobook redirect, then fail " + u + " " + err_4);
+                                                err_6 = _a.sent();
+                                                reject("HTTP audiobook redirect, then fail " + u + " " + err_6);
                                                 return [3, 3];
                                             case 3: return [2];
                                         }
