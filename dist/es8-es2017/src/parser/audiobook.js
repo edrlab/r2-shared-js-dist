@@ -232,7 +232,9 @@ async function isAudioBookPublication(urlOrPath) {
     const fileName = path.basename(p);
     const ext = path.extname(fileName).toLowerCase();
     const audio = /\.audiobook$/.test(ext);
-    if (audio) {
+    const audioLcp = /\.lcpa$/.test(ext);
+    const audioLcpAlt = /\.lcpaudiobook$/.test(ext);
+    if (audio || audioLcp || audioLcpAlt) {
         if (!isHttp) {
             return AudioBookis.LocalPacked;
         }

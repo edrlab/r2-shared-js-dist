@@ -282,7 +282,7 @@ function doRequest(u) {
 }
 function isAudioBookPublication(urlOrPath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var p, isHttp, url, fileName, ext, audio, manStr, manJson;
+        var p, isHttp, url, fileName, ext, audio, audioLcp, audioLcpAlt, manStr, manJson;
         return tslib_1.__generator(this, function (_a) {
             p = urlOrPath;
             isHttp = UrlUtils_1.isHTTP(urlOrPath);
@@ -293,7 +293,9 @@ function isAudioBookPublication(urlOrPath) {
             fileName = path.basename(p);
             ext = path.extname(fileName).toLowerCase();
             audio = /\.audiobook$/.test(ext);
-            if (audio) {
+            audioLcp = /\.lcpa$/.test(ext);
+            audioLcpAlt = /\.lcpaudiobook$/.test(ext);
+            if (audio || audioLcp || audioLcpAlt) {
                 if (!isHttp) {
                     return [2, AudioBookis.LocalPacked];
                 }
