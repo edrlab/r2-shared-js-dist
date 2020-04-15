@@ -63,5 +63,6 @@ export declare class Metadata implements IWithAdditionalJSON {
     Source: string;
     Subject: Subject[];
     AdditionalJSON: JsonMap;
+    ParseAccessModeSufficient(): (string[])[];
     protected _OnDeserialized(): void;
 }

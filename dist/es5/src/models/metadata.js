@@ -75,6 +75,18 @@ var Metadata = (function () {
         enumerable: true,
         configurable: true
     });
+    Metadata.prototype.ParseAccessModeSufficient = function () {
+        if (this.AccessModeSufficient) {
+            return this.AccessModeSufficient.map(function (ams) {
+                return ams.split(",").
+                    map(function (token) { return token.trim(); }).
+                    filter(function (token) { return token.length; }).
+                    reduce(function (pv, cv) { return pv.includes(cv) ? pv : pv.concat(cv); }, []).
+                    filter(function (arr) { return arr.length; });
+            });
+        }
+        return [];
+    };
     Metadata.prototype._OnDeserialized = function () {
         if (!this.Title) {
             console.log("Metadata.Title is not set!");

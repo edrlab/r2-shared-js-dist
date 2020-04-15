@@ -61,6 +61,16 @@ let Metadata = class Metadata {
             this.BelongsTo2 = belongsto;
         }
     }
+    ParseAccessModeSufficient() {
+        if (this.AccessModeSufficient) {
+            return this.AccessModeSufficient.map((ams) => ams.split(",").
+                map((token) => token.trim()).
+                filter((token) => token.length).
+                reduce((pv, cv) => pv.includes(cv) ? pv : pv.concat(cv), []).
+                filter((arr) => arr.length));
+        }
+        return [];
+    }
     _OnDeserialized() {
         if (!this.Title) {
             console.log("Metadata.Title is not set!");
