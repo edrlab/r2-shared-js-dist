@@ -5,11 +5,17 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-m
 const opf_author_1 = require("./opf-author");
 const opf_date_1 = require("./opf-date");
 const opf_identifier_1 = require("./opf-identifier");
+const opf_link_1 = require("./opf-link");
 const opf_metafield_1 = require("./opf-metafield");
 const opf_subject_1 = require("./opf-subject");
 const opf_title_1 = require("./opf-title");
 let Metadata = class Metadata {
 };
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("link"),
+    xml_js_mapper_1.XmlItemType(opf_link_1.MetaLink),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "Link", void 0);
 tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("dc:title"),
     xml_js_mapper_1.XmlItemType(opf_title_1.Title),

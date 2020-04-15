@@ -441,6 +441,187 @@ function EpubParsePromise(filePath) {
                             });
                         }
                         if (opf.Metadata.Meta) {
+                            opf.Metadata.Link.forEach(function (metaLink) {
+                                if (metaLink.Property === "a11y:certifierCredential") {
+                                    var val = metaLink.Href;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.CertifierCredential) {
+                                        publication.Metadata.CertifierCredential = [];
+                                    }
+                                    publication.Metadata.CertifierCredential.push(val);
+                                }
+                                else if (metaLink.Property === "a11y:certifierReport") {
+                                    var val = metaLink.Href;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.CertifierReport) {
+                                        publication.Metadata.CertifierReport = [];
+                                    }
+                                    publication.Metadata.CertifierReport.push(val);
+                                }
+                                else if (metaLink.Property === "dcterms:conformsTo") {
+                                    var val = metaLink.Href;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.ConformsTo) {
+                                        publication.Metadata.ConformsTo = [];
+                                    }
+                                    publication.Metadata.ConformsTo.push(val);
+                                }
+                            });
+                            opf.Metadata.Meta.forEach(function (metaTag) {
+                                if (metaTag.Name === "schema:accessMode" ||
+                                    metaTag.Property === "schema:accessMode") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessMode) {
+                                        publication.Metadata.AccessMode = [];
+                                    }
+                                    publication.Metadata.AccessMode.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessibilityFeature" ||
+                                    metaTag.Property === "schema:accessibilityFeature") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessibilityFeature) {
+                                        publication.Metadata.AccessibilityFeature = [];
+                                    }
+                                    publication.Metadata.AccessibilityFeature.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessibilityHazard" ||
+                                    metaTag.Property === "schema:accessibilityHazard") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessibilityHazard) {
+                                        publication.Metadata.AccessibilityHazard = [];
+                                    }
+                                    publication.Metadata.AccessibilityHazard.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessibilitySummary" ||
+                                    metaTag.Property === "schema:accessibilitySummary") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessibilitySummary) {
+                                        publication.Metadata.AccessibilitySummary = [];
+                                    }
+                                    publication.Metadata.AccessibilitySummary.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessModeSufficient" ||
+                                    metaTag.Property === "schema:accessModeSufficient") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessModeSufficient) {
+                                        publication.Metadata.AccessModeSufficient = [];
+                                    }
+                                    publication.Metadata.AccessModeSufficient.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessibilityAPI" ||
+                                    metaTag.Property === "schema:accessibilityAPI") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessibilityAPI) {
+                                        publication.Metadata.AccessibilityAPI = [];
+                                    }
+                                    publication.Metadata.AccessibilityAPI.push(val);
+                                }
+                                else if (metaTag.Name === "schema:accessibilityControl" ||
+                                    metaTag.Property === "schema:accessibilityControl") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.AccessibilityControl) {
+                                        publication.Metadata.AccessibilityControl = [];
+                                    }
+                                    publication.Metadata.AccessibilityControl.push(val);
+                                }
+                                else if (metaTag.Name === "a11y:certifiedBy" ||
+                                    metaTag.Property === "a11y:certifiedBy") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.CertifiedBy) {
+                                        publication.Metadata.CertifiedBy = [];
+                                    }
+                                    publication.Metadata.CertifiedBy.push(val);
+                                }
+                                else if (metaTag.Name === "a11y:certifierCredential" ||
+                                    metaTag.Property === "a11y:certifierCredential") {
+                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                                    if (!val) {
+                                        return;
+                                    }
+                                    val = val.trim();
+                                    if (!val) {
+                                        return;
+                                    }
+                                    if (!publication.Metadata.CertifierCredential) {
+                                        publication.Metadata.CertifierCredential = [];
+                                    }
+                                    publication.Metadata.CertifierCredential.push(val);
+                                }
+                            });
                             metasDuration_1 = [];
                             metasNarrator_1 = [];
                             metasActiveClass_1 = [];

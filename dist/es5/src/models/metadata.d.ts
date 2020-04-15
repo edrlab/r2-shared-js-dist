@@ -11,6 +11,17 @@ export declare enum DirectionEnum {
     LTR = "ltr"
 }
 export declare class Metadata implements IWithAdditionalJSON {
+    AccessMode: string[];
+    AccessibilityFeature: string[];
+    AccessibilityHazard: string[];
+    AccessibilitySummary: string[];
+    AccessModeSufficient: string[];
+    AccessibilityAPI: string[];
+    AccessibilityControl: string[];
+    CertifiedBy: string[];
+    CertifierCredential: string[];
+    CertifierReport: string[];
+    ConformsTo: string[];
     RDFType: string;
     Title: string | IStringMap;
     SubTitle: string | IStringMap;

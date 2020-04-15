@@ -107,7 +107,12 @@ if (args[2]) {
         return;
     }
     const isAnEPUB = epub_1.isEPUBlication(filePath);
-    const isAnAudioBook = await audiobook_1.isAudioBookPublication(filePath);
+    let isAnAudioBook;
+    try {
+        isAnAudioBook = await audiobook_1.isAudioBookPublication(filePath);
+    }
+    catch (_err) {
+    }
     if ((isAnEPUB || isAnAudioBook) && outputDirPath) {
         try {
             await extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys);

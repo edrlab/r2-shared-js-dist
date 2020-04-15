@@ -68,6 +68,72 @@ let Metadata = class Metadata {
     }
 };
 tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessMode"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessMode", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessibilityFeature"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessibilityFeature", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessibilityHazard"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessibilityHazard", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessibilitySummary"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessibilitySummary", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessModeSufficient"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessModeSufficient", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessibilityAPI"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessibilityAPI", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("accessibilityControl"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "AccessibilityControl", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("certifiedBy"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "CertifiedBy", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("certifierCredential"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "CertifierCredential", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("certifierReport"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "CertifierReport", void 0);
+tslib_1.__decorate([
+    ta_json_x_1.JsonProperty("conformsTo"),
+    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
+    ta_json_x_1.JsonElementType(String),
+    tslib_1.__metadata("design:type", Array)
+], Metadata.prototype, "ConformsTo", void 0);
+tslib_1.__decorate([
     ta_json_x_1.JsonProperty("@type"),
     tslib_1.__metadata("design:type", String)
 ], Metadata.prototype, "RDFType", void 0);

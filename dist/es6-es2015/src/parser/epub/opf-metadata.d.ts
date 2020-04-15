@@ -1,10 +1,12 @@
 import { Author } from "./opf-author";
 import { MetaDate } from "./opf-date";
 import { Identifier } from "./opf-identifier";
+import { MetaLink } from "./opf-link";
 import { Metafield } from "./opf-metafield";
 import { Subject } from "./opf-subject";
 import { Title } from "./opf-title";
 export declare class Metadata {
+    Link: MetaLink[];
     Title: Title[];
     Language: string[];
     Identifier: Identifier[];

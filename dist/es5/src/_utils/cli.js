@@ -98,7 +98,7 @@ if (args[2]) {
     decryptKeys = args[2].trim().split(";");
 }
 (function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var publication, err_1, isAnEPUB, isAnAudioBook, err_2;
+    var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, err_2;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -114,27 +114,35 @@ if (args[2]) {
                 return [2];
             case 3:
                 isAnEPUB = epub_1.isEPUBlication(filePath);
-                return [4, audiobook_1.isAudioBookPublication(filePath)];
+                _a.label = 4;
             case 4:
-                isAnAudioBook = _a.sent();
-                if (!((isAnEPUB || isAnAudioBook) && outputDirPath)) return [3, 9];
-                _a.label = 5;
+                _a.trys.push([4, 6, , 7]);
+                return [4, audiobook_1.isAudioBookPublication(filePath)];
             case 5:
-                _a.trys.push([5, 7, , 8]);
-                return [4, extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys)];
+                isAnAudioBook = _a.sent();
+                return [3, 7];
             case 6:
-                _a.sent();
-                return [3, 8];
+                _err_1 = _a.sent();
+                return [3, 7];
             case 7:
+                if (!((isAnEPUB || isAnAudioBook) && outputDirPath)) return [3, 12];
+                _a.label = 8;
+            case 8:
+                _a.trys.push([8, 10, , 11]);
+                return [4, extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys)];
+            case 9:
+                _a.sent();
+                return [3, 11];
+            case 10:
                 err_2 = _a.sent();
                 console.log("== Publication extract FAIL");
                 console.log(err_2);
                 return [2];
-            case 8: return [3, 10];
-            case 9:
+            case 11: return [3, 13];
+            case 12:
                 dumpPublication(publication);
-                _a.label = 10;
-            case 10: return [2];
+                _a.label = 13;
+            case 13: return [2];
         }
     });
 }); })();
