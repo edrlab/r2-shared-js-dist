@@ -10,6 +10,7 @@ export declare class Link {
     Bitrate: number;
     Templated: boolean;
     Children: Link[];
+    Alternate: Link[];
     Rel: string[];
     MediaOverlays: MediaOverlayNode[] | undefined;
     Href1: string;

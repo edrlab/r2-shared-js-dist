@@ -7,6 +7,7 @@ var decodeURI_1 = require("../_utils/decodeURI");
 var metadata_properties_1 = require("./metadata-properties");
 var PROPERTIES_JSON_PROP = "properties";
 var CHILDREN_JSON_PROP = "children";
+var ALTERNATE_JSON_PROP = "alternate";
 var Link = (function () {
     function Link() {
     }
@@ -110,6 +111,11 @@ var Link = (function () {
         ta_json_x_1.JsonElementType(Link_1),
         tslib_1.__metadata("design:type", Array)
     ], Link.prototype, "Children", void 0);
+    tslib_1.__decorate([
+        ta_json_x_1.JsonProperty(ALTERNATE_JSON_PROP),
+        ta_json_x_1.JsonElementType(Link_1),
+        tslib_1.__metadata("design:type", Array)
+    ], Link.prototype, "Alternate", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("rel"),
         ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
