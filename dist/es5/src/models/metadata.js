@@ -75,18 +75,6 @@ var Metadata = (function () {
         enumerable: true,
         configurable: true
     });
-    Metadata.prototype.ParseAccessModeSufficient = function () {
-        if (this.AccessModeSufficient) {
-            return this.AccessModeSufficient.map(function (ams) {
-                return ams.split(",").
-                    map(function (token) { return token.trim(); }).
-                    filter(function (token) { return token.length; }).
-                    reduce(function (pv, cv) { return pv.includes(cv) ? pv : pv.concat(cv); }, []).
-                    filter(function (arr) { return arr.length; });
-            });
-        }
-        return [];
-    };
     Metadata.prototype._OnDeserialized = function () {
         if (!this.Title) {
             console.log("Metadata.Title is not set!");
@@ -112,14 +100,11 @@ var Metadata = (function () {
     ], Metadata.prototype, "AccessibilityHazard", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("accessibilitySummary"),
-        ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
-        ta_json_x_1.JsonElementType(String),
-        tslib_1.__metadata("design:type", Array)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "AccessibilitySummary", void 0);
     tslib_1.__decorate([
         ta_json_x_1.JsonProperty("accessModeSufficient"),
-        ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
-        ta_json_x_1.JsonElementType(String),
+        ta_json_x_1.JsonElementType(Array),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessModeSufficient", void 0);
     tslib_1.__decorate([

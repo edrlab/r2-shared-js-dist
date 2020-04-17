@@ -14,8 +14,8 @@ export declare class Metadata implements IWithAdditionalJSON {
     AccessMode: string[];
     AccessibilityFeature: string[];
     AccessibilityHazard: string[];
-    AccessibilitySummary: string[];
-    AccessModeSufficient: string[];
+    AccessibilitySummary: string | IStringMap;
+    AccessModeSufficient: (string[])[];
     AccessibilityAPI: string[];
     AccessibilityControl: string[];
     CertifiedBy: string[];
@@ -63,6 +63,5 @@ export declare class Metadata implements IWithAdditionalJSON {
     Source: string;
     Subject: Subject[];
     AdditionalJSON: JsonMap;
-    ParseAccessModeSufficient(): (string[])[];
     protected _OnDeserialized(): void;
 }

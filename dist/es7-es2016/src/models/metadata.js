@@ -61,16 +61,6 @@ let Metadata = class Metadata {
             this.BelongsTo2 = belongsto;
         }
     }
-    ParseAccessModeSufficient() {
-        if (this.AccessModeSufficient) {
-            return this.AccessModeSufficient.map((ams) => ams.split(",").
-                map((token) => token.trim()).
-                filter((token) => token.length).
-                reduce((pv, cv) => pv.includes(cv) ? pv : pv.concat(cv), []).
-                filter((arr) => arr.length));
-        }
-        return [];
-    }
     _OnDeserialized() {
         if (!this.Title) {
             console.log("Metadata.Title is not set!");
@@ -97,14 +87,11 @@ tslib_1.__decorate([
 ], Metadata.prototype, "AccessibilityHazard", void 0);
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty("accessibilitySummary"),
-    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
-    ta_json_x_1.JsonElementType(String),
-    tslib_1.__metadata("design:type", Array)
+    tslib_1.__metadata("design:type", Object)
 ], Metadata.prototype, "AccessibilitySummary", void 0);
 tslib_1.__decorate([
     ta_json_x_1.JsonProperty("accessModeSufficient"),
-    ta_json_x_1.JsonConverter(ta_json_string_converter_1.JsonStringConverter),
-    ta_json_x_1.JsonElementType(String),
+    ta_json_x_1.JsonElementType(Array),
     tslib_1.__metadata("design:type", Array)
 ], Metadata.prototype, "AccessModeSufficient", void 0);
 tslib_1.__decorate([

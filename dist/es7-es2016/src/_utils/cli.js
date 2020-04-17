@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const crypto = require("crypto");
+const deepEqual = require("fast-deep-equal");
 const fs = require("fs");
+const jsonDiff = require("json-diff");
 const path = require("path");
 const url_1 = require("url");
 const util = require("util");
+const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
 const audiobook_1 = require("../parser/audiobook");
 const epub_1 = require("../parser/epub");
@@ -376,5 +379,24 @@ function ensureDirs(fspath) {
 function dumpPublication(publication) {
     console.log("#### RAW OBJECT:");
     console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+    const publicationJsonObj = serializable_1.TaJsonSerialize(publication);
+    const publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
+    const publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
+    const publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
+    const eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
+    if (!eq) {
+        console.log("#### TA-JSON SERIALIZED JSON OBJ:");
+        console.log(publicationJsonObj);
+        console.log("#### STRINGIFIED JSON OBJ:");
+        console.log(publicationJsonStr);
+        console.log("#### TA-JSON DESERIALIZED (REVERSE):");
+        console.log(util.inspect(publicationReverse, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+        console.log("#### TA-JSON SERIALIZED JSON OBJ (REVERSE):");
+        console.log(publicationJsonObjReverse);
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+    }
+    console.log(jsonDiff.diffString(publicationJsonObj, publicationJsonObjReverse));
 }
 //# sourceMappingURL=cli.js.map

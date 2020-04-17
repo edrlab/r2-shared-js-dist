@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var crypto = require("crypto");
+var deepEqual = require("fast-deep-equal");
 var fs = require("fs");
+var jsonDiff = require("json-diff");
 var path = require("path");
 var url_1 = require("url");
 var util = require("util");
+var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
 var audiobook_1 = require("../parser/audiobook");
 var epub_1 = require("../parser/epub");
@@ -466,5 +469,24 @@ function ensureDirs(fspath) {
 function dumpPublication(publication) {
     console.log("#### RAW OBJECT:");
     console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+    var publicationJsonObj = serializable_1.TaJsonSerialize(publication);
+    var publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
+    var publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
+    var publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
+    var eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
+    if (!eq) {
+        console.log("#### TA-JSON SERIALIZED JSON OBJ:");
+        console.log(publicationJsonObj);
+        console.log("#### STRINGIFIED JSON OBJ:");
+        console.log(publicationJsonStr);
+        console.log("#### TA-JSON DESERIALIZED (REVERSE):");
+        console.log(util.inspect(publicationReverse, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+        console.log("#### TA-JSON SERIALIZED JSON OBJ (REVERSE):");
+        console.log(publicationJsonObjReverse);
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+    }
+    console.log(jsonDiff.diffString(publicationJsonObj, publicationJsonObjReverse));
 }
 //# sourceMappingURL=cli.js.map

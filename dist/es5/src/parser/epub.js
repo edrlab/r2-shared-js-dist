@@ -19,6 +19,7 @@ var metadata_properties_1 = require("../models/metadata-properties");
 var metadata_subject_1 = require("../models/metadata-subject");
 var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
+var ta_json_string_tokens_converter_1 = require("../models/ta-json-string-tokens-converter");
 var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
@@ -151,7 +152,7 @@ function isEPUBlication(urlOrPath) {
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, err, zipEntries, _a, zipEntries_2, zipEntry, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, dname, ncxManItemHrefDecoded, ncxFilePath, err, zipEntries, _b, zipEntries_3, zipEntry, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1, lang, pageMapLink;
+        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, err, zipEntries, _a, zipEntries_2, zipEntry, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, dname, ncxManItemHrefDecoded, ncxFilePath, err, zipEntries, _b, zipEntries_3, zipEntry, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, AccessibilitySummarys_1, tuple, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1, lang, pageMapLink;
         return tslib_1.__generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -487,6 +488,7 @@ function EpubParsePromise(filePath) {
                             });
                         }
                         if (opf.Metadata.Meta) {
+                            AccessibilitySummarys_1 = [];
                             opf.Metadata.Meta.forEach(function (metaTag) {
                                 if (metaTag.Name === "schema:accessMode" ||
                                     metaTag.Property === "schema:accessMode") {
@@ -543,10 +545,10 @@ function EpubParsePromise(filePath) {
                                     if (!val) {
                                         return;
                                     }
-                                    if (!publication.Metadata.AccessibilitySummary) {
-                                        publication.Metadata.AccessibilitySummary = [];
-                                    }
-                                    publication.Metadata.AccessibilitySummary.push(val);
+                                    AccessibilitySummarys_1.push({
+                                        metaTag: metaTag,
+                                        val: val,
+                                    });
                                 }
                                 else if (metaTag.Name === "schema:accessModeSufficient" ||
                                     metaTag.Property === "schema:accessModeSufficient") {
@@ -561,7 +563,7 @@ function EpubParsePromise(filePath) {
                                     if (!publication.Metadata.AccessModeSufficient) {
                                         publication.Metadata.AccessModeSufficient = [];
                                     }
-                                    publication.Metadata.AccessModeSufficient.push(val);
+                                    publication.Metadata.AccessModeSufficient.push(ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient(val));
                                 }
                                 else if (metaTag.Name === "schema:accessibilityAPI" ||
                                     metaTag.Property === "schema:accessibilityAPI") {
@@ -624,6 +626,33 @@ function EpubParsePromise(filePath) {
                                     publication.Metadata.CertifierCredential.push(val);
                                 }
                             });
+                            if (AccessibilitySummarys_1.length === 1) {
+                                tuple = AccessibilitySummarys_1[0];
+                                if (tuple.metaTag.Lang) {
+                                    publication.Metadata.AccessibilitySummary = {};
+                                    publication.Metadata.AccessibilitySummary[tuple.metaTag.Lang.toLowerCase()] = tuple.val;
+                                }
+                                else {
+                                    publication.Metadata.AccessibilitySummary = tuple.val;
+                                }
+                            }
+                            else {
+                                publication.Metadata.AccessibilitySummary = {};
+                                AccessibilitySummarys_1.forEach(function (tuple) {
+                                    var xmlLang = tuple.metaTag.Lang || opf.Lang;
+                                    if (xmlLang) {
+                                        publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
+                                    }
+                                    else if (publication.Metadata.Language &&
+                                        publication.Metadata.Language.length &&
+                                        !publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()]) {
+                                        publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()] = tuple.val;
+                                    }
+                                    else {
+                                        publication.Metadata.AccessibilitySummary[exports.BCP47_UNKNOWN_LANG] = tuple.val;
+                                    }
+                                });
+                            }
                             metasDuration_1 = [];
                             metasNarrator_1 = [];
                             metasActiveClass_1 = [];

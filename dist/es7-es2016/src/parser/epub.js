@@ -19,6 +19,7 @@ const metadata_properties_1 = require("../models/metadata-properties");
 const metadata_subject_1 = require("../models/metadata-subject");
 const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
+const ta_json_string_tokens_converter_1 = require("../models/ta-json-string-tokens-converter");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es7-es2016/src/models/metadata-encrypted");
 const lcp_1 = require("r2-lcp-js/dist/es7-es2016/src/parser/epub/lcp");
 const serializable_1 = require("r2-lcp-js/dist/es7-es2016/src/serializable");
@@ -401,6 +402,7 @@ function EpubParsePromise(filePath) {
                 });
             }
             if (opf.Metadata.Meta) {
+                const AccessibilitySummarys = [];
                 opf.Metadata.Meta.forEach((metaTag) => {
                     if (metaTag.Name === "schema:accessMode" ||
                         metaTag.Property === "schema:accessMode") {
@@ -457,10 +459,10 @@ function EpubParsePromise(filePath) {
                         if (!val) {
                             return;
                         }
-                        if (!publication.Metadata.AccessibilitySummary) {
-                            publication.Metadata.AccessibilitySummary = [];
-                        }
-                        publication.Metadata.AccessibilitySummary.push(val);
+                        AccessibilitySummarys.push({
+                            metaTag,
+                            val,
+                        });
                     }
                     else if (metaTag.Name === "schema:accessModeSufficient" ||
                         metaTag.Property === "schema:accessModeSufficient") {
@@ -475,7 +477,7 @@ function EpubParsePromise(filePath) {
                         if (!publication.Metadata.AccessModeSufficient) {
                             publication.Metadata.AccessModeSufficient = [];
                         }
-                        publication.Metadata.AccessModeSufficient.push(val);
+                        publication.Metadata.AccessModeSufficient.push(ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient(val));
                     }
                     else if (metaTag.Name === "schema:accessibilityAPI" ||
                         metaTag.Property === "schema:accessibilityAPI") {
@@ -538,6 +540,33 @@ function EpubParsePromise(filePath) {
                         publication.Metadata.CertifierCredential.push(val);
                     }
                 });
+                if (AccessibilitySummarys.length === 1) {
+                    const tuple = AccessibilitySummarys[0];
+                    if (tuple.metaTag.Lang) {
+                        publication.Metadata.AccessibilitySummary = {};
+                        publication.Metadata.AccessibilitySummary[tuple.metaTag.Lang.toLowerCase()] = tuple.val;
+                    }
+                    else {
+                        publication.Metadata.AccessibilitySummary = tuple.val;
+                    }
+                }
+                else {
+                    publication.Metadata.AccessibilitySummary = {};
+                    AccessibilitySummarys.forEach((tuple) => {
+                        const xmlLang = tuple.metaTag.Lang || opf.Lang;
+                        if (xmlLang) {
+                            publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
+                        }
+                        else if (publication.Metadata.Language &&
+                            publication.Metadata.Language.length &&
+                            !publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()]) {
+                            publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()] = tuple.val;
+                        }
+                        else {
+                            publication.Metadata.AccessibilitySummary[exports.BCP47_UNKNOWN_LANG] = tuple.val;
+                        }
+                    });
+                }
                 const metasDuration = [];
                 const metasNarrator = [];
                 const metasActiveClass = [];
