@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Publication = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -31,7 +32,7 @@ var Publication = (function () {
                 this.Spine2 = spine;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Publication.prototype, "PageList", {
@@ -44,7 +45,7 @@ var Publication = (function () {
                 this.PageList2 = pagelist;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Publication.prototype.freeDestroy = function () {

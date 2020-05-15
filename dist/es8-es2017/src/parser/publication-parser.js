@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PublicationParsePromise = void 0;
 const audiobook_1 = require("./audiobook");
 const cbz_1 = require("./cbz");
 const epub_1 = require("./epub");

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LinearizeAccessModeSufficients = exports.DelinearizeAccessModeSufficients = exports.DelinearizeAccessModeSufficient = void 0;
 exports.DelinearizeAccessModeSufficient = function (ams) {
     return ams.split(",").
         map(function (token) { return token.trim(); }).

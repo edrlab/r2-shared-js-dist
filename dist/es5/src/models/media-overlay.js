@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MediaOverlayNode = exports.timeStrToSeconds = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -88,7 +89,7 @@ var MediaOverlayNode = (function () {
         tslib_1.__metadata("design:type", Array)
     ], MediaOverlayNode.prototype, "Role", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty("children"),
+        ta_json_x_1.JsonProperty("narration"),
         ta_json_x_1.JsonElementType(MediaOverlayNode_1),
         tslib_1.__metadata("design:type", Array)
     ], MediaOverlayNode.prototype, "Children", void 0);

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonContributorConverter = void 0;
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var metadata_contributor_1 = require("./metadata-contributor");
 var JsonContributorConverter = (function () {

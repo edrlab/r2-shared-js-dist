@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TransformerLCP = void 0;
 var tslib_1 = require("tslib");
 var transformer_lcp_1 = require("r2-lcp-js/dist/es5/src/transform/transformer-lcp");
 var TransformerLCP = (function () {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.tryDecodeURI = void 0;
 function tryDecodeURI(url) {
     if (!url) {
         return null;

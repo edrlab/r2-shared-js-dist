@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JsonSubjectConverter = void 0;
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var metadata_subject_1 = require("./metadata-subject");
 var JsonSubjectConverter = (function () {

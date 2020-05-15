@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.zipHasEntry = void 0;
 const debug_ = require("debug");
 const debug = debug_("r2:shared#utils/zipHasEntry");
 async function zipHasEntry(zip, zipPath, zipPathOther) {

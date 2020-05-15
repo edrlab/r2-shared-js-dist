@@ -14,4 +14,5 @@ export declare enum EPUBis {
 export declare function isEPUBlication(urlOrPath: string): EPUBis | undefined;
 export declare function EpubParsePromise(filePath: string): Promise<Publication>;
 export declare function getAllMediaOverlays(publication: Publication): Promise<MediaOverlayNode[]>;
-export declare function getMediaOverlay(publication: Publication, spineHref: string): Promise<MediaOverlayNode[]>;
+export declare function getMediaOverlay(publication: Publication, spineHref: string): Promise<MediaOverlayNode>;
+export declare const lazyLoadMediaOverlays: (publication: Publication, mo: MediaOverlayNode) => Promise<undefined>;

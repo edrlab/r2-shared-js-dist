@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CbzParsePromise = exports.isCBZPublication = void 0;
 const mime = require("mime-types");
 const path = require("path");
 const slugify = require("slugify");

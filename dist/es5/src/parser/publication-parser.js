@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PublicationParsePromise = void 0;
 var tslib_1 = require("tslib");
 var audiobook_1 = require("./audiobook");
 var cbz_1 = require("./cbz");

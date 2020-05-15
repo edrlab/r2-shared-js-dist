@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const fs = require("fs");
 const image_size_1 = require("image-size");
 const moment = require("moment");
 const path = require("path");
-const querystring = require("querystring");
 const url_1 = require("url");
 const xmldom = require("xmldom");
 const xpath = require("xpath");
@@ -62,10 +62,10 @@ exports.addCoverDimensions = (publication, coverLink) => tslib_1.__awaiter(void 
         }
         const has = yield zipHasEntry_1.zipHasEntry(zip, coverLinkHrefDecoded, coverLink.Href);
         if (!has) {
-            console.log(`NOT IN ZIP (addCoverDimensions): ${coverLink.Href} --- ${coverLinkHrefDecoded}`);
+            debug(`NOT IN ZIP (addCoverDimensions): ${coverLink.Href} --- ${coverLinkHrefDecoded}`);
             const zipEntries = yield zip.getEntries();
             for (const zipEntry of zipEntries) {
-                console.log(zipEntry);
+                debug(zipEntry);
             }
             return;
         }
@@ -247,10 +247,10 @@ function EpubParsePromise(filePath) {
         has = yield zipHasEntry_1.zipHasEntry(zip, rootfilePathDecoded, rootfile.Path);
         if (!has) {
             const err = `NOT IN ZIP (container OPF rootfile): ${rootfile.Path} --- ${rootfilePathDecoded}`;
-            console.log(err);
+            debug(err);
             const zipEntries = yield zip.getEntries();
             for (const zipEntry of zipEntries) {
-                console.log(zipEntry);
+                debug(zipEntry);
             }
             return Promise.reject(err);
         }
@@ -290,10 +290,10 @@ function EpubParsePromise(filePath) {
                 has = yield zipHasEntry_1.zipHasEntry(zip, ncxFilePath, undefined);
                 if (!has) {
                     const err = `NOT IN ZIP (NCX): ${ncxManItem.Href} --- ${ncxFilePath}`;
-                    console.log(err);
+                    debug(err);
                     const zipEntries = yield zip.getEntries();
                     for (const zipEntry of zipEntries) {
-                        console.log(zipEntry);
+                        debug(zipEntry);
                     }
                     return Promise.reject(err);
                 }
@@ -550,7 +550,7 @@ function EpubParsePromise(filePath) {
                         publication.Metadata.AccessibilitySummary = tuple.val;
                     }
                 }
-                else {
+                else if (AccessibilitySummarys.length) {
                     publication.Metadata.AccessibilitySummary = {};
                     AccessibilitySummarys.forEach((tuple) => {
                         const xmlLang = tuple.metaTag.Lang || opf.Lang;
@@ -572,7 +572,7 @@ function EpubParsePromise(filePath) {
                 const metasActiveClass = [];
                 const metasPlaybackActiveClass = [];
                 opf.Metadata.Meta.forEach((metaTag) => {
-                    if (metaTag.Property === "media:duration") {
+                    if (metaTag.Property === "media:duration" && !metaTag.Refine) {
                         metasDuration.push(metaTag);
                     }
                     if (metaTag.Property === "media:narrator") {
@@ -642,9 +642,9 @@ function EpubParsePromise(filePath) {
         if (isEpub3OrMore(rootfile, opf)) {
             findContributorInMeta(publication, rootfile, opf);
         }
-        yield fillSpineAndResource(publication, rootfile, opf);
+        yield fillSpineAndResource(publication, rootfile, opf, zip);
         yield addRendition(publication, rootfile, opf, zip);
-        yield addCoverRel(publication, rootfile, opf);
+        yield addCoverRel(publication, rootfile, opf, zip);
         if (encryption) {
             fillEncryptionInfo(publication, rootfile, opf, encryption, lcpl);
         }
@@ -669,7 +669,6 @@ function EpubParsePromise(filePath) {
         fillCalibreSerieInfo(publication, rootfile, opf);
         fillSubject(publication, rootfile, opf);
         fillPublicationDate(publication, rootfile, opf);
-        yield fillMediaOverlay(publication, rootfile, opf, zip);
         return publication;
     });
 }
@@ -677,19 +676,21 @@ exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const mos = [];
-        if (publication.Spine) {
-            for (const link of publication.Spine) {
-                if (link.MediaOverlays) {
-                    for (const mo of link.MediaOverlays) {
-                        try {
-                            yield fillMediaOverlayParse(publication, mo);
-                        }
-                        catch (err) {
-                            return Promise.reject(err);
-                        }
-                        mos.push(mo);
+        const links = [].
+            concat(publication.Spine ? publication.Spine : []).
+            concat(publication.Resources ? publication.Resources : []);
+        for (const link of links) {
+            if (link.MediaOverlays) {
+                const mo = link.MediaOverlays;
+                if (!mo.initialized) {
+                    try {
+                        yield exports.lazyLoadMediaOverlays(publication, mo);
+                    }
+                    catch (err) {
+                        return Promise.reject(err);
                     }
                 }
+                mos.push(mo);
             }
         }
         return Promise.resolve(mos);
@@ -698,35 +699,35 @@ function getAllMediaOverlays(publication) {
 exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        const mos = [];
-        if (publication.Spine) {
-            for (const link of publication.Spine) {
-                if (link.MediaOverlays && link.Href.indexOf(spineHref) >= 0) {
-                    for (const mo of link.MediaOverlays) {
-                        try {
-                            yield fillMediaOverlayParse(publication, mo);
-                        }
-                        catch (err) {
-                            return Promise.reject(err);
-                        }
-                        mos.push(mo);
+        const links = [].
+            concat(publication.Spine ? publication.Spine : []).
+            concat(publication.Resources ? publication.Resources : []);
+        for (const link of links) {
+            if (link.MediaOverlays && link.Href.indexOf(spineHref) >= 0) {
+                const mo = link.MediaOverlays;
+                if (!mo.initialized) {
+                    try {
+                        yield exports.lazyLoadMediaOverlays(publication, mo);
+                    }
+                    catch (err) {
+                        return Promise.reject(err);
                     }
                 }
+                return Promise.resolve(mo);
             }
         }
-        return Promise.resolve(mos);
+        return Promise.reject(`No Media Overlays ${spineHref}`);
     });
 }
 exports.getMediaOverlay = getMediaOverlay;
-const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+exports.lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (mo.initialized || !mo.SmilPathInZip) {
         return;
     }
     let link;
     if (publication.Resources) {
-        const relativePath = mo.SmilPathInZip;
         link = publication.Resources.find((l) => {
-            if (l.Href === relativePath) {
+            if (l.Href === mo.SmilPathInZip) {
                 return true;
             }
             return false;
@@ -734,7 +735,7 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
         if (!link) {
             if (publication.Spine) {
                 link = publication.Spine.find((l) => {
-                    if (l.Href === relativePath) {
+                    if (l.Href === mo.SmilPathInZip) {
                         return true;
                     }
                     return false;
@@ -742,7 +743,7 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
             }
         }
         if (!link) {
-            const err = "Asset not declared in publication spine/resources! " + relativePath;
+            const err = "Asset not declared in publication spine/resources! " + mo.SmilPathInZip;
             debug(err);
             return Promise.reject(err);
         }
@@ -754,11 +755,11 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
     const zip = zipInternal.Value;
     const has = yield zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined);
     if (!has) {
-        const err = `NOT IN ZIP (fillMediaOverlayParse): ${mo.SmilPathInZip}`;
-        console.log(err);
+        const err = `NOT IN ZIP (lazyLoadMediaOverlays): ${mo.SmilPathInZip}`;
+        debug(err);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
-            console.log(zipEntry);
+            debug(zipEntry);
         }
         return Promise.reject(err);
     }
@@ -824,7 +825,7 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
         if (smil.Body.TextRef) {
             const smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
             if (!smilBodyTextRefDecoded) {
-                console.log("!?smilBodyTextRefDecoded");
+                debug("!?smilBodyTextRefDecoded");
             }
             else {
                 const zipPath = path.join(path.dirname(smil.ZipPath), smilBodyTextRefDecoded)
@@ -839,93 +840,6 @@ const fillMediaOverlayParse = (publication, mo) => tslib_1.__awaiter(void 0, voi
                 }
                 addSeqToMediaOverlay(smil, publication, mo, mo.Children, seqChild);
             });
-        }
-    }
-    return;
-});
-const fillMediaOverlay = (publication, rootfile, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    if (!publication.Resources) {
-        return;
-    }
-    for (const item of publication.Resources) {
-        if (item.TypeLink !== "application/smil+xml") {
-            continue;
-        }
-        const itemHrefDecoded = item.HrefDecoded;
-        if (!itemHrefDecoded) {
-            console.log("?!item.HrefDecoded");
-            continue;
-        }
-        const has = yield zipHasEntry_1.zipHasEntry(zip, itemHrefDecoded, item.Href);
-        if (!has) {
-            console.log(`NOT IN ZIP (fillMediaOverlay): ${item.HrefDecoded} --- ${itemHrefDecoded}`);
-            const zipEntries = yield zip.getEntries();
-            for (const zipEntry of zipEntries) {
-                console.log(zipEntry);
-            }
-            continue;
-        }
-        const manItemsHtmlWithSmil = [];
-        opf.Manifest.forEach((manItemHtmlWithSmil) => {
-            if (manItemHtmlWithSmil.MediaOverlay) {
-                const manItemSmil = opf.Manifest.find((mi) => {
-                    if (mi.ID === manItemHtmlWithSmil.MediaOverlay) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (manItemSmil && opf.ZipPath) {
-                    const manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
-                    if (!manItemSmilHrefDecoded) {
-                        console.log("!?manItemSmil.Href");
-                        return;
-                    }
-                    const smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
-                        .replace(/\\/g, "/");
-                    if (smilFilePath === itemHrefDecoded) {
-                        manItemsHtmlWithSmil.push(manItemHtmlWithSmil);
-                    }
-                }
-            }
-        });
-        const mo = new media_overlay_1.MediaOverlayNode();
-        mo.SmilPathInZip = itemHrefDecoded;
-        mo.initialized = false;
-        manItemsHtmlWithSmil.forEach((manItemHtmlWithSmil) => {
-            if (!opf.ZipPath) {
-                return;
-            }
-            const manItemHtmlWithSmilHrefDecoded = manItemHtmlWithSmil.HrefDecoded;
-            if (!manItemHtmlWithSmilHrefDecoded) {
-                console.log("?!manItemHtmlWithSmil.Href");
-                return;
-            }
-            const htmlPathInZip = path.join(path.dirname(opf.ZipPath), manItemHtmlWithSmilHrefDecoded)
-                .replace(/\\/g, "/");
-            const link = findLinKByHref(publication, rootfile, opf, htmlPathInZip);
-            if (link) {
-                if (!link.MediaOverlays) {
-                    link.MediaOverlays = [];
-                }
-                const alreadyExists = link.MediaOverlays.find((moo) => {
-                    if (item.Href === moo.SmilPathInZip) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (!alreadyExists) {
-                    link.MediaOverlays.push(mo);
-                }
-                if (!link.Properties) {
-                    link.Properties = new metadata_properties_1.Properties();
-                }
-                link.Properties.MediaOverlay = exports.mediaOverlayURLPath + "?" +
-                    exports.mediaOverlayURLParam + "=" + querystring.escape(link.Href);
-            }
-        });
-        if (item.Properties && item.Properties.Encrypted) {
-            debug("ENCRYPTED SMIL MEDIA OVERLAY: " + item.Href);
-            continue;
         }
     }
     return;
@@ -955,7 +869,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
         if (seq.TextRef) {
             const seqTextRefDecoded = seq.TextRefDecoded;
             if (!seqTextRefDecoded) {
-                console.log("!?seqTextRefDecoded");
+                debug("!?seqTextRefDecoded");
             }
             else {
                 const zipPath = path.join(path.dirname(smil.ZipPath), seqTextRefDecoded)
@@ -991,7 +905,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
         if (par.Text && par.Text.Src) {
             const parTextSrcDcoded = par.Text.SrcDecoded;
             if (!parTextSrcDcoded) {
-                console.log("?!parTextSrcDcoded");
+                debug("?!parTextSrcDcoded");
             }
             else {
                 const zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
@@ -1002,7 +916,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
         if (par.Audio && par.Audio.Src) {
             const parAudioSrcDcoded = par.Audio.SrcDecoded;
             if (!parAudioSrcDcoded) {
-                console.log("?!parAudioSrcDcoded");
+                debug("?!parAudioSrcDcoded");
             }
             else {
                 const zipPath = path.join(path.dirname(smil.ZipPath), parAudioSrcDcoded)
@@ -1029,7 +943,7 @@ const fillPublicationDate = (publication, rootfile, opf) => {
                 }
             }
             catch (err) {
-                console.log("INVALID DATE/TIME? " + token);
+                debug("INVALID DATE/TIME? " + token);
             }
             return;
         }
@@ -1043,7 +957,7 @@ const fillPublicationDate = (publication, rootfile, opf) => {
                     }
                 }
                 catch (err) {
-                    console.log("INVALID DATE/TIME? " + token);
+                    debug("INVALID DATE/TIME? " + token);
                 }
             }
         });
@@ -1495,15 +1409,63 @@ const addToLinkFromProperties = (publication, link, propertiesString) => tslib_1
         }
     }
 });
-const addMediaOverlay = (link, linkEpub, rootfile, opf) => {
+const addMediaOverlay = (link, linkEpub, rootfile, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (linkEpub.MediaOverlay) {
         const meta = findMetaByRefineAndProperty(rootfile, opf, linkEpub.MediaOverlay, "media:duration");
         if (meta) {
             link.Duration = media_overlay_1.timeStrToSeconds(meta.Data);
         }
+        const manItemSmil = opf.Manifest.find((mi) => {
+            if (mi.ID === linkEpub.MediaOverlay) {
+                return true;
+            }
+            return false;
+        });
+        if (manItemSmil && manItemSmil.MediaType === "application/smil+xml") {
+            if (opf.ZipPath) {
+                const manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
+                if (!manItemSmilHrefDecoded) {
+                    debug("!?manItemSmil.HrefDecoded");
+                    return;
+                }
+                const smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
+                    .replace(/\\/g, "/");
+                const has = yield zipHasEntry_1.zipHasEntry(zip, smilFilePath, smilFilePath);
+                if (!has) {
+                    debug(`NOT IN ZIP (addMediaOverlay): ${smilFilePath}`);
+                    const zipEntries = yield zip.getEntries();
+                    for (const zipEntry of zipEntries) {
+                        debug(zipEntry);
+                    }
+                    return;
+                }
+                const mo = new media_overlay_1.MediaOverlayNode();
+                mo.SmilPathInZip = smilFilePath;
+                mo.initialized = false;
+                link.MediaOverlays = mo;
+                const moURL = exports.mediaOverlayURLPath + "?" +
+                    exports.mediaOverlayURLParam + "=" +
+                    UrlUtils_1.encodeURIComponent_RFC3986(link.HrefDecoded ? link.HrefDecoded : link.Href);
+                if (!link.Properties) {
+                    link.Properties = new metadata_properties_1.Properties();
+                }
+                link.Properties.MediaOverlay = moURL;
+                if (!link.Alternate) {
+                    link.Alternate = [];
+                }
+                const moLink = new publication_link_1.Link();
+                moLink.Href = moURL;
+                moLink.TypeLink = "application/vnd.syncnarr+json";
+                moLink.Duration = link.Duration;
+                link.Alternate.push(moLink);
+                if (link.Properties && link.Properties.Encrypted) {
+                    debug("ENCRYPTED SMIL MEDIA OVERLAY: " + (link.HrefDecoded ? link.HrefDecoded : link.Href));
+                }
+            }
+        }
     }
-};
-const findInManifestByID = (publication, rootfile, opf, ID) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+});
+const findInManifestByID = (publication, rootfile, opf, ID, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (opf.Manifest && opf.Manifest.length) {
         const item = opf.Manifest.find((manItem) => {
             if (manItem.ID === ID) {
@@ -1521,7 +1483,7 @@ const findInManifestByID = (publication, rootfile, opf, ID) => tslib_1.__awaiter
             linkItem.setHrefDecoded(path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
                 .replace(/\\/g, "/"));
             yield addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf);
-            addMediaOverlay(linkItem, item, rootfile, opf);
+            yield addMediaOverlay(linkItem, item, rootfile, opf, zip);
             return linkItem;
         }
     }
@@ -1721,7 +1683,7 @@ const addRendition = (publication, _rootfile, opf, zip) => tslib_1.__awaiter(voi
         }
     }
 });
-const fillSpineAndResource = (publication, rootfile, opf) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const fillSpineAndResource = (publication, rootfile, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!opf.ZipPath) {
         return;
     }
@@ -1730,7 +1692,7 @@ const fillSpineAndResource = (publication, rootfile, opf) => tslib_1.__awaiter(v
             if (!item.Linear || item.Linear === "yes") {
                 let linkItem;
                 try {
-                    linkItem = yield findInManifestByID(publication, rootfile, opf, item.IDref);
+                    linkItem = yield findInManifestByID(publication, rootfile, opf, item.IDref, zip);
                 }
                 catch (err) {
                     debug(err);
@@ -1749,7 +1711,7 @@ const fillSpineAndResource = (publication, rootfile, opf) => tslib_1.__awaiter(v
         for (const item of opf.Manifest) {
             const itemHrefDecoded = item.HrefDecoded;
             if (!itemHrefDecoded) {
-                console.log("!? item.Href");
+                debug("!? item.Href");
                 continue;
             }
             const zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
@@ -1760,7 +1722,7 @@ const fillSpineAndResource = (publication, rootfile, opf) => tslib_1.__awaiter(v
                 linkItem.TypeLink = item.MediaType;
                 linkItem.setHrefDecoded(zipPath);
                 yield addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf);
-                addMediaOverlay(linkItem, item, rootfile, opf);
+                yield addMediaOverlay(linkItem, item, rootfile, opf, zip);
                 if (!publication.Resources) {
                     publication.Resources = [];
                 }
@@ -1824,7 +1786,7 @@ const fillPageListFromNCX = (publication, _rootfile, _opf, ncx) => {
             const link = new publication_link_1.Link();
             const srcDecoded = pageTarget.Content.SrcDecoded;
             if (!srcDecoded) {
-                console.log("!?srcDecoded");
+                debug("!?srcDecoded");
                 return;
             }
             const zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
@@ -1875,15 +1837,15 @@ const fillPageListFromAdobePageMap = (publication, _rootfile, _opf, zip, l) => t
 const createDocStringFromZipPath = (link, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const linkHrefDecoded = link.HrefDecoded;
     if (!linkHrefDecoded) {
-        console.log("!?link.HrefDecoded");
+        debug("!?link.HrefDecoded");
         return undefined;
     }
     const has = yield zipHasEntry_1.zipHasEntry(zip, linkHrefDecoded, link.Href);
     if (!has) {
-        console.log(`NOT IN ZIP (createDocStringFromZipPath): ${link.Href} --- ${linkHrefDecoded}`);
+        debug(`NOT IN ZIP (createDocStringFromZipPath): ${link.Href} --- ${linkHrefDecoded}`);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
-            console.log(zipEntry);
+            debug(zipEntry);
         }
         return undefined;
     }
@@ -1922,7 +1884,7 @@ const fillLandmarksFromGuide = (publication, _rootfile, opf) => {
             if (ref.Href && opf.ZipPath) {
                 const refHrefDecoded = ref.HrefDecoded;
                 if (!refHrefDecoded) {
-                    console.log("ref.Href?!");
+                    debug("ref.Href?!");
                     return;
                 }
                 const link = new publication_link_1.Link();
@@ -1941,7 +1903,7 @@ const fillLandmarksFromGuide = (publication, _rootfile, opf) => {
 const fillTOCFromNavPoint = (publication, rootfile, opf, ncx, point, node) => {
     const srcDecoded = point.Content.SrcDecoded;
     if (!srcDecoded) {
-        console.log("?!point.Content.Src");
+        debug("?!point.Content.Src");
         return;
     }
     const link = new publication_link_1.Link();
@@ -2014,15 +1976,15 @@ const fillTOCFromNavDoc = (publication, _rootfile, _opf, zip) => tslib_1.__await
     }
     const navLinkHrefDecoded = navLink.HrefDecoded;
     if (!navLinkHrefDecoded) {
-        console.log("!?navLink.HrefDecoded");
+        debug("!?navLink.HrefDecoded");
         return;
     }
     const has = yield zipHasEntry_1.zipHasEntry(zip, navLinkHrefDecoded, navLink.Href);
     if (!has) {
-        console.log(`NOT IN ZIP (fillTOCFromNavDoc): ${navLink.Href} --- ${navLinkHrefDecoded}`);
+        debug(`NOT IN ZIP (fillTOCFromNavDoc): ${navLink.Href} --- ${navLinkHrefDecoded}`);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
-            console.log(zipEntry);
+            debug(zipEntry);
         }
         return;
     }
@@ -2127,7 +2089,7 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
                         const val = aHref[0].value;
                         let valDecoded = decodeURI_1.tryDecodeURI(val);
                         if (!valDecoded) {
-                            console.log("!?valDecoded");
+                            debug("!?valDecoded");
                             return;
                         }
                         if (val[0] === "#") {
@@ -2161,7 +2123,7 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
         }
     });
 };
-const addCoverRel = (publication, rootfile, opf) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const addCoverRel = (publication, rootfile, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let coverID;
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
         opf.Metadata.Meta.find((meta) => {
@@ -2175,7 +2137,7 @@ const addCoverRel = (publication, rootfile, opf) => tslib_1.__awaiter(void 0, vo
     if (coverID) {
         let manifestInfo;
         try {
-            manifestInfo = yield findInManifestByID(publication, rootfile, opf, coverID);
+            manifestInfo = yield findInManifestByID(publication, rootfile, opf, coverID, zip);
         }
         catch (err) {
             debug(err);
@@ -2255,19 +2217,5 @@ const getEpubVersion = (rootfile, opf) => {
 const isEpub3OrMore = (rootfile, opf) => {
     const version = getEpubVersion(rootfile, opf);
     return (version === epub3 || version === epub301 || version === epub31);
-};
-const findLinKByHref = (publication, _rootfile, _opf, href) => {
-    if (publication.Spine && publication.Spine.length) {
-        const ll = publication.Spine.find((l) => {
-            if (href === l.HrefDecoded) {
-                return true;
-            }
-            return false;
-        });
-        if (ll) {
-            return ll;
-        }
-    }
-    return undefined;
 };
 //# sourceMappingURL=epub.js.map

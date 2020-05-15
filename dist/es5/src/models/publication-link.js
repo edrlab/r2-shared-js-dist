@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Link = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -20,7 +21,7 @@ var Link = (function () {
             this.Href1 = href;
             this._urlDecoded = undefined;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Link.prototype, "HrefDecoded", {
@@ -41,7 +42,7 @@ var Link = (function () {
         set: function (href) {
             this._urlDecoded = href;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Link.prototype.setHrefDecoded = function (href) {

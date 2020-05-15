@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
 var image_size_1 = require("image-size");
 var moment = require("moment");
 var path = require("path");
-var querystring = require("querystring");
 var url_1 = require("url");
 var xmldom = require("xmldom");
 var xpath = require("xpath");
@@ -68,13 +68,13 @@ exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.
             case 1:
                 has = _b.sent();
                 if (!!has) return [3, 3];
-                console.log("NOT IN ZIP (addCoverDimensions): " + coverLink.Href + " --- " + coverLinkHrefDecoded);
+                debug("NOT IN ZIP (addCoverDimensions): " + coverLink.Href + " --- " + coverLinkHrefDecoded);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _b.sent();
                 for (_a = 0, zipEntries_1 = zipEntries; _a < zipEntries_1.length; _a++) {
                     zipEntry = zipEntries_1[_a];
-                    console.log(zipEntry);
+                    debug(zipEntry);
                 }
                 return [2];
             case 3:
@@ -310,13 +310,13 @@ function EpubParsePromise(filePath) {
                     has = _c.sent();
                     if (!!has) return [3, 35];
                     err = "NOT IN ZIP (container OPF rootfile): " + rootfile.Path + " --- " + rootfilePathDecoded;
-                    console.log(err);
+                    debug(err);
                     return [4, zip.getEntries()];
                 case 34:
                     zipEntries = _c.sent();
                     for (_a = 0, zipEntries_2 = zipEntries; _a < zipEntries_2.length; _a++) {
                         zipEntry = zipEntries_2[_a];
-                        console.log(zipEntry);
+                        debug(zipEntry);
                     }
                     return [2, Promise.reject(err)];
                 case 35:
@@ -363,13 +363,13 @@ function EpubParsePromise(filePath) {
                     has = _c.sent();
                     if (!!has) return [3, 45];
                     err = "NOT IN ZIP (NCX): " + ncxManItem.Href + " --- " + ncxFilePath;
-                    console.log(err);
+                    debug(err);
                     return [4, zip.getEntries()];
                 case 44:
                     zipEntries = _c.sent();
                     for (_b = 0, zipEntries_3 = zipEntries; _b < zipEntries_3.length; _b++) {
                         zipEntry = zipEntries_3[_b];
-                        console.log(zipEntry);
+                        debug(zipEntry);
                     }
                     return [2, Promise.reject(err)];
                 case 45:
@@ -636,7 +636,7 @@ function EpubParsePromise(filePath) {
                                     publication.Metadata.AccessibilitySummary = tuple.val;
                                 }
                             }
-                            else {
+                            else if (AccessibilitySummarys_1.length) {
                                 publication.Metadata.AccessibilitySummary = {};
                                 AccessibilitySummarys_1.forEach(function (tuple) {
                                     var xmlLang = tuple.metaTag.Lang || opf.Lang;
@@ -658,7 +658,7 @@ function EpubParsePromise(filePath) {
                             metasActiveClass_1 = [];
                             metasPlaybackActiveClass_1 = [];
                             opf.Metadata.Meta.forEach(function (metaTag) {
-                                if (metaTag.Property === "media:duration") {
+                                if (metaTag.Property === "media:duration" && !metaTag.Refine) {
                                     metasDuration_1.push(metaTag);
                                 }
                                 if (metaTag.Property === "media:narrator") {
@@ -728,13 +728,13 @@ function EpubParsePromise(filePath) {
                     if (isEpub3OrMore(rootfile, opf)) {
                         findContributorInMeta(publication, rootfile, opf);
                     }
-                    return [4, fillSpineAndResource(publication, rootfile, opf)];
+                    return [4, fillSpineAndResource(publication, rootfile, opf, zip)];
                 case 55:
                     _c.sent();
                     return [4, addRendition(publication, rootfile, opf, zip)];
                 case 56:
                     _c.sent();
-                    return [4, addCoverRel(publication, rootfile, opf)];
+                    return [4, addCoverRel(publication, rootfile, opf, zip)];
                 case 57:
                     _c.sent();
                     if (encryption) {
@@ -765,9 +765,6 @@ function EpubParsePromise(filePath) {
                     fillCalibreSerieInfo(publication, rootfile, opf);
                     fillSubject(publication, rootfile, opf);
                     fillPublicationDate(publication, rootfile, opf);
-                    return [4, fillMediaOverlay(publication, rootfile, opf, zip)];
-                case 61:
-                    _c.sent();
                     return [2, publication];
             }
         });
@@ -776,43 +773,39 @@ function EpubParsePromise(filePath) {
 exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var mos, _a, _b, link, _c, _d, mo, err_14;
-        return tslib_1.__generator(this, function (_e) {
-            switch (_e.label) {
+        var mos, links, _a, links_1, link, mo, err_14;
+        return tslib_1.__generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     mos = [];
-                    if (!publication.Spine) return [3, 9];
-                    _a = 0, _b = publication.Spine;
-                    _e.label = 1;
+                    links = [].
+                        concat(publication.Spine ? publication.Spine : []).
+                        concat(publication.Resources ? publication.Resources : []);
+                    _a = 0, links_1 = links;
+                    _b.label = 1;
                 case 1:
-                    if (!(_a < _b.length)) return [3, 9];
-                    link = _b[_a];
-                    if (!link.MediaOverlays) return [3, 8];
-                    _c = 0, _d = link.MediaOverlays;
-                    _e.label = 2;
+                    if (!(_a < links_1.length)) return [3, 7];
+                    link = links_1[_a];
+                    if (!link.MediaOverlays) return [3, 6];
+                    mo = link.MediaOverlays;
+                    if (!!mo.initialized) return [3, 5];
+                    _b.label = 2;
                 case 2:
-                    if (!(_c < _d.length)) return [3, 8];
-                    mo = _d[_c];
-                    _e.label = 3;
+                    _b.trys.push([2, 4, , 5]);
+                    return [4, exports.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
-                    _e.trys.push([3, 5, , 6]);
-                    return [4, fillMediaOverlayParse(publication, mo)];
+                    _b.sent();
+                    return [3, 5];
                 case 4:
-                    _e.sent();
-                    return [3, 6];
-                case 5:
-                    err_14 = _e.sent();
+                    err_14 = _b.sent();
                     return [2, Promise.reject(err_14)];
-                case 6:
+                case 5:
                     mos.push(mo);
-                    _e.label = 7;
-                case 7:
-                    _c++;
-                    return [3, 2];
-                case 8:
+                    _b.label = 6;
+                case 6:
                     _a++;
                     return [3, 1];
-                case 9: return [2, Promise.resolve(mos)];
+                case 7: return [2, Promise.resolve(mos)];
             }
         });
     });
@@ -820,50 +813,43 @@ function getAllMediaOverlays(publication) {
 exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var mos, _a, _b, link, _c, _d, mo, err_15;
-        return tslib_1.__generator(this, function (_e) {
-            switch (_e.label) {
+        var links, _a, links_2, link, mo, err_15;
+        return tslib_1.__generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    mos = [];
-                    if (!publication.Spine) return [3, 9];
-                    _a = 0, _b = publication.Spine;
-                    _e.label = 1;
+                    links = [].
+                        concat(publication.Spine ? publication.Spine : []).
+                        concat(publication.Resources ? publication.Resources : []);
+                    _a = 0, links_2 = links;
+                    _b.label = 1;
                 case 1:
-                    if (!(_a < _b.length)) return [3, 9];
-                    link = _b[_a];
-                    if (!(link.MediaOverlays && link.Href.indexOf(spineHref) >= 0)) return [3, 8];
-                    _c = 0, _d = link.MediaOverlays;
-                    _e.label = 2;
+                    if (!(_a < links_2.length)) return [3, 7];
+                    link = links_2[_a];
+                    if (!(link.MediaOverlays && link.Href.indexOf(spineHref) >= 0)) return [3, 6];
+                    mo = link.MediaOverlays;
+                    if (!!mo.initialized) return [3, 5];
+                    _b.label = 2;
                 case 2:
-                    if (!(_c < _d.length)) return [3, 8];
-                    mo = _d[_c];
-                    _e.label = 3;
+                    _b.trys.push([2, 4, , 5]);
+                    return [4, exports.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
-                    _e.trys.push([3, 5, , 6]);
-                    return [4, fillMediaOverlayParse(publication, mo)];
+                    _b.sent();
+                    return [3, 5];
                 case 4:
-                    _e.sent();
-                    return [3, 6];
-                case 5:
-                    err_15 = _e.sent();
+                    err_15 = _b.sent();
                     return [2, Promise.reject(err_15)];
+                case 5: return [2, Promise.resolve(mo)];
                 case 6:
-                    mos.push(mo);
-                    _e.label = 7;
-                case 7:
-                    _c++;
-                    return [3, 2];
-                case 8:
                     _a++;
                     return [3, 1];
-                case 9: return [2, Promise.resolve(mos)];
+                case 7: return [2, Promise.reject("No Media Overlays " + spineHref)];
             }
         });
     });
 }
 exports.getMediaOverlay = getMediaOverlay;
-var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, relativePath_1, err, zipInternal, zip, has, err, zipEntries, _a, zipEntries_4, zipEntry, smilZipStream_, err_16, decryptFail, transformedStream, err_17, err, smilZipStream, smilZipData, err_18, smilStr, smilXmlDoc, smil, roles, _b, roles_1, role, smilBodyTextRefDecoded, zipPath;
+exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var link, err, zipInternal, zip, has, err, zipEntries, _a, zipEntries_4, zipEntry, smilZipStream_, err_16, decryptFail, transformedStream, err_17, err, smilZipStream, smilZipData, err_18, smilStr, smilXmlDoc, smil, roles, _b, roles_1, role, smilBodyTextRefDecoded, zipPath;
     return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -871,9 +857,8 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                     return [2];
                 }
                 if (publication.Resources) {
-                    relativePath_1 = mo.SmilPathInZip;
                     link = publication.Resources.find(function (l) {
-                        if (l.Href === relativePath_1) {
+                        if (l.Href === mo.SmilPathInZip) {
                             return true;
                         }
                         return false;
@@ -881,7 +866,7 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                     if (!link) {
                         if (publication.Spine) {
                             link = publication.Spine.find(function (l) {
-                                if (l.Href === relativePath_1) {
+                                if (l.Href === mo.SmilPathInZip) {
                                     return true;
                                 }
                                 return false;
@@ -889,7 +874,7 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                         }
                     }
                     if (!link) {
-                        err = "Asset not declared in publication spine/resources! " + relativePath_1;
+                        err = "Asset not declared in publication spine/resources! " + mo.SmilPathInZip;
                         debug(err);
                         return [2, Promise.reject(err)];
                     }
@@ -903,14 +888,14 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
             case 1:
                 has = _c.sent();
                 if (!!has) return [3, 3];
-                err = "NOT IN ZIP (fillMediaOverlayParse): " + mo.SmilPathInZip;
-                console.log(err);
+                err = "NOT IN ZIP (lazyLoadMediaOverlays): " + mo.SmilPathInZip;
+                debug(err);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _c.sent();
                 for (_a = 0, zipEntries_4 = zipEntries; _a < zipEntries_4.length; _a++) {
                     zipEntry = zipEntries_4[_a];
-                    console.log(zipEntry);
+                    debug(zipEntry);
                 }
                 return [2, Promise.reject(err)];
             case 3:
@@ -989,7 +974,7 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                     if (smil.Body.TextRef) {
                         smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
                         if (!smilBodyTextRefDecoded) {
-                            console.log("!?smilBodyTextRefDecoded");
+                            debug("!?smilBodyTextRefDecoded");
                         }
                         else {
                             zipPath = path.join(path.dirname(smil.ZipPath), smilBodyTextRefDecoded)
@@ -1007,123 +992,6 @@ var fillMediaOverlayParse = function (publication, mo) { return tslib_1.__awaite
                     }
                 }
                 return [2];
-        }
-    });
-}); };
-var fillMediaOverlay = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var _loop_1, _a, _b, item;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
-            case 0:
-                if (!publication.Resources) {
-                    return [2];
-                }
-                _loop_1 = function (item) {
-                    var itemHrefDecoded, has, zipEntries, _a, zipEntries_5, zipEntry, manItemsHtmlWithSmil, mo;
-                    return tslib_1.__generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
-                                if (item.TypeLink !== "application/smil+xml") {
-                                    return [2, "continue"];
-                                }
-                                itemHrefDecoded = item.HrefDecoded;
-                                if (!itemHrefDecoded) {
-                                    console.log("?!item.HrefDecoded");
-                                    return [2, "continue"];
-                                }
-                                return [4, zipHasEntry_1.zipHasEntry(zip, itemHrefDecoded, item.Href)];
-                            case 1:
-                                has = _b.sent();
-                                if (!!has) return [3, 3];
-                                console.log("NOT IN ZIP (fillMediaOverlay): " + item.HrefDecoded + " --- " + itemHrefDecoded);
-                                return [4, zip.getEntries()];
-                            case 2:
-                                zipEntries = _b.sent();
-                                for (_a = 0, zipEntries_5 = zipEntries; _a < zipEntries_5.length; _a++) {
-                                    zipEntry = zipEntries_5[_a];
-                                    console.log(zipEntry);
-                                }
-                                return [2, "continue"];
-                            case 3:
-                                manItemsHtmlWithSmil = [];
-                                opf.Manifest.forEach(function (manItemHtmlWithSmil) {
-                                    if (manItemHtmlWithSmil.MediaOverlay) {
-                                        var manItemSmil = opf.Manifest.find(function (mi) {
-                                            if (mi.ID === manItemHtmlWithSmil.MediaOverlay) {
-                                                return true;
-                                            }
-                                            return false;
-                                        });
-                                        if (manItemSmil && opf.ZipPath) {
-                                            var manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
-                                            if (!manItemSmilHrefDecoded) {
-                                                console.log("!?manItemSmil.Href");
-                                                return;
-                                            }
-                                            var smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
-                                                .replace(/\\/g, "/");
-                                            if (smilFilePath === itemHrefDecoded) {
-                                                manItemsHtmlWithSmil.push(manItemHtmlWithSmil);
-                                            }
-                                        }
-                                    }
-                                });
-                                mo = new media_overlay_1.MediaOverlayNode();
-                                mo.SmilPathInZip = itemHrefDecoded;
-                                mo.initialized = false;
-                                manItemsHtmlWithSmil.forEach(function (manItemHtmlWithSmil) {
-                                    if (!opf.ZipPath) {
-                                        return;
-                                    }
-                                    var manItemHtmlWithSmilHrefDecoded = manItemHtmlWithSmil.HrefDecoded;
-                                    if (!manItemHtmlWithSmilHrefDecoded) {
-                                        console.log("?!manItemHtmlWithSmil.Href");
-                                        return;
-                                    }
-                                    var htmlPathInZip = path.join(path.dirname(opf.ZipPath), manItemHtmlWithSmilHrefDecoded)
-                                        .replace(/\\/g, "/");
-                                    var link = findLinKByHref(publication, rootfile, opf, htmlPathInZip);
-                                    if (link) {
-                                        if (!link.MediaOverlays) {
-                                            link.MediaOverlays = [];
-                                        }
-                                        var alreadyExists = link.MediaOverlays.find(function (moo) {
-                                            if (item.Href === moo.SmilPathInZip) {
-                                                return true;
-                                            }
-                                            return false;
-                                        });
-                                        if (!alreadyExists) {
-                                            link.MediaOverlays.push(mo);
-                                        }
-                                        if (!link.Properties) {
-                                            link.Properties = new metadata_properties_1.Properties();
-                                        }
-                                        link.Properties.MediaOverlay = exports.mediaOverlayURLPath + "?" +
-                                            exports.mediaOverlayURLParam + "=" + querystring.escape(link.Href);
-                                    }
-                                });
-                                if (item.Properties && item.Properties.Encrypted) {
-                                    debug("ENCRYPTED SMIL MEDIA OVERLAY: " + item.Href);
-                                    return [2, "continue"];
-                                }
-                                return [2];
-                        }
-                    });
-                };
-                _a = 0, _b = publication.Resources;
-                _c.label = 1;
-            case 1:
-                if (!(_a < _b.length)) return [3, 4];
-                item = _b[_a];
-                return [5, _loop_1(item)];
-            case 2:
-                _c.sent();
-                _c.label = 3;
-            case 3:
-                _a++;
-                return [3, 1];
-            case 4: return [2];
         }
     });
 }); };
@@ -1153,7 +1021,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         if (seq.TextRef) {
             var seqTextRefDecoded = seq.TextRefDecoded;
             if (!seqTextRefDecoded) {
-                console.log("!?seqTextRefDecoded");
+                debug("!?seqTextRefDecoded");
             }
             else {
                 var zipPath = path.join(path.dirname(smil.ZipPath), seqTextRefDecoded)
@@ -1190,7 +1058,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         if (par.Text && par.Text.Src) {
             var parTextSrcDcoded = par.Text.SrcDecoded;
             if (!parTextSrcDcoded) {
-                console.log("?!parTextSrcDcoded");
+                debug("?!parTextSrcDcoded");
             }
             else {
                 var zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
@@ -1201,7 +1069,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         if (par.Audio && par.Audio.Src) {
             var parAudioSrcDcoded = par.Audio.SrcDecoded;
             if (!parAudioSrcDcoded) {
-                console.log("?!parAudioSrcDcoded");
+                debug("?!parAudioSrcDcoded");
             }
             else {
                 var zipPath = path.join(path.dirname(smil.ZipPath), parAudioSrcDcoded)
@@ -1228,7 +1096,7 @@ var fillPublicationDate = function (publication, rootfile, opf) {
                 }
             }
             catch (err) {
-                console.log("INVALID DATE/TIME? " + token);
+                debug("INVALID DATE/TIME? " + token);
             }
             return;
         }
@@ -1242,7 +1110,7 @@ var fillPublicationDate = function (publication, rootfile, opf) {
                     }
                 }
                 catch (err) {
-                    console.log("INVALID DATE/TIME? " + token);
+                    debug("INVALID DATE/TIME? " + token);
                 }
             }
         });
@@ -1799,27 +1667,85 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
         }
     });
 }); };
-var addMediaOverlay = function (link, linkEpub, rootfile, opf) {
-    if (linkEpub.MediaOverlay) {
-        var meta = findMetaByRefineAndProperty(rootfile, opf, linkEpub.MediaOverlay, "media:duration");
-        if (meta) {
-            link.Duration = media_overlay_1.timeStrToSeconds(meta.Data);
+var addMediaOverlay = function (link, linkEpub, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var meta, manItemSmil, manItemSmilHrefDecoded, smilFilePath, has, zipEntries, _a, zipEntries_5, zipEntry, mo, moURL, moLink;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                if (!linkEpub.MediaOverlay) return [3, 4];
+                meta = findMetaByRefineAndProperty(rootfile, opf, linkEpub.MediaOverlay, "media:duration");
+                if (meta) {
+                    link.Duration = media_overlay_1.timeStrToSeconds(meta.Data);
+                }
+                manItemSmil = opf.Manifest.find(function (mi) {
+                    if (mi.ID === linkEpub.MediaOverlay) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (!(manItemSmil && manItemSmil.MediaType === "application/smil+xml")) return [3, 4];
+                if (!opf.ZipPath) return [3, 4];
+                manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
+                if (!manItemSmilHrefDecoded) {
+                    debug("!?manItemSmil.HrefDecoded");
+                    return [2];
+                }
+                smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
+                    .replace(/\\/g, "/");
+                return [4, zipHasEntry_1.zipHasEntry(zip, smilFilePath, smilFilePath)];
+            case 1:
+                has = _b.sent();
+                if (!!has) return [3, 3];
+                debug("NOT IN ZIP (addMediaOverlay): " + smilFilePath);
+                return [4, zip.getEntries()];
+            case 2:
+                zipEntries = _b.sent();
+                for (_a = 0, zipEntries_5 = zipEntries; _a < zipEntries_5.length; _a++) {
+                    zipEntry = zipEntries_5[_a];
+                    debug(zipEntry);
+                }
+                return [2];
+            case 3:
+                mo = new media_overlay_1.MediaOverlayNode();
+                mo.SmilPathInZip = smilFilePath;
+                mo.initialized = false;
+                link.MediaOverlays = mo;
+                moURL = exports.mediaOverlayURLPath + "?" +
+                    exports.mediaOverlayURLParam + "=" +
+                    UrlUtils_1.encodeURIComponent_RFC3986(link.HrefDecoded ? link.HrefDecoded : link.Href);
+                if (!link.Properties) {
+                    link.Properties = new metadata_properties_1.Properties();
+                }
+                link.Properties.MediaOverlay = moURL;
+                if (!link.Alternate) {
+                    link.Alternate = [];
+                }
+                moLink = new publication_link_1.Link();
+                moLink.Href = moURL;
+                moLink.TypeLink = "application/vnd.syncnarr+json";
+                moLink.Duration = link.Duration;
+                link.Alternate.push(moLink);
+                if (link.Properties && link.Properties.Encrypted) {
+                    debug("ENCRYPTED SMIL MEDIA OVERLAY: " + (link.HrefDecoded ? link.HrefDecoded : link.Href));
+                }
+                _b.label = 4;
+            case 4: return [2];
         }
-    }
-};
-var findInManifestByID = function (publication, rootfile, opf, ID) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    });
+}); };
+var findInManifestByID = function (publication, rootfile, opf, ID, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var item, linkItem, itemHrefDecoded;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!(opf.Manifest && opf.Manifest.length)) return [3, 2];
+                if (!(opf.Manifest && opf.Manifest.length)) return [3, 3];
                 item = opf.Manifest.find(function (manItem) {
                     if (manItem.ID === ID) {
                         return true;
                     }
                     return false;
                 });
-                if (!(item && opf.ZipPath)) return [3, 2];
+                if (!(item && opf.ZipPath)) return [3, 3];
                 linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
                 itemHrefDecoded = item.HrefDecoded;
@@ -1831,9 +1757,11 @@ var findInManifestByID = function (publication, rootfile, opf, ID) { return tsli
                 return [4, addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf)];
             case 1:
                 _a.sent();
-                addMediaOverlay(linkItem, item, rootfile, opf);
+                return [4, addMediaOverlay(linkItem, item, rootfile, opf, zip)];
+            case 2:
+                _a.sent();
                 return [2, linkItem];
-            case 2: return [2, Promise.reject("ID " + ID + " not found")];
+            case 3: return [2, Promise.reject("ID " + ID + " not found")];
         }
     });
 }); };
@@ -2054,7 +1982,7 @@ var addRendition = function (publication, _rootfile, opf, zip) { return tslib_1.
         }
     });
 }); };
-var fillSpineAndResource = function (publication, rootfile, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var fillSpineAndResource = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _a, _b, item, linkItem, err_21, _c, _d, item, itemHrefDecoded, zipPath, linkSpine, linkItem;
     return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
@@ -2073,7 +2001,7 @@ var fillSpineAndResource = function (publication, rootfile, opf) { return tslib_
                 _e.label = 2;
             case 2:
                 _e.trys.push([2, 4, , 5]);
-                return [4, findInManifestByID(publication, rootfile, opf, item.IDref)];
+                return [4, findInManifestByID(publication, rootfile, opf, item.IDref, zip)];
             case 3:
                 linkItem = _e.sent();
                 return [3, 5];
@@ -2093,37 +2021,39 @@ var fillSpineAndResource = function (publication, rootfile, opf) { return tslib_
                 _a++;
                 return [3, 1];
             case 7:
-                if (!(opf.Manifest && opf.Manifest.length)) return [3, 11];
+                if (!(opf.Manifest && opf.Manifest.length)) return [3, 12];
                 _c = 0, _d = opf.Manifest;
                 _e.label = 8;
             case 8:
-                if (!(_c < _d.length)) return [3, 11];
+                if (!(_c < _d.length)) return [3, 12];
                 item = _d[_c];
                 itemHrefDecoded = item.HrefDecoded;
                 if (!itemHrefDecoded) {
-                    console.log("!? item.Href");
-                    return [3, 10];
+                    debug("!? item.Href");
+                    return [3, 11];
                 }
                 zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
                     .replace(/\\/g, "/");
                 linkSpine = findInSpineByHref(publication, zipPath);
-                if (!(!linkSpine || !linkSpine.Href)) return [3, 10];
+                if (!(!linkSpine || !linkSpine.Href)) return [3, 11];
                 linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
                 linkItem.setHrefDecoded(zipPath);
                 return [4, addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf)];
             case 9:
                 _e.sent();
-                addMediaOverlay(linkItem, item, rootfile, opf);
+                return [4, addMediaOverlay(linkItem, item, rootfile, opf, zip)];
+            case 10:
+                _e.sent();
                 if (!publication.Resources) {
                     publication.Resources = [];
                 }
                 publication.Resources.push(linkItem);
-                _e.label = 10;
-            case 10:
+                _e.label = 11;
+            case 11:
                 _c++;
                 return [3, 8];
-            case 11: return [2];
+            case 12: return [2];
         }
     });
 }); };
@@ -2182,7 +2112,7 @@ var fillPageListFromNCX = function (publication, _rootfile, _opf, ncx) {
             var link = new publication_link_1.Link();
             var srcDecoded = pageTarget.Content.SrcDecoded;
             if (!srcDecoded) {
-                console.log("!?srcDecoded");
+                debug("!?srcDecoded");
                 return;
             }
             var zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
@@ -2246,20 +2176,20 @@ var createDocStringFromZipPath = function (link, zip) { return tslib_1.__awaiter
             case 0:
                 linkHrefDecoded = link.HrefDecoded;
                 if (!linkHrefDecoded) {
-                    console.log("!?link.HrefDecoded");
+                    debug("!?link.HrefDecoded");
                     return [2, undefined];
                 }
                 return [4, zipHasEntry_1.zipHasEntry(zip, linkHrefDecoded, link.Href)];
             case 1:
                 has = _b.sent();
                 if (!!has) return [3, 3];
-                console.log("NOT IN ZIP (createDocStringFromZipPath): " + link.Href + " --- " + linkHrefDecoded);
+                debug("NOT IN ZIP (createDocStringFromZipPath): " + link.Href + " --- " + linkHrefDecoded);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _b.sent();
                 for (_a = 0, zipEntries_6 = zipEntries; _a < zipEntries_6.length; _a++) {
                     zipEntry = zipEntries_6[_a];
-                    console.log(zipEntry);
+                    debug(zipEntry);
                 }
                 return [2, undefined];
             case 3:
@@ -2305,7 +2235,7 @@ var fillLandmarksFromGuide = function (publication, _rootfile, opf) {
             if (ref.Href && opf.ZipPath) {
                 var refHrefDecoded = ref.HrefDecoded;
                 if (!refHrefDecoded) {
-                    console.log("ref.Href?!");
+                    debug("ref.Href?!");
                     return;
                 }
                 var link = new publication_link_1.Link();
@@ -2324,7 +2254,7 @@ var fillLandmarksFromGuide = function (publication, _rootfile, opf) {
 var fillTOCFromNavPoint = function (publication, rootfile, opf, ncx, point, node) {
     var srcDecoded = point.Content.SrcDecoded;
     if (!srcDecoded) {
-        console.log("?!point.Content.Src");
+        debug("?!point.Content.Src");
         return;
     }
     var link = new publication_link_1.Link();
@@ -2401,20 +2331,20 @@ var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return ts
                 }
                 navLinkHrefDecoded = navLink.HrefDecoded;
                 if (!navLinkHrefDecoded) {
-                    console.log("!?navLink.HrefDecoded");
+                    debug("!?navLink.HrefDecoded");
                     return [2];
                 }
                 return [4, zipHasEntry_1.zipHasEntry(zip, navLinkHrefDecoded, navLink.Href)];
             case 1:
                 has = _b.sent();
                 if (!!has) return [3, 3];
-                console.log("NOT IN ZIP (fillTOCFromNavDoc): " + navLink.Href + " --- " + navLinkHrefDecoded);
+                debug("NOT IN ZIP (fillTOCFromNavDoc): " + navLink.Href + " --- " + navLinkHrefDecoded);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _b.sent();
                 for (_a = 0, zipEntries_7 = zipEntries; _a < zipEntries_7.length; _a++) {
                     zipEntry = zipEntries_7[_a];
-                    console.log(zipEntry);
+                    debug(zipEntry);
                 }
                 return [2];
             case 3:
@@ -2529,7 +2459,7 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
                         var val = aHref[0].value;
                         var valDecoded = decodeURI_1.tryDecodeURI(val);
                         if (!valDecoded) {
-                            console.log("!?valDecoded");
+                            debug("!?valDecoded");
                             return;
                         }
                         if (val[0] === "#") {
@@ -2563,7 +2493,7 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
         }
     });
 };
-var addCoverRel = function (publication, rootfile, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var coverID, manifestInfo, err_26, href_1, linky;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -2582,7 +2512,7 @@ var addCoverRel = function (publication, rootfile, opf) { return tslib_1.__await
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4, findInManifestByID(publication, rootfile, opf, coverID)];
+                return [4, findInManifestByID(publication, rootfile, opf, coverID, zip)];
             case 2:
                 manifestInfo = _a.sent();
                 return [3, 4];
@@ -2668,19 +2598,5 @@ var getEpubVersion = function (rootfile, opf) {
 var isEpub3OrMore = function (rootfile, opf) {
     var version = getEpubVersion(rootfile, opf);
     return (version === epub3 || version === epub301 || version === epub31);
-};
-var findLinKByHref = function (publication, _rootfile, _opf, href) {
-    if (publication.Spine && publication.Spine.length) {
-        var ll = publication.Spine.find(function (l) {
-            if (href === l.HrefDecoded) {
-                return true;
-            }
-            return false;
-        });
-        if (ll) {
-            return ll;
-        }
-    }
-    return undefined;
 };
 //# sourceMappingURL=epub.js.map

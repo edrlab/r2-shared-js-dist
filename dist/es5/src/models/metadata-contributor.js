@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Contributor = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -18,7 +19,7 @@ var Contributor = (function () {
                 this.SortAs2 = sortas;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Contributor.prototype._OnDeserialized = function () {

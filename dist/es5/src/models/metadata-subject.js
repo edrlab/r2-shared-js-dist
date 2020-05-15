@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Subject = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var publication_link_1 = require("./publication-link");
@@ -17,7 +18,7 @@ var Subject = (function () {
                 this.SortAs2 = sortas;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Subject.prototype._OnDeserialized = function () {

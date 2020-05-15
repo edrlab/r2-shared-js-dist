@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.isAudioBookPublication = exports.AudioBookis = exports.AudioBookParsePromise = void 0;
 const debug_ = require("debug");
 const fs = require("fs");
 const http = require("http");

@@ -12,7 +12,7 @@ export declare class Link {
     Children: Link[];
     Alternate: Link[];
     Rel: string[];
-    MediaOverlays: MediaOverlayNode[] | undefined;
+    MediaOverlays: MediaOverlayNode | undefined;
     Href1: string;
     get Href(): string;
     set Href(href: string);

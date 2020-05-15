@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Properties = exports.SpreadEnum = exports.PageEnum = exports.OverflowEnum = exports.OrientationEnum = exports.LayoutEnum = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");

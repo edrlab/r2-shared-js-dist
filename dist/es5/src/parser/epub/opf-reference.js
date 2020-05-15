@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Reference = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
@@ -14,7 +15,7 @@ var Reference = (function () {
             this.Href1 = href;
             this._urlDecoded = undefined;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Reference.prototype, "HrefDecoded", {
@@ -35,7 +36,7 @@ var Reference = (function () {
         set: function (href) {
             this._urlDecoded = href;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Reference.prototype.setHrefDecoded = function (href) {

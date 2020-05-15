@@ -8,6 +8,7 @@ var jsonDiff = require("json-diff");
 var path = require("path");
 var url_1 = require("url");
 var util = require("util");
+var media_overlay_1 = require("../models/media-overlay");
 var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
 var audiobook_1 = require("../parser/audiobook");
@@ -141,11 +142,12 @@ if (args[2]) {
                 console.log("== Publication extract FAIL");
                 console.log(err_2);
                 return [2];
-            case 11: return [3, 13];
-            case 12:
-                dumpPublication(publication);
-                _a.label = 13;
-            case 13: return [2];
+            case 11: return [3, 14];
+            case 12: return [4, dumpPublication(publication)];
+            case 13:
+                _a.sent();
+                _a.label = 14;
+            case 14: return [2];
         }
     });
 }); })();
@@ -467,26 +469,95 @@ function ensureDirs(fspath) {
     }
 }
 function dumpPublication(publication) {
-    console.log("#### RAW OBJECT:");
-    console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
-    var publicationJsonObj = serializable_1.TaJsonSerialize(publication);
-    var publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
-    var publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
-    var publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
-    var eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
-    if (!eq) {
-        console.log("#### TA-JSON SERIALIZED JSON OBJ:");
-        console.log(publicationJsonObj);
-        console.log("#### STRINGIFIED JSON OBJ:");
-        console.log(publicationJsonStr);
-        console.log("#### TA-JSON DESERIALIZED (REVERSE):");
-        console.log(util.inspect(publicationReverse, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
-        console.log("#### TA-JSON SERIALIZED JSON OBJ (REVERSE):");
-        console.log(publicationJsonObjReverse);
-        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
-        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
-        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
-    }
-    console.log(jsonDiff.diffString(publicationJsonObj, publicationJsonObjReverse));
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
+        var publicationJsonObj, publicationJsonStr, publicationReverse, publicationJsonObjReverse, eq, _i, _a, spineItem, _b, _c, altLink, mo, err_11, moJsonObj, moJsonStr, moReverse, moJsonObjReverse, equa;
+        return tslib_1.__generator(this, function (_d) {
+            switch (_d.label) {
+                case 0:
+                    console.log("#### RAW OBJECT:");
+                    console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+                    publicationJsonObj = serializable_1.TaJsonSerialize(publication);
+                    console.log(util.inspect(publicationJsonObj, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+                    publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
+                    publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
+                    publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
+                    eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
+                    if (!eq) {
+                        console.log("#### TA-JSON SERIALIZED JSON OBJ:");
+                        console.log(publicationJsonObj);
+                        console.log("#### STRINGIFIED JSON OBJ:");
+                        console.log(publicationJsonStr);
+                        console.log("#### TA-JSON DESERIALIZED (REVERSE):");
+                        console.log(util.inspect(publicationReverse, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+                        console.log("#### TA-JSON SERIALIZED JSON OBJ (REVERSE):");
+                        console.log(publicationJsonObjReverse);
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                    }
+                    console.log(jsonDiff.diffString(publicationJsonObj, publicationJsonObjReverse));
+                    if (!publication.Spine) return [3, 7];
+                    _i = 0, _a = publication.Spine;
+                    _d.label = 1;
+                case 1:
+                    if (!(_i < _a.length)) return [3, 7];
+                    spineItem = _a[_i];
+                    if (spineItem.Properties && spineItem.Properties.MediaOverlay) {
+                        console.log(spineItem.Href);
+                        console.log(spineItem.Properties.MediaOverlay);
+                        console.log(spineItem.Duration);
+                    }
+                    if (spineItem.Alternate) {
+                        for (_b = 0, _c = spineItem.Alternate; _b < _c.length; _b++) {
+                            altLink = _c[_b];
+                            if (altLink.TypeLink === "application/vnd.syncnarr+json") {
+                                console.log(altLink.Href);
+                                console.log(altLink.TypeLink);
+                                console.log(altLink.Duration);
+                            }
+                        }
+                    }
+                    if (!spineItem.MediaOverlays) return [3, 6];
+                    mo = spineItem.MediaOverlays;
+                    console.log(mo.SmilPathInZip);
+                    _d.label = 2;
+                case 2:
+                    _d.trys.push([2, 4, , 5]);
+                    return [4, epub_1.lazyLoadMediaOverlays(publication, mo)];
+                case 3:
+                    _d.sent();
+                    return [3, 5];
+                case 4:
+                    err_11 = _d.sent();
+                    return [2, Promise.reject(err_11)];
+                case 5:
+                    moJsonObj = serializable_1.TaJsonSerialize(mo);
+                    moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
+                    console.log(moJsonStr.substr(0, 1000) + "\n...\n");
+                    moReverse = serializable_1.TaJsonDeserialize(moJsonObj, media_overlay_1.MediaOverlayNode);
+                    moJsonObjReverse = serializable_1.TaJsonSerialize(moReverse);
+                    equa = deepEqual(moJsonObj, moJsonObjReverse);
+                    if (!equa) {
+                        console.log("#### TA-JSON SERIALIZED JSON OBJ:");
+                        console.log(moJsonObj);
+                        console.log("#### STRINGIFIED JSON OBJ:");
+                        console.log(moJsonStr);
+                        console.log("#### TA-JSON DESERIALIZED (REVERSE):");
+                        console.log(util.inspect(moReverse, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+                        console.log("#### TA-JSON SERIALIZED JSON OBJ (REVERSE):");
+                        console.log(moJsonObjReverse);
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                        console.log("#### REVERSE NOT DEEP EQUAL!\n\n");
+                    }
+                    console.log(jsonDiff.diffString(moJsonObj, moJsonObjReverse));
+                    _d.label = 6;
+                case 6:
+                    _i++;
+                    return [3, 1];
+                case 7: return [2];
+            }
+        });
+    });
 }
 //# sourceMappingURL=cli.js.map

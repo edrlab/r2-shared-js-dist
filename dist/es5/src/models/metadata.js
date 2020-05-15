@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Metadata = exports.DirectionEnum = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -46,7 +47,7 @@ var Metadata = (function () {
                 this.SortAs2 = sortas;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Metadata.prototype, "Direction", {
@@ -59,7 +60,7 @@ var Metadata = (function () {
                 this.Direction2 = direction;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Metadata.prototype, "BelongsTo", {
@@ -72,7 +73,7 @@ var Metadata = (function () {
                 this.BelongsTo2 = belongsto;
             }
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Metadata.prototype._OnDeserialized = function () {
