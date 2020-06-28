@@ -4,60 +4,57 @@ exports.Audio = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Audio = (() => {
-    let Audio = class Audio {
-        get Src() {
-            return this.Src1;
+let Audio = class Audio {
+    get Src() {
+        return this.Src1;
+    }
+    set Src(href) {
+        this.Src1 = href;
+        this._urlDecoded = undefined;
+    }
+    get SrcDecoded() {
+        if (this._urlDecoded) {
+            return this._urlDecoded;
         }
-        set Src(href) {
-            this.Src1 = href;
-            this._urlDecoded = undefined;
+        if (this._urlDecoded === null) {
+            return undefined;
         }
-        get SrcDecoded() {
-            if (this._urlDecoded) {
-                return this._urlDecoded;
-            }
-            if (this._urlDecoded === null) {
-                return undefined;
-            }
-            if (!this.Src) {
-                this._urlDecoded = null;
-                return undefined;
-            }
-            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Src);
-            return !this._urlDecoded ? undefined : this._urlDecoded;
+        if (!this.Src) {
+            this._urlDecoded = null;
+            return undefined;
         }
-        set SrcDecoded(href) {
-            this._urlDecoded = href;
-        }
-        setSrcDecoded(href) {
-            this.Src = href;
-            this.SrcDecoded = href;
-        }
-    };
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@clipBegin"),
-        tslib_1.__metadata("design:type", String)
-    ], Audio.prototype, "ClipBegin", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@clipEnd"),
-        tslib_1.__metadata("design:type", String)
-    ], Audio.prototype, "ClipEnd", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@epub:type"),
-        tslib_1.__metadata("design:type", String)
-    ], Audio.prototype, "EpubType", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@src"),
-        tslib_1.__metadata("design:type", String)
-    ], Audio.prototype, "Src1", void 0);
-    Audio = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
-            epub: "http://www.idpf.org/2007/ops",
-            smil: "http://www.w3.org/ns/SMIL",
-        })
-    ], Audio);
-    return Audio;
-})();
+        this._urlDecoded = decodeURI_1.tryDecodeURI(this.Src);
+        return !this._urlDecoded ? undefined : this._urlDecoded;
+    }
+    set SrcDecoded(href) {
+        this._urlDecoded = href;
+    }
+    setSrcDecoded(href) {
+        this.Src = href;
+        this.SrcDecoded = href;
+    }
+};
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@clipBegin"),
+    tslib_1.__metadata("design:type", String)
+], Audio.prototype, "ClipBegin", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@clipEnd"),
+    tslib_1.__metadata("design:type", String)
+], Audio.prototype, "ClipEnd", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@epub:type"),
+    tslib_1.__metadata("design:type", String)
+], Audio.prototype, "EpubType", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@src"),
+    tslib_1.__metadata("design:type", String)
+], Audio.prototype, "Src1", void 0);
+Audio = tslib_1.__decorate([
+    xml_js_mapper_1.XmlObject({
+        epub: "http://www.idpf.org/2007/ops",
+        smil: "http://www.w3.org/ns/SMIL",
+    })
+], Audio);
 exports.Audio = Audio;
 //# sourceMappingURL=smil-audio.js.map
