@@ -620,7 +620,7 @@ exports.setPublicationDirection = function (publication, opf) {
     }
 };
 exports.getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr, ncxDoc, ncx;
+    var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr, iStart, iEnd, clip, ncxDoc, ncx;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -672,6 +672,16 @@ exports.getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void
                 return [2, Promise.reject(err_3)];
             case 10:
                 ncxStr = ncxZipData.toString("utf8");
+                iStart = ncxStr.indexOf("<ncx");
+                if (iStart >= 0) {
+                    iEnd = ncxStr.indexOf(">", iStart);
+                    if (iEnd > iStart) {
+                        clip = ncxStr.substr(iStart, iEnd - iStart);
+                        if (clip.indexOf("xmlns") < 0) {
+                            ncxStr = ncxStr.replace(/<ncx/, "<ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" ");
+                        }
+                    }
+                }
                 ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
                 ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
                 ncx.ZipPath = ncxFilePath;
@@ -680,7 +690,7 @@ exports.getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void
     });
 }); };
 exports.getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr, opfDoc, opf;
+    var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr, iStart, iEnd, clip, opfDoc, opf;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4, zipHasEntry_1.zipHasEntry(zip, rootfilePathDecoded, rootfilePath)];
@@ -722,6 +732,16 @@ exports.getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tsli
                 return [2, Promise.reject(err_5)];
             case 10:
                 opfStr = opfZipData.toString("utf8");
+                iStart = opfStr.indexOf("<package");
+                if (iStart >= 0) {
+                    iEnd = opfStr.indexOf(">", iStart);
+                    if (iEnd > iStart) {
+                        clip = opfStr.substr(iStart, iEnd - iStart);
+                        if (clip.indexOf("xmlns") < 0) {
+                            opfStr = opfStr.replace(/<package/, "<package xmlns=\"http://openebook.org/namespaces/oeb-package/1.0/\" ");
+                        }
+                    }
+                }
                 opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
                 opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
                 opf.ZipPath = rootfilePathDecoded;
@@ -1017,24 +1037,31 @@ exports.addOtherMetadata = function (publication, rootfile, opf) {
             if (metaTag.Name === "dtb:totalTime") {
                 metasDuration_1.push(metaTag);
             }
-            if (metaTag.Name === "dtb:multimediaType" ||
-                metaTag.Name === "dtb:multimediaContent") {
-                if (!publication.Metadata.AdditionalJSON) {
-                    publication.Metadata.AdditionalJSON = {};
-                }
-                publication.Metadata.AdditionalJSON[metaTag.Name] = metaTag.Content;
-            }
-            if (metaTag.Property === "media:duration" && !metaTag.Refine) {
+            else if (metaTag.Property === "media:duration" && !metaTag.Refine) {
                 metasDuration_1.push(metaTag);
             }
-            if (metaTag.Property === "media:narrator") {
+            else if (metaTag.Property === "media:narrator") {
                 metasNarrator_1.push(metaTag);
             }
-            if (metaTag.Property === "media:active-class") {
+            else if (metaTag.Property === "media:active-class") {
                 metasActiveClass_1.push(metaTag);
             }
-            if (metaTag.Property === "media:playback-active-class") {
+            else if (metaTag.Property === "media:playback-active-class") {
                 metasPlaybackActiveClass_1.push(metaTag);
+            }
+            else {
+                var key = metaTag.Name ? metaTag.Name : metaTag.Property;
+                if (key && !metadata_1.MetadataSupportedKeys.includes(key)) {
+                    if (!publication.Metadata.AdditionalJSON) {
+                        publication.Metadata.AdditionalJSON = {};
+                    }
+                    if (metaTag.Name && metaTag.Content) {
+                        publication.Metadata.AdditionalJSON[metaTag.Name] = metaTag.Content;
+                    }
+                    else if (metaTag.Property && metaTag.Data) {
+                        publication.Metadata.AdditionalJSON[metaTag.Property] = metaTag.Data;
+                    }
+                }
             }
         };
         if (opf.Metadata.Meta) {

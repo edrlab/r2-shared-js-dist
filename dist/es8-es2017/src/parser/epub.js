@@ -390,7 +390,17 @@ exports.lazyLoadMediaOverlays = async (publication, mo) => {
         debug(err);
         return Promise.reject(err);
     }
-    const smilStr = smilZipData.toString("utf8");
+    let smilStr = smilZipData.toString("utf8");
+    const iStart = smilStr.indexOf("<smil");
+    if (iStart >= 0) {
+        const iEnd = smilStr.indexOf(">", iStart);
+        if (iEnd > iStart) {
+            const clip = smilStr.substr(iStart, iEnd - iStart);
+            if (clip.indexOf("xmlns") < 0) {
+                smilStr = smilStr.replace(/<smil/, "<smil xmlns=\"http://www.w3.org/ns/SMIL\" ");
+            }
+        }
+    }
     const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
     const smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
     smil.ZipPath = mo.SmilPathInZip;

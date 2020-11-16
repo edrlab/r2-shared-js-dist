@@ -10,6 +10,7 @@ export declare enum DirectionEnum {
     RTL = "rtl",
     LTR = "ltr"
 }
+export declare const MetadataSupportedKeys: string[];
 export declare class Metadata implements IWithAdditionalJSON {
     AccessMode: string[];
     AccessibilityFeature: string[];

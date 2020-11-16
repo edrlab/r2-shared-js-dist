@@ -424,7 +424,7 @@ function getMediaOverlay(publication, spineHref) {
 }
 exports.getMediaOverlay = getMediaOverlay;
 exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_2, zipEntry, smilZipStream_, err_12, decryptFail, transformedStream, err_13, err, smilZipStream, smilZipData, err_14, smilStr, smilXmlDoc, smil, roles, _a, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
+    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_2, zipEntry, smilZipStream_, err_12, decryptFail, transformedStream, err_13, err, smilZipStream, smilZipData, err_14, smilStr, iStart, iEnd, clip, smilXmlDoc, smil, roles, _a, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
     return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -526,6 +526,16 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
                 return [2, Promise.reject(err_14)];
             case 15:
                 smilStr = smilZipData.toString("utf8");
+                iStart = smilStr.indexOf("<smil");
+                if (iStart >= 0) {
+                    iEnd = smilStr.indexOf(">", iStart);
+                    if (iEnd > iStart) {
+                        clip = smilStr.substr(iStart, iEnd - iStart);
+                        if (clip.indexOf("xmlns") < 0) {
+                            smilStr = smilStr.replace(/<smil/, "<smil xmlns=\"http://www.w3.org/ns/SMIL\" ");
+                        }
+                    }
+                }
                 smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
                 smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
                 smil.ZipPath = mo.SmilPathInZip;

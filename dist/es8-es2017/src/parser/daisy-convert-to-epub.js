@@ -24,7 +24,7 @@ function ensureDirs(fspath) {
 }
 exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
     return new Promise(async (resolve, reject) => {
-        var _a;
+        var _a, _b;
         const zipInternal = publication.findFromInternal("zip");
         if (!zipInternal) {
             debug("No publication zip!?");
@@ -198,7 +198,7 @@ exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                         continue;
                     }
                     const dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");
-                    const title = dtBookDoc.getElementsByTagName("doctitle")[0].textContent;
+                    const title = (_b = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _b === void 0 ? void 0 : _b.textContent;
                     const listElements = dtBookDoc.getElementsByTagName("list");
                     for (let i = 0; i < listElements.length; i++) {
                         const listElement = listElements.item(i);
@@ -260,7 +260,7 @@ exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                         .replace(/<head([\s\S]*?)>/gm, `
 <head$1>
 <meta charset="UTF-8" />
-<title>${title}</title>
+<title>${title ? title : " "}</title>
 `)
                         .replace(/<\/head[\s\S]*?>/gm, `
 ${cssHrefs.reduce((pv, cv) => {

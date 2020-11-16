@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Properties = exports.SpreadEnum = exports.PageEnum = exports.OverflowEnum = exports.OrientationEnum = exports.LayoutEnum = void 0;
+exports.Properties = exports.PropertiesSupportedKeys = exports.SpreadEnum = exports.PageEnum = exports.OverflowEnum = exports.OrientationEnum = exports.LayoutEnum = void 0;
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const metadata_encrypted_1 = require("r2-lcp-js/dist/es7-es2016/src/models/metadata-encrypted");
@@ -35,6 +35,7 @@ var SpreadEnum;
     SpreadEnum["None"] = "none";
     SpreadEnum["Landscape"] = "landscape";
 })(SpreadEnum = exports.SpreadEnum || (exports.SpreadEnum = {}));
+exports.PropertiesSupportedKeys = ["contains", "layout", "orientation", "overflow", "page", "spread", "encrypted", "media-overlay"];
 let Properties = class Properties {
 };
 tslib_1.__decorate([

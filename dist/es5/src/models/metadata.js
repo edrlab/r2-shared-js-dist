@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Metadata = exports.DirectionEnum = void 0;
+exports.Metadata = exports.MetadataSupportedKeys = exports.DirectionEnum = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
@@ -17,23 +17,7 @@ var DirectionEnum;
     DirectionEnum["RTL"] = "rtl";
     DirectionEnum["LTR"] = "ltr";
 })(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
-var SUBJECT_JSON_PROP = "subject";
-var BELONGS_TO_JSON_PROP = "belongs_to";
-var BELONGSTO_JSON_PROP = "belongsTo";
-var RENDITION_JSON_PROP = "rendition";
-var AUTHOR_JSON_PROP = "author";
-var TRANSLATOR_JSON_PROP = "translator";
-var EDITOR_JSON_PROP = "editor";
-var ARTIST_JSON_PROP = "artist";
-var ILLUSTRATOR_JSON_PROP = "illustrator";
-var LETTERER_JSON_PROP = "letterer";
-var PENCILER_JSON_PROP = "penciler";
-var COLORIST_JSON_PROP = "colorist";
-var INKER_JSON_PROP = "inker";
-var NARRATOR_JSON_PROP = "narrator";
-var CONTRIBUTOR_JSON_PROP = "contributor";
-var PUBLISHER_JSON_PROP = "publisher";
-var IMPRINT_JSON_PROP = "imprint";
+exports.MetadataSupportedKeys = ["accessMode", "accessibilityFeature", "accessibilityHazard", "accessibilitySummary", "accessModeSufficient", "accessibilityAPI", "accessibilityControl", "certifiedBy", "certifierCredential", "certifierReport", "conformsTo", "title", "subtitle", "identifier", "author", "translator", "editor", "artist", "illustrator", "letterer", "penciler", "colorist", "inker", "narrator", "contributor", "publisher", "imprint", "language", "modified", "published", "sortAs", "description", "readingProgression", "direction", "belongsTo", "duration", "numberOfPages", "rights", "rendition", "source", "subject"];
 var Metadata = (function () {
     function Metadata() {
     }
@@ -161,79 +145,79 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Identifier", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(AUTHOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("author"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Author", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(TRANSLATOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("translator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Translator", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(EDITOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("editor"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Editor", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(ARTIST_JSON_PROP),
+        ta_json_x_1.JsonProperty("artist"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Artist", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(ILLUSTRATOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("illustrator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Illustrator", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(LETTERER_JSON_PROP),
+        ta_json_x_1.JsonProperty("letterer"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Letterer", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(PENCILER_JSON_PROP),
+        ta_json_x_1.JsonProperty("penciler"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Penciler", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(COLORIST_JSON_PROP),
+        ta_json_x_1.JsonProperty("colorist"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Colorist", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(INKER_JSON_PROP),
+        ta_json_x_1.JsonProperty("inker"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Inker", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(NARRATOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("narrator"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Narrator", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(CONTRIBUTOR_JSON_PROP),
+        ta_json_x_1.JsonProperty("contributor"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Contributor", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(PUBLISHER_JSON_PROP),
+        ta_json_x_1.JsonProperty("publisher"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Publisher", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(IMPRINT_JSON_PROP),
+        ta_json_x_1.JsonProperty("imprint"),
         ta_json_x_1.JsonElementType(metadata_contributor_1.Contributor),
         ta_json_x_1.JsonConverter(metadata_contributor_json_converter_1.JsonContributorConverter),
         tslib_1.__metadata("design:type", Array)
@@ -273,11 +257,11 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "Direction1", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(BELONGSTO_JSON_PROP),
+        ta_json_x_1.JsonProperty("belongsTo"),
         tslib_1.__metadata("design:type", metadata_belongsto_1.BelongsTo)
     ], Metadata.prototype, "BelongsTo2", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(BELONGS_TO_JSON_PROP),
+        ta_json_x_1.JsonProperty("belongs_to"),
         tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "BelongsTo1", void 0);
     tslib_1.__decorate([
@@ -297,7 +281,7 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Rights", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(RENDITION_JSON_PROP),
+        ta_json_x_1.JsonProperty("rendition"),
         tslib_1.__metadata("design:type", metadata_properties_1.Properties)
     ], Metadata.prototype, "Rendition", void 0);
     tslib_1.__decorate([
@@ -305,7 +289,7 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Source", void 0);
     tslib_1.__decorate([
-        ta_json_x_1.JsonProperty(SUBJECT_JSON_PROP),
+        ta_json_x_1.JsonProperty("subject"),
         ta_json_x_1.JsonConverter(metadata_subject_json_converter_1.JsonSubjectConverter),
         ta_json_x_1.JsonElementType(metadata_subject_1.Subject),
         tslib_1.__metadata("design:type", Array)

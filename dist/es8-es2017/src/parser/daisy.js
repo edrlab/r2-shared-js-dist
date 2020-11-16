@@ -28,10 +28,12 @@ async function isDaisyPublication(urlOrPath) {
         p = url.pathname;
         return undefined;
     }
-    else if (/\.daisy[3]?$/.test(path.extname(path.basename(p)).toLowerCase())) {
+    else if (/\.daisy[23]?$/.test(path.extname(path.basename(p)).toLowerCase())) {
         return DaisyBookis.LocalPacked;
     }
-    else if (fs.existsSync(path.join(urlOrPath, "package.opf"))) {
+    else if (fs.existsSync(path.join(urlOrPath, "package.opf")) ||
+        fs.existsSync(path.join(urlOrPath, "Book.opf")) ||
+        fs.existsSync(path.join(urlOrPath, "speechgen.opf"))) {
         if (!fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
             return DaisyBookis.LocalExploded;
         }
@@ -46,7 +48,9 @@ async function isDaisyPublication(urlOrPath) {
             return Promise.reject(err);
         }
         if (!await zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined) &&
-            await zipHasEntry_1.zipHasEntry(zip, "package.opf", undefined)) {
+            (await zipHasEntry_1.zipHasEntry(zip, "package.opf", undefined) ||
+                await zipHasEntry_1.zipHasEntry(zip, "Book.opf", undefined) ||
+                await zipHasEntry_1.zipHasEntry(zip, "speechgen.opf", undefined))) {
             return DaisyBookis.LocalPacked;
         }
     }
@@ -74,7 +78,9 @@ async function DaisyParsePromise(filePath) {
     publication.AddToInternal("type", "daisy");
     publication.AddToInternal("zip", zip);
     const entries = await zip.getEntries();
-    const opfZipEntryPath = entries.find((entry) => entry.match(/\.opf$/));
+    const opfZipEntryPath = entries.find((entry) => {
+        return entry.endsWith(".opf") && entry.indexOf("/") < 0 && entry.indexOf("\\") < 0;
+    });
     if (!opfZipEntryPath) {
         return Promise.reject("Opf File doesn't exists");
     }
@@ -92,9 +98,15 @@ async function DaisyParsePromise(filePath) {
     await epub_daisy_common_1.fillSpineAndResource(publication, undefined, opf, zip, addLinkData);
     let ncx;
     if (opf.Manifest) {
-        const ncxManItem = opf.Manifest.find((manifestItem) => {
+        let ncxManItem = opf.Manifest.find((manifestItem) => {
             return manifestItem.MediaType === "application/x-dtbncx+xml";
         });
+        if (!ncxManItem) {
+            ncxManItem = opf.Manifest.find((manifestItem) => {
+                return manifestItem.MediaType === "text/xml" &&
+                    manifestItem.Href && manifestItem.Href.endsWith(".ncx");
+            });
+        }
         if (ncxManItem) {
             ncx = await epub_daisy_common_1.getNcx(ncxManItem, opf, zip);
         }

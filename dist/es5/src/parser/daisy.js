@@ -23,9 +23,9 @@ var DaisyBookis;
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var p, http, url, zip, err_1, _a;
-        return tslib_1.__generator(this, function (_b) {
-            switch (_b.label) {
+        var p, http, url, zip, err_1, _a, _b, _c;
+        return tslib_1.__generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
                     p = urlOrPath;
                     http = UrlUtils_1.isHTTP(urlOrPath);
@@ -34,41 +34,57 @@ function isDaisyPublication(urlOrPath) {
                     p = url.pathname;
                     return [2, undefined];
                 case 1:
-                    if (!/\.daisy[3]?$/.test(path.extname(path.basename(p)).toLowerCase())) return [3, 2];
+                    if (!/\.daisy[23]?$/.test(path.extname(path.basename(p)).toLowerCase())) return [3, 2];
                     return [2, DaisyBookis.LocalPacked];
                 case 2:
-                    if (!fs.existsSync(path.join(urlOrPath, "package.opf"))) return [3, 3];
+                    if (!(fs.existsSync(path.join(urlOrPath, "package.opf")) ||
+                        fs.existsSync(path.join(urlOrPath, "Book.opf")) ||
+                        fs.existsSync(path.join(urlOrPath, "speechgen.opf")))) return [3, 3];
                     if (!fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
                         return [2, DaisyBookis.LocalExploded];
                     }
-                    return [3, 11];
+                    return [3, 15];
                 case 3:
                     zip = void 0;
-                    _b.label = 4;
+                    _d.label = 4;
                 case 4:
-                    _b.trys.push([4, 6, , 7]);
+                    _d.trys.push([4, 6, , 7]);
                     return [4, zipFactory_1.zipLoadPromise(urlOrPath)];
                 case 5:
-                    zip = _b.sent();
+                    zip = _d.sent();
                     return [3, 7];
                 case 6:
-                    err_1 = _b.sent();
+                    err_1 = _d.sent();
                     debug(err_1);
                     return [2, Promise.reject(err_1)];
                 case 7: return [4, zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined)];
                 case 8:
-                    _a = !(_b.sent());
-                    if (!_a) return [3, 10];
+                    _a = !(_d.sent());
+                    if (!_a) return [3, 14];
                     return [4, zipHasEntry_1.zipHasEntry(zip, "package.opf", undefined)];
                 case 9:
-                    _a = (_b.sent());
-                    _b.label = 10;
+                    _c = (_d.sent());
+                    if (_c) return [3, 11];
+                    return [4, zipHasEntry_1.zipHasEntry(zip, "Book.opf", undefined)];
                 case 10:
+                    _c = (_d.sent());
+                    _d.label = 11;
+                case 11:
+                    _b = _c;
+                    if (_b) return [3, 13];
+                    return [4, zipHasEntry_1.zipHasEntry(zip, "speechgen.opf", undefined)];
+                case 12:
+                    _b = (_d.sent());
+                    _d.label = 13;
+                case 13:
+                    _a = (_b);
+                    _d.label = 14;
+                case 14:
                     if (_a) {
                         return [2, DaisyBookis.LocalPacked];
                     }
-                    _b.label = 11;
-                case 11: return [2, undefined];
+                    _d.label = 15;
+                case 15: return [2, undefined];
             }
         });
     });
@@ -104,7 +120,9 @@ function DaisyParsePromise(filePath) {
                     return [4, zip.getEntries()];
                 case 4:
                     entries = _a.sent();
-                    opfZipEntryPath = entries.find(function (entry) { return entry.match(/\.opf$/); });
+                    opfZipEntryPath = entries.find(function (entry) {
+                        return entry.endsWith(".opf") && entry.indexOf("/") < 0 && entry.indexOf("\\") < 0;
+                    });
                     if (!opfZipEntryPath) {
                         return [2, Promise.reject("Opf File doesn't exists")];
                     }
@@ -128,6 +146,12 @@ function DaisyParsePromise(filePath) {
                     ncxManItem = opf.Manifest.find(function (manifestItem) {
                         return manifestItem.MediaType === "application/x-dtbncx+xml";
                     });
+                    if (!ncxManItem) {
+                        ncxManItem = opf.Manifest.find(function (manifestItem) {
+                            return manifestItem.MediaType === "text/xml" &&
+                                manifestItem.Href && manifestItem.Href.endsWith(".ncx");
+                        });
+                    }
                     if (!ncxManItem) return [3, 8];
                     return [4, epub_daisy_common_1.getNcx(ncxManItem, opf, zip)];
                 case 7:

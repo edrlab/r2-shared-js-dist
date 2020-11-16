@@ -27,9 +27,9 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
     return tslib_1.__generator(this, function (_a) {
         return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                 var zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, combinedMediaOverlays, patchMediaOverlaysTextHref_1, _i, _a, linkItem, _b, _c, altLink, resourcesToKeep, _d, _e, resLink, cssText, _f, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _g, elementNames_2, elementName, els, _h, els_1, el, cls, stylesheets, cssHrefs, _j, stylesheets_1, stylesheet, match, href, smilRefs, _k, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, moURL, moLink, jsonObjMO, jsonStrMO, buff, findFirstDescendantText_1, smilDocs_1, processLink_1, processLinks_1, _l, _m, link, _o, _p, link, jsonObj, jsonStr, erreur_1;
-                var _q;
-                return tslib_1.__generator(this, function (_r) {
-                    switch (_r.label) {
+                var _q, _r;
+                return tslib_1.__generator(this, function (_s) {
+                    switch (_s.label) {
                         case 0:
                             zipInternal = publication.findFromInternal("zip");
                             if (!zipInternal) {
@@ -40,9 +40,9 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             outputZipPath = path.join(outputDirPath, "daisy-to-epub.webpub");
                             ensureDirs(outputZipPath);
                             zipfile = new yazl_1.ZipFile();
-                            _r.label = 1;
+                            _s.label = 1;
                         case 1:
-                            _r.trys.push([1, 26, 27, 28]);
+                            _s.trys.push([1, 26, 27, 28]);
                             writeStream = fs.createWriteStream(outputZipPath);
                             zipfile.outputStream.pipe(writeStream)
                                 .on("close", function () {
@@ -139,7 +139,7 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             combinedMediaOverlays.Role.push("section");
                             combinedMediaOverlays.duration = 0;
                             _i = 0, _a = publication.Spine;
-                            _r.label = 2;
+                            _s.label = 2;
                         case 2:
                             if (!(_i < _a.length)) return [3, 6];
                             linkItem = _a[_i];
@@ -147,7 +147,7 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             if (!!linkItem.MediaOverlays.initialized) return [3, 4];
                             return [4, epub_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
                         case 3:
-                            _r.sent();
+                            _s.sent();
                             if (linkItem.MediaOverlays.duration) {
                                 if (!linkItem.Duration) {
                                     linkItem.Duration = linkItem.MediaOverlays.duration;
@@ -163,7 +163,7 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                     }
                                 }
                             }
-                            _r.label = 4;
+                            _s.label = 4;
                         case 4:
                             if (linkItem.MediaOverlays.Children) {
                                 if (!combinedMediaOverlays.Children) {
@@ -175,18 +175,18 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                     combinedMediaOverlays.duration += linkItem.MediaOverlays.duration;
                                 }
                             }
-                            _r.label = 5;
+                            _s.label = 5;
                         case 5:
                             _i++;
                             return [3, 2];
                         case 6:
                             patchMediaOverlaysTextHref_1(combinedMediaOverlays);
-                            _r.label = 7;
+                            _s.label = 7;
                         case 7:
                             publication.Spine = [];
                             resourcesToKeep = [];
                             _d = 0, _e = publication.Resources;
-                            _r.label = 8;
+                            _s.label = 8;
                         case 8:
                             if (!(_d < _e.length)) return [3, 15];
                             resLink = _e[_d];
@@ -196,7 +196,7 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             if (!(resLink.TypeLink === "text/css" || resLink.HrefDecoded.endsWith(".css"))) return [3, 10];
                             return [4, epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
                         case 9:
-                            cssText = _r.sent();
+                            cssText = _s.sent();
                             if (!cssText) {
                                 debug("!loadFileStrFromZipPath", resLink.HrefDecoded);
                                 return [3, 14];
@@ -222,13 +222,13 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             if (!(resLink.TypeLink === "application/x-dtbook+xml" || resLink.HrefDecoded.endsWith(".xml"))) return [3, 12];
                             return [4, epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
                         case 11:
-                            dtBookStr = _r.sent();
+                            dtBookStr = _s.sent();
                             if (!dtBookStr) {
                                 debug("!loadFileStrFromZipPath", dtBookStr);
                                 return [3, 14];
                             }
                             dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");
-                            title = dtBookDoc.getElementsByTagName("doctitle")[0].textContent;
+                            title = (_r = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _r === void 0 ? void 0 : _r.textContent;
                             listElements = dtBookDoc.getElementsByTagName("list");
                             for (i = 0; i < listElements.length; i++) {
                                 listElement = listElements.item(i);
@@ -289,7 +289,7 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             dtbookNowXHTML = new xmldom.XMLSerializer().serializeToString(dtBookDoc)
                                 .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/, "xmlns=\"http://www.w3.org/1999/xhtml\"")
                                 .replace(/^([\s\S]*)<html/gm, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE xhtml>\n<html")
-                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n<title>" + title + "</title>\n")
+                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n<title>" + (title ? title : " ") + "</title>\n")
                                 .replace(/<\/head[\s\S]*?>/gm, "\n" + cssHrefs.reduce(function (pv, cv) {
                                 return pv + "\n" + ("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cv + "\" />");
                             }, "") + "\n</head>\n");
@@ -329,12 +329,12 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                 !resLink.HrefDecoded.endsWith(".ncx"))) return [3, 14];
                             return [4, epub_daisy_common_1.loadFileBufferFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
                         case 13:
-                            buff = _r.sent();
+                            buff = _s.sent();
                             if (buff) {
                                 zipfile.addBuffer(buff, resLink.HrefDecoded);
                             }
                             resourcesToKeep.push(resLink);
-                            _r.label = 14;
+                            _s.label = 14;
                         case 14:
                             _d++;
                             return [3, 8];
@@ -451,28 +451,28 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             }); };
                             if (!publication.PageList) return [3, 19];
                             _l = 0, _m = publication.PageList;
-                            _r.label = 16;
+                            _s.label = 16;
                         case 16:
                             if (!(_l < _m.length)) return [3, 19];
                             link = _m[_l];
                             return [4, processLink_1(link)];
                         case 17:
-                            _r.sent();
-                            _r.label = 18;
+                            _s.sent();
+                            _s.label = 18;
                         case 18:
                             _l++;
                             return [3, 16];
                         case 19:
                             if (!publication.Landmarks) return [3, 23];
                             _o = 0, _p = publication.Landmarks;
-                            _r.label = 20;
+                            _s.label = 20;
                         case 20:
                             if (!(_o < _p.length)) return [3, 23];
                             link = _p[_o];
                             return [4, processLink_1(link)];
                         case 21:
-                            _r.sent();
-                            _r.label = 22;
+                            _s.sent();
+                            _s.label = 22;
                         case 22:
                             _o++;
                             return [3, 20];
@@ -480,15 +480,15 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             if (!publication.TOC) return [3, 25];
                             return [4, processLinks_1(publication.TOC)];
                         case 24:
-                            _r.sent();
-                            _r.label = 25;
+                            _s.sent();
+                            _s.label = 25;
                         case 25:
                             jsonObj = serializable_1.TaJsonSerialize(publication);
                             jsonStr = global.JSON.stringify(jsonObj, null, "  ");
                             zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
                             return [3, 28];
                         case 26:
-                            erreur_1 = _r.sent();
+                            erreur_1 = _s.sent();
                             debug(erreur_1);
                             return [3, 28];
                         case 27:

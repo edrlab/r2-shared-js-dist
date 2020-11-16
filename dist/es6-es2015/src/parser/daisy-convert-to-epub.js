@@ -25,7 +25,7 @@ function ensureDirs(fspath) {
 }
 exports.convertDaisyToReadiumWebPub = (outputDirPath, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-        var _a;
+        var _a, _b;
         const zipInternal = publication.findFromInternal("zip");
         if (!zipInternal) {
             debug("No publication zip!?");
@@ -199,7 +199,7 @@ exports.convertDaisyToReadiumWebPub = (outputDirPath, publication) => tslib_1.__
                         continue;
                     }
                     const dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");
-                    const title = dtBookDoc.getElementsByTagName("doctitle")[0].textContent;
+                    const title = (_b = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _b === void 0 ? void 0 : _b.textContent;
                     const listElements = dtBookDoc.getElementsByTagName("list");
                     for (let i = 0; i < listElements.length; i++) {
                         const listElement = listElements.item(i);
@@ -261,7 +261,7 @@ exports.convertDaisyToReadiumWebPub = (outputDirPath, publication) => tslib_1.__
                         .replace(/<head([\s\S]*?)>/gm, `
 <head$1>
 <meta charset="UTF-8" />
-<title>${title}</title>
+<title>${title ? title : " "}</title>
 `)
                         .replace(/<\/head[\s\S]*?>/gm, `
 ${cssHrefs.reduce((pv, cv) => {

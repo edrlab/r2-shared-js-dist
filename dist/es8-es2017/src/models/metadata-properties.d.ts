@@ -26,6 +26,7 @@ export declare enum SpreadEnum {
     None = "none",
     Landscape = "landscape"
 }
+export declare const PropertiesSupportedKeys: string[];
 export declare class Properties implements IWithAdditionalJSON {
     Contains: string[];
     Layout: string;
