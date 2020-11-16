@@ -41,6 +41,7 @@ Metafield = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",
+        opf2: "http://openebook.org/namespaces/oeb-package/1.0/",
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], Metafield);

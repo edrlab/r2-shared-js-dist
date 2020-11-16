@@ -3,15 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metadata = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var opf_author_1 = require("./opf-author");
-var opf_date_1 = require("./opf-date");
-var opf_identifier_1 = require("./opf-identifier");
+var opf_dc_metadata_1 = require("./opf-dc-metadata");
 var opf_link_1 = require("./opf-link");
 var opf_metafield_1 = require("./opf-metafield");
-var opf_subject_1 = require("./opf-subject");
-var opf_title_1 = require("./opf-title");
-var Metadata = (function () {
+var opf_x_metadata_1 = require("./opf-x-metadata");
+var Metadata = (function (_super) {
+    tslib_1.__extends(Metadata, _super);
     function Metadata() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     tslib_1.__decorate([
         xml_js_mapper_1.XmlXPathSelector("link"),
@@ -19,92 +18,26 @@ var Metadata = (function () {
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Link", void 0);
     tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:title"),
-        xml_js_mapper_1.XmlItemType(opf_title_1.Title),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Title", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:language/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Language", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:identifier"),
-        xml_js_mapper_1.XmlItemType(opf_identifier_1.Identifier),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Identifier", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:creator"),
-        xml_js_mapper_1.XmlItemType(opf_author_1.Author),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Creator", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:subject"),
-        xml_js_mapper_1.XmlItemType(opf_subject_1.Subject),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Subject", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:description/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Description", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:publisher/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Publisher", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:contributor"),
-        xml_js_mapper_1.XmlItemType(opf_author_1.Author),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Contributor", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:date"),
-        xml_js_mapper_1.XmlItemType(opf_date_1.MetaDate),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Date", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:type/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Type", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:format/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Format", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:source/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Source", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:relation/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Relation", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:coverage/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Coverage", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("dc:rights/text()"),
-        xml_js_mapper_1.XmlItemType(String),
-        tslib_1.__metadata("design:type", Array)
-    ], Metadata.prototype, "Rights", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("opf:meta"),
+        xml_js_mapper_1.XmlXPathSelector("meta"),
         xml_js_mapper_1.XmlItemType(opf_metafield_1.Metafield),
         tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Meta", void 0);
+    tslib_1.__decorate([
+        xml_js_mapper_1.XmlXPathSelector("dc-metadata"),
+        tslib_1.__metadata("design:type", opf_dc_metadata_1.DCMetadata)
+    ], Metadata.prototype, "DCMetadata", void 0);
+    tslib_1.__decorate([
+        xml_js_mapper_1.XmlXPathSelector("x-metadata"),
+        tslib_1.__metadata("design:type", opf_x_metadata_1.XMetadata)
+    ], Metadata.prototype, "XMetadata", void 0);
     Metadata = tslib_1.__decorate([
         xml_js_mapper_1.XmlObject({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",
+            opf2: "http://openebook.org/namespaces/oeb-package/1.0/",
         })
     ], Metadata);
     return Metadata;
-}());
+}(opf_dc_metadata_1.DCMetadata));
 exports.Metadata = Metadata;
 //# sourceMappingURL=opf-metadata.js.map

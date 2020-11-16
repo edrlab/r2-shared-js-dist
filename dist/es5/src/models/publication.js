@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publication = void 0;
 var tslib_1 = require("tslib");
+var debug_ = require("debug");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var metadata_1 = require("./metadata");
 var publication_link_1 = require("./publication-link");
+var debug = debug_("r2:shared#models/publication");
 var METADATA_JSON_PROP = "metadata";
 var LINKS_JSON_PROP = "links";
 var READINGORDER_JSON_PROP = "readingOrder";
@@ -49,7 +51,7 @@ var Publication = (function () {
         configurable: true
     });
     Publication.prototype.freeDestroy = function () {
-        console.log("freeDestroy: Publication");
+        debug("freeDestroy: Publication");
         if (this.Internal) {
             var zipInternal = this.findFromInternal("zip");
             if (zipInternal) {

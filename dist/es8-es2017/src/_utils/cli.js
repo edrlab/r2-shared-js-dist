@@ -11,6 +11,8 @@ const media_overlay_1 = require("../models/media-overlay");
 const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
 const audiobook_1 = require("../parser/audiobook");
+const daisy_1 = require("../parser/daisy");
+const daisy_convert_to_epub_1 = require("../parser/daisy-convert-to-epub");
 const epub_1 = require("../parser/epub");
 const publication_parser_1 = require("../parser/publication-parser");
 const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
@@ -117,9 +119,20 @@ if (args[2]) {
     }
     catch (_err) {
     }
-    if ((isAnEPUB || isAnAudioBook) && outputDirPath) {
+    let isDaisyBook;
+    try {
+        isDaisyBook = await daisy_1.isDaisyPublication(filePath);
+    }
+    catch (_err) {
+    }
+    if ((isDaisyBook || isAnAudioBook || isAnEPUB) && outputDirPath) {
         try {
-            await extractEPUB(isAnEPUB ? true : false, publication, outputDirPath, decryptKeys);
+            if (isDaisyBook) {
+                await daisy_convert_to_epub_1.convertDaisyToReadiumWebPub(outputDirPath, publication);
+            }
+            else {
+                await extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys);
+            }
         }
         catch (err) {
             console.log("== Publication extract FAIL");
@@ -328,7 +341,13 @@ async function extractEPUB(isEPUB, pub, outDir, keys) {
         console.log(err);
         throw err;
     }
-    fs.mkdirSync(outDir);
+    ensureDirs(path.join(outDir, "DUMMY_FILE.EXT"));
+    try {
+        await extractEPUB_MediaOverlays(pub, zip, outDir);
+    }
+    catch (err) {
+        console.log(err);
+    }
     extractEPUB_ManifestJSON(pub, outDir, keys);
     const links = [];
     if (pub.Resources) {
@@ -359,6 +378,39 @@ async function extractEPUB(isEPUB, pub, outDir, keys) {
     }
     catch (err) {
         console.log(err);
+    }
+}
+async function extractEPUB_MediaOverlays(pub, _zip, outDir) {
+    if (!pub.Spine) {
+        return;
+    }
+    let i = -1;
+    for (const spineItem of pub.Spine) {
+        if (spineItem.MediaOverlays) {
+            const mo = spineItem.MediaOverlays;
+            try {
+                await epub_1.lazyLoadMediaOverlays(pub, mo);
+            }
+            catch (err) {
+                return Promise.reject(err);
+            }
+            const moJsonObj = serializable_1.TaJsonSerialize(mo);
+            const moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
+            i++;
+            const p = `media-overlays_${i}.json`;
+            const moJsonPath = path.join(outDir, p);
+            fs.writeFileSync(moJsonPath, moJsonStr, "utf8");
+            if (spineItem.Properties && spineItem.Properties.MediaOverlay) {
+                spineItem.Properties.MediaOverlay = p;
+            }
+            if (spineItem.Alternate) {
+                for (const altLink of spineItem.Alternate) {
+                    if (altLink.TypeLink === "application/vnd.syncnarr+json") {
+                        altLink.Href = p;
+                    }
+                }
+            }
+        }
     }
 }
 function ensureDirs(fspath) {
@@ -409,6 +461,9 @@ async function dumpPublication(publication) {
             }
             if (spineItem.MediaOverlays) {
                 const mo = spineItem.MediaOverlays;
+                if (!mo.initialized) {
+                    console.log(util.inspect(mo, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
+                }
                 console.log(mo.SmilPathInZip);
                 try {
                     await epub_1.lazyLoadMediaOverlays(publication, mo);

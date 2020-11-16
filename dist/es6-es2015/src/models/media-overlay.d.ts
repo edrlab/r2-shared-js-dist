@@ -6,4 +6,5 @@ export declare class MediaOverlayNode {
     Children: MediaOverlayNode[];
     SmilPathInZip: string | undefined;
     initialized: boolean;
+    duration: number | undefined;
 }

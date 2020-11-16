@@ -10,20 +10,20 @@ const opf_spine_1 = require("./opf-spine");
 let OPF = class OPF {
 };
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("opf:metadata"),
+    xml_js_mapper_1.XmlXPathSelector("opf:metadata | opf2:metadata"),
     tslib_1.__metadata("design:type", opf_metadata_1.Metadata)
 ], OPF.prototype, "Metadata", void 0);
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("opf:manifest/opf:item"),
+    xml_js_mapper_1.XmlXPathSelector("manifest/item"),
     xml_js_mapper_1.XmlItemType(opf_manifest_1.Manifest),
     tslib_1.__metadata("design:type", Array)
 ], OPF.prototype, "Manifest", void 0);
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("opf:spine"),
+    xml_js_mapper_1.XmlXPathSelector("spine"),
     tslib_1.__metadata("design:type", opf_spine_1.Spine)
 ], OPF.prototype, "Spine", void 0);
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("opf:guide/opf:reference"),
+    xml_js_mapper_1.XmlXPathSelector("guide/reference"),
     xml_js_mapper_1.XmlItemType(opf_reference_1.Reference),
     tslib_1.__metadata("design:type", Array)
 ], OPF.prototype, "Guide", void 0);
@@ -47,6 +47,7 @@ OPF = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",
+        opf2: "http://openebook.org/namespaces/oeb-package/1.0/",
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], OPF);

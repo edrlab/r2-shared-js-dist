@@ -14,6 +14,7 @@ Body = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
+        smil2: "http://www.w3.org/2001/SMIL20/",
     })
 ], Body);
 exports.Body = Body;

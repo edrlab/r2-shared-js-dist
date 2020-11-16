@@ -20,7 +20,7 @@ var Spine = (function () {
         tslib_1.__metadata("design:type", String)
     ], Spine.prototype, "PageProgression", void 0);
     tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("opf:itemref"),
+        xml_js_mapper_1.XmlXPathSelector("itemref"),
         xml_js_mapper_1.XmlItemType(opf_spineitem_1.SpineItem),
         tslib_1.__metadata("design:type", Array)
     ], Spine.prototype, "Items", void 0);
@@ -28,6 +28,7 @@ var Spine = (function () {
         xml_js_mapper_1.XmlObject({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",
+            opf2: "http://openebook.org/namespaces/oeb-package/1.0/",
             xml: "http://www.w3.org/XML/1998/namespace",
         })
     ], Spine);

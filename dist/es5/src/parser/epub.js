@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -14,12 +14,9 @@ var media_overlay_1 = require("../models/media-overlay");
 var metadata_1 = require("../models/metadata");
 var metadata_belongsto_1 = require("../models/metadata-belongsto");
 var metadata_contributor_1 = require("../models/metadata-contributor");
-var metadata_media_overlay_1 = require("../models/metadata-media-overlay");
 var metadata_properties_1 = require("../models/metadata-properties");
-var metadata_subject_1 = require("../models/metadata-subject");
 var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
-var ta_json_string_tokens_converter_1 = require("../models/ta-json-string-tokens-converter");
 var metadata_encrypted_1 = require("r2-lcp-js/dist/es5/src/models/metadata-encrypted");
 var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
@@ -30,32 +27,18 @@ var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
 var transformer_1 = require("../transform/transformer");
 var decodeURI_1 = require("../_utils/decodeURI");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
+var epub_daisy_common_1 = require("./epub-daisy-common");
 var container_1 = require("./epub/container");
 var display_options_1 = require("./epub/display-options");
 var encryption_1 = require("./epub/encryption");
-var ncx_1 = require("./epub/ncx");
-var opf_1 = require("./epub/opf");
-var opf_author_1 = require("./epub/opf-author");
 var smil_1 = require("./epub/smil");
 var smil_seq_1 = require("./epub/smil-seq");
 var debug = debug_("r2:shared#parser/epub");
-var epub3 = "3.0";
-var epub301 = "3.0.1";
-var epub31 = "3.1";
-exports.mediaOverlayURLPath = "media-overlay.json";
-exports.mediaOverlayURLParam = "resource";
-exports.BCP47_UNKNOWN_LANG = "und";
-function parseSpaceSeparatedString(str) {
-    return str ? str.trim().split(" ").map(function (role) {
-        return role.trim();
-    }).filter(function (role) {
-        return role.length > 0;
-    }) : [];
-}
+exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var zipInternal, zip, coverLinkHrefDecoded, has, zipEntries, _a, zipEntries_1, zipEntry, zipStream, err_1, zipData, imageInfo, err_2;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
+    var zipInternal, zip, coverLinkHrefDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, zipStream, err_1, zipData, imageInfo, err_2;
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 zipInternal = publication.findFromInternal("zip");
                 if (!zipInternal) return [3, 11];
@@ -66,40 +49,40 @@ exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.
                 }
                 return [4, zipHasEntry_1.zipHasEntry(zip, coverLinkHrefDecoded, coverLink.Href)];
             case 1:
-                has = _b.sent();
+                has = _a.sent();
                 if (!!has) return [3, 3];
                 debug("NOT IN ZIP (addCoverDimensions): " + coverLink.Href + " --- " + coverLinkHrefDecoded);
                 return [4, zip.getEntries()];
             case 2:
-                zipEntries = _b.sent();
-                for (_a = 0, zipEntries_1 = zipEntries; _a < zipEntries_1.length; _a++) {
-                    zipEntry = zipEntries_1[_a];
+                zipEntries = _a.sent();
+                for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
+                    zipEntry = zipEntries_1[_i];
                     debug(zipEntry);
                 }
                 return [2];
             case 3:
                 zipStream = void 0;
-                _b.label = 4;
+                _a.label = 4;
             case 4:
-                _b.trys.push([4, 6, , 7]);
+                _a.trys.push([4, 6, , 7]);
                 return [4, zip.entryStreamPromise(coverLinkHrefDecoded)];
             case 5:
-                zipStream = _b.sent();
+                zipStream = _a.sent();
                 return [3, 7];
             case 6:
-                err_1 = _b.sent();
+                err_1 = _a.sent();
                 debug(coverLinkHrefDecoded);
                 debug(coverLink.TypeLink);
                 debug(err_1);
                 return [2];
             case 7:
                 zipData = void 0;
-                _b.label = 8;
+                _a.label = 8;
             case 8:
-                _b.trys.push([8, 10, , 11]);
+                _a.trys.push([8, 10, , 11]);
                 return [4, BufferUtils_1.streamToBufferPromise(zipStream.stream)];
             case 9:
-                zipData = _b.sent();
+                zipData = _a.sent();
                 imageInfo = image_size_1.imageSize(zipData);
                 if (imageInfo && imageInfo.width && imageInfo.height) {
                     coverLink.Width = imageInfo.width;
@@ -112,7 +95,7 @@ exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.
                 }
                 return [3, 11];
             case 10:
-                err_2 = _b.sent();
+                err_2 = _a.sent();
                 debug(coverLinkHrefDecoded);
                 debug(coverLink.TypeLink);
                 debug(err_2);
@@ -152,9 +135,9 @@ function isEPUBlication(urlOrPath) {
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, err, zipEntries, _a, zipEntries_2, zipEntry, opfZipStream_, err_10, opfZipStream, opfZipData, err_11, opfStr, opfDoc, opf, ncx, ncxManItem, dname, ncxManItemHrefDecoded, ncxFilePath, err, zipEntries, _b, zipEntries_3, zipEntry, ncxZipStream_, err_12, ncxZipStream, ncxZipData, err_13, ncxStr, ncxDoc, AccessibilitySummarys_1, tuple, metasDuration_1, metasNarrator_1, metasActiveClass_1, metasPlaybackActiveClass_1, lang, pageMapLink;
-        return tslib_1.__generator(this, function (_c) {
-            switch (_c.label) {
+        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ncx, ncxManItem, pageMapLink;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     isAnEPUB = isEPUBlication(filePath);
                     filePathToLoad = filePath;
@@ -166,15 +149,15 @@ function EpubParsePromise(filePath) {
                         url.pathname = url.pathname.replace(/META-INF[\/|\\]container.xml$/, "");
                         filePathToLoad = url.toString();
                     }
-                    _c.label = 1;
+                    _a.label = 1;
                 case 1:
-                    _c.trys.push([1, 3, , 4]);
+                    _a.trys.push([1, 3, , 4]);
                     return [4, zipFactory_1.zipLoadPromise(filePathToLoad)];
                 case 2:
-                    zip = _c.sent();
+                    zip = _a.sent();
                     return [3, 4];
                 case 3:
-                    err_3 = _c.sent();
+                    err_3 = _a.sent();
                     debug(err_3);
                     return [2, Promise.reject(err_3)];
                 case 4:
@@ -192,32 +175,32 @@ function EpubParsePromise(filePath) {
                     lcplZipPath = "META-INF/license.lcpl";
                     return [4, zipHasEntry_1.zipHasEntry(zip, lcplZipPath, undefined)];
                 case 5:
-                    has = _c.sent();
+                    has = _a.sent();
                     if (!has) return [3, 14];
                     lcplZipStream_ = void 0;
-                    _c.label = 6;
+                    _a.label = 6;
                 case 6:
-                    _c.trys.push([6, 8, , 9]);
+                    _a.trys.push([6, 8, , 9]);
                     return [4, zip.entryStreamPromise(lcplZipPath)];
                 case 7:
-                    lcplZipStream_ = _c.sent();
+                    lcplZipStream_ = _a.sent();
                     return [3, 9];
                 case 8:
-                    err_4 = _c.sent();
+                    err_4 = _a.sent();
                     debug(err_4);
                     return [2, Promise.reject(err_4)];
                 case 9:
                     lcplZipStream = lcplZipStream_.stream;
                     lcplZipData = void 0;
-                    _c.label = 10;
+                    _a.label = 10;
                 case 10:
-                    _c.trys.push([10, 12, , 13]);
+                    _a.trys.push([10, 12, , 13]);
                     return [4, BufferUtils_1.streamToBufferPromise(lcplZipStream)];
                 case 11:
-                    lcplZipData = _c.sent();
+                    lcplZipData = _a.sent();
                     return [3, 13];
                 case 12:
-                    err_5 = _c.sent();
+                    err_5 = _a.sent();
                     debug(err_5);
                     return [2, Promise.reject(err_5)];
                 case 13:
@@ -230,37 +213,37 @@ function EpubParsePromise(filePath) {
                     publication.LCP = lcpl;
                     mime = "application/vnd.readium.lcp.license.v1.0+json";
                     publication.AddLink(mime, ["license"], lcpl.ZipPath, undefined);
-                    _c.label = 14;
+                    _a.label = 14;
                 case 14:
                     encZipPath = "META-INF/encryption.xml";
                     return [4, zipHasEntry_1.zipHasEntry(zip, encZipPath, undefined)];
                 case 15:
-                    has = _c.sent();
+                    has = _a.sent();
                     if (!has) return [3, 24];
                     encryptionXmlZipStream_ = void 0;
-                    _c.label = 16;
+                    _a.label = 16;
                 case 16:
-                    _c.trys.push([16, 18, , 19]);
+                    _a.trys.push([16, 18, , 19]);
                     return [4, zip.entryStreamPromise(encZipPath)];
                 case 17:
-                    encryptionXmlZipStream_ = _c.sent();
+                    encryptionXmlZipStream_ = _a.sent();
                     return [3, 19];
                 case 18:
-                    err_6 = _c.sent();
+                    err_6 = _a.sent();
                     debug(err_6);
                     return [2, Promise.reject(err_6)];
                 case 19:
                     encryptionXmlZipStream = encryptionXmlZipStream_.stream;
                     encryptionXmlZipData = void 0;
-                    _c.label = 20;
+                    _a.label = 20;
                 case 20:
-                    _c.trys.push([20, 22, , 23]);
+                    _a.trys.push([20, 22, , 23]);
                     return [4, BufferUtils_1.streamToBufferPromise(encryptionXmlZipStream)];
                 case 21:
-                    encryptionXmlZipData = _c.sent();
+                    encryptionXmlZipData = _a.sent();
                     return [3, 23];
                 case 22:
-                    err_7 = _c.sent();
+                    err_7 = _a.sent();
                     debug(err_7);
                     return [2, Promise.reject(err_7)];
                 case 23:
@@ -268,31 +251,31 @@ function EpubParsePromise(filePath) {
                     encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr);
                     encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
                     encryption.ZipPath = encZipPath;
-                    _c.label = 24;
+                    _a.label = 24;
                 case 24:
                     containerZipPath = "META-INF/container.xml";
-                    _c.label = 25;
+                    _a.label = 25;
                 case 25:
-                    _c.trys.push([25, 27, , 28]);
+                    _a.trys.push([25, 27, , 28]);
                     return [4, zip.entryStreamPromise(containerZipPath)];
                 case 26:
-                    containerXmlZipStream_ = _c.sent();
+                    containerXmlZipStream_ = _a.sent();
                     return [3, 28];
                 case 27:
-                    err_8 = _c.sent();
+                    err_8 = _a.sent();
                     debug(err_8);
                     return [2, Promise.reject(err_8)];
                 case 28:
                     containerXmlZipStream = containerXmlZipStream_.stream;
-                    _c.label = 29;
+                    _a.label = 29;
                 case 29:
-                    _c.trys.push([29, 31, , 32]);
+                    _a.trys.push([29, 31, , 32]);
                     return [4, BufferUtils_1.streamToBufferPromise(containerXmlZipStream)];
                 case 30:
-                    containerXmlZipData = _c.sent();
+                    containerXmlZipData = _a.sent();
                     return [3, 32];
                 case 31:
-                    err_9 = _c.sent();
+                    err_9 = _a.sent();
                     debug(err_9);
                     return [2, Promise.reject(err_9)];
                 case 32:
@@ -305,466 +288,58 @@ function EpubParsePromise(filePath) {
                     if (!rootfilePathDecoded) {
                         return [2, Promise.reject("?!rootfile.PathDecoded")];
                     }
-                    return [4, zipHasEntry_1.zipHasEntry(zip, rootfilePathDecoded, rootfile.Path)];
+                    return [4, epub_daisy_common_1.getOpf(zip, rootfilePathDecoded, rootfile.Path)];
                 case 33:
-                    has = _c.sent();
-                    if (!!has) return [3, 35];
-                    err = "NOT IN ZIP (container OPF rootfile): " + rootfile.Path + " --- " + rootfilePathDecoded;
-                    debug(err);
-                    return [4, zip.getEntries()];
+                    opf = _a.sent();
+                    epub_daisy_common_1.addLanguage(publication, opf);
+                    epub_daisy_common_1.addTitle(publication, rootfile, opf);
+                    epub_daisy_common_1.addIdentifier(publication, opf);
+                    epub_daisy_common_1.addOtherMetadata(publication, rootfile, opf);
+                    epub_daisy_common_1.setPublicationDirection(publication, opf);
+                    epub_daisy_common_1.findContributorInMeta(publication, rootfile, opf);
+                    return [4, epub_daisy_common_1.fillSpineAndResource(publication, rootfile, opf, zip, addLinkData)];
                 case 34:
-                    zipEntries = _c.sent();
-                    for (_a = 0, zipEntries_2 = zipEntries; _a < zipEntries_2.length; _a++) {
-                        zipEntry = zipEntries_2[_a];
-                        debug(zipEntry);
-                    }
-                    return [2, Promise.reject(err)];
+                    _a.sent();
+                    return [4, addRendition(publication, opf, zip)];
                 case 35:
-                    _c.trys.push([35, 37, , 38]);
-                    return [4, zip.entryStreamPromise(rootfilePathDecoded)];
+                    _a.sent();
+                    return [4, addCoverRel(publication, rootfile, opf, zip)];
                 case 36:
-                    opfZipStream_ = _c.sent();
-                    return [3, 38];
+                    _a.sent();
+                    if (encryption) {
+                        fillEncryptionInfo(publication, encryption, lcpl);
+                    }
+                    return [4, fillTOCFromNavDoc(publication, zip)];
                 case 37:
-                    err_10 = _c.sent();
-                    debug(err_10);
-                    return [2, Promise.reject(err_10)];
-                case 38:
-                    opfZipStream = opfZipStream_.stream;
-                    _c.label = 39;
-                case 39:
-                    _c.trys.push([39, 41, , 42]);
-                    return [4, BufferUtils_1.streamToBufferPromise(opfZipStream)];
-                case 40:
-                    opfZipData = _c.sent();
-                    return [3, 42];
-                case 41:
-                    err_11 = _c.sent();
-                    debug(err_11);
-                    return [2, Promise.reject(err_11)];
-                case 42:
-                    opfStr = opfZipData.toString("utf8");
-                    opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
-                    opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
-                    opf.ZipPath = rootfilePathDecoded;
-                    if (!opf.Spine.Toc) return [3, 54];
+                    _a.sent();
+                    if (!(!publication.TOC || !publication.TOC.length)) return [3, 40];
+                    ncx = void 0;
+                    if (!(opf.Manifest && opf.Spine.Toc)) return [3, 39];
                     ncxManItem = opf.Manifest.find(function (manifestItem) {
                         return manifestItem.ID === opf.Spine.Toc;
                     });
-                    if (!ncxManItem) return [3, 54];
-                    dname = path.dirname(opf.ZipPath);
-                    ncxManItemHrefDecoded = ncxManItem.HrefDecoded;
-                    if (!ncxManItemHrefDecoded) {
-                        return [2, Promise.reject("?!ncxManItem.Href")];
-                    }
-                    ncxFilePath = path.join(dname, ncxManItemHrefDecoded).replace(/\\/g, "/");
-                    return [4, zipHasEntry_1.zipHasEntry(zip, ncxFilePath, undefined)];
-                case 43:
-                    has = _c.sent();
-                    if (!!has) return [3, 45];
-                    err = "NOT IN ZIP (NCX): " + ncxManItem.Href + " --- " + ncxFilePath;
-                    debug(err);
-                    return [4, zip.getEntries()];
-                case 44:
-                    zipEntries = _c.sent();
-                    for (_b = 0, zipEntries_3 = zipEntries; _b < zipEntries_3.length; _b++) {
-                        zipEntry = zipEntries_3[_b];
-                        debug(zipEntry);
-                    }
-                    return [2, Promise.reject(err)];
-                case 45:
-                    ncxZipStream_ = void 0;
-                    _c.label = 46;
-                case 46:
-                    _c.trys.push([46, 48, , 49]);
-                    return [4, zip.entryStreamPromise(ncxFilePath)];
-                case 47:
-                    ncxZipStream_ = _c.sent();
-                    return [3, 49];
-                case 48:
-                    err_12 = _c.sent();
-                    debug(err_12);
-                    return [2, Promise.reject(err_12)];
-                case 49:
-                    ncxZipStream = ncxZipStream_.stream;
-                    ncxZipData = void 0;
-                    _c.label = 50;
-                case 50:
-                    _c.trys.push([50, 52, , 53]);
-                    return [4, BufferUtils_1.streamToBufferPromise(ncxZipStream)];
-                case 51:
-                    ncxZipData = _c.sent();
-                    return [3, 53];
-                case 52:
-                    err_13 = _c.sent();
-                    debug(err_13);
-                    return [2, Promise.reject(err_13)];
-                case 53:
-                    ncxStr = ncxZipData.toString("utf8");
-                    ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
-                    ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
-                    ncx.ZipPath = ncxFilePath;
-                    _c.label = 54;
-                case 54:
-                    if (opf.Metadata) {
-                        if (opf.Metadata.Language) {
-                            publication.Metadata.Language = opf.Metadata.Language;
-                        }
-                    }
-                    addTitle(publication, rootfile, opf);
-                    addIdentifier(publication, rootfile, opf);
-                    if (opf.Metadata) {
-                        if (opf.Metadata.Rights && opf.Metadata.Rights.length) {
-                            publication.Metadata.Rights = opf.Metadata.Rights.join(" ");
-                        }
-                        if (opf.Metadata.Description && opf.Metadata.Description.length) {
-                            publication.Metadata.Description = opf.Metadata.Description[0];
-                        }
-                        if (opf.Metadata.Publisher && opf.Metadata.Publisher.length) {
-                            publication.Metadata.Publisher = [];
-                            opf.Metadata.Publisher.forEach(function (pub) {
-                                var contrib = new metadata_contributor_1.Contributor();
-                                contrib.Name = pub;
-                                publication.Metadata.Publisher.push(contrib);
-                            });
-                        }
-                        if (opf.Metadata.Source && opf.Metadata.Source.length) {
-                            publication.Metadata.Source = opf.Metadata.Source[0];
-                        }
-                        if (opf.Metadata.Contributor && opf.Metadata.Contributor.length) {
-                            opf.Metadata.Contributor.forEach(function (cont) {
-                                addContributor(publication, rootfile, opf, cont, undefined);
-                            });
-                        }
-                        if (opf.Metadata.Creator && opf.Metadata.Creator.length) {
-                            opf.Metadata.Creator.forEach(function (cont) {
-                                addContributor(publication, rootfile, opf, cont, "aut");
-                            });
-                        }
-                        if (opf.Metadata.Link) {
-                            opf.Metadata.Link.forEach(function (metaLink) {
-                                if (metaLink.Property === "a11y:certifierCredential") {
-                                    var val = metaLink.Href;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.CertifierCredential) {
-                                        publication.Metadata.CertifierCredential = [];
-                                    }
-                                    publication.Metadata.CertifierCredential.push(val);
-                                }
-                                else if (metaLink.Property === "a11y:certifierReport") {
-                                    var val = metaLink.Href;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.CertifierReport) {
-                                        publication.Metadata.CertifierReport = [];
-                                    }
-                                    publication.Metadata.CertifierReport.push(val);
-                                }
-                                else if (metaLink.Property === "dcterms:conformsTo") {
-                                    var val = metaLink.Href;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.ConformsTo) {
-                                        publication.Metadata.ConformsTo = [];
-                                    }
-                                    publication.Metadata.ConformsTo.push(val);
-                                }
-                            });
-                        }
-                        if (opf.Metadata.Meta) {
-                            AccessibilitySummarys_1 = [];
-                            opf.Metadata.Meta.forEach(function (metaTag) {
-                                if (metaTag.Name === "schema:accessMode" ||
-                                    metaTag.Property === "schema:accessMode") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessMode) {
-                                        publication.Metadata.AccessMode = [];
-                                    }
-                                    publication.Metadata.AccessMode.push(val);
-                                }
-                                else if (metaTag.Name === "schema:accessibilityFeature" ||
-                                    metaTag.Property === "schema:accessibilityFeature") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessibilityFeature) {
-                                        publication.Metadata.AccessibilityFeature = [];
-                                    }
-                                    publication.Metadata.AccessibilityFeature.push(val);
-                                }
-                                else if (metaTag.Name === "schema:accessibilityHazard" ||
-                                    metaTag.Property === "schema:accessibilityHazard") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessibilityHazard) {
-                                        publication.Metadata.AccessibilityHazard = [];
-                                    }
-                                    publication.Metadata.AccessibilityHazard.push(val);
-                                }
-                                else if (metaTag.Name === "schema:accessibilitySummary" ||
-                                    metaTag.Property === "schema:accessibilitySummary") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    AccessibilitySummarys_1.push({
-                                        metaTag: metaTag,
-                                        val: val,
-                                    });
-                                }
-                                else if (metaTag.Name === "schema:accessModeSufficient" ||
-                                    metaTag.Property === "schema:accessModeSufficient") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessModeSufficient) {
-                                        publication.Metadata.AccessModeSufficient = [];
-                                    }
-                                    publication.Metadata.AccessModeSufficient.push(ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient(val));
-                                }
-                                else if (metaTag.Name === "schema:accessibilityAPI" ||
-                                    metaTag.Property === "schema:accessibilityAPI") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessibilityAPI) {
-                                        publication.Metadata.AccessibilityAPI = [];
-                                    }
-                                    publication.Metadata.AccessibilityAPI.push(val);
-                                }
-                                else if (metaTag.Name === "schema:accessibilityControl" ||
-                                    metaTag.Property === "schema:accessibilityControl") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.AccessibilityControl) {
-                                        publication.Metadata.AccessibilityControl = [];
-                                    }
-                                    publication.Metadata.AccessibilityControl.push(val);
-                                }
-                                else if (metaTag.Name === "a11y:certifiedBy" ||
-                                    metaTag.Property === "a11y:certifiedBy") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.CertifiedBy) {
-                                        publication.Metadata.CertifiedBy = [];
-                                    }
-                                    publication.Metadata.CertifiedBy.push(val);
-                                }
-                                else if (metaTag.Name === "a11y:certifierCredential" ||
-                                    metaTag.Property === "a11y:certifierCredential") {
-                                    var val = metaTag.Property ? metaTag.Data : metaTag.Content;
-                                    if (!val) {
-                                        return;
-                                    }
-                                    val = val.trim();
-                                    if (!val) {
-                                        return;
-                                    }
-                                    if (!publication.Metadata.CertifierCredential) {
-                                        publication.Metadata.CertifierCredential = [];
-                                    }
-                                    publication.Metadata.CertifierCredential.push(val);
-                                }
-                            });
-                            if (AccessibilitySummarys_1.length === 1) {
-                                tuple = AccessibilitySummarys_1[0];
-                                if (tuple.metaTag.Lang) {
-                                    publication.Metadata.AccessibilitySummary = {};
-                                    publication.Metadata.AccessibilitySummary[tuple.metaTag.Lang.toLowerCase()] = tuple.val;
-                                }
-                                else {
-                                    publication.Metadata.AccessibilitySummary = tuple.val;
-                                }
-                            }
-                            else if (AccessibilitySummarys_1.length) {
-                                publication.Metadata.AccessibilitySummary = {};
-                                AccessibilitySummarys_1.forEach(function (tuple) {
-                                    var xmlLang = tuple.metaTag.Lang || opf.Lang;
-                                    if (xmlLang) {
-                                        publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
-                                    }
-                                    else if (publication.Metadata.Language &&
-                                        publication.Metadata.Language.length &&
-                                        !publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()]) {
-                                        publication.Metadata.AccessibilitySummary[publication.Metadata.Language[0].toLowerCase()] = tuple.val;
-                                    }
-                                    else {
-                                        publication.Metadata.AccessibilitySummary[exports.BCP47_UNKNOWN_LANG] = tuple.val;
-                                    }
-                                });
-                            }
-                            metasDuration_1 = [];
-                            metasNarrator_1 = [];
-                            metasActiveClass_1 = [];
-                            metasPlaybackActiveClass_1 = [];
-                            opf.Metadata.Meta.forEach(function (metaTag) {
-                                if (metaTag.Property === "media:duration" && !metaTag.Refine) {
-                                    metasDuration_1.push(metaTag);
-                                }
-                                if (metaTag.Property === "media:narrator") {
-                                    metasNarrator_1.push(metaTag);
-                                }
-                                if (metaTag.Property === "media:active-class") {
-                                    metasActiveClass_1.push(metaTag);
-                                }
-                                if (metaTag.Property === "media:playback-active-class") {
-                                    metasPlaybackActiveClass_1.push(metaTag);
-                                }
-                            });
-                            if (metasDuration_1.length) {
-                                publication.Metadata.Duration = media_overlay_1.timeStrToSeconds(metasDuration_1[0].Data);
-                            }
-                            if (metasNarrator_1.length) {
-                                if (!publication.Metadata.Narrator) {
-                                    publication.Metadata.Narrator = [];
-                                }
-                                metasNarrator_1.forEach(function (metaNarrator) {
-                                    var cont = new metadata_contributor_1.Contributor();
-                                    cont.Name = metaNarrator.Data;
-                                    publication.Metadata.Narrator.push(cont);
-                                });
-                            }
-                            if (metasActiveClass_1.length) {
-                                if (!publication.Metadata.MediaOverlay) {
-                                    publication.Metadata.MediaOverlay = new metadata_media_overlay_1.MediaOverlay();
-                                }
-                                publication.Metadata.MediaOverlay.ActiveClass = metasActiveClass_1[0].Data;
-                            }
-                            if (metasPlaybackActiveClass_1.length) {
-                                if (!publication.Metadata.MediaOverlay) {
-                                    publication.Metadata.MediaOverlay = new metadata_media_overlay_1.MediaOverlay();
-                                }
-                                publication.Metadata.MediaOverlay.PlaybackActiveClass = metasPlaybackActiveClass_1[0].Data;
-                            }
-                        }
-                    }
-                    if (opf.Spine && opf.Spine.PageProgression) {
-                        switch (opf.Spine.PageProgression) {
-                            case "auto": {
-                                publication.Metadata.Direction = metadata_1.DirectionEnum.Auto;
-                                break;
-                            }
-                            case "ltr": {
-                                publication.Metadata.Direction = metadata_1.DirectionEnum.LTR;
-                                break;
-                            }
-                            case "rtl": {
-                                publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
-                                break;
-                            }
-                        }
-                    }
-                    if (publication.Metadata.Language && publication.Metadata.Language.length &&
-                        (!publication.Metadata.Direction || publication.Metadata.Direction === metadata_1.DirectionEnum.Auto)) {
-                        lang = publication.Metadata.Language[0].toLowerCase();
-                        if ((lang === "ar" || lang.startsWith("ar-") ||
-                            lang === "he" || lang.startsWith("he-") ||
-                            lang === "fa" || lang.startsWith("fa-")) ||
-                            lang === "zh-Hant" ||
-                            lang === "zh-TW") {
-                            publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
-                        }
-                    }
-                    if (isEpub3OrMore(rootfile, opf)) {
-                        findContributorInMeta(publication, rootfile, opf);
-                    }
-                    return [4, fillSpineAndResource(publication, rootfile, opf, zip)];
-                case 55:
-                    _c.sent();
-                    return [4, addRendition(publication, rootfile, opf, zip)];
-                case 56:
-                    _c.sent();
-                    return [4, addCoverRel(publication, rootfile, opf, zip)];
-                case 57:
-                    _c.sent();
-                    if (encryption) {
-                        fillEncryptionInfo(publication, rootfile, opf, encryption, lcpl);
-                    }
-                    return [4, fillTOCFromNavDoc(publication, rootfile, opf, zip)];
-                case 58:
-                    _c.sent();
-                    if (!publication.TOC || !publication.TOC.length) {
-                        if (ncx) {
-                            fillTOCFromNCX(publication, rootfile, opf, ncx);
-                            if (!publication.PageList) {
-                                fillPageListFromNCX(publication, rootfile, opf, ncx);
-                            }
-                        }
-                        fillLandmarksFromGuide(publication, rootfile, opf);
-                    }
-                    if (!(!publication.PageList && publication.Resources)) return [3, 60];
+                    if (!ncxManItem) return [3, 39];
+                    return [4, epub_daisy_common_1.getNcx(ncxManItem, opf, zip)];
+                case 38:
+                    ncx = _a.sent();
+                    _a.label = 39;
+                case 39:
+                    epub_daisy_common_1.fillTOC(publication, opf, ncx);
+                    _a.label = 40;
+                case 40:
+                    if (!(!publication.PageList && publication.Resources)) return [3, 42];
                     pageMapLink = publication.Resources.find(function (item) {
                         return item.TypeLink === "application/oebps-page-map+xml";
                     });
-                    if (!pageMapLink) return [3, 60];
-                    return [4, fillPageListFromAdobePageMap(publication, rootfile, opf, zip, pageMapLink)];
-                case 59:
-                    _c.sent();
-                    _c.label = 60;
-                case 60:
-                    fillCalibreSerieInfo(publication, rootfile, opf);
-                    fillSubject(publication, rootfile, opf);
-                    fillPublicationDate(publication, rootfile, opf);
+                    if (!pageMapLink) return [3, 42];
+                    return [4, fillPageListFromAdobePageMap(publication, zip, pageMapLink)];
+                case 41:
+                    _a.sent();
+                    _a.label = 42;
+                case 42:
+                    fillCalibreSerieInfo(publication, opf);
+                    epub_daisy_common_1.fillSubject(publication, opf);
+                    epub_daisy_common_1.fillPublicationDate(publication, rootfile, opf);
                     return [2, publication];
             }
         });
@@ -773,37 +348,37 @@ function EpubParsePromise(filePath) {
 exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var mos, links, _a, links_1, link, mo, err_14;
-        return tslib_1.__generator(this, function (_b) {
-            switch (_b.label) {
+        var mos, links, _i, links_1, link, mo, err_10;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     mos = [];
                     links = [].
                         concat(publication.Spine ? publication.Spine : []).
                         concat(publication.Resources ? publication.Resources : []);
-                    _a = 0, links_1 = links;
-                    _b.label = 1;
+                    _i = 0, links_1 = links;
+                    _a.label = 1;
                 case 1:
-                    if (!(_a < links_1.length)) return [3, 7];
-                    link = links_1[_a];
+                    if (!(_i < links_1.length)) return [3, 7];
+                    link = links_1[_i];
                     if (!link.MediaOverlays) return [3, 6];
                     mo = link.MediaOverlays;
                     if (!!mo.initialized) return [3, 5];
-                    _b.label = 2;
+                    _a.label = 2;
                 case 2:
-                    _b.trys.push([2, 4, , 5]);
+                    _a.trys.push([2, 4, , 5]);
                     return [4, exports.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
-                    _b.sent();
+                    _a.sent();
                     return [3, 5];
                 case 4:
-                    err_14 = _b.sent();
-                    return [2, Promise.reject(err_14)];
+                    err_10 = _a.sent();
+                    return [2, Promise.reject(err_10)];
                 case 5:
                     mos.push(mo);
-                    _b.label = 6;
+                    _a.label = 6;
                 case 6:
-                    _a++;
+                    _i++;
                     return [3, 1];
                 case 7: return [2, Promise.resolve(mos)];
             }
@@ -813,34 +388,34 @@ function getAllMediaOverlays(publication) {
 exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var links, _a, links_2, link, mo, err_15;
-        return tslib_1.__generator(this, function (_b) {
-            switch (_b.label) {
+        var links, _i, links_2, link, mo, err_11;
+        return tslib_1.__generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     links = [].
                         concat(publication.Spine ? publication.Spine : []).
                         concat(publication.Resources ? publication.Resources : []);
-                    _a = 0, links_2 = links;
-                    _b.label = 1;
+                    _i = 0, links_2 = links;
+                    _a.label = 1;
                 case 1:
-                    if (!(_a < links_2.length)) return [3, 7];
-                    link = links_2[_a];
+                    if (!(_i < links_2.length)) return [3, 7];
+                    link = links_2[_i];
                     if (!(link.MediaOverlays && link.Href.indexOf(spineHref) >= 0)) return [3, 6];
                     mo = link.MediaOverlays;
                     if (!!mo.initialized) return [3, 5];
-                    _b.label = 2;
+                    _a.label = 2;
                 case 2:
-                    _b.trys.push([2, 4, , 5]);
+                    _a.trys.push([2, 4, , 5]);
                     return [4, exports.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
-                    _b.sent();
+                    _a.sent();
                     return [3, 5];
                 case 4:
-                    err_15 = _b.sent();
-                    return [2, Promise.reject(err_15)];
+                    err_11 = _a.sent();
+                    return [2, Promise.reject(err_11)];
                 case 5: return [2, Promise.resolve(mo)];
                 case 6:
-                    _a++;
+                    _i++;
                     return [3, 1];
                 case 7: return [2, Promise.reject("No Media Overlays " + spineHref)];
             }
@@ -849,9 +424,9 @@ function getMediaOverlay(publication, spineHref) {
 }
 exports.getMediaOverlay = getMediaOverlay;
 exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, err, zipInternal, zip, has, err, zipEntries, _a, zipEntries_4, zipEntry, smilZipStream_, err_16, decryptFail, transformedStream, err_17, err, smilZipStream, smilZipData, err_18, smilStr, smilXmlDoc, smil, roles, _b, roles_1, role, smilBodyTextRefDecoded, zipPath;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
+    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_2, zipEntry, smilZipStream_, err_12, decryptFail, transformedStream, err_13, err, smilZipStream, smilZipData, err_14, smilStr, smilXmlDoc, smil, roles, _a, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 if (mo.initialized || !mo.SmilPathInZip) {
                     return [2];
@@ -886,43 +461,43 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
                 zip = zipInternal.Value;
                 return [4, zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined)];
             case 1:
-                has = _c.sent();
+                has = _b.sent();
                 if (!!has) return [3, 3];
                 err = "NOT IN ZIP (lazyLoadMediaOverlays): " + mo.SmilPathInZip;
                 debug(err);
                 return [4, zip.getEntries()];
             case 2:
-                zipEntries = _c.sent();
-                for (_a = 0, zipEntries_4 = zipEntries; _a < zipEntries_4.length; _a++) {
-                    zipEntry = zipEntries_4[_a];
+                zipEntries = _b.sent();
+                for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
+                    zipEntry = zipEntries_2[_i];
                     debug(zipEntry);
                 }
                 return [2, Promise.reject(err)];
             case 3:
-                _c.trys.push([3, 5, , 6]);
+                _b.trys.push([3, 5, , 6]);
                 return [4, zip.entryStreamPromise(mo.SmilPathInZip)];
             case 4:
-                smilZipStream_ = _c.sent();
+                smilZipStream_ = _b.sent();
                 return [3, 6];
             case 5:
-                err_16 = _c.sent();
-                debug(err_16);
-                return [2, Promise.reject(err_16)];
+                err_12 = _b.sent();
+                debug(err_12);
+                return [2, Promise.reject(err_12)];
             case 6:
                 if (!(link && link.Properties && link.Properties.Encrypted)) return [3, 11];
                 decryptFail = false;
                 transformedStream = void 0;
-                _c.label = 7;
+                _b.label = 7;
             case 7:
-                _c.trys.push([7, 9, , 10]);
+                _b.trys.push([7, 9, , 10]);
                 return [4, transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined)];
             case 8:
-                transformedStream = _c.sent();
+                transformedStream = _b.sent();
                 return [3, 10];
             case 9:
-                err_17 = _c.sent();
-                debug(err_17);
-                return [2, Promise.reject(err_17)];
+                err_13 = _b.sent();
+                debug(err_13);
+                return [2, Promise.reject(err_13)];
             case 10:
                 if (transformedStream) {
                     smilZipStream_ = transformedStream;
@@ -935,20 +510,20 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
                     debug(err);
                     return [2, Promise.reject(err)];
                 }
-                _c.label = 11;
+                _b.label = 11;
             case 11:
                 smilZipStream = smilZipStream_.stream;
-                _c.label = 12;
+                _b.label = 12;
             case 12:
-                _c.trys.push([12, 14, , 15]);
+                _b.trys.push([12, 14, , 15]);
                 return [4, BufferUtils_1.streamToBufferPromise(smilZipStream)];
             case 13:
-                smilZipData = _c.sent();
+                smilZipData = _b.sent();
                 return [3, 15];
             case 14:
-                err_18 = _c.sent();
-                debug(err_18);
-                return [2, Promise.reject(err_18)];
+                err_14 = _b.sent();
+                debug(err_14);
+                return [2, Promise.reject(err_14)];
             case 15:
                 smilStr = smilZipData.toString("utf8");
                 smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
@@ -959,10 +534,13 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
                 mo.Role = [];
                 mo.Role.push("section");
                 if (smil.Body) {
+                    if (smil.Body.Duration) {
+                        mo.duration = media_overlay_1.timeStrToSeconds(smil.Body.Duration);
+                    }
                     if (smil.Body.EpubType) {
-                        roles = parseSpaceSeparatedString(smil.Body.EpubType);
-                        for (_b = 0, roles_1 = roles; _b < roles_1.length; _b++) {
-                            role = roles_1[_b];
+                        roles = epub_daisy_common_1.parseSpaceSeparatedString(smil.Body.EpubType);
+                        for (_a = 0, roles_1 = roles; _a < roles_1.length; _a++) {
+                            role = roles_1[_a];
                             if (!role.length) {
                                 return [2];
                             }
@@ -983,7 +561,11 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
                         }
                     }
                     if (smil.Body.Children && smil.Body.Children.length) {
+                        getDur_1 = !smil.Body.Duration && smil.Body.Children.length === 1;
                         smil.Body.Children.forEach(function (seqChild) {
+                            if (getDur_1 && seqChild.Duration) {
+                                mo.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+                            }
                             if (!mo.Children) {
                                 mo.Children = [];
                             }
@@ -1002,14 +584,17 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     var moc = new media_overlay_1.MediaOverlayNode();
     moc.initialized = rootMO.initialized;
     mo.push(moc);
+    if (seqChild.Duration) {
+        moc.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+    }
     if (seqChild instanceof smil_seq_1.Seq) {
         moc.Role = [];
         moc.Role.push("section");
         var seq = seqChild;
         if (seq.EpubType) {
-            var roles = parseSpaceSeparatedString(seq.EpubType);
-            for (var _a = 0, roles_2 = roles; _a < roles_2.length; _a++) {
-                var role = roles_2[_a];
+            var roles = epub_daisy_common_1.parseSpaceSeparatedString(seq.EpubType);
+            for (var _i = 0, roles_2 = roles; _i < roles_2.length; _i++) {
+                var role = roles_2[_i];
                 if (!role.length) {
                     return;
                 }
@@ -1041,9 +626,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     else {
         var par = seqChild;
         if (par.EpubType) {
-            var roles = parseSpaceSeparatedString(par.EpubType);
-            for (var _b = 0, roles_3 = roles; _b < roles_3.length; _b++) {
-                var role = roles_3[_b];
+            var roles = epub_daisy_common_1.parseSpaceSeparatedString(par.EpubType);
+            for (var _a = 0, roles_3 = roles; _a < roles_3.length; _a++) {
+                var role = roles_3[_a];
                 if (!role.length) {
                     return;
                 }
@@ -1085,337 +670,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         }
     }
 };
-var fillPublicationDate = function (publication, rootfile, opf) {
-    if (opf.Metadata && opf.Metadata.Date && opf.Metadata.Date.length) {
-        if (isEpub3OrMore(rootfile, opf) && opf.Metadata.Date[0] && opf.Metadata.Date[0].Data) {
-            var token = opf.Metadata.Date[0].Data;
-            try {
-                var mom = moment(token);
-                if (mom.isValid()) {
-                    publication.Metadata.PublicationDate = mom.toDate();
-                }
-            }
-            catch (err) {
-                debug("INVALID DATE/TIME? " + token);
-            }
-            return;
-        }
-        opf.Metadata.Date.forEach(function (date) {
-            if (date.Data && date.Event && date.Event.indexOf("publication") >= 0) {
-                var token = date.Data;
-                try {
-                    var mom = moment(token);
-                    if (mom.isValid()) {
-                        publication.Metadata.PublicationDate = mom.toDate();
-                    }
-                }
-                catch (err) {
-                    debug("INVALID DATE/TIME? " + token);
-                }
-            }
-        });
-    }
-};
-var findContributorInMeta = function (publication, rootfile, opf) {
-    if (opf.Metadata && opf.Metadata.Meta) {
-        opf.Metadata.Meta.forEach(function (meta) {
-            if (meta.Property === "dcterms:creator" || meta.Property === "dcterms:contributor") {
-                var cont = new opf_author_1.Author();
-                cont.Data = meta.Data;
-                cont.ID = meta.ID;
-                addContributor(publication, rootfile, opf, cont, undefined);
-            }
-        });
-    }
-};
-var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
-    var contributor = new metadata_contributor_1.Contributor();
-    var role;
-    if (isEpub3OrMore(rootfile, opf)) {
-        if (cont.FileAs) {
-            contributor.SortAs = cont.FileAs;
-        }
-        else {
-            var metaFileAs = findMetaByRefineAndProperty(rootfile, opf, cont.ID, "file-as");
-            if (metaFileAs && metaFileAs.Property === "file-as") {
-                contributor.SortAs = metaFileAs.Data;
-            }
-        }
-        var metaRole = findMetaByRefineAndProperty(rootfile, opf, cont.ID, "role");
-        if (metaRole && metaRole.Property === "role") {
-            role = metaRole.Data;
-        }
-        if (!role && forcedRole) {
-            role = forcedRole;
-        }
-        var metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, cont.ID, "alternate-script");
-        if (metaAlt && metaAlt.length) {
-            contributor.Name = {};
-            metaAlt.forEach(function (m) {
-                if (m.Lang) {
-                    contributor.Name[m.Lang] = m.Data;
-                }
-            });
-            var xmlLang = cont.Lang || opf.Lang;
-            if (xmlLang) {
-                contributor.Name[xmlLang.toLowerCase()] = cont.Data;
-            }
-            else if (publication.Metadata &&
-                publication.Metadata.Language &&
-                publication.Metadata.Language.length &&
-                !contributor.Name[publication.Metadata.Language[0].toLowerCase()]) {
-                contributor.Name[publication.Metadata.Language[0].toLowerCase()] = cont.Data;
-            }
-            else {
-                contributor.Name[exports.BCP47_UNKNOWN_LANG] = cont.Data;
-            }
-        }
-        else {
-            contributor.Name = cont.Data;
-        }
-    }
-    else {
-        contributor.Name = cont.Data;
-        role = cont.Role;
-        if (!role && forcedRole) {
-            role = forcedRole;
-        }
-    }
-    if (role) {
-        switch (role) {
-            case "aut": {
-                if (!publication.Metadata.Author) {
-                    publication.Metadata.Author = [];
-                }
-                publication.Metadata.Author.push(contributor);
-                break;
-            }
-            case "trl": {
-                if (!publication.Metadata.Translator) {
-                    publication.Metadata.Translator = [];
-                }
-                publication.Metadata.Translator.push(contributor);
-                break;
-            }
-            case "art": {
-                if (!publication.Metadata.Artist) {
-                    publication.Metadata.Artist = [];
-                }
-                publication.Metadata.Artist.push(contributor);
-                break;
-            }
-            case "edt": {
-                if (!publication.Metadata.Editor) {
-                    publication.Metadata.Editor = [];
-                }
-                publication.Metadata.Editor.push(contributor);
-                break;
-            }
-            case "ill": {
-                if (!publication.Metadata.Illustrator) {
-                    publication.Metadata.Illustrator = [];
-                }
-                publication.Metadata.Illustrator.push(contributor);
-                break;
-            }
-            case "ltr": {
-                if (!publication.Metadata.Letterer) {
-                    publication.Metadata.Letterer = [];
-                }
-                publication.Metadata.Letterer.push(contributor);
-                break;
-            }
-            case "pen": {
-                if (!publication.Metadata.Penciler) {
-                    publication.Metadata.Penciler = [];
-                }
-                publication.Metadata.Penciler.push(contributor);
-                break;
-            }
-            case "clr": {
-                if (!publication.Metadata.Colorist) {
-                    publication.Metadata.Colorist = [];
-                }
-                publication.Metadata.Colorist.push(contributor);
-                break;
-            }
-            case "ink": {
-                if (!publication.Metadata.Inker) {
-                    publication.Metadata.Inker = [];
-                }
-                publication.Metadata.Inker.push(contributor);
-                break;
-            }
-            case "nrt": {
-                if (!publication.Metadata.Narrator) {
-                    publication.Metadata.Narrator = [];
-                }
-                publication.Metadata.Narrator.push(contributor);
-                break;
-            }
-            case "pbl": {
-                if (!publication.Metadata.Publisher) {
-                    publication.Metadata.Publisher = [];
-                }
-                publication.Metadata.Publisher.push(contributor);
-                break;
-            }
-            default: {
-                contributor.Role = [role];
-                if (!publication.Metadata.Contributor) {
-                    publication.Metadata.Contributor = [];
-                }
-                publication.Metadata.Contributor.push(contributor);
-            }
-        }
-    }
-};
-var addIdentifier = function (publication, _rootfile, opf) {
-    if (opf.Metadata && opf.Metadata.Identifier) {
-        if (opf.UniqueIdentifier && opf.Metadata.Identifier.length > 1) {
-            opf.Metadata.Identifier.forEach(function (iden) {
-                if (iden.ID === opf.UniqueIdentifier) {
-                    publication.Metadata.Identifier = iden.Data;
-                }
-            });
-        }
-        else if (opf.Metadata.Identifier.length > 0) {
-            publication.Metadata.Identifier = opf.Metadata.Identifier[0].Data;
-        }
-    }
-};
-var addTitle = function (publication, rootfile, opf) {
-    if (isEpub3OrMore(rootfile, opf)) {
-        var mainTitle = void 0;
-        var subTitle_1;
-        var subTitleDisplaySeq_1 = 0;
-        if (opf.Metadata &&
-            opf.Metadata.Title &&
-            opf.Metadata.Title.length) {
-            if (opf.Metadata.Meta) {
-                var tt = opf.Metadata.Title.find(function (title) {
-                    var refineID = "#" + title.ID;
-                    var m = opf.Metadata.Meta.find(function (meta) {
-                        if (meta.Data === "main" && meta.Refine === refineID) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    if (m) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (tt) {
-                    mainTitle = tt;
-                }
-                opf.Metadata.Title.forEach(function (title) {
-                    var refineID = "#" + title.ID;
-                    var m = opf.Metadata.Meta.find(function (meta) {
-                        if (meta.Data === "subtitle" && meta.Refine === refineID) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    if (m) {
-                        var titleDisplaySeq = 0;
-                        var mds = opf.Metadata.Meta.find(function (meta) {
-                            if (meta.Property === "display-seq" && meta.Refine === refineID) {
-                                return true;
-                            }
-                            return false;
-                        });
-                        if (mds) {
-                            try {
-                                titleDisplaySeq = parseInt(mds.Data, 10);
-                            }
-                            catch (err) {
-                                debug(err);
-                                debug(mds.Data);
-                                titleDisplaySeq = 0;
-                            }
-                            if (isNaN(titleDisplaySeq)) {
-                                debug("NaN");
-                                debug(mds.Data);
-                                titleDisplaySeq = 0;
-                            }
-                        }
-                        else {
-                            titleDisplaySeq = 0;
-                        }
-                        if (!subTitle_1 || titleDisplaySeq < subTitleDisplaySeq_1) {
-                            subTitle_1 = title;
-                            subTitleDisplaySeq_1 = titleDisplaySeq;
-                        }
-                    }
-                });
-            }
-            if (!mainTitle) {
-                mainTitle = opf.Metadata.Title[0];
-            }
-        }
-        if (mainTitle) {
-            var metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, mainTitle.ID, "alternate-script");
-            if (metaAlt && metaAlt.length) {
-                publication.Metadata.Title = {};
-                metaAlt.forEach(function (m) {
-                    if (m.Lang) {
-                        publication.Metadata.Title[m.Lang.toLowerCase()] = m.Data;
-                    }
-                });
-                var xmlLang = mainTitle.Lang || opf.Lang;
-                if (xmlLang) {
-                    publication.Metadata.Title[xmlLang.toLowerCase()] = mainTitle.Data;
-                }
-                else if (publication.Metadata.Language &&
-                    publication.Metadata.Language.length &&
-                    !publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()]) {
-                    publication.Metadata.Title[publication.Metadata.Language[0].toLowerCase()] = mainTitle.Data;
-                }
-                else {
-                    publication.Metadata.Title[exports.BCP47_UNKNOWN_LANG] = mainTitle.Data;
-                }
-            }
-            else {
-                publication.Metadata.Title = mainTitle.Data;
-            }
-        }
-        if (subTitle_1) {
-            var metaAlt = findAllMetaByRefineAndProperty(rootfile, opf, subTitle_1.ID, "alternate-script");
-            if (metaAlt && metaAlt.length) {
-                publication.Metadata.SubTitle = {};
-                metaAlt.forEach(function (m) {
-                    if (m.Lang) {
-                        publication.Metadata.SubTitle[m.Lang.toLowerCase()] = m.Data;
-                    }
-                });
-                var xmlLang = subTitle_1.Lang || opf.Lang;
-                if (xmlLang) {
-                    publication.Metadata.SubTitle[xmlLang.toLowerCase()] = subTitle_1.Data;
-                }
-                else if (publication.Metadata.Language &&
-                    publication.Metadata.Language.length &&
-                    !publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()]) {
-                    publication.Metadata.SubTitle[publication.Metadata.Language[0].toLowerCase()] = subTitle_1.Data;
-                }
-                else {
-                    publication.Metadata.SubTitle[exports.BCP47_UNKNOWN_LANG] = subTitle_1.Data;
-                }
-            }
-            else {
-                publication.Metadata.SubTitle = subTitle_1.Data;
-            }
-        }
-    }
-    else {
-        if (opf.Metadata &&
-            opf.Metadata.Title &&
-            opf.Metadata.Title.length) {
-            publication.Metadata.Title = opf.Metadata.Title[0].Data;
-        }
-    }
-};
-var addRelAndPropertiesToLink = function (publication, link, linkEpub, rootfile, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var spineProperties;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -1426,7 +681,7 @@ var addRelAndPropertiesToLink = function (publication, link, linkEpub, rootfile,
                 _a.sent();
                 _a.label = 2;
             case 2:
-                spineProperties = findPropertiesInSpineForManifest(linkEpub, rootfile, opf);
+                spineProperties = findPropertiesInSpineForManifest(linkEpub, opf);
                 if (!spineProperties) return [3, 4];
                 return [4, addToLinkFromProperties(publication, link, spineProperties)];
             case 3:
@@ -1437,19 +692,19 @@ var addRelAndPropertiesToLink = function (publication, link, linkEpub, rootfile,
     });
 }); };
 var addToLinkFromProperties = function (publication, link, propertiesString) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var properties, propertiesStruct, _a, properties_1, p, _b;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
+    var properties, propertiesStruct, _i, properties_1, p, _a;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                properties = parseSpaceSeparatedString(propertiesString);
+                properties = epub_daisy_common_1.parseSpaceSeparatedString(propertiesString);
                 propertiesStruct = new metadata_properties_1.Properties();
-                _a = 0, properties_1 = properties;
-                _c.label = 1;
+                _i = 0, properties_1 = properties;
+                _b.label = 1;
             case 1:
-                if (!(_a < properties_1.length)) return [3, 31];
-                p = properties_1[_a];
-                _b = p;
-                switch (_b) {
+                if (!(_i < properties_1.length)) return [3, 31];
+                p = properties_1[_i];
+                _a = p;
+                switch (_a) {
                     case "cover-image": return [3, 2];
                     case "nav": return [3, 4];
                     case "scripted": return [3, 5];
@@ -1481,14 +736,14 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                 link.AddRel("cover");
                 return [4, exports.addCoverDimensions(publication, link)];
             case 3:
-                _c.sent();
+                _b.sent();
                 return [3, 29];
             case 4:
                 {
                     link.AddRel("contents");
                     return [3, 29];
                 }
-                _c.label = 5;
+                _b.label = 5;
             case 5:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1497,7 +752,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("js");
                     return [3, 29];
                 }
-                _c.label = 6;
+                _b.label = 6;
             case 6:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1506,7 +761,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("mathml");
                     return [3, 29];
                 }
-                _c.label = 7;
+                _b.label = 7;
             case 7:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1515,7 +770,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("onix");
                     return [3, 29];
                 }
-                _c.label = 8;
+                _b.label = 8;
             case 8:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1524,7 +779,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("svg");
                     return [3, 29];
                 }
-                _c.label = 9;
+                _b.label = 9;
             case 9:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1533,7 +788,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("xmp");
                     return [3, 29];
                 }
-                _c.label = 10;
+                _b.label = 10;
             case 10:
                 {
                     if (!propertiesStruct.Contains) {
@@ -1542,114 +797,114 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     propertiesStruct.Contains.push("remote-resources");
                     return [3, 29];
                 }
-                _c.label = 11;
+                _b.label = 11;
             case 11:
                 {
                     propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
                     return [3, 29];
                 }
-                _c.label = 12;
+                _b.label = 12;
             case 12:
                 {
                     propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
                     return [3, 29];
                 }
-                _c.label = 13;
+                _b.label = 13;
             case 13:
                 {
                     propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
                     return [3, 29];
                 }
-                _c.label = 14;
+                _b.label = 14;
             case 14:
                 {
                     propertiesStruct.Spread = metadata_properties_1.SpreadEnum.None;
                     return [3, 29];
                 }
-                _c.label = 15;
+                _b.label = 15;
             case 15:
                 {
                     propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Auto;
                     return [3, 29];
                 }
-                _c.label = 16;
+                _b.label = 16;
             case 16:
                 {
                     propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Landscape;
                     return [3, 29];
                 }
-                _c.label = 17;
+                _b.label = 17;
             case 17:
                 {
                     propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
                     return [3, 29];
                 }
-                _c.label = 18;
+                _b.label = 18;
             case 18:
                 {
                     propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
                     return [3, 29];
                 }
-                _c.label = 19;
+                _b.label = 19;
             case 19:
                 {
                     propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Reflowable;
                     return [3, 29];
                 }
-                _c.label = 20;
+                _b.label = 20;
             case 20:
                 {
                     propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Fixed;
                     return [3, 29];
                 }
-                _c.label = 21;
+                _b.label = 21;
             case 21:
                 {
                     propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Auto;
                     return [3, 29];
                 }
-                _c.label = 22;
+                _b.label = 22;
             case 22:
                 {
                     propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Landscape;
                     return [3, 29];
                 }
-                _c.label = 23;
+                _b.label = 23;
             case 23:
                 {
                     propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Portrait;
                     return [3, 29];
                 }
-                _c.label = 24;
+                _b.label = 24;
             case 24:
                 {
                     propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Auto;
                     return [3, 29];
                 }
-                _c.label = 25;
+                _b.label = 25;
             case 25:
                 {
                     propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Paginated;
                     return [3, 29];
                 }
-                _c.label = 26;
+                _b.label = 26;
             case 26:
                 {
                     propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.ScrolledContinuous;
                     return [3, 29];
                 }
-                _c.label = 27;
+                _b.label = 27;
             case 27:
                 {
                     propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Scrolled;
                     return [3, 29];
                 }
-                _c.label = 28;
+                _b.label = 28;
             case 28:
                 {
                     return [3, 29];
                 }
-                _c.label = 29;
+                _b.label = 29;
             case 29:
                 if (propertiesStruct.Layout ||
                     propertiesStruct.Orientation ||
@@ -1659,21 +914,21 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     (propertiesStruct.Contains && propertiesStruct.Contains.length)) {
                     link.Properties = propertiesStruct;
                 }
-                _c.label = 30;
+                _b.label = 30;
             case 30:
-                _a++;
+                _i++;
                 return [3, 1];
             case 31: return [2];
         }
     });
 }); };
-var addMediaOverlay = function (link, linkEpub, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var meta, manItemSmil, manItemSmilHrefDecoded, smilFilePath, has, zipEntries, _a, zipEntries_5, zipEntry, mo, moURL, moLink;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
+var addMediaOverlay = function (link, linkEpub, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var meta, manItemSmil;
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                if (!linkEpub.MediaOverlay) return [3, 4];
-                meta = findMetaByRefineAndProperty(rootfile, opf, linkEpub.MediaOverlay, "media:duration");
+                if (!linkEpub.MediaOverlay) return [3, 2];
+                meta = epub_daisy_common_1.findMetaByRefineAndProperty(opf, linkEpub.MediaOverlay, "media:duration");
                 if (meta) {
                     link.Duration = media_overlay_1.timeStrToSeconds(meta.Data);
                 }
@@ -1683,90 +938,17 @@ var addMediaOverlay = function (link, linkEpub, rootfile, opf, zip) { return tsl
                     }
                     return false;
                 });
-                if (!(manItemSmil && manItemSmil.MediaType === "application/smil+xml")) return [3, 4];
-                if (!opf.ZipPath) return [3, 4];
-                manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
-                if (!manItemSmilHrefDecoded) {
-                    debug("!?manItemSmil.HrefDecoded");
-                    return [2];
-                }
-                smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
-                    .replace(/\\/g, "/");
-                return [4, zipHasEntry_1.zipHasEntry(zip, smilFilePath, smilFilePath)];
+                if (!manItemSmil) return [3, 2];
+                return [4, epub_daisy_common_1.addMediaOverlaySMIL(link, manItemSmil, opf, zip)];
             case 1:
-                has = _b.sent();
-                if (!!has) return [3, 3];
-                debug("NOT IN ZIP (addMediaOverlay): " + smilFilePath);
-                return [4, zip.getEntries()];
-            case 2:
-                zipEntries = _b.sent();
-                for (_a = 0, zipEntries_5 = zipEntries; _a < zipEntries_5.length; _a++) {
-                    zipEntry = zipEntries_5[_a];
-                    debug(zipEntry);
-                }
-                return [2];
-            case 3:
-                mo = new media_overlay_1.MediaOverlayNode();
-                mo.SmilPathInZip = smilFilePath;
-                mo.initialized = false;
-                link.MediaOverlays = mo;
-                moURL = exports.mediaOverlayURLPath + "?" +
-                    exports.mediaOverlayURLParam + "=" +
-                    UrlUtils_1.encodeURIComponent_RFC3986(link.HrefDecoded ? link.HrefDecoded : link.Href);
-                if (!link.Properties) {
-                    link.Properties = new metadata_properties_1.Properties();
-                }
-                link.Properties.MediaOverlay = moURL;
-                if (!link.Alternate) {
-                    link.Alternate = [];
-                }
-                moLink = new publication_link_1.Link();
-                moLink.Href = moURL;
-                moLink.TypeLink = "application/vnd.syncnarr+json";
-                moLink.Duration = link.Duration;
-                link.Alternate.push(moLink);
-                if (link.Properties && link.Properties.Encrypted) {
-                    debug("ENCRYPTED SMIL MEDIA OVERLAY: " + (link.HrefDecoded ? link.HrefDecoded : link.Href));
-                }
-                _b.label = 4;
-            case 4: return [2];
+                _a.sent();
+                _a.label = 2;
+            case 2: return [2];
         }
     });
 }); };
-var findInManifestByID = function (publication, rootfile, opf, ID, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var item, linkItem, itemHrefDecoded;
-    return tslib_1.__generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!(opf.Manifest && opf.Manifest.length)) return [3, 3];
-                item = opf.Manifest.find(function (manItem) {
-                    if (manItem.ID === ID) {
-                        return true;
-                    }
-                    return false;
-                });
-                if (!(item && opf.ZipPath)) return [3, 3];
-                linkItem = new publication_link_1.Link();
-                linkItem.TypeLink = item.MediaType;
-                itemHrefDecoded = item.HrefDecoded;
-                if (!itemHrefDecoded) {
-                    return [2, Promise.reject("item.Href?!")];
-                }
-                linkItem.setHrefDecoded(path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
-                    .replace(/\\/g, "/"));
-                return [4, addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf)];
-            case 1:
-                _a.sent();
-                return [4, addMediaOverlay(linkItem, item, rootfile, opf, zip)];
-            case 2:
-                _a.sent();
-                return [2, linkItem];
-            case 3: return [2, Promise.reject("ID " + ID + " not found")];
-        }
-    });
-}); };
-var addRendition = function (publication, _rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var rendition_1, displayOptionsZipPath, has, displayOptionsZipStream_, err_19, displayOptionsZipStream, displayOptionsZipData, err_20, displayOptionsStr, displayOptionsDoc, displayOptions, renditionPlatformAll_1, renditionPlatformIpad_1, renditionPlatformIphone_1;
+var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var rendition_1, displayOptionsZipPath, has, displayOptionsZipStream_, err_15, displayOptionsZipStream, displayOptionsZipData, err_16, displayOptionsStr, displayOptionsDoc, displayOptions, renditionPlatformAll_1, renditionPlatformIpad_1, renditionPlatformIphone_1;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1886,8 +1068,8 @@ var addRendition = function (publication, _rootfile, opf, zip) { return tslib_1.
                 displayOptionsZipStream_ = _a.sent();
                 return [3, 9];
             case 8:
-                err_19 = _a.sent();
-                debug(err_19);
+                err_15 = _a.sent();
+                debug(err_15);
                 return [3, 9];
             case 9:
                 if (!displayOptionsZipStream_) return [3, 14];
@@ -1901,8 +1083,8 @@ var addRendition = function (publication, _rootfile, opf, zip) { return tslib_1.
                 displayOptionsZipData = _a.sent();
                 return [3, 13];
             case 12:
-                err_20 = _a.sent();
-                debug(err_20);
+                err_16 = _a.sent();
+                debug(err_16);
                 return [3, 13];
             case 13:
                 if (displayOptionsZipData) {
@@ -1982,82 +1164,23 @@ var addRendition = function (publication, _rootfile, opf, zip) { return tslib_1.
         }
     });
 }); };
-var fillSpineAndResource = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, item, linkItem, err_21, _c, _d, item, itemHrefDecoded, zipPath, linkSpine, linkItem;
-    return tslib_1.__generator(this, function (_e) {
-        switch (_e.label) {
+var addLinkData = function (publication, rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                if (!opf.ZipPath) {
-                    return [2];
-                }
-                if (!(opf.Spine && opf.Spine.Items && opf.Spine.Items.length)) return [3, 7];
-                _a = 0, _b = opf.Spine.Items;
-                _e.label = 1;
+                if (!rootfile) return [3, 2];
+                return [4, addRelAndPropertiesToLink(publication, linkItem, item, opf)];
             case 1:
-                if (!(_a < _b.length)) return [3, 7];
-                item = _b[_a];
-                if (!(!item.Linear || item.Linear === "yes")) return [3, 6];
-                linkItem = void 0;
-                _e.label = 2;
-            case 2:
-                _e.trys.push([2, 4, , 5]);
-                return [4, findInManifestByID(publication, rootfile, opf, item.IDref, zip)];
+                _a.sent();
+                _a.label = 2;
+            case 2: return [4, addMediaOverlay(linkItem, item, opf, zip)];
             case 3:
-                linkItem = _e.sent();
-                return [3, 5];
-            case 4:
-                err_21 = _e.sent();
-                debug(err_21);
-                return [3, 6];
-            case 5:
-                if (linkItem && linkItem.Href) {
-                    if (!publication.Spine) {
-                        publication.Spine = [];
-                    }
-                    publication.Spine.push(linkItem);
-                }
-                _e.label = 6;
-            case 6:
-                _a++;
-                return [3, 1];
-            case 7:
-                if (!(opf.Manifest && opf.Manifest.length)) return [3, 12];
-                _c = 0, _d = opf.Manifest;
-                _e.label = 8;
-            case 8:
-                if (!(_c < _d.length)) return [3, 12];
-                item = _d[_c];
-                itemHrefDecoded = item.HrefDecoded;
-                if (!itemHrefDecoded) {
-                    debug("!? item.Href");
-                    return [3, 11];
-                }
-                zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
-                    .replace(/\\/g, "/");
-                linkSpine = findInSpineByHref(publication, zipPath);
-                if (!(!linkSpine || !linkSpine.Href)) return [3, 11];
-                linkItem = new publication_link_1.Link();
-                linkItem.TypeLink = item.MediaType;
-                linkItem.setHrefDecoded(zipPath);
-                return [4, addRelAndPropertiesToLink(publication, linkItem, item, rootfile, opf)];
-            case 9:
-                _e.sent();
-                return [4, addMediaOverlay(linkItem, item, rootfile, opf, zip)];
-            case 10:
-                _e.sent();
-                if (!publication.Resources) {
-                    publication.Resources = [];
-                }
-                publication.Resources.push(linkItem);
-                _e.label = 11;
-            case 11:
-                _c++;
-                return [3, 8];
-            case 12: return [2];
+                _a.sent();
+                return [2];
         }
     });
 }); };
-var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp) {
+var fillEncryptionInfo = function (publication, encryption, lcp) {
     encryption.EncryptedData.forEach(function (encInfo) {
         var encrypted = new metadata_encrypted_1.Encrypted();
         encrypted.Algorithm = encInfo.EncryptionMethod.Algorithm;
@@ -2083,7 +1206,7 @@ var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp
             });
         }
         if (publication.Resources) {
-            publication.Resources.forEach(function (l, _i, _arr) {
+            publication.Resources.forEach(function (l) {
                 var filePath = l.Href;
                 if (filePath === encInfo.CipherData.CipherReference.URI) {
                     if (!l.Properties) {
@@ -2094,7 +1217,7 @@ var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp
             });
         }
         if (publication.Spine) {
-            publication.Spine.forEach(function (l, _i, _arr) {
+            publication.Spine.forEach(function (l) {
                 var filePath = l.Href;
                 if (filePath === encInfo.CipherData.CipherReference.URI) {
                     if (!l.Properties) {
@@ -2106,27 +1229,7 @@ var fillEncryptionInfo = function (publication, _rootfile, _opf, encryption, lcp
         }
     });
 };
-var fillPageListFromNCX = function (publication, _rootfile, _opf, ncx) {
-    if (ncx.PageList && ncx.PageList.PageTarget && ncx.PageList.PageTarget.length) {
-        ncx.PageList.PageTarget.forEach(function (pageTarget) {
-            var link = new publication_link_1.Link();
-            var srcDecoded = pageTarget.Content.SrcDecoded;
-            if (!srcDecoded) {
-                debug("!?srcDecoded");
-                return;
-            }
-            var zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
-                .replace(/\\/g, "/");
-            link.setHrefDecoded(zipPath);
-            link.Title = pageTarget.Text;
-            if (!publication.PageList) {
-                publication.PageList = [];
-            }
-            publication.PageList.push(link);
-        });
-    }
-};
-var fillPageListFromAdobePageMap = function (publication, _rootfile, _opf, zip, l) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var fillPageListFromAdobePageMap = function (publication, zip, l) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var pageMapContent, pageMapXmlDoc, pages, i, page, link, href, title, hrefDecoded, zipPath;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -2134,7 +1237,7 @@ var fillPageListFromAdobePageMap = function (publication, _rootfile, _opf, zip, 
                 if (!l.HrefDecoded) {
                     return [2];
                 }
-                return [4, createDocStringFromZipPath(l, zip)];
+                return [4, epub_daisy_common_1.loadFileStrFromZipPath(l.Href, l.HrefDecoded, zip)];
             case 1:
                 pageMapContent = _a.sent();
                 if (!pageMapContent) {
@@ -2169,130 +1272,7 @@ var fillPageListFromAdobePageMap = function (publication, _rootfile, _opf, zip, 
         }
     });
 }); };
-var createDocStringFromZipPath = function (link, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var linkHrefDecoded, has, zipEntries, _a, zipEntries_6, zipEntry, zipStream_, err_22, zipStream, zipData, err_23;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                linkHrefDecoded = link.HrefDecoded;
-                if (!linkHrefDecoded) {
-                    debug("!?link.HrefDecoded");
-                    return [2, undefined];
-                }
-                return [4, zipHasEntry_1.zipHasEntry(zip, linkHrefDecoded, link.Href)];
-            case 1:
-                has = _b.sent();
-                if (!!has) return [3, 3];
-                debug("NOT IN ZIP (createDocStringFromZipPath): " + link.Href + " --- " + linkHrefDecoded);
-                return [4, zip.getEntries()];
-            case 2:
-                zipEntries = _b.sent();
-                for (_a = 0, zipEntries_6 = zipEntries; _a < zipEntries_6.length; _a++) {
-                    zipEntry = zipEntries_6[_a];
-                    debug(zipEntry);
-                }
-                return [2, undefined];
-            case 3:
-                _b.trys.push([3, 5, , 6]);
-                return [4, zip.entryStreamPromise(linkHrefDecoded)];
-            case 4:
-                zipStream_ = _b.sent();
-                return [3, 6];
-            case 5:
-                err_22 = _b.sent();
-                debug(err_22);
-                return [2, Promise.reject(err_22)];
-            case 6:
-                zipStream = zipStream_.stream;
-                _b.label = 7;
-            case 7:
-                _b.trys.push([7, 9, , 10]);
-                return [4, BufferUtils_1.streamToBufferPromise(zipStream)];
-            case 8:
-                zipData = _b.sent();
-                return [3, 10];
-            case 9:
-                err_23 = _b.sent();
-                debug(err_23);
-                return [2, Promise.reject(err_23)];
-            case 10: return [2, zipData.toString("utf8")];
-        }
-    });
-}); };
-var fillTOCFromNCX = function (publication, rootfile, opf, ncx) {
-    if (ncx.Points && ncx.Points.length) {
-        ncx.Points.forEach(function (point) {
-            if (!publication.TOC) {
-                publication.TOC = [];
-            }
-            fillTOCFromNavPoint(publication, rootfile, opf, ncx, point, publication.TOC);
-        });
-    }
-};
-var fillLandmarksFromGuide = function (publication, _rootfile, opf) {
-    if (opf.Guide && opf.Guide.length) {
-        opf.Guide.forEach(function (ref) {
-            if (ref.Href && opf.ZipPath) {
-                var refHrefDecoded = ref.HrefDecoded;
-                if (!refHrefDecoded) {
-                    debug("ref.Href?!");
-                    return;
-                }
-                var link = new publication_link_1.Link();
-                var zipPath = path.join(path.dirname(opf.ZipPath), refHrefDecoded)
-                    .replace(/\\/g, "/");
-                link.setHrefDecoded(zipPath);
-                link.Title = ref.Title;
-                if (!publication.Landmarks) {
-                    publication.Landmarks = [];
-                }
-                publication.Landmarks.push(link);
-            }
-        });
-    }
-};
-var fillTOCFromNavPoint = function (publication, rootfile, opf, ncx, point, node) {
-    var srcDecoded = point.Content.SrcDecoded;
-    if (!srcDecoded) {
-        debug("?!point.Content.Src");
-        return;
-    }
-    var link = new publication_link_1.Link();
-    var zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
-        .replace(/\\/g, "/");
-    link.setHrefDecoded(zipPath);
-    link.Title = point.Text;
-    if (point.Points && point.Points.length) {
-        point.Points.forEach(function (p) {
-            if (!link.Children) {
-                link.Children = [];
-            }
-            fillTOCFromNavPoint(publication, rootfile, opf, ncx, p, link.Children);
-        });
-    }
-    node.push(link);
-};
-var fillSubject = function (publication, _rootfile, opf) {
-    if (opf.Metadata && opf.Metadata.Subject && opf.Metadata.Subject.length) {
-        opf.Metadata.Subject.forEach(function (s) {
-            var sub = new metadata_subject_1.Subject();
-            if (s.Lang) {
-                sub.Name = {};
-                sub.Name[s.Lang] = s.Data;
-            }
-            else {
-                sub.Name = s.Data;
-            }
-            sub.Code = s.Term;
-            sub.Scheme = s.Authority;
-            if (!publication.Metadata.Subject) {
-                publication.Metadata.Subject = [];
-            }
-            publication.Metadata.Subject.push(sub);
-        });
-    }
-};
-var fillCalibreSerieInfo = function (publication, _rootfile, opf) {
+var fillCalibreSerieInfo = function (publication, opf) {
     var serie;
     var seriePosition;
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
@@ -2320,10 +1300,10 @@ var fillCalibreSerieInfo = function (publication, _rootfile, opf) {
         publication.Metadata.BelongsTo.Series.push(contributor);
     }
 };
-var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var navLink, navLinkHrefDecoded, has, zipEntries, _a, zipEntries_7, zipEntry, navDocZipStream_, err_24, navDocZipStream, navDocZipData, err_25, navDocStr, navXmlDoc, select, navs;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
+var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var navLink, navLinkHrefDecoded, has, zipEntries, _i, zipEntries_3, zipEntry, navDocZipStream_, err_17, navDocZipStream, navDocZipData, err_18, navDocStr, navXmlDoc, select, navs;
+    return tslib_1.__generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 navLink = publication.GetNavDoc();
                 if (!navLink) {
@@ -2336,40 +1316,40 @@ var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return ts
                 }
                 return [4, zipHasEntry_1.zipHasEntry(zip, navLinkHrefDecoded, navLink.Href)];
             case 1:
-                has = _b.sent();
+                has = _a.sent();
                 if (!!has) return [3, 3];
                 debug("NOT IN ZIP (fillTOCFromNavDoc): " + navLink.Href + " --- " + navLinkHrefDecoded);
                 return [4, zip.getEntries()];
             case 2:
-                zipEntries = _b.sent();
-                for (_a = 0, zipEntries_7 = zipEntries; _a < zipEntries_7.length; _a++) {
-                    zipEntry = zipEntries_7[_a];
+                zipEntries = _a.sent();
+                for (_i = 0, zipEntries_3 = zipEntries; _i < zipEntries_3.length; _i++) {
+                    zipEntry = zipEntries_3[_i];
                     debug(zipEntry);
                 }
                 return [2];
             case 3:
-                _b.trys.push([3, 5, , 6]);
+                _a.trys.push([3, 5, , 6]);
                 return [4, zip.entryStreamPromise(navLinkHrefDecoded)];
             case 4:
-                navDocZipStream_ = _b.sent();
+                navDocZipStream_ = _a.sent();
                 return [3, 6];
             case 5:
-                err_24 = _b.sent();
-                debug(err_24);
-                return [2, Promise.reject(err_24)];
+                err_17 = _a.sent();
+                debug(err_17);
+                return [2, Promise.reject(err_17)];
             case 6:
                 navDocZipStream = navDocZipStream_.stream;
-                _b.label = 7;
+                _a.label = 7;
             case 7:
-                _b.trys.push([7, 9, , 10]);
+                _a.trys.push([7, 9, , 10]);
                 return [4, BufferUtils_1.streamToBufferPromise(navDocZipStream)];
             case 8:
-                navDocZipData = _b.sent();
+                navDocZipData = _a.sent();
                 return [3, 10];
             case 9:
-                err_25 = _b.sent();
-                debug(err_25);
-                return [2, Promise.reject(err_25)];
+                err_18 = _a.sent();
+                debug(err_18);
+                return [2, Promise.reject(err_18)];
             case 10:
                 navDocStr = navDocZipData.toString("utf8");
                 navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr);
@@ -2384,10 +1364,10 @@ var fillTOCFromNavDoc = function (publication, _rootfile, _opf, zip) { return ts
                         if (epubType && epubType.length) {
                             var olElem = select("xhtml:ol", navElement);
                             var rolesString = epubType[0].value;
-                            var rolesArray = parseSpaceSeparatedString(rolesString);
+                            var rolesArray = epub_daisy_common_1.parseSpaceSeparatedString(rolesString);
                             if (rolesArray.length) {
-                                for (var _a = 0, rolesArray_1 = rolesArray; _a < rolesArray_1.length; _a++) {
-                                    var role = rolesArray_1[_a];
+                                for (var _i = 0, rolesArray_1 = rolesArray; _i < rolesArray_1.length; _i++) {
+                                    var role = rolesArray_1[_i];
                                     switch (role) {
                                         case "toc": {
                                             publication.TOC = [];
@@ -2449,7 +1429,7 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
                     var epubType = select("@epub:type", aElems[0]);
                     if (epubType && epubType.length) {
                         var rolesString = epubType[0].value;
-                        var rolesArray = parseSpaceSeparatedString(rolesString);
+                        var rolesArray = epub_daisy_common_1.parseSpaceSeparatedString(rolesString);
                         if (rolesArray.length) {
                             link.AddRels(rolesArray);
                         }
@@ -2494,7 +1474,7 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
     });
 };
 var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var coverID, manifestInfo, err_26, href_1, linky;
+    var coverID, manifestInfo, err_19, href_1, linky;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -2512,18 +1492,18 @@ var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4, findInManifestByID(publication, rootfile, opf, coverID, zip)];
+                return [4, epub_daisy_common_1.findInManifestByID(publication, rootfile, opf, coverID, zip, addLinkData)];
             case 2:
                 manifestInfo = _a.sent();
                 return [3, 4];
             case 3:
-                err_26 = _a.sent();
-                debug(err_26);
+                err_19 = _a.sent();
+                debug(err_19);
                 return [2];
             case 4:
                 if (!(manifestInfo && manifestInfo.Href && publication.Resources && publication.Resources.length)) return [3, 6];
                 href_1 = manifestInfo.Href;
-                linky = publication.Resources.find(function (item, _i, _arr) {
+                linky = publication.Resources.find(function (item) {
                     if (item.Href === href_1) {
                         return true;
                     }
@@ -2539,7 +1519,7 @@ var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__
         }
     });
 }); };
-var findPropertiesInSpineForManifest = function (linkEpub, _rootfile, opf) {
+var findPropertiesInSpineForManifest = function (linkEpub, opf) {
     if (opf.Spine && opf.Spine.Items && opf.Spine.Items.length) {
         var it = opf.Spine.Items.find(function (item) {
             if (item.IDref === linkEpub.ID) {
@@ -2552,51 +1532,5 @@ var findPropertiesInSpineForManifest = function (linkEpub, _rootfile, opf) {
         }
     }
     return undefined;
-};
-var findInSpineByHref = function (publication, href) {
-    if (publication.Spine && publication.Spine.length) {
-        var ll = publication.Spine.find(function (l) {
-            if (l.HrefDecoded === href) {
-                return true;
-            }
-            return false;
-        });
-        if (ll) {
-            return ll;
-        }
-    }
-    return undefined;
-};
-var findMetaByRefineAndProperty = function (rootfile, opf, ID, property) {
-    var ret = findAllMetaByRefineAndProperty(rootfile, opf, ID, property);
-    if (ret.length) {
-        return ret[0];
-    }
-    return undefined;
-};
-var findAllMetaByRefineAndProperty = function (_rootfile, opf, ID, property) {
-    var metas = [];
-    var refineID = "#" + ID;
-    if (opf.Metadata && opf.Metadata.Meta) {
-        opf.Metadata.Meta.forEach(function (metaTag) {
-            if (metaTag.Refine === refineID && metaTag.Property === property) {
-                metas.push(metaTag);
-            }
-        });
-    }
-    return metas;
-};
-var getEpubVersion = function (rootfile, opf) {
-    if (rootfile.Version) {
-        return rootfile.Version;
-    }
-    else if (opf.Version) {
-        return opf.Version;
-    }
-    return undefined;
-};
-var isEpub3OrMore = function (rootfile, opf) {
-    var version = getEpubVersion(rootfile, opf);
-    return (version === epub3 || version === epub301 || version === epub31);
 };
 //# sourceMappingURL=epub.js.map

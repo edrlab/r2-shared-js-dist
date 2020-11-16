@@ -36,10 +36,14 @@ let Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
     }
 };
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("smil:par|smil:seq"),
+    xml_js_mapper_1.XmlXPathSelector("smil:par | smil:seq | smil2:par | smil2:seq"),
     xml_js_mapper_1.XmlItemType(smil_seq_or_par_1.SeqOrPar),
     tslib_1.__metadata("design:type", Array)
 ], Seq.prototype, "Children", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@customTest"),
+    tslib_1.__metadata("design:type", String)
+], Seq.prototype, "CustomTest", void 0);
 tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("@epub:textref"),
     tslib_1.__metadata("design:type", String)
@@ -48,6 +52,7 @@ Seq = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
+        smil2: "http://www.w3.org/2001/SMIL20/",
     }),
     xml_js_mapper_1.XmlDiscriminatorValue("seq")
 ], Seq);
