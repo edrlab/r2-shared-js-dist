@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
 const debug_ = require("debug");
 const fs = require("fs");
 const image_size_1 = require("image-size");
@@ -34,6 +34,8 @@ const smil_1 = require("./epub/smil");
 const smil_seq_1 = require("./epub/smil-seq");
 const debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
+exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
+exports.mediaOverlayURLParam = epub_daisy_common_1.mediaOverlayURLParam;
 exports.addCoverDimensions = async (publication, coverLink) => {
     const zipInternal = publication.findFromInternal("zip");
     if (zipInternal) {

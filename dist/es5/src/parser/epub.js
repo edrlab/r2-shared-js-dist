@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -35,6 +35,8 @@ var smil_1 = require("./epub/smil");
 var smil_seq_1 = require("./epub/smil-seq");
 var debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
+exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
+exports.mediaOverlayURLParam = epub_daisy_common_1.mediaOverlayURLParam;
 exports.addCoverDimensions = function (publication, coverLink) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var zipInternal, zip, coverLinkHrefDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, zipStream, err_1, zipData, imageInfo, err_2;
     return tslib_1.__generator(this, function (_a) {
