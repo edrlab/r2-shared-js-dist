@@ -14,6 +14,7 @@ const audiobook_1 = require("../parser/audiobook");
 const daisy_1 = require("../parser/daisy");
 const daisy_convert_to_epub_1 = require("../parser/daisy-convert-to-epub");
 const epub_1 = require("../parser/epub");
+const epub_daisy_common_1 = require("../parser/epub-daisy-common");
 const publication_parser_1 = require("../parser/publication-parser");
 const lcp_1 = require("r2-lcp-js/dist/es8-es2017/src/parser/epub/lcp");
 const serializable_1 = require("r2-lcp-js/dist/es8-es2017/src/serializable");
@@ -389,7 +390,7 @@ async function extractEPUB_MediaOverlays(pub, _zip, outDir) {
         if (spineItem.MediaOverlays) {
             const mo = spineItem.MediaOverlays;
             try {
-                await epub_1.lazyLoadMediaOverlays(pub, mo);
+                await epub_daisy_common_1.lazyLoadMediaOverlays(pub, mo);
             }
             catch (err) {
                 return Promise.reject(err);
@@ -466,7 +467,7 @@ async function dumpPublication(publication) {
                 }
                 console.log(mo.SmilPathInZip);
                 try {
-                    await epub_1.lazyLoadMediaOverlays(publication, mo);
+                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);

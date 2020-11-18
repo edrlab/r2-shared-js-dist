@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -24,15 +24,12 @@ var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
-var transformer_1 = require("../transform/transformer");
 var decodeURI_1 = require("../_utils/decodeURI");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var epub_daisy_common_1 = require("./epub-daisy-common");
 var container_1 = require("./epub/container");
 var display_options_1 = require("./epub/display-options");
 var encryption_1 = require("./epub/encryption");
-var smil_1 = require("./epub/smil");
-var smil_seq_1 = require("./epub/smil-seq");
 var debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
@@ -369,7 +366,7 @@ function getAllMediaOverlays(publication) {
                     _a.label = 2;
                 case 2:
                     _a.trys.push([2, 4, , 5]);
-                    return [4, exports.lazyLoadMediaOverlays(publication, mo)];
+                    return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
                     _a.sent();
                     return [3, 5];
@@ -408,7 +405,7 @@ function getMediaOverlay(publication, spineHref) {
                     _a.label = 2;
                 case 2:
                     _a.trys.push([2, 4, , 5]);
-                    return [4, exports.lazyLoadMediaOverlays(publication, mo)];
+                    return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo)];
                 case 3:
                     _a.sent();
                     return [3, 5];
@@ -425,263 +422,6 @@ function getMediaOverlay(publication, spineHref) {
     });
 }
 exports.getMediaOverlay = getMediaOverlay;
-exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_2, zipEntry, smilZipStream_, err_12, decryptFail, transformedStream, err_13, err, smilZipStream, smilZipData, err_14, smilStr, iStart, iEnd, clip, smilXmlDoc, smil, roles, _a, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
-    return tslib_1.__generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                if (mo.initialized || !mo.SmilPathInZip) {
-                    return [2];
-                }
-                if (publication.Resources) {
-                    link = publication.Resources.find(function (l) {
-                        if (l.Href === mo.SmilPathInZip) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    if (!link) {
-                        if (publication.Spine) {
-                            link = publication.Spine.find(function (l) {
-                                if (l.Href === mo.SmilPathInZip) {
-                                    return true;
-                                }
-                                return false;
-                            });
-                        }
-                    }
-                    if (!link) {
-                        err = "Asset not declared in publication spine/resources! " + mo.SmilPathInZip;
-                        debug(err);
-                        return [2, Promise.reject(err)];
-                    }
-                }
-                zipInternal = publication.findFromInternal("zip");
-                if (!zipInternal) {
-                    return [2];
-                }
-                zip = zipInternal.Value;
-                return [4, zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined)];
-            case 1:
-                has = _b.sent();
-                if (!!has) return [3, 3];
-                err = "NOT IN ZIP (lazyLoadMediaOverlays): " + mo.SmilPathInZip;
-                debug(err);
-                return [4, zip.getEntries()];
-            case 2:
-                zipEntries = _b.sent();
-                for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
-                    zipEntry = zipEntries_2[_i];
-                    debug(zipEntry);
-                }
-                return [2, Promise.reject(err)];
-            case 3:
-                _b.trys.push([3, 5, , 6]);
-                return [4, zip.entryStreamPromise(mo.SmilPathInZip)];
-            case 4:
-                smilZipStream_ = _b.sent();
-                return [3, 6];
-            case 5:
-                err_12 = _b.sent();
-                debug(err_12);
-                return [2, Promise.reject(err_12)];
-            case 6:
-                if (!(link && link.Properties && link.Properties.Encrypted)) return [3, 11];
-                decryptFail = false;
-                transformedStream = void 0;
-                _b.label = 7;
-            case 7:
-                _b.trys.push([7, 9, , 10]);
-                return [4, transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined)];
-            case 8:
-                transformedStream = _b.sent();
-                return [3, 10];
-            case 9:
-                err_13 = _b.sent();
-                debug(err_13);
-                return [2, Promise.reject(err_13)];
-            case 10:
-                if (transformedStream) {
-                    smilZipStream_ = transformedStream;
-                }
-                else {
-                    decryptFail = true;
-                }
-                if (decryptFail) {
-                    err = "Encryption scheme not supported.";
-                    debug(err);
-                    return [2, Promise.reject(err)];
-                }
-                _b.label = 11;
-            case 11:
-                smilZipStream = smilZipStream_.stream;
-                _b.label = 12;
-            case 12:
-                _b.trys.push([12, 14, , 15]);
-                return [4, BufferUtils_1.streamToBufferPromise(smilZipStream)];
-            case 13:
-                smilZipData = _b.sent();
-                return [3, 15];
-            case 14:
-                err_14 = _b.sent();
-                debug(err_14);
-                return [2, Promise.reject(err_14)];
-            case 15:
-                smilStr = smilZipData.toString("utf8");
-                iStart = smilStr.indexOf("<smil");
-                if (iStart >= 0) {
-                    iEnd = smilStr.indexOf(">", iStart);
-                    if (iEnd > iStart) {
-                        clip = smilStr.substr(iStart, iEnd - iStart);
-                        if (clip.indexOf("xmlns") < 0) {
-                            smilStr = smilStr.replace(/<smil/, "<smil xmlns=\"http://www.w3.org/ns/SMIL\" ");
-                        }
-                    }
-                }
-                smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
-                smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
-                smil.ZipPath = mo.SmilPathInZip;
-                mo.initialized = true;
-                debug("PARSED SMIL: " + mo.SmilPathInZip);
-                mo.Role = [];
-                mo.Role.push("section");
-                if (smil.Body) {
-                    if (smil.Body.Duration) {
-                        mo.duration = media_overlay_1.timeStrToSeconds(smil.Body.Duration);
-                    }
-                    if (smil.Body.EpubType) {
-                        roles = epub_daisy_common_1.parseSpaceSeparatedString(smil.Body.EpubType);
-                        for (_a = 0, roles_1 = roles; _a < roles_1.length; _a++) {
-                            role = roles_1[_a];
-                            if (!role.length) {
-                                return [2];
-                            }
-                            if (mo.Role.indexOf(role) < 0) {
-                                mo.Role.push(role);
-                            }
-                        }
-                    }
-                    if (smil.Body.TextRef) {
-                        smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
-                        if (!smilBodyTextRefDecoded) {
-                            debug("!?smilBodyTextRefDecoded");
-                        }
-                        else {
-                            zipPath = path.join(path.dirname(smil.ZipPath), smilBodyTextRefDecoded)
-                                .replace(/\\/g, "/");
-                            mo.Text = zipPath;
-                        }
-                    }
-                    if (smil.Body.Children && smil.Body.Children.length) {
-                        getDur_1 = !smil.Body.Duration && smil.Body.Children.length === 1;
-                        smil.Body.Children.forEach(function (seqChild) {
-                            if (getDur_1 && seqChild.Duration) {
-                                mo.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
-                            }
-                            if (!mo.Children) {
-                                mo.Children = [];
-                            }
-                            addSeqToMediaOverlay(smil, publication, mo, mo.Children, seqChild);
-                        });
-                    }
-                }
-                return [2];
-        }
-    });
-}); };
-var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
-    if (!smil.ZipPath) {
-        return;
-    }
-    var moc = new media_overlay_1.MediaOverlayNode();
-    moc.initialized = rootMO.initialized;
-    mo.push(moc);
-    if (seqChild.Duration) {
-        moc.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
-    }
-    if (seqChild instanceof smil_seq_1.Seq) {
-        moc.Role = [];
-        moc.Role.push("section");
-        var seq = seqChild;
-        if (seq.EpubType) {
-            var roles = epub_daisy_common_1.parseSpaceSeparatedString(seq.EpubType);
-            for (var _i = 0, roles_2 = roles; _i < roles_2.length; _i++) {
-                var role = roles_2[_i];
-                if (!role.length) {
-                    return;
-                }
-                if (moc.Role.indexOf(role) < 0) {
-                    moc.Role.push(role);
-                }
-            }
-        }
-        if (seq.TextRef) {
-            var seqTextRefDecoded = seq.TextRefDecoded;
-            if (!seqTextRefDecoded) {
-                debug("!?seqTextRefDecoded");
-            }
-            else {
-                var zipPath = path.join(path.dirname(smil.ZipPath), seqTextRefDecoded)
-                    .replace(/\\/g, "/");
-                moc.Text = zipPath;
-            }
-        }
-        if (seq.Children && seq.Children.length) {
-            seq.Children.forEach(function (child) {
-                if (!moc.Children) {
-                    moc.Children = [];
-                }
-                addSeqToMediaOverlay(smil, publication, rootMO, moc.Children, child);
-            });
-        }
-    }
-    else {
-        var par = seqChild;
-        if (par.EpubType) {
-            var roles = epub_daisy_common_1.parseSpaceSeparatedString(par.EpubType);
-            for (var _a = 0, roles_3 = roles; _a < roles_3.length; _a++) {
-                var role = roles_3[_a];
-                if (!role.length) {
-                    return;
-                }
-                if (!moc.Role) {
-                    moc.Role = [];
-                }
-                if (moc.Role.indexOf(role) < 0) {
-                    moc.Role.push(role);
-                }
-            }
-        }
-        if (par.Text && par.Text.Src) {
-            var parTextSrcDcoded = par.Text.SrcDecoded;
-            if (!parTextSrcDcoded) {
-                debug("?!parTextSrcDcoded");
-            }
-            else {
-                var zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
-                    .replace(/\\/g, "/");
-                moc.Text = zipPath;
-            }
-        }
-        if (par.Audio && par.Audio.Src) {
-            var parAudioSrcDcoded = par.Audio.SrcDecoded;
-            if (!parAudioSrcDcoded) {
-                debug("?!parAudioSrcDcoded");
-            }
-            else {
-                var zipPath = path.join(path.dirname(smil.ZipPath), parAudioSrcDcoded)
-                    .replace(/\\/g, "/");
-                moc.Audio = zipPath;
-                moc.Audio += "#t=";
-                moc.Audio += par.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(par.Audio.ClipBegin) : "0";
-                if (par.Audio.ClipEnd) {
-                    moc.Audio += ",";
-                    moc.Audio += media_overlay_1.timeStrToSeconds(par.Audio.ClipEnd);
-                }
-            }
-        }
-    }
-};
 var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var spineProperties;
     return tslib_1.__generator(this, function (_a) {
@@ -960,7 +700,7 @@ var addMediaOverlay = function (link, linkEpub, opf, zip) { return tslib_1.__awa
     });
 }); };
 var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var rendition_1, displayOptionsZipPath, has, displayOptionsZipStream_, err_15, displayOptionsZipStream, displayOptionsZipData, err_16, displayOptionsStr, displayOptionsDoc, displayOptions, renditionPlatformAll_1, renditionPlatformIpad_1, renditionPlatformIphone_1;
+    var rendition_1, displayOptionsZipPath, has, displayOptionsZipStream_, err_12, displayOptionsZipStream, displayOptionsZipData, err_13, displayOptionsStr, displayOptionsDoc, displayOptions, renditionPlatformAll_1, renditionPlatformIpad_1, renditionPlatformIphone_1;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1080,8 +820,8 @@ var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(v
                 displayOptionsZipStream_ = _a.sent();
                 return [3, 9];
             case 8:
-                err_15 = _a.sent();
-                debug(err_15);
+                err_12 = _a.sent();
+                debug(err_12);
                 return [3, 9];
             case 9:
                 if (!displayOptionsZipStream_) return [3, 14];
@@ -1095,8 +835,8 @@ var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(v
                 displayOptionsZipData = _a.sent();
                 return [3, 13];
             case 12:
-                err_16 = _a.sent();
-                debug(err_16);
+                err_13 = _a.sent();
+                debug(err_13);
                 return [3, 13];
             case 13:
                 if (displayOptionsZipData) {
@@ -1313,7 +1053,7 @@ var fillCalibreSerieInfo = function (publication, opf) {
     }
 };
 var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var navLink, navLinkHrefDecoded, has, zipEntries, _i, zipEntries_3, zipEntry, navDocZipStream_, err_17, navDocZipStream, navDocZipData, err_18, navDocStr, navXmlDoc, select, navs;
+    var navLink, navLinkHrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, navDocZipStream_, err_14, navDocZipStream, navDocZipData, err_15, navDocStr, navXmlDoc, select, navs;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1334,8 +1074,8 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
-                for (_i = 0, zipEntries_3 = zipEntries; _i < zipEntries_3.length; _i++) {
-                    zipEntry = zipEntries_3[_i];
+                for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
+                    zipEntry = zipEntries_2[_i];
                     debug(zipEntry);
                 }
                 return [2];
@@ -1346,9 +1086,9 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
                 navDocZipStream_ = _a.sent();
                 return [3, 6];
             case 5:
-                err_17 = _a.sent();
-                debug(err_17);
-                return [2, Promise.reject(err_17)];
+                err_14 = _a.sent();
+                debug(err_14);
+                return [2, Promise.reject(err_14)];
             case 6:
                 navDocZipStream = navDocZipStream_.stream;
                 _a.label = 7;
@@ -1359,9 +1099,9 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
                 navDocZipData = _a.sent();
                 return [3, 10];
             case 9:
-                err_18 = _a.sent();
-                debug(err_18);
-                return [2, Promise.reject(err_18)];
+                err_15 = _a.sent();
+                debug(err_15);
+                return [2, Promise.reject(err_15)];
             case 10:
                 navDocStr = navDocZipData.toString("utf8");
                 navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr);
@@ -1486,7 +1226,7 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
     });
 };
 var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var coverID, manifestInfo, err_19, href_1, linky;
+    var coverID, manifestInfo, err_16, href_1, linky;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1509,8 +1249,8 @@ var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__
                 manifestInfo = _a.sent();
                 return [3, 4];
             case 3:
-                err_19 = _a.sent();
-                debug(err_19);
+                err_16 = _a.sent();
+                debug(err_16);
                 return [2];
             case 4:
                 if (!(manifestInfo && manifestInfo.Href && publication.Resources && publication.Resources.length)) return [3, 6];

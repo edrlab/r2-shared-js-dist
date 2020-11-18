@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazyLoadMediaOverlays = exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
 const debug_ = require("debug");
 const fs = require("fs");
 const image_size_1 = require("image-size");
@@ -23,15 +23,12 @@ const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const zipFactory_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/zip/zipFactory");
-const transformer_1 = require("../transform/transformer");
 const decodeURI_1 = require("../_utils/decodeURI");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const container_1 = require("./epub/container");
 const display_options_1 = require("./epub/display-options");
 const encryption_1 = require("./epub/encryption");
-const smil_1 = require("./epub/smil");
-const smil_seq_1 = require("./epub/smil-seq");
 const debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
@@ -277,7 +274,7 @@ async function getAllMediaOverlays(publication) {
             const mo = link.MediaOverlays;
             if (!mo.initialized) {
                 try {
-                    await exports.lazyLoadMediaOverlays(publication, mo);
+                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);
@@ -298,7 +295,7 @@ async function getMediaOverlay(publication, spineHref) {
             const mo = link.MediaOverlays;
             if (!mo.initialized) {
                 try {
-                    await exports.lazyLoadMediaOverlays(publication, mo);
+                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);
@@ -310,238 +307,6 @@ async function getMediaOverlay(publication, spineHref) {
     return Promise.reject(`No Media Overlays ${spineHref}`);
 }
 exports.getMediaOverlay = getMediaOverlay;
-exports.lazyLoadMediaOverlays = async (publication, mo) => {
-    if (mo.initialized || !mo.SmilPathInZip) {
-        return;
-    }
-    let link;
-    if (publication.Resources) {
-        link = publication.Resources.find((l) => {
-            if (l.Href === mo.SmilPathInZip) {
-                return true;
-            }
-            return false;
-        });
-        if (!link) {
-            if (publication.Spine) {
-                link = publication.Spine.find((l) => {
-                    if (l.Href === mo.SmilPathInZip) {
-                        return true;
-                    }
-                    return false;
-                });
-            }
-        }
-        if (!link) {
-            const err = "Asset not declared in publication spine/resources! " + mo.SmilPathInZip;
-            debug(err);
-            return Promise.reject(err);
-        }
-    }
-    const zipInternal = publication.findFromInternal("zip");
-    if (!zipInternal) {
-        return;
-    }
-    const zip = zipInternal.Value;
-    const has = await zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined);
-    if (!has) {
-        const err = `NOT IN ZIP (lazyLoadMediaOverlays): ${mo.SmilPathInZip}`;
-        debug(err);
-        const zipEntries = await zip.getEntries();
-        for (const zipEntry of zipEntries) {
-            debug(zipEntry);
-        }
-        return Promise.reject(err);
-    }
-    let smilZipStream_;
-    try {
-        smilZipStream_ = await zip.entryStreamPromise(mo.SmilPathInZip);
-    }
-    catch (err) {
-        debug(err);
-        return Promise.reject(err);
-    }
-    if (link && link.Properties && link.Properties.Encrypted) {
-        let decryptFail = false;
-        let transformedStream;
-        try {
-            transformedStream = await transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined);
-        }
-        catch (err) {
-            debug(err);
-            return Promise.reject(err);
-        }
-        if (transformedStream) {
-            smilZipStream_ = transformedStream;
-        }
-        else {
-            decryptFail = true;
-        }
-        if (decryptFail) {
-            const err = "Encryption scheme not supported.";
-            debug(err);
-            return Promise.reject(err);
-        }
-    }
-    const smilZipStream = smilZipStream_.stream;
-    let smilZipData;
-    try {
-        smilZipData = await BufferUtils_1.streamToBufferPromise(smilZipStream);
-    }
-    catch (err) {
-        debug(err);
-        return Promise.reject(err);
-    }
-    let smilStr = smilZipData.toString("utf8");
-    const iStart = smilStr.indexOf("<smil");
-    if (iStart >= 0) {
-        const iEnd = smilStr.indexOf(">", iStart);
-        if (iEnd > iStart) {
-            const clip = smilStr.substr(iStart, iEnd - iStart);
-            if (clip.indexOf("xmlns") < 0) {
-                smilStr = smilStr.replace(/<smil/, "<smil xmlns=\"http://www.w3.org/ns/SMIL\" ");
-            }
-        }
-    }
-    const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
-    const smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
-    smil.ZipPath = mo.SmilPathInZip;
-    mo.initialized = true;
-    debug("PARSED SMIL: " + mo.SmilPathInZip);
-    mo.Role = [];
-    mo.Role.push("section");
-    if (smil.Body) {
-        if (smil.Body.Duration) {
-            mo.duration = media_overlay_1.timeStrToSeconds(smil.Body.Duration);
-        }
-        if (smil.Body.EpubType) {
-            const roles = epub_daisy_common_1.parseSpaceSeparatedString(smil.Body.EpubType);
-            for (const role of roles) {
-                if (!role.length) {
-                    return;
-                }
-                if (mo.Role.indexOf(role) < 0) {
-                    mo.Role.push(role);
-                }
-            }
-        }
-        if (smil.Body.TextRef) {
-            const smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
-            if (!smilBodyTextRefDecoded) {
-                debug("!?smilBodyTextRefDecoded");
-            }
-            else {
-                const zipPath = path.join(path.dirname(smil.ZipPath), smilBodyTextRefDecoded)
-                    .replace(/\\/g, "/");
-                mo.Text = zipPath;
-            }
-        }
-        if (smil.Body.Children && smil.Body.Children.length) {
-            const getDur = !smil.Body.Duration && smil.Body.Children.length === 1;
-            smil.Body.Children.forEach((seqChild) => {
-                if (getDur && seqChild.Duration) {
-                    mo.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
-                }
-                if (!mo.Children) {
-                    mo.Children = [];
-                }
-                addSeqToMediaOverlay(smil, publication, mo, mo.Children, seqChild);
-            });
-        }
-    }
-    return;
-};
-const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
-    if (!smil.ZipPath) {
-        return;
-    }
-    const moc = new media_overlay_1.MediaOverlayNode();
-    moc.initialized = rootMO.initialized;
-    mo.push(moc);
-    if (seqChild.Duration) {
-        moc.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
-    }
-    if (seqChild instanceof smil_seq_1.Seq) {
-        moc.Role = [];
-        moc.Role.push("section");
-        const seq = seqChild;
-        if (seq.EpubType) {
-            const roles = epub_daisy_common_1.parseSpaceSeparatedString(seq.EpubType);
-            for (const role of roles) {
-                if (!role.length) {
-                    return;
-                }
-                if (moc.Role.indexOf(role) < 0) {
-                    moc.Role.push(role);
-                }
-            }
-        }
-        if (seq.TextRef) {
-            const seqTextRefDecoded = seq.TextRefDecoded;
-            if (!seqTextRefDecoded) {
-                debug("!?seqTextRefDecoded");
-            }
-            else {
-                const zipPath = path.join(path.dirname(smil.ZipPath), seqTextRefDecoded)
-                    .replace(/\\/g, "/");
-                moc.Text = zipPath;
-            }
-        }
-        if (seq.Children && seq.Children.length) {
-            seq.Children.forEach((child) => {
-                if (!moc.Children) {
-                    moc.Children = [];
-                }
-                addSeqToMediaOverlay(smil, publication, rootMO, moc.Children, child);
-            });
-        }
-    }
-    else {
-        const par = seqChild;
-        if (par.EpubType) {
-            const roles = epub_daisy_common_1.parseSpaceSeparatedString(par.EpubType);
-            for (const role of roles) {
-                if (!role.length) {
-                    return;
-                }
-                if (!moc.Role) {
-                    moc.Role = [];
-                }
-                if (moc.Role.indexOf(role) < 0) {
-                    moc.Role.push(role);
-                }
-            }
-        }
-        if (par.Text && par.Text.Src) {
-            const parTextSrcDcoded = par.Text.SrcDecoded;
-            if (!parTextSrcDcoded) {
-                debug("?!parTextSrcDcoded");
-            }
-            else {
-                const zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
-                    .replace(/\\/g, "/");
-                moc.Text = zipPath;
-            }
-        }
-        if (par.Audio && par.Audio.Src) {
-            const parAudioSrcDcoded = par.Audio.SrcDecoded;
-            if (!parAudioSrcDcoded) {
-                debug("?!parAudioSrcDcoded");
-            }
-            else {
-                const zipPath = path.join(path.dirname(smil.ZipPath), parAudioSrcDcoded)
-                    .replace(/\\/g, "/");
-                moc.Audio = zipPath;
-                moc.Audio += "#t=";
-                moc.Audio += par.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(par.Audio.ClipBegin) : "0";
-                if (par.Audio.ClipEnd) {
-                    moc.Audio += ",";
-                    moc.Audio += media_overlay_1.timeStrToSeconds(par.Audio.ClipEnd);
-                }
-            }
-        }
-    }
-};
 const addRelAndPropertiesToLink = async (publication, link, linkEpub, opf) => {
     if (linkEpub.Properties) {
         await addToLinkFromProperties(publication, link, linkEpub.Properties);

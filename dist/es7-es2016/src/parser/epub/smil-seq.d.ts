@@ -1,7 +1,6 @@
 import { SeqOrPar } from "./smil-seq-or-par";
 export declare class Seq extends SeqOrPar {
     Children: SeqOrPar[];
-    CustomTest: string;
     TextRef1: string;
     get TextRef(): string;
     set TextRef(href: string);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.updateDurations = exports.lazyLoadMediaOverlays = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var moment = require("moment");
@@ -17,10 +17,13 @@ var ta_json_string_tokens_converter_1 = require("../models/ta-json-string-tokens
 var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
+var transformer_1 = require("../transform/transformer");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var ncx_1 = require("./epub/ncx");
 var opf_1 = require("./epub/opf");
 var opf_author_1 = require("./epub/opf-author");
+var smil_1 = require("./epub/smil");
+var smil_seq_1 = require("./epub/smil-seq");
 var debug = debug_("r2:shared#parser/epub-daisy-common");
 var epub3 = "3.0";
 var epub301 = "3.0.1";
@@ -1305,4 +1308,445 @@ exports.addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return ts
         }
     });
 }); };
+exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
+    var _d;
+    return tslib_1.__generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                if (mo.initialized || !mo.SmilPathInZip) {
+                    return [2];
+                }
+                if (publication.Resources) {
+                    link = publication.Resources.find(function (l) {
+                        if (l.Href === mo.SmilPathInZip) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    if (!link) {
+                        if (publication.Spine) {
+                            link = publication.Spine.find(function (l) {
+                                if (l.Href === mo.SmilPathInZip) {
+                                    return true;
+                                }
+                                return false;
+                            });
+                        }
+                    }
+                    if (!link) {
+                        err = "Asset not declared in publication spine/resources! " + mo.SmilPathInZip;
+                        debug(err);
+                        return [2, Promise.reject(err)];
+                    }
+                }
+                zipInternal = publication.findFromInternal("zip");
+                if (!zipInternal) {
+                    return [2];
+                }
+                zip = zipInternal.Value;
+                return [4, zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined)];
+            case 1:
+                has = _e.sent();
+                if (!!has) return [3, 3];
+                err = "NOT IN ZIP (lazyLoadMediaOverlays): " + mo.SmilPathInZip;
+                debug(err);
+                return [4, zip.getEntries()];
+            case 2:
+                zipEntries = _e.sent();
+                for (_i = 0, zipEntries_5 = zipEntries; _i < zipEntries_5.length; _i++) {
+                    zipEntry = zipEntries_5[_i];
+                    debug(zipEntry);
+                }
+                return [2, Promise.reject(err)];
+            case 3:
+                _e.trys.push([3, 5, , 6]);
+                return [4, zip.entryStreamPromise(mo.SmilPathInZip)];
+            case 4:
+                smilZipStream_ = _e.sent();
+                return [3, 6];
+            case 5:
+                err_9 = _e.sent();
+                debug(err_9);
+                return [2, Promise.reject(err_9)];
+            case 6:
+                if (!(link && link.Properties && link.Properties.Encrypted)) return [3, 11];
+                decryptFail = false;
+                transformedStream = void 0;
+                _e.label = 7;
+            case 7:
+                _e.trys.push([7, 9, , 10]);
+                return [4, transformer_1.Transformers.tryStream(publication, link, undefined, smilZipStream_, false, 0, 0, undefined)];
+            case 8:
+                transformedStream = _e.sent();
+                return [3, 10];
+            case 9:
+                err_10 = _e.sent();
+                debug(err_10);
+                return [2, Promise.reject(err_10)];
+            case 10:
+                if (transformedStream) {
+                    smilZipStream_ = transformedStream;
+                }
+                else {
+                    decryptFail = true;
+                }
+                if (decryptFail) {
+                    err = "Encryption scheme not supported.";
+                    debug(err);
+                    return [2, Promise.reject(err)];
+                }
+                _e.label = 11;
+            case 11:
+                smilZipStream = smilZipStream_.stream;
+                _e.label = 12;
+            case 12:
+                _e.trys.push([12, 14, , 15]);
+                return [4, BufferUtils_1.streamToBufferPromise(smilZipStream)];
+            case 13:
+                smilZipData = _e.sent();
+                return [3, 15];
+            case 14:
+                err_11 = _e.sent();
+                debug(err_11);
+                return [2, Promise.reject(err_11)];
+            case 15:
+                smilStr = smilZipData.toString("utf8");
+                iStart = smilStr.indexOf("<smil");
+                if (iStart >= 0) {
+                    iEnd = smilStr.indexOf(">", iStart);
+                    if (iEnd > iStart) {
+                        clip = smilStr.substr(iStart, iEnd - iStart);
+                        if (clip.indexOf("xmlns") < 0) {
+                            smilStr = smilStr.replace(/<smil/, "<smil xmlns=\"http://www.w3.org/ns/SMIL\" ");
+                        }
+                    }
+                }
+                smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+                smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
+                smil.ZipPath = mo.SmilPathInZip;
+                mo.initialized = true;
+                debug("PARSED SMIL: " + mo.SmilPathInZip);
+                mo.Role = [];
+                mo.Role.push("section");
+                if ((_d = smil.Head) === null || _d === void 0 ? void 0 : _d.Meta) {
+                    for (_a = 0, _b = smil.Head.Meta; _a < _b.length; _a++) {
+                        m = _b[_a];
+                        if (m.Content && m.Name === "dtb:totalElapsedTime") {
+                            mo.totalElapsedTime = media_overlay_1.timeStrToSeconds(m.Content);
+                        }
+                    }
+                }
+                if (smil.Body) {
+                    if (smil.Body.Duration) {
+                        mo.duration = media_overlay_1.timeStrToSeconds(smil.Body.Duration);
+                    }
+                    if (smil.Body.EpubType) {
+                        roles = exports.parseSpaceSeparatedString(smil.Body.EpubType);
+                        for (_c = 0, roles_1 = roles; _c < roles_1.length; _c++) {
+                            role = roles_1[_c];
+                            if (!role.length) {
+                                continue;
+                            }
+                            if (mo.Role.indexOf(role) < 0) {
+                                mo.Role.push(role);
+                            }
+                        }
+                    }
+                    if (smil.Body.Class) {
+                        if (smil.Body.Class.indexOf("pagenum") >= 0) {
+                            mo.Role.push("pagebreak");
+                        }
+                        else if (smil.Body.Class.indexOf("note") >= 0) {
+                            mo.Role.push("note");
+                        }
+                        else if (smil.Body.Class.indexOf("sidebar") >= 0) {
+                            mo.Role.push("sidebar");
+                        }
+                        else if (smil.Body.Class.indexOf("annotation") >= 0) {
+                            mo.Role.push("annotation");
+                        }
+                    }
+                    else if (smil.Body.CustomTest) {
+                        if (smil.Body.CustomTest.indexOf("pagenum") >= 0) {
+                            mo.Role.push("pagebreak");
+                        }
+                        else if (smil.Body.CustomTest.indexOf("note") >= 0) {
+                            mo.Role.push("note");
+                        }
+                        else if (smil.Body.CustomTest.indexOf("sidebar") >= 0) {
+                            mo.Role.push("sidebar");
+                        }
+                        else if (smil.Body.CustomTest.indexOf("annotation") >= 0) {
+                            mo.Role.push("annotation");
+                        }
+                    }
+                    if (smil.Body.TextRef) {
+                        smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
+                        if (!smilBodyTextRefDecoded) {
+                            debug("!?smilBodyTextRefDecoded");
+                        }
+                        else {
+                            zipPath = path.join(path.dirname(smil.ZipPath), smilBodyTextRefDecoded)
+                                .replace(/\\/g, "/");
+                            mo.Text = zipPath;
+                        }
+                    }
+                    if (smil.Body.Children && smil.Body.Children.length) {
+                        getDur_1 = !smil.Body.Duration && smil.Body.Children.length === 1;
+                        smil.Body.Children.forEach(function (seqChild) {
+                            if (getDur_1 && seqChild.Duration) {
+                                mo.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+                            }
+                            if (!mo.Children) {
+                                mo.Children = [];
+                            }
+                            addSeqToMediaOverlay(smil, publication, mo, mo.Children, seqChild);
+                        });
+                    }
+                }
+                return [2];
+        }
+    });
+}); };
+var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
+    if (!smil.ZipPath) {
+        return;
+    }
+    var moc = new media_overlay_1.MediaOverlayNode();
+    moc.initialized = rootMO.initialized;
+    var doAdd = true;
+    if (seqChild.Duration) {
+        moc.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+    }
+    if (seqChild instanceof smil_seq_1.Seq) {
+        moc.Role = [];
+        moc.Role.push("section");
+        var seq = seqChild;
+        if (seq.EpubType) {
+            var roles = exports.parseSpaceSeparatedString(seq.EpubType);
+            for (var _i = 0, roles_2 = roles; _i < roles_2.length; _i++) {
+                var role = roles_2[_i];
+                if (!role.length) {
+                    continue;
+                }
+                if (moc.Role.indexOf(role) < 0) {
+                    moc.Role.push(role);
+                }
+            }
+        }
+        if (seq.Class) {
+            if (seq.Class.indexOf("pagenum") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+            else if (seq.Class.indexOf("note") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (seq.Class.indexOf("sidebar") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
+            else if (seq.Class.indexOf("annotation") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("annotation");
+            }
+        }
+        else if (seq.CustomTest) {
+            if (seq.CustomTest.indexOf("pagenum") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+            else if (seq.CustomTest.indexOf("note") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (seq.CustomTest.indexOf("sidebar") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
+            else if (seq.CustomTest.indexOf("annotation") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("annotation");
+            }
+        }
+        if (seq.TextRef) {
+            var seqTextRefDecoded = seq.TextRefDecoded;
+            if (!seqTextRefDecoded) {
+                debug("!?seqTextRefDecoded");
+            }
+            else {
+                var zipPath = path.join(path.dirname(smil.ZipPath), seqTextRefDecoded)
+                    .replace(/\\/g, "/");
+                moc.Text = zipPath;
+            }
+        }
+        if (seq.Children && seq.Children.length) {
+            seq.Children.forEach(function (child) {
+                if (!moc.Children) {
+                    moc.Children = [];
+                }
+                addSeqToMediaOverlay(smil, publication, rootMO, moc.Children, child);
+            });
+        }
+    }
+    else {
+        var par = seqChild;
+        if (par.EpubType) {
+            var roles = exports.parseSpaceSeparatedString(par.EpubType);
+            for (var _a = 0, roles_3 = roles; _a < roles_3.length; _a++) {
+                var role = roles_3[_a];
+                if (!role.length) {
+                    continue;
+                }
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                if (moc.Role.indexOf(role) < 0) {
+                    moc.Role.push(role);
+                }
+            }
+        }
+        if (par.Class) {
+            if (par.Class.indexOf("pagenum") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+            else if (par.Class.indexOf("note") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (par.Class.indexOf("sidebar") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
+            else if (par.Class.indexOf("annotation") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("annotation");
+            }
+        }
+        else if (par.CustomTest) {
+            if (par.CustomTest.indexOf("pagenum") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+            else if (par.CustomTest.indexOf("note") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (par.CustomTest.indexOf("sidebar") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
+            else if (par.CustomTest.indexOf("annotation") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("annotation");
+            }
+        }
+        if (par.Text && par.Text.Src) {
+            var parTextSrcDcoded = par.Text.SrcDecoded;
+            if (!parTextSrcDcoded) {
+                debug("?!parTextSrcDcoded");
+            }
+            else {
+                var zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
+                    .replace(/\\/g, "/");
+                moc.Text = zipPath;
+            }
+        }
+        if (par.Audio && par.Audio.Src) {
+            var parAudioSrcDcoded = par.Audio.SrcDecoded;
+            if (!parAudioSrcDcoded) {
+                debug("?!parAudioSrcDcoded");
+            }
+            else {
+                var zipPath = path.join(path.dirname(smil.ZipPath), parAudioSrcDcoded)
+                    .replace(/\\/g, "/");
+                moc.Audio = zipPath;
+                moc.Audio += "#t=";
+                var begin = par.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(par.Audio.ClipBegin) : 0;
+                moc.AudioClipBegin = begin;
+                var end = par.Audio.ClipEnd ? media_overlay_1.timeStrToSeconds(par.Audio.ClipEnd) : 0;
+                moc.AudioClipEnd = end;
+                moc.Audio += begin.toString();
+                if (par.Audio.ClipEnd) {
+                    moc.Audio += ",";
+                    moc.Audio += end.toString();
+                }
+            }
+        }
+        if (par.Img && par.Img.Src) {
+            var parImgSrcDcoded = par.Img.SrcDecoded;
+            if (!parImgSrcDcoded) {
+                debug("?!parImgSrcDcoded");
+            }
+            else {
+                var zipPath = path.join(path.dirname(smil.ZipPath), parImgSrcDcoded)
+                    .replace(/\\/g, "/");
+                debug("SMIL IMG skipped: " + zipPath);
+            }
+            if (!par.Audio && !par.Text) {
+                moc.initialized = false;
+                doAdd = false;
+            }
+        }
+    }
+    if (doAdd) {
+        mo.push(moc);
+    }
+    else {
+        debug("SMIL MO skip: ", moc, seqChild);
+    }
+};
+exports.updateDurations = function (dur, link) {
+    if (!dur || !link.MediaOverlays) {
+        return;
+    }
+    if (!link.Duration) {
+        link.Duration = dur;
+    }
+    if (link.Alternate) {
+        for (var _i = 0, _a = link.Alternate; _i < _a.length; _i++) {
+            var altLink = _a[_i];
+            if (altLink.TypeLink === "application/vnd.syncnarr+json") {
+                if (!altLink.Duration) {
+                    altLink.Duration = dur;
+                }
+            }
+        }
+    }
+};
 //# sourceMappingURL=epub-daisy-common.js.map

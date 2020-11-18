@@ -17,6 +17,14 @@ tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("@dur"),
     tslib_1.__metadata("design:type", String)
 ], SeqOrPar.prototype, "Duration", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@customTest"),
+    tslib_1.__metadata("design:type", String)
+], SeqOrPar.prototype, "CustomTest", void 0);
+tslib_1.__decorate([
+    xml_js_mapper_1.XmlXPathSelector("@class"),
+    tslib_1.__metadata("design:type", String)
+], SeqOrPar.prototype, "Class", void 0);
 SeqOrPar = tslib_1.__decorate([
     xml_js_mapper_1.XmlObject({
         epub: "http://www.idpf.org/2007/ops",

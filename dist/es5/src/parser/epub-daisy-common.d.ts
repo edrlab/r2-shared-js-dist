@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { MediaOverlayNode } from "../models/media-overlay";
 import { Publication } from "../models/publication";
 import { Link } from "../models/publication-link";
 import { IZip } from "r2-utils-js/dist/es5/src/_utils/zip/zip";
@@ -34,4 +35,6 @@ export declare const loadFileStrFromZipPath: (linkHref: string, linkHrefDecoded:
 export declare const loadFileBufferFromZipPath: (linkHref: string, linkHrefDecoded: string, zip: IZip) => Promise<Buffer | undefined>;
 export declare const fillTOC: (publication: Publication, opf: OPF, ncx: NCX | undefined) => void;
 export declare const addMediaOverlaySMIL: (link: Link, manItemSmil: Manifest, opf: OPF, zip: IZip) => Promise<void>;
+export declare const lazyLoadMediaOverlays: (publication: Publication, mo: MediaOverlayNode) => Promise<undefined>;
+export declare const updateDurations: (dur: number | undefined, link: Link) => void;
 export {};

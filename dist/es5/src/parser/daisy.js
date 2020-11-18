@@ -11,7 +11,6 @@ var publication_1 = require("../models/publication");
 var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
-var epub_1 = require("./epub");
 var epub_daisy_common_1 = require("./epub-daisy-common");
 var debug = debug_("r2:shared#parser/daisy");
 var DaisyBookis;
@@ -168,36 +167,21 @@ function DaisyParsePromise(filePath) {
 }
 exports.DaisyParsePromise = DaisyParsePromise;
 var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var _i, _a, altLink;
-    var _b;
-    return tslib_1.__generator(this, function (_c) {
-        switch (_c.label) {
+    var _a;
+    return tslib_1.__generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                if (!(((_b = publication.Metadata) === null || _b === void 0 ? void 0 : _b.AdditionalJSON) &&
+                if (!(((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
                     publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText")) return [3, 3];
                 return [4, epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip)];
             case 1:
-                _c.sent();
+                _b.sent();
                 if (!(linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized)) return [3, 3];
-                return [4, epub_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
+                return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
             case 2:
-                _c.sent();
-                if (linkItem.MediaOverlays.duration) {
-                    if (!linkItem.Duration) {
-                        linkItem.Duration = linkItem.MediaOverlays.duration;
-                    }
-                    if (linkItem.Alternate) {
-                        for (_i = 0, _a = linkItem.Alternate; _i < _a.length; _i++) {
-                            altLink = _a[_i];
-                            if (altLink.TypeLink === "application/vnd.syncnarr+json") {
-                                if (!altLink.Duration) {
-                                    altLink.Duration = linkItem.MediaOverlays.duration;
-                                }
-                            }
-                        }
-                    }
-                }
-                _c.label = 3;
+                _b.sent();
+                epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                _b.label = 3;
             case 3: return [2];
         }
     });

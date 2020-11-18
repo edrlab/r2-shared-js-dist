@@ -52,10 +52,6 @@ var Seq = (function (_super) {
         tslib_1.__metadata("design:type", Array)
     ], Seq.prototype, "Children", void 0);
     tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@customTest"),
-        tslib_1.__metadata("design:type", String)
-    ], Seq.prototype, "CustomTest", void 0);
-    tslib_1.__decorate([
         xml_js_mapper_1.XmlXPathSelector("@epub:textref"),
         tslib_1.__metadata("design:type", String)
     ], Seq.prototype, "TextRef1", void 0);

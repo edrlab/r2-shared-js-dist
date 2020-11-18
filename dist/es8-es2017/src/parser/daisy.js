@@ -10,7 +10,6 @@ const publication_1 = require("../models/publication");
 const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils");
 const zipFactory_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/zip/zipFactory");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
-const epub_1 = require("./epub");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const debug = debug_("r2:shared#parser/daisy");
 var DaisyBookis;
@@ -123,21 +122,8 @@ const addLinkData = async (publication, _rootfile, opf, zip, linkItem, item) => 
         publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText") {
         await epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
         if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
-            await epub_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
-            if (linkItem.MediaOverlays.duration) {
-                if (!linkItem.Duration) {
-                    linkItem.Duration = linkItem.MediaOverlays.duration;
-                }
-                if (linkItem.Alternate) {
-                    for (const altLink of linkItem.Alternate) {
-                        if (altLink.TypeLink === "application/vnd.syncnarr+json") {
-                            if (!altLink.Duration) {
-                                altLink.Duration = linkItem.MediaOverlays.duration;
-                            }
-                        }
-                    }
-                }
-            }
+            await epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
+            epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
         }
     }
 };
