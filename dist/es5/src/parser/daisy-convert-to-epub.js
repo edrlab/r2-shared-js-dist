@@ -270,9 +270,16 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                 debug("!loadFileStrFromZipPath", dtBookStr);
                                 return [3, 13];
                             }
+                            dtBookStr = dtBookStr.replace(/xmlns=""/, " ");
                             dtBookStr = dtBookStr.replace(/<dtbook/, "<dtbook xmlns:epub=\"http://www.idpf.org/2007/ops\" ");
                             dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");
                             title = (_q = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _q === void 0 ? void 0 : _q.textContent;
+                            if (title) {
+                                title = title.trim();
+                                if (!title.length) {
+                                    title = null;
+                                }
+                            }
                             listElements = dtBookDoc.getElementsByTagName("list");
                             for (i = 0; i < listElements.length; i++) {
                                 listElement = listElements.item(i);
@@ -348,8 +355,9 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             }
                             dtbookNowXHTML = new xmldom.XMLSerializer().serializeToString(dtBookDoc)
                                 .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/, "xmlns=\"http://www.w3.org/1999/xhtml\"")
+                                .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/g, " ")
                                 .replace(/^([\s\S]*)<html/gm, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE xhtml>\n<html ")
-                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n<title>" + (title ? title : " ") + "</title>\n")
+                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n" + (title ? "<title>" + title + "</title>" : "") + "\n")
                                 .replace(/<\/head[\s\S]*?>/gm, "\n" + cssHrefs.reduce(function (pv, cv) {
                                 return pv + "\n" + ("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cv + "\" />");
                             }, "") + "\n</head>\n");

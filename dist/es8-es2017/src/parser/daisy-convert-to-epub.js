@@ -242,9 +242,16 @@ exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                         debug("!loadFileStrFromZipPath", dtBookStr);
                         continue;
                     }
+                    dtBookStr = dtBookStr.replace(/xmlns=""/, " ");
                     dtBookStr = dtBookStr.replace(/<dtbook/, "<dtbook xmlns:epub=\"http://www.idpf.org/2007/ops\" ");
                     const dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");
-                    const title = (_b = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _b === void 0 ? void 0 : _b.textContent;
+                    let title = (_b = dtBookDoc.getElementsByTagName("doctitle")[0]) === null || _b === void 0 ? void 0 : _b.textContent;
+                    if (title) {
+                        title = title.trim();
+                        if (!title.length) {
+                            title = null;
+                        }
+                    }
                     const listElements = dtBookDoc.getElementsByTagName("list");
                     for (let i = 0; i < listElements.length; i++) {
                         const listElement = listElements.item(i);
@@ -316,13 +323,14 @@ exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                     }
                     const dtbookNowXHTML = new xmldom.XMLSerializer().serializeToString(dtBookDoc)
                         .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/, "xmlns=\"http://www.w3.org/1999/xhtml\"")
+                        .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/g, " ")
                         .replace(/^([\s\S]*)<html/gm, `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE xhtml>
 <html `)
                         .replace(/<head([\s\S]*?)>/gm, `
 <head$1>
 <meta charset="UTF-8" />
-<title>${title ? title : " "}</title>
+${title ? `<title>${title}</title>` : ""}
 `)
                         .replace(/<\/head[\s\S]*?>/gm, `
 ${cssHrefs.reduce((pv, cv) => {
