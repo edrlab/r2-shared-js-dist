@@ -25,7 +25,7 @@ function ensureDirs(fspath) {
 exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     return tslib_1.__generator(this, function (_a) {
         return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-                var zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantText_1, smilDocs_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, erreur_1;
+                var zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, isFullTextAudio, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantText_1, smilDocs_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, erreur_1;
                 var _p, _q;
                 return tslib_1.__generator(this, function (_r) {
                     switch (_r.label) {
@@ -158,8 +158,9 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                 }
                                 return smilTextRef;
                             };
-                            if (!(publication.Spine && ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
-                                publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText")) return [3, 6];
+                            isFullTextAudio = ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
+                                publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
+                            if (!publication.Spine) return [3, 6];
                             mediaOverlaysMap_1 = {};
                             previousLinkItem = void 0;
                             spineIndex = -1;
@@ -176,39 +177,43 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                             return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
                         case 3:
                             _r.sent();
-                            epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                            if (isFullTextAudio) {
+                                epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                            }
                             _r.label = 4;
                         case 4:
-                            computedDur = getMediaOverlaysDuration_1(linkItem.MediaOverlays);
-                            if (computedDur) {
-                                if (!linkItem.MediaOverlays.duration) {
-                                    linkItem.MediaOverlays.duration = computedDur;
-                                    epub_daisy_common_1.updateDurations(computedDur, linkItem);
-                                }
-                                else {
-                                    if (Math.round(linkItem.MediaOverlays.duration) !== Math.round(computedDur)) {
-                                        debug("linkItem.MediaOverlays.duration !== computedDur", linkItem.MediaOverlays.duration, computedDur);
-                                    }
-                                }
-                            }
-                            if (previousLinkItem && previousLinkItem.MediaOverlays &&
-                                typeof previousLinkItem.MediaOverlays.totalElapsedTime !== "undefined" &&
-                                typeof linkItem.MediaOverlays.totalElapsedTime !== "undefined") {
-                                dur = linkItem.MediaOverlays.totalElapsedTime -
-                                    previousLinkItem.MediaOverlays.totalElapsedTime;
-                                if (dur > 0) {
-                                    if (!previousLinkItem.MediaOverlays.duration) {
-                                        previousLinkItem.MediaOverlays.duration = dur;
-                                        epub_daisy_common_1.updateDurations(dur, previousLinkItem);
+                            if (isFullTextAudio) {
+                                computedDur = getMediaOverlaysDuration_1(linkItem.MediaOverlays);
+                                if (computedDur) {
+                                    if (!linkItem.MediaOverlays.duration) {
+                                        linkItem.MediaOverlays.duration = computedDur;
+                                        epub_daisy_common_1.updateDurations(computedDur, linkItem);
                                     }
                                     else {
-                                        if (Math.round(previousLinkItem.MediaOverlays.duration) !== Math.round(dur)) {
-                                            debug("previousLinkItem.MediaOverlays.duration !== dur", previousLinkItem.MediaOverlays.duration, dur);
+                                        if (Math.round(linkItem.MediaOverlays.duration) !== Math.round(computedDur)) {
+                                            debug("linkItem.MediaOverlays.duration !== computedDur", linkItem.MediaOverlays.duration, computedDur);
                                         }
                                     }
                                 }
+                                if (previousLinkItem && previousLinkItem.MediaOverlays &&
+                                    typeof previousLinkItem.MediaOverlays.totalElapsedTime !== "undefined" &&
+                                    typeof linkItem.MediaOverlays.totalElapsedTime !== "undefined") {
+                                    dur = linkItem.MediaOverlays.totalElapsedTime -
+                                        previousLinkItem.MediaOverlays.totalElapsedTime;
+                                    if (dur > 0) {
+                                        if (!previousLinkItem.MediaOverlays.duration) {
+                                            previousLinkItem.MediaOverlays.duration = dur;
+                                            epub_daisy_common_1.updateDurations(dur, previousLinkItem);
+                                        }
+                                        else {
+                                            if (Math.round(previousLinkItem.MediaOverlays.duration) !== Math.round(dur)) {
+                                                debug("previousLinkItem.MediaOverlays.duration !== dur", previousLinkItem.MediaOverlays.duration, dur);
+                                            }
+                                        }
+                                    }
+                                }
+                                previousLinkItem = linkItem;
                             }
-                            previousLinkItem = linkItem;
                             smilTextRef = patchMediaOverlaysTextHref_1(linkItem.MediaOverlays);
                             if (smilTextRef) {
                                 if (!mediaOverlaysMap_1[smilTextRef]) {
@@ -452,27 +457,32 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
                                         debug("dtBook.HrefDecoded !== mediaOverlay.smilTextRef", dtBookLink.HrefDecoded, mediaOverlay.smilTextRef);
                                     }
                                     else {
-                                        dtBookLink.MediaOverlays = mediaOverlay.mo;
-                                        if (mediaOverlay.mo.duration) {
-                                            dtBookLink.Duration = mediaOverlay.mo.duration;
+                                        if (isFullTextAudio) {
+                                            dtBookLink.MediaOverlays = mediaOverlay.mo;
+                                            if (mediaOverlay.mo.duration) {
+                                                dtBookLink.Duration = mediaOverlay.mo.duration;
+                                            }
+                                            var moURL = "smil-media-overlays_" + mediaOverlay.index + ".json";
+                                            if (!dtBookLink.Properties) {
+                                                dtBookLink.Properties = new metadata_properties_1.Properties();
+                                            }
+                                            dtBookLink.Properties.MediaOverlay = moURL;
+                                            if (!dtBookLink.Alternate) {
+                                                dtBookLink.Alternate = [];
+                                            }
+                                            var moLink = new publication_link_1.Link();
+                                            moLink.Href = moURL;
+                                            moLink.TypeLink = "application/vnd.syncnarr+json";
+                                            moLink.Duration = dtBookLink.Duration;
+                                            dtBookLink.Alternate.push(moLink);
+                                            var jsonObjMO = serializable_1.TaJsonSerialize(mediaOverlay.mo);
+                                            var jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
+                                            zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
+                                            debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
                                         }
-                                        var moURL = "smil-media-overlays_" + mediaOverlay.index + ".json";
-                                        if (!dtBookLink.Properties) {
-                                            dtBookLink.Properties = new metadata_properties_1.Properties();
+                                        else {
+                                            debug("dtBookLink IN SPINE (no audio):", mediaOverlay.index, dtBookLink.HrefDecoded);
                                         }
-                                        dtBookLink.Properties.MediaOverlay = moURL;
-                                        if (!dtBookLink.Alternate) {
-                                            dtBookLink.Alternate = [];
-                                        }
-                                        var moLink = new publication_link_1.Link();
-                                        moLink.Href = moURL;
-                                        moLink.TypeLink = "application/vnd.syncnarr+json";
-                                        moLink.Duration = dtBookLink.Duration;
-                                        dtBookLink.Alternate.push(moLink);
-                                        var jsonObjMO = serializable_1.TaJsonSerialize(mediaOverlay.mo);
-                                        var jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
-                                        zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
-                                        debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
                                         publication.Spine.push(dtBookLink);
                                     }
                                 };

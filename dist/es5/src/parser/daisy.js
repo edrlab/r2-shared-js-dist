@@ -167,12 +167,15 @@ function DaisyParsePromise(filePath) {
 }
 exports.DaisyParsePromise = DaisyParsePromise;
 var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    var isFullTextAudio, isTextOnly;
     var _a;
     return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                if (!(((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
-                    publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText")) return [3, 3];
+                if (!((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON)) return [3, 3];
+                isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
+                isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
+                if (!(isFullTextAudio || isTextOnly)) return [3, 3];
                 return [4, epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip)];
             case 1:
                 _b.sent();
@@ -180,7 +183,9 @@ var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { 
                 return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
             case 2:
                 _b.sent();
-                epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                if (isFullTextAudio) {
+                    epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                }
                 _b.label = 3;
             case 3: return [2];
         }

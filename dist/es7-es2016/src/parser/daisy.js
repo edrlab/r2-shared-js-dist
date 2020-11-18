@@ -123,12 +123,17 @@ function DaisyParsePromise(filePath) {
 exports.DaisyParsePromise = DaisyParsePromise;
 const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    if (((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
-        publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText") {
-        yield epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
-        if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
-            yield epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
-            epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+    if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
+        const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
+        const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
+        if (isFullTextAudio || isTextOnly) {
+            yield epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
+            if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
+                yield epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
+                if (isFullTextAudio) {
+                    epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                }
+            }
         }
     }
 });
