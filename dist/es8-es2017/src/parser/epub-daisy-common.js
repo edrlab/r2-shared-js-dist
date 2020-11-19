@@ -688,29 +688,29 @@ exports.getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
     return opf;
 };
 exports.addOtherMetadata = (publication, rootfile, opf) => {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7;
-    if (!((_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata)) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
+    if (!opf.Metadata) {
         return;
     }
-    const opfMetadataRights = ((_d = (_c = (_b = opf.Metadata) === null || _b === void 0 ? void 0 : _b.DCMetadata) === null || _c === void 0 ? void 0 : _c.Rights) === null || _d === void 0 ? void 0 : _d.length) ?
+    const opfMetadataRights = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Rights) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Rights :
-        (((_f = (_e = opf.Metadata) === null || _e === void 0 ? void 0 : _e.Rights) === null || _f === void 0 ? void 0 : _f.length) ?
+        (((_e = (_d = opf.Metadata) === null || _d === void 0 ? void 0 : _d.Rights) === null || _e === void 0 ? void 0 : _e.length) ?
             opf.Metadata.Rights :
             undefined);
     if (opfMetadataRights) {
         publication.Metadata.Rights = opfMetadataRights.join(" ");
     }
-    const opfMetadataDescription = ((_j = (_h = (_g = opf.Metadata) === null || _g === void 0 ? void 0 : _g.DCMetadata) === null || _h === void 0 ? void 0 : _h.Description) === null || _j === void 0 ? void 0 : _j.length) ?
+    const opfMetadataDescription = ((_h = (_g = (_f = opf.Metadata) === null || _f === void 0 ? void 0 : _f.DCMetadata) === null || _g === void 0 ? void 0 : _g.Description) === null || _h === void 0 ? void 0 : _h.length) ?
         opf.Metadata.DCMetadata.Description :
-        (((_l = (_k = opf.Metadata) === null || _k === void 0 ? void 0 : _k.Description) === null || _l === void 0 ? void 0 : _l.length) ?
+        (((_k = (_j = opf.Metadata) === null || _j === void 0 ? void 0 : _j.Description) === null || _k === void 0 ? void 0 : _k.length) ?
             opf.Metadata.Description :
             undefined);
     if (opfMetadataDescription) {
         publication.Metadata.Description = opfMetadataDescription[0];
     }
-    const opfMetadataPublisher = ((_p = (_o = (_m = opf.Metadata) === null || _m === void 0 ? void 0 : _m.DCMetadata) === null || _o === void 0 ? void 0 : _o.Publisher) === null || _p === void 0 ? void 0 : _p.length) ?
+    const opfMetadataPublisher = ((_o = (_m = (_l = opf.Metadata) === null || _l === void 0 ? void 0 : _l.DCMetadata) === null || _m === void 0 ? void 0 : _m.Publisher) === null || _o === void 0 ? void 0 : _o.length) ?
         opf.Metadata.DCMetadata.Publisher :
-        (((_r = (_q = opf.Metadata) === null || _q === void 0 ? void 0 : _q.Publisher) === null || _r === void 0 ? void 0 : _r.length) ?
+        (((_q = (_p = opf.Metadata) === null || _p === void 0 ? void 0 : _p.Publisher) === null || _q === void 0 ? void 0 : _q.length) ?
             opf.Metadata.Publisher :
             undefined);
     if (opfMetadataPublisher) {
@@ -721,17 +721,17 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
             publication.Metadata.Publisher.push(contrib);
         });
     }
-    const opfMetadataSource = ((_u = (_t = (_s = opf.Metadata) === null || _s === void 0 ? void 0 : _s.DCMetadata) === null || _t === void 0 ? void 0 : _t.Source) === null || _u === void 0 ? void 0 : _u.length) ?
+    const opfMetadataSource = ((_t = (_s = (_r = opf.Metadata) === null || _r === void 0 ? void 0 : _r.DCMetadata) === null || _s === void 0 ? void 0 : _s.Source) === null || _t === void 0 ? void 0 : _t.length) ?
         opf.Metadata.DCMetadata.Source :
-        (((_w = (_v = opf.Metadata) === null || _v === void 0 ? void 0 : _v.Source) === null || _w === void 0 ? void 0 : _w.length) ?
+        (((_v = (_u = opf.Metadata) === null || _u === void 0 ? void 0 : _u.Source) === null || _v === void 0 ? void 0 : _v.length) ?
             opf.Metadata.Source :
             undefined);
     if (opfMetadataSource) {
         publication.Metadata.Source = opfMetadataSource[0];
     }
-    const opfMetadataContributor = ((_z = (_y = (_x = opf.Metadata) === null || _x === void 0 ? void 0 : _x.DCMetadata) === null || _y === void 0 ? void 0 : _y.Contributor) === null || _z === void 0 ? void 0 : _z.length) ?
+    const opfMetadataContributor = ((_y = (_x = (_w = opf.Metadata) === null || _w === void 0 ? void 0 : _w.DCMetadata) === null || _x === void 0 ? void 0 : _x.Contributor) === null || _y === void 0 ? void 0 : _y.length) ?
         opf.Metadata.DCMetadata.Contributor :
-        (((_1 = (_0 = opf.Metadata) === null || _0 === void 0 ? void 0 : _0.Contributor) === null || _1 === void 0 ? void 0 : _1.length) ?
+        (((_0 = (_z = opf.Metadata) === null || _z === void 0 ? void 0 : _z.Contributor) === null || _0 === void 0 ? void 0 : _0.length) ?
             opf.Metadata.Contributor :
             undefined);
     if (opfMetadataContributor) {
@@ -739,9 +739,9 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
             exports.addContributor(publication, rootfile, opf, cont, undefined);
         });
     }
-    const opfMetadataCreator = ((_4 = (_3 = (_2 = opf.Metadata) === null || _2 === void 0 ? void 0 : _2.DCMetadata) === null || _3 === void 0 ? void 0 : _3.Creator) === null || _4 === void 0 ? void 0 : _4.length) ?
+    const opfMetadataCreator = ((_3 = (_2 = (_1 = opf.Metadata) === null || _1 === void 0 ? void 0 : _1.DCMetadata) === null || _2 === void 0 ? void 0 : _2.Creator) === null || _3 === void 0 ? void 0 : _3.length) ?
         opf.Metadata.DCMetadata.Creator :
-        (((_6 = (_5 = opf.Metadata) === null || _5 === void 0 ? void 0 : _5.Creator) === null || _6 === void 0 ? void 0 : _6.length) ?
+        (((_5 = (_4 = opf.Metadata) === null || _4 === void 0 ? void 0 : _4.Creator) === null || _5 === void 0 ? void 0 : _5.length) ?
             opf.Metadata.Creator :
             undefined);
     if (opfMetadataCreator) {
@@ -749,7 +749,7 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
             exports.addContributor(publication, rootfile, opf, cont, "aut");
         });
     }
-    if ((_7 = opf.Metadata) === null || _7 === void 0 ? void 0 : _7.Link) {
+    if ((_6 = opf.Metadata) === null || _6 === void 0 ? void 0 : _6.Link) {
         opf.Metadata.Link.forEach((metaLink) => {
             if (metaLink.Property === "a11y:certifierCredential") {
                 let val = metaLink.Href;
@@ -795,7 +795,7 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
             }
         });
     }
-    if (opf.Metadata.Meta || opf.Metadata.XMetadata.Meta) {
+    if (opf.Metadata.Meta || ((_7 = opf.Metadata.XMetadata) === null || _7 === void 0 ? void 0 : _7.Meta)) {
         const AccessibilitySummarys = [];
         const metaFunc = (metaTag) => {
             if (metaTag.Name === "schema:accessMode" ||
@@ -937,7 +937,7 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
         if (opf.Metadata.Meta) {
             opf.Metadata.Meta.forEach(metaFunc);
         }
-        if (opf.Metadata.XMetadata.Meta) {
+        if ((_8 = opf.Metadata.XMetadata) === null || _8 === void 0 ? void 0 : _8.Meta) {
             opf.Metadata.XMetadata.Meta.forEach(metaFunc);
         }
         if (AccessibilitySummarys.length === 1) {
@@ -1005,7 +1005,7 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
         if (opf.Metadata.Meta) {
             opf.Metadata.Meta.forEach(mFunc);
         }
-        if (opf.Metadata.XMetadata.Meta) {
+        if ((_9 = opf.Metadata.XMetadata) === null || _9 === void 0 ? void 0 : _9.Meta) {
             opf.Metadata.XMetadata.Meta.forEach(mFunc);
         }
         if (metasDuration.length) {
