@@ -22,7 +22,7 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     return tslib_1.__generator(this, function (_a) {
         return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                 var zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, isFullTextAudio, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantText_1, smilDocs_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, erreur_1;
@@ -656,4 +656,5 @@ exports.convertDaisyToReadiumWebPub = function (outputDirPath, publication) { re
             }); })];
     });
 }); };
+exports.convertDaisyToReadiumWebPub = convertDaisyToReadiumWebPub;
 //# sourceMappingURL=daisy-convert-to-epub.js.map

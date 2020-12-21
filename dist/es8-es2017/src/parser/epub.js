@@ -33,7 +33,7 @@ const debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
 exports.mediaOverlayURLParam = epub_daisy_common_1.mediaOverlayURLParam;
-exports.addCoverDimensions = async (publication, coverLink) => {
+const addCoverDimensions = async (publication, coverLink) => {
     const zipInternal = publication.findFromInternal("zip");
     if (zipInternal) {
         const zip = zipInternal.Value;
@@ -81,6 +81,7 @@ exports.addCoverDimensions = async (publication, coverLink) => {
         }
     }
 };
+exports.addCoverDimensions = addCoverDimensions;
 var EPUBis;
 (function (EPUBis) {
     EPUBis["LocalExploded"] = "LocalExploded";

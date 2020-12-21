@@ -30,13 +30,14 @@ const epub31 = "3.1";
 exports.mediaOverlayURLPath = "media-overlay.json";
 exports.mediaOverlayURLParam = "resource";
 exports.BCP47_UNKNOWN_LANG = "und";
-exports.parseSpaceSeparatedString = (str) => {
+const parseSpaceSeparatedString = (str) => {
     return str ? str.trim().split(" ").map((role) => {
         return role.trim();
     }).filter((role) => {
         return role.length > 0;
     }) : [];
 };
+exports.parseSpaceSeparatedString = parseSpaceSeparatedString;
 const getEpubVersion = (rootfile, opf) => {
     if (rootfile.Version) {
         return rootfile.Version;
@@ -46,11 +47,12 @@ const getEpubVersion = (rootfile, opf) => {
     }
     return undefined;
 };
-exports.isEpub3OrMore = (rootfile, opf) => {
+const isEpub3OrMore = (rootfile, opf) => {
     const version = getEpubVersion(rootfile, opf);
     return (version === epub3 || version === epub301 || version === epub31);
 };
-exports.fillPublicationDate = (publication, rootfile, opf) => {
+exports.isEpub3OrMore = isEpub3OrMore;
+const fillPublicationDate = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e;
     const opfMetadataDate = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Date) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Date :
@@ -88,7 +90,8 @@ exports.fillPublicationDate = (publication, rootfile, opf) => {
         });
     }
 };
-exports.fillSubject = (publication, opf) => {
+exports.fillPublicationDate = fillPublicationDate;
+const fillSubject = (publication, opf) => {
     var _a, _b, _c, _d, _e;
     const opfMetadataSubject = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Subject) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Subject :
@@ -114,7 +117,8 @@ exports.fillSubject = (publication, opf) => {
         });
     }
 };
-exports.findContributorInMeta = (publication, rootfile, opf) => {
+exports.fillSubject = fillSubject;
+const findContributorInMeta = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e;
     if (!rootfile || exports.isEpub3OrMore(rootfile, opf)) {
         const func = (meta) => {
@@ -133,7 +137,8 @@ exports.findContributorInMeta = (publication, rootfile, opf) => {
         }
     }
 };
-exports.addContributor = (publication, rootfile, opf, cont, forcedRole) => {
+exports.findContributorInMeta = findContributorInMeta;
+const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
     const contributor = new metadata_contributor_1.Contributor();
     let role;
     if (rootfile && exports.isEpub3OrMore(rootfile, opf)) {
@@ -275,14 +280,16 @@ exports.addContributor = (publication, rootfile, opf, cont, forcedRole) => {
         }
     }
 };
-exports.findMetaByRefineAndProperty = (opf, ID, property) => {
+exports.addContributor = addContributor;
+const findMetaByRefineAndProperty = (opf, ID, property) => {
     const ret = exports.findAllMetaByRefineAndProperty(opf, ID, property);
     if (ret.length) {
         return ret[0];
     }
     return undefined;
 };
-exports.findAllMetaByRefineAndProperty = (opf, ID, property) => {
+exports.findMetaByRefineAndProperty = findMetaByRefineAndProperty;
+const findAllMetaByRefineAndProperty = (opf, ID, property) => {
     var _a, _b, _c, _d, _e;
     const metas = [];
     const refineID = "#" + ID;
@@ -299,7 +306,8 @@ exports.findAllMetaByRefineAndProperty = (opf, ID, property) => {
     }
     return metas;
 };
-exports.findInSpineByHref = (publication, href) => {
+exports.findAllMetaByRefineAndProperty = findAllMetaByRefineAndProperty;
+const findInSpineByHref = (publication, href) => {
     if (publication.Spine && publication.Spine.length) {
         const ll = publication.Spine.find((l) => {
             if (l.HrefDecoded === href) {
@@ -313,7 +321,8 @@ exports.findInSpineByHref = (publication, href) => {
     }
     return undefined;
 };
-exports.findInManifestByID = async (publication, rootfile, opf, ID, zip, addLinkData) => {
+exports.findInSpineByHref = findInSpineByHref;
+const findInManifestByID = async (publication, rootfile, opf, ID, zip, addLinkData) => {
     if (opf.Manifest && opf.Manifest.length) {
         const item = opf.Manifest.find((manItem) => {
             if (manItem.ID === ID) {
@@ -336,7 +345,8 @@ exports.findInManifestByID = async (publication, rootfile, opf, ID, zip, addLink
     }
     return Promise.reject(`ID ${ID} not found`);
 };
-exports.fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkData) => {
+exports.findInManifestByID = findInManifestByID;
+const fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkData) => {
     if (!opf.ZipPath) {
         return;
     }
@@ -383,7 +393,8 @@ exports.fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkDa
         }
     }
 };
-exports.addLanguage = (publication, opf) => {
+exports.fillSpineAndResource = fillSpineAndResource;
+const addLanguage = (publication, opf) => {
     var _a, _b, _c, _d, _e;
     const opfMetadataLanguage = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Language) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Language :
@@ -394,7 +405,8 @@ exports.addLanguage = (publication, opf) => {
         publication.Metadata.Language = opfMetadataLanguage;
     }
 };
-exports.addIdentifier = (publication, opf) => {
+exports.addLanguage = addLanguage;
+const addIdentifier = (publication, opf) => {
     var _a, _b, _c, _d, _e;
     const opfMetadataIdentifier = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Identifier) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Identifier :
@@ -414,7 +426,8 @@ exports.addIdentifier = (publication, opf) => {
         }
     }
 };
-exports.addTitle = (publication, rootfile, opf) => {
+exports.addIdentifier = addIdentifier;
+const addTitle = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     const opfMetadataTitle = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Title) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Title :
@@ -561,7 +574,8 @@ exports.addTitle = (publication, rootfile, opf) => {
         }
     }
 };
-exports.setPublicationDirection = (publication, opf) => {
+exports.addTitle = addTitle;
+const setPublicationDirection = (publication, opf) => {
     if (opf.Spine && opf.Spine.PageProgression) {
         switch (opf.Spine.PageProgression) {
             case "auto": {
@@ -590,7 +604,8 @@ exports.setPublicationDirection = (publication, opf) => {
         }
     }
 };
-exports.getNcx = async (ncxManItem, opf, zip) => {
+exports.setPublicationDirection = setPublicationDirection;
+const getNcx = async (ncxManItem, opf, zip) => {
     if (!opf.ZipPath) {
         return Promise.reject("?!!opf.ZipPath");
     }
@@ -643,7 +658,8 @@ exports.getNcx = async (ncxManItem, opf, zip) => {
     ncx.ZipPath = ncxFilePath;
     return ncx;
 };
-exports.getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
+exports.getNcx = getNcx;
+const getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
     const has = await zipHasEntry_1.zipHasEntry(zip, rootfilePathDecoded, rootfilePath);
     if (!has) {
         const err = `NOT IN ZIP (container OPF rootfile): ${rootfilePath} --- ${rootfilePathDecoded}`;
@@ -687,7 +703,8 @@ exports.getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
     opf.ZipPath = rootfilePathDecoded;
     return opf;
 };
-exports.addOtherMetadata = (publication, rootfile, opf) => {
+exports.getOpf = getOpf;
+const addOtherMetadata = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
     if (!opf.Metadata) {
         return;
@@ -1035,7 +1052,8 @@ exports.addOtherMetadata = (publication, rootfile, opf) => {
         }
     }
 };
-exports.loadFileStrFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
+exports.addOtherMetadata = addOtherMetadata;
+const loadFileStrFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     let zipData;
     try {
         zipData = await exports.loadFileBufferFromZipPath(linkHref, linkHrefDecoded, zip);
@@ -1049,7 +1067,8 @@ exports.loadFileStrFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     }
     return Promise.reject("?!zipData loadFileStrFromZipPath()");
 };
-exports.loadFileBufferFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
+exports.loadFileStrFromZipPath = loadFileStrFromZipPath;
+const loadFileBufferFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     if (!linkHrefDecoded) {
         debug("!?link.HrefDecoded");
         return undefined;
@@ -1082,6 +1101,7 @@ exports.loadFileBufferFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     }
     return zipData;
 };
+exports.loadFileBufferFromZipPath = loadFileBufferFromZipPath;
 const fillLandmarksFromGuide = (publication, opf) => {
     if (opf.Guide && opf.Guide.length) {
         opf.Guide.forEach((ref) => {
@@ -1155,7 +1175,7 @@ const fillPageListFromNCX = (publication, ncx) => {
         });
     }
 };
-exports.fillTOC = (publication, opf, ncx) => {
+const fillTOC = (publication, opf, ncx) => {
     if (ncx) {
         fillTOCFromNCX(publication, ncx);
         if (!publication.PageList) {
@@ -1164,7 +1184,8 @@ exports.fillTOC = (publication, opf, ncx) => {
     }
     fillLandmarksFromGuide(publication, opf);
 };
-exports.addMediaOverlaySMIL = async (link, manItemSmil, opf, zip) => {
+exports.fillTOC = fillTOC;
+const addMediaOverlaySMIL = async (link, manItemSmil, opf, zip) => {
     if (manItemSmil && manItemSmil.MediaType && manItemSmil.MediaType.startsWith("application/smil")) {
         if (opf.ZipPath) {
             const manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
@@ -1208,7 +1229,8 @@ exports.addMediaOverlaySMIL = async (link, manItemSmil, opf, zip) => {
         }
     }
 };
-exports.lazyLoadMediaOverlays = async (publication, mo) => {
+exports.addMediaOverlaySMIL = addMediaOverlaySMIL;
+const lazyLoadMediaOverlays = async (publication, mo) => {
     var _a;
     if (mo.initialized || !mo.SmilPathInZip) {
         return;
@@ -1385,6 +1407,7 @@ exports.lazyLoadMediaOverlays = async (publication, mo) => {
     }
     return;
 };
+exports.lazyLoadMediaOverlays = lazyLoadMediaOverlays;
 const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
     if (!smil.ZipPath) {
         return;
@@ -1605,7 +1628,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
         debug("SMIL MO skip: ", moc, seqChild);
     }
 };
-exports.updateDurations = (dur, link) => {
+const updateDurations = (dur, link) => {
     if (!dur || !link.MediaOverlays) {
         return;
     }
@@ -1622,4 +1645,5 @@ exports.updateDurations = (dur, link) => {
         }
     }
 };
+exports.updateDurations = updateDurations;
 //# sourceMappingURL=epub-daisy-common.js.map

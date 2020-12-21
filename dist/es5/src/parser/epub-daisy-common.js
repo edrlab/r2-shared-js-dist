@@ -31,13 +31,14 @@ var epub31 = "3.1";
 exports.mediaOverlayURLPath = "media-overlay.json";
 exports.mediaOverlayURLParam = "resource";
 exports.BCP47_UNKNOWN_LANG = "und";
-exports.parseSpaceSeparatedString = function (str) {
+var parseSpaceSeparatedString = function (str) {
     return str ? str.trim().split(" ").map(function (role) {
         return role.trim();
     }).filter(function (role) {
         return role.length > 0;
     }) : [];
 };
+exports.parseSpaceSeparatedString = parseSpaceSeparatedString;
 var getEpubVersion = function (rootfile, opf) {
     if (rootfile.Version) {
         return rootfile.Version;
@@ -47,11 +48,12 @@ var getEpubVersion = function (rootfile, opf) {
     }
     return undefined;
 };
-exports.isEpub3OrMore = function (rootfile, opf) {
+var isEpub3OrMore = function (rootfile, opf) {
     var version = getEpubVersion(rootfile, opf);
     return (version === epub3 || version === epub301 || version === epub31);
 };
-exports.fillPublicationDate = function (publication, rootfile, opf) {
+exports.isEpub3OrMore = isEpub3OrMore;
+var fillPublicationDate = function (publication, rootfile, opf) {
     var _a, _b, _c, _d, _e;
     var opfMetadataDate = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Date) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Date :
@@ -89,7 +91,8 @@ exports.fillPublicationDate = function (publication, rootfile, opf) {
         });
     }
 };
-exports.fillSubject = function (publication, opf) {
+exports.fillPublicationDate = fillPublicationDate;
+var fillSubject = function (publication, opf) {
     var _a, _b, _c, _d, _e;
     var opfMetadataSubject = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Subject) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Subject :
@@ -115,7 +118,8 @@ exports.fillSubject = function (publication, opf) {
         });
     }
 };
-exports.findContributorInMeta = function (publication, rootfile, opf) {
+exports.fillSubject = fillSubject;
+var findContributorInMeta = function (publication, rootfile, opf) {
     var _a, _b, _c, _d, _e;
     if (!rootfile || exports.isEpub3OrMore(rootfile, opf)) {
         var func = function (meta) {
@@ -134,7 +138,8 @@ exports.findContributorInMeta = function (publication, rootfile, opf) {
         }
     }
 };
-exports.addContributor = function (publication, rootfile, opf, cont, forcedRole) {
+exports.findContributorInMeta = findContributorInMeta;
+var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
     var contributor = new metadata_contributor_1.Contributor();
     var role;
     if (rootfile && exports.isEpub3OrMore(rootfile, opf)) {
@@ -276,14 +281,16 @@ exports.addContributor = function (publication, rootfile, opf, cont, forcedRole)
         }
     }
 };
-exports.findMetaByRefineAndProperty = function (opf, ID, property) {
+exports.addContributor = addContributor;
+var findMetaByRefineAndProperty = function (opf, ID, property) {
     var ret = exports.findAllMetaByRefineAndProperty(opf, ID, property);
     if (ret.length) {
         return ret[0];
     }
     return undefined;
 };
-exports.findAllMetaByRefineAndProperty = function (opf, ID, property) {
+exports.findMetaByRefineAndProperty = findMetaByRefineAndProperty;
+var findAllMetaByRefineAndProperty = function (opf, ID, property) {
     var _a, _b, _c, _d, _e;
     var metas = [];
     var refineID = "#" + ID;
@@ -300,7 +307,8 @@ exports.findAllMetaByRefineAndProperty = function (opf, ID, property) {
     }
     return metas;
 };
-exports.findInSpineByHref = function (publication, href) {
+exports.findAllMetaByRefineAndProperty = findAllMetaByRefineAndProperty;
+var findInSpineByHref = function (publication, href) {
     if (publication.Spine && publication.Spine.length) {
         var ll = publication.Spine.find(function (l) {
             if (l.HrefDecoded === href) {
@@ -314,7 +322,8 @@ exports.findInSpineByHref = function (publication, href) {
     }
     return undefined;
 };
-exports.findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.findInSpineByHref = findInSpineByHref;
+var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var item, linkItem, itemHrefDecoded;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -343,7 +352,8 @@ exports.findInManifestByID = function (publication, rootfile, opf, ID, zip, addL
         }
     });
 }); };
-exports.fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.findInManifestByID = findInManifestByID;
+var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _i, _a, item, linkItem, err_1, _b, _c, item, itemHrefDecoded, zipPath, linkSpine, linkItem;
     return tslib_1.__generator(this, function (_d) {
         switch (_d.label) {
@@ -415,7 +425,8 @@ exports.fillSpineAndResource = function (publication, rootfile, opf, zip, addLin
         }
     });
 }); };
-exports.addLanguage = function (publication, opf) {
+exports.fillSpineAndResource = fillSpineAndResource;
+var addLanguage = function (publication, opf) {
     var _a, _b, _c, _d, _e;
     var opfMetadataLanguage = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Language) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Language :
@@ -426,7 +437,8 @@ exports.addLanguage = function (publication, opf) {
         publication.Metadata.Language = opfMetadataLanguage;
     }
 };
-exports.addIdentifier = function (publication, opf) {
+exports.addLanguage = addLanguage;
+var addIdentifier = function (publication, opf) {
     var _a, _b, _c, _d, _e;
     var opfMetadataIdentifier = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Identifier) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Identifier :
@@ -446,7 +458,8 @@ exports.addIdentifier = function (publication, opf) {
         }
     }
 };
-exports.addTitle = function (publication, rootfile, opf) {
+exports.addIdentifier = addIdentifier;
+var addTitle = function (publication, rootfile, opf) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
     var opfMetadataTitle = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Title) === null || _c === void 0 ? void 0 : _c.length) ?
         opf.Metadata.DCMetadata.Title :
@@ -593,7 +606,8 @@ exports.addTitle = function (publication, rootfile, opf) {
         }
     }
 };
-exports.setPublicationDirection = function (publication, opf) {
+exports.addTitle = addTitle;
+var setPublicationDirection = function (publication, opf) {
     if (opf.Spine && opf.Spine.PageProgression) {
         switch (opf.Spine.PageProgression) {
             case "auto": {
@@ -622,7 +636,8 @@ exports.setPublicationDirection = function (publication, opf) {
         }
     }
 };
-exports.getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.setPublicationDirection = setPublicationDirection;
+var getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr, iStart, iEnd, clip, ncxDoc, ncx;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -692,7 +707,8 @@ exports.getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void
         }
     });
 }); };
-exports.getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.getNcx = getNcx;
+var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr, iStart, iEnd, clip, opfDoc, opf;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -752,7 +768,8 @@ exports.getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tsli
         }
     });
 }); };
-exports.addOtherMetadata = function (publication, rootfile, opf) {
+exports.getOpf = getOpf;
+var addOtherMetadata = function (publication, rootfile, opf) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
     if (!opf.Metadata) {
         return;
@@ -1100,7 +1117,8 @@ exports.addOtherMetadata = function (publication, rootfile, opf) {
         }
     }
 };
-exports.loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.addOtherMetadata = addOtherMetadata;
+var loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var zipData, err_6;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -1122,7 +1140,8 @@ exports.loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { ret
         }
     });
 }); };
-exports.loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.loadFileStrFromZipPath = loadFileStrFromZipPath;
+var loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var has, zipEntries, _i, zipEntries_3, zipEntry, zipStream_, err_7, zipStream, zipData, err_8;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -1171,6 +1190,7 @@ exports.loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { 
         }
     });
 }); };
+exports.loadFileBufferFromZipPath = loadFileBufferFromZipPath;
 var fillLandmarksFromGuide = function (publication, opf) {
     if (opf.Guide && opf.Guide.length) {
         opf.Guide.forEach(function (ref) {
@@ -1244,7 +1264,7 @@ var fillPageListFromNCX = function (publication, ncx) {
         });
     }
 };
-exports.fillTOC = function (publication, opf, ncx) {
+var fillTOC = function (publication, opf, ncx) {
     if (ncx) {
         fillTOCFromNCX(publication, ncx);
         if (!publication.PageList) {
@@ -1253,7 +1273,8 @@ exports.fillTOC = function (publication, opf, ncx) {
     }
     fillLandmarksFromGuide(publication, opf);
 };
-exports.addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.fillTOC = fillTOC;
+var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var manItemSmilHrefDecoded, smilFilePath, has, zipEntries, _i, zipEntries_4, zipEntry, mo, moURL, moLink;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
@@ -1308,7 +1329,8 @@ exports.addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return ts
         }
     });
 }); };
-exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+exports.addMediaOverlaySMIL = addMediaOverlaySMIL;
+var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
     var _d;
     return tslib_1.__generator(this, function (_e) {
@@ -1509,6 +1531,7 @@ exports.lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__aw
         }
     });
 }); };
+exports.lazyLoadMediaOverlays = lazyLoadMediaOverlays;
 var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     if (!smil.ZipPath) {
         return;
@@ -1731,7 +1754,7 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         debug("SMIL MO skip: ", moc, seqChild);
     }
 };
-exports.updateDurations = function (dur, link) {
+var updateDurations = function (dur, link) {
     if (!dur || !link.MediaOverlays) {
         return;
     }
@@ -1749,4 +1772,5 @@ exports.updateDurations = function (dur, link) {
         }
     }
 };
+exports.updateDurations = updateDurations;
 //# sourceMappingURL=epub-daisy-common.js.map

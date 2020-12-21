@@ -21,7 +21,7 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-exports.convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
+const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
     return new Promise(async (resolve, reject) => {
         var _a, _b;
         const zipInternal = publication.findFromInternal("zip");
@@ -570,4 +570,5 @@ ${cssHrefs.reduce((pv, cv) => {
         }
     });
 };
+exports.convertDaisyToReadiumWebPub = convertDaisyToReadiumWebPub;
 //# sourceMappingURL=daisy-convert-to-epub.js.map

@@ -22,7 +22,7 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-exports.convertDaisyToReadiumWebPub = (outputDirPath, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const convertDaisyToReadiumWebPub = (outputDirPath, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a, _b;
         const zipInternal = publication.findFromInternal("zip");
@@ -571,4 +571,5 @@ ${cssHrefs.reduce((pv, cv) => {
         }
     }));
 });
+exports.convertDaisyToReadiumWebPub = convertDaisyToReadiumWebPub;
 //# sourceMappingURL=daisy-convert-to-epub.js.map
