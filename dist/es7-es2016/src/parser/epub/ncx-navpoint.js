@@ -5,6 +5,7 @@ exports.NavPoint = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const ncx_content_1 = require("./ncx-content");
+const ncx_navlabel_1 = require("./ncx-navlabel");
 let NavPoint = NavPoint_1 = class NavPoint {
 };
 tslib_1.__decorate([
@@ -13,9 +14,9 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", Array)
 ], NavPoint.prototype, "Points", void 0);
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("ncx:navLabel/ncx:text/text()"),
-    tslib_1.__metadata("design:type", String)
-], NavPoint.prototype, "Text", void 0);
+    xml_js_mapper_1.XmlXPathSelector("ncx:navLabel"),
+    tslib_1.__metadata("design:type", ncx_navlabel_1.NavLabel)
+], NavPoint.prototype, "NavLabel", void 0);
 tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("ncx:content"),
     tslib_1.__metadata("design:type", ncx_content_1.Content)

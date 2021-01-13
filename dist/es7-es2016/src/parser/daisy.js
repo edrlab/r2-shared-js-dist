@@ -126,11 +126,12 @@ const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => tslib_
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
         const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
         const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
-        if (isFullTextAudio || isTextOnly) {
+        const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
+        if (isFullTextAudio || isTextOnly || isAudioOnly) {
             yield epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
             if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
                 yield epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
-                if (isFullTextAudio) {
+                if (isFullTextAudio || isAudioOnly) {
                     epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
                 }
             }

@@ -1,7 +1,8 @@
 import { Content } from "./ncx-content";
+import { NavLabel } from "./ncx-navlabel";
 export declare class NavPoint {
     Points: NavPoint[];
-    Text: string;
+    NavLabel: NavLabel;
     Content: Content;
     PlayerOrder: number;
     ID: string;

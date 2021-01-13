@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateDurations = exports.lazyLoadMediaOverlays = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
+var mime = require("mime-types");
 var moment = require("moment");
 var path = require("path");
 var xmldom = require("xmldom");
@@ -1223,7 +1224,39 @@ var fillTOCFromNCX = function (publication, ncx) {
         });
     }
 };
+var addAlternateAudioLinkFromNCX = function (ncx, link, navLabel) {
+    if ((navLabel === null || navLabel === void 0 ? void 0 : navLabel.Audio) && navLabel.Audio.Src) {
+        var audioSrcDcoded = navLabel.Audio.SrcDecoded;
+        if (!audioSrcDcoded) {
+            debug("?!audioSrcDcoded");
+        }
+        else {
+            var zipPath = path.join(path.dirname(ncx.ZipPath), audioSrcDcoded)
+                .replace(/\\/g, "/");
+            var timeHref = zipPath;
+            timeHref += "#t=";
+            var begin = navLabel.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(navLabel.Audio.ClipBegin) : 0;
+            var end = navLabel.Audio.ClipEnd ? media_overlay_1.timeStrToSeconds(navLabel.Audio.ClipEnd) : 0;
+            timeHref += begin.toString();
+            if (navLabel.Audio.ClipEnd) {
+                timeHref += ",";
+                timeHref += end.toString();
+            }
+            if (!link.Alternate) {
+                link.Alternate = [];
+            }
+            var altLink = new publication_link_1.Link();
+            altLink.setHrefDecoded(timeHref);
+            var mediaType = mime.lookup(audioSrcDcoded);
+            if (mediaType) {
+                altLink.TypeLink = mediaType;
+            }
+            link.Alternate.push(altLink);
+        }
+    }
+};
 var fillTOCFromNavPoint = function (publication, ncx, point, node) {
+    var _a;
     var srcDecoded = point.Content.SrcDecoded;
     if (!srcDecoded) {
         debug("?!point.Content.Src");
@@ -1233,7 +1266,8 @@ var fillTOCFromNavPoint = function (publication, ncx, point, node) {
     var zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
         .replace(/\\/g, "/");
     link.setHrefDecoded(zipPath);
-    link.Title = point.Text;
+    link.Title = (_a = point.NavLabel) === null || _a === void 0 ? void 0 : _a.Text;
+    addAlternateAudioLinkFromNCX(ncx, link, point.NavLabel);
     if (point.Points && point.Points.length) {
         point.Points.forEach(function (p) {
             if (!link.Children) {
@@ -1247,6 +1281,7 @@ var fillTOCFromNavPoint = function (publication, ncx, point, node) {
 var fillPageListFromNCX = function (publication, ncx) {
     if (ncx.PageList && ncx.PageList.PageTarget && ncx.PageList.PageTarget.length) {
         ncx.PageList.PageTarget.forEach(function (pageTarget) {
+            var _a;
             var link = new publication_link_1.Link();
             var srcDecoded = pageTarget.Content.SrcDecoded;
             if (!srcDecoded) {
@@ -1256,7 +1291,8 @@ var fillPageListFromNCX = function (publication, ncx) {
             var zipPath = path.join(path.dirname(ncx.ZipPath), srcDecoded)
                 .replace(/\\/g, "/");
             link.setHrefDecoded(zipPath);
-            link.Title = pageTarget.Text;
+            link.Title = (_a = pageTarget.NavLabel) === null || _a === void 0 ? void 0 : _a.Text;
+            addAlternateAudioLinkFromNCX(ncx, link, pageTarget.NavLabel);
             if (!publication.PageList) {
                 publication.PageList = [];
             }
@@ -1546,6 +1582,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
         moc.Role = [];
         moc.Role.push("section");
         var seq = seqChild;
+        if (seq.ID) {
+            moc.SeqID = seq.ID;
+        }
         if (seq.EpubType) {
             var roles = exports.parseSpaceSeparatedString(seq.EpubType);
             for (var _i = 0, roles_2 = roles; _i < roles_2.length; _i++) {
@@ -1632,6 +1671,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     }
     else {
         var par = seqChild;
+        if (par.ID) {
+            moc.ParID = par.ID;
+        }
         if (par.EpubType) {
             var roles = exports.parseSpaceSeparatedString(par.EpubType);
             for (var _a = 0, roles_3 = roles; _a < roles_3.length; _a++) {

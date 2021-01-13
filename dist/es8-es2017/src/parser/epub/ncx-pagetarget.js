@@ -4,12 +4,13 @@ exports.PageTarget = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const ncx_content_1 = require("./ncx-content");
+const ncx_navlabel_1 = require("./ncx-navlabel");
 let PageTarget = class PageTarget {
 };
 tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("ncx:navLabel/ncx:text/text()"),
-    tslib_1.__metadata("design:type", String)
-], PageTarget.prototype, "Text", void 0);
+    xml_js_mapper_1.XmlXPathSelector("ncx:navLabel"),
+    tslib_1.__metadata("design:type", ncx_navlabel_1.NavLabel)
+], PageTarget.prototype, "NavLabel", void 0);
 tslib_1.__decorate([
     xml_js_mapper_1.XmlXPathSelector("@value"),
     tslib_1.__metadata("design:type", String)
