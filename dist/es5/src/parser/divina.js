@@ -24,9 +24,9 @@ function absolutizeURLs(rootUrl, jsonObj) {
         }
     });
 }
-function DivinaParsePromise(filePath, isDivina) {
+function DivinaParsePromise(filePath, isDivina, pubtype) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnDivina, _a, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication, lcpEntryName, checkLCP, hasLCP, has, lcpZipStream_, err_4, lcpZipStream, lcpZipData, err_5, lcpJsonStr, lcpJson, lcpl;
+        var isAnDivina, _a, publicationType, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication, lcpEntryName, checkLCP, hasLCP, has, lcpZipStream_, err_4, lcpZipStream, lcpZipData, err_5, lcpJsonStr, lcpJson, lcpl;
         return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -38,6 +38,7 @@ function DivinaParsePromise(filePath, isDivina) {
                     _b.label = 2;
                 case 2:
                     isAnDivina = _a;
+                    publicationType = pubtype || (isAnDivina ? "divina" : "generic");
                     entryName = "manifest.json";
                     filePathToLoad = filePath;
                     if (isAnDivina === Divinais.LocalExploded) {
@@ -109,7 +110,7 @@ function DivinaParsePromise(filePath, isDivina) {
                         absolutizeURLs(url.toString(), manifestJson);
                     }
                     publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
-                    publication.AddToInternal("type", "divina");
+                    publication.AddToInternal("type", publicationType);
                     publication.AddToInternal("zip", zip);
                     lcpEntryName = "license.lcpl";
                     checkLCP = true;
@@ -182,6 +183,7 @@ var Divinais;
     Divinais["LocalExploded"] = "LocalExploded";
     Divinais["LocalPacked"] = "LocalPacked";
     Divinais["RemoteExploded"] = "RemoteExploded";
+    Divinais["RemotePacked"] = "RemotePacked";
 })(Divinais = exports.Divinais || (exports.Divinais = {}));
 function doRequest(u) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {

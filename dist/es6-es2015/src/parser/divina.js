@@ -24,9 +24,10 @@ function absolutizeURLs(rootUrl, jsonObj) {
         }
     });
 }
-function DivinaParsePromise(filePath, isDivina) {
+function DivinaParsePromise(filePath, isDivina, pubtype) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const isAnDivina = isDivina || (yield isDivinaPublication(filePath));
+        const publicationType = pubtype || (isAnDivina ? "divina" : "generic");
         let entryName = "manifest.json";
         let filePathToLoad = filePath;
         if (isAnDivina === Divinais.LocalExploded) {
@@ -84,7 +85,7 @@ function DivinaParsePromise(filePath, isDivina) {
             absolutizeURLs(url.toString(), manifestJson);
         }
         const publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
-        publication.AddToInternal("type", "divina");
+        publication.AddToInternal("type", publicationType);
         publication.AddToInternal("zip", zip);
         const lcpEntryName = "license.lcpl";
         let checkLCP = true;
@@ -142,6 +143,7 @@ var Divinais;
     Divinais["LocalExploded"] = "LocalExploded";
     Divinais["LocalPacked"] = "LocalPacked";
     Divinais["RemoteExploded"] = "RemoteExploded";
+    Divinais["RemotePacked"] = "RemotePacked";
 })(Divinais = exports.Divinais || (exports.Divinais = {}));
 function doRequest(u) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
