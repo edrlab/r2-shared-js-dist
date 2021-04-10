@@ -329,7 +329,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                         case 8:
                             publication.Spine = [];
                             resourcesToKeep = [];
-                            dtBooks = tslib_1.__spreadArrays(audioOnlySmilHtmls);
+                            dtBooks = tslib_1.__spreadArray([], audioOnlySmilHtmls);
                             _b = 0, _c = publication.Resources;
                             _u.label = 9;
                         case 9:

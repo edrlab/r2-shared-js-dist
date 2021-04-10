@@ -48,10 +48,14 @@ function isDaisyPublication(urlOrPath) {
                 debug(err);
                 return Promise.reject(err);
             }
-            if (!(yield zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined)) &&
-                ((yield zipHasEntry_1.zipHasEntry(zip, "package.opf", undefined)) ||
-                    (yield zipHasEntry_1.zipHasEntry(zip, "Book.opf", undefined)) ||
-                    (yield zipHasEntry_1.zipHasEntry(zip, "speechgen.opf", undefined)))) {
+            if (!(yield zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined))) {
+                const entries = yield zip.getEntries();
+                const opfZipEntryPath = entries.find((entry) => {
+                    return entry.endsWith(".opf");
+                });
+                if (!opfZipEntryPath) {
+                    return undefined;
+                }
                 return DaisyBookis.LocalPacked;
             }
         }
@@ -82,10 +86,10 @@ function DaisyParsePromise(filePath) {
         publication.AddToInternal("zip", zip);
         const entries = yield zip.getEntries();
         const opfZipEntryPath = entries.find((entry) => {
-            return entry.endsWith(".opf") && entry.indexOf("/") < 0 && entry.indexOf("\\") < 0;
+            return entry.endsWith(".opf");
         });
         if (!opfZipEntryPath) {
-            return Promise.reject("Opf File doesn't exists");
+            return Promise.reject("OPF package XML file cannot be found.");
         }
         const rootfilePathDecoded = opfZipEntryPath;
         if (!rootfilePathDecoded) {
