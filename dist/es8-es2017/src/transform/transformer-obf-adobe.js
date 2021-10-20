@@ -10,7 +10,7 @@ class TransformerObfAdobe {
     async transformStream(publication, link, _url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
         let data;
         try {
-            data = await BufferUtils_1.streamToBufferPromise(stream.stream);
+            data = await (0, BufferUtils_1.streamToBufferPromise)(stream.stream);
         }
         catch (err) {
             return Promise.reject(err);
@@ -27,7 +27,7 @@ class TransformerObfAdobe {
             reset: async () => {
                 return Promise.resolve(sal);
             },
-            stream: BufferUtils_1.bufferToStream(buff),
+            stream: (0, BufferUtils_1.bufferToStream)(buff),
         };
         return Promise.resolve(sal);
     }

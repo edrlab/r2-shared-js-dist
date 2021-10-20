@@ -10,7 +10,7 @@ var DelinearizeAccessModeSufficient = function (ams) {
 };
 exports.DelinearizeAccessModeSufficient = DelinearizeAccessModeSufficient;
 var DelinearizeAccessModeSufficients = function (accessModeSufficients) {
-    return accessModeSufficients.map(function (ams) { return exports.DelinearizeAccessModeSufficient(ams); });
+    return accessModeSufficients.map(function (ams) { return (0, exports.DelinearizeAccessModeSufficient)(ams); });
 };
 exports.DelinearizeAccessModeSufficients = DelinearizeAccessModeSufficients;
 var LinearizeAccessModeSufficients = function (accessModeSufficients) {

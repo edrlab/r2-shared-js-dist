@@ -23,7 +23,7 @@ let Manifest = class Manifest {
             this._urlDecoded = null;
             return undefined;
         }
-        this._urlDecoded = decodeURI_1.tryDecodeURI(this.Href);
+        this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.Href);
         return !this._urlDecoded ? undefined : this._urlDecoded;
     }
     set HrefDecoded(href) {
@@ -34,32 +34,32 @@ let Manifest = class Manifest {
         this.HrefDecoded = href;
     }
 };
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@id | @xml:id"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "ID", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@media-type"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@media-type"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "MediaType", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@media-fallback"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@media-fallback"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "Fallback", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@properties"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@properties"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "Properties", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@media-overlay"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@media-overlay"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "MediaOverlay", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@href"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@href"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Manifest.prototype, "Href1", void 0);
-Manifest = tslib_1.__decorate([
-    xml_js_mapper_1.XmlObject({
+Manifest = (0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",
         xml: "http://www.w3.org/XML/1998/namespace",

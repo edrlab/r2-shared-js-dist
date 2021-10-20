@@ -21,9 +21,9 @@ var DaisyBookis;
     DaisyBookis["RemotePacked"] = "RemotePacked";
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         let p = urlOrPath;
-        const http = UrlUtils_1.isHTTP(urlOrPath);
+        const http = (0, UrlUtils_1.isHTTP)(urlOrPath);
         if (http) {
             const url = new URL(urlOrPath);
             p = url.pathname;
@@ -42,13 +42,13 @@ function isDaisyPublication(urlOrPath) {
         else {
             let zip;
             try {
-                zip = yield zipFactory_1.zipLoadPromise(urlOrPath);
+                zip = yield (0, zipFactory_1.zipLoadPromise)(urlOrPath);
             }
             catch (err) {
                 debug(err);
                 return Promise.reject(err);
             }
-            if (!(yield zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined))) {
+            if (!(yield (0, zipHasEntry_1.zipHasEntry)(zip, "META-INF/container.xml", undefined))) {
                 const entries = yield zip.getEntries();
                 const opfZipEntryPath = entries.find((entry) => {
                     return entry.endsWith(".opf");
@@ -64,10 +64,10 @@ function isDaisyPublication(urlOrPath) {
 }
 exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         let zip;
         try {
-            zip = yield zipFactory_1.zipLoadPromise(filePath);
+            zip = yield (0, zipFactory_1.zipLoadPromise)(filePath);
         }
         catch (err) {
             debug(err);
@@ -95,14 +95,14 @@ function DaisyParsePromise(filePath) {
         if (!rootfilePathDecoded) {
             return Promise.reject("?!rootfile.PathDecoded");
         }
-        const opf = yield epub_daisy_common_1.getOpf(zip, rootfilePathDecoded, opfZipEntryPath);
-        epub_daisy_common_1.addLanguage(publication, opf);
-        epub_daisy_common_1.addTitle(publication, undefined, opf);
-        epub_daisy_common_1.addIdentifier(publication, opf);
-        epub_daisy_common_1.addOtherMetadata(publication, undefined, opf);
-        epub_daisy_common_1.setPublicationDirection(publication, opf);
-        epub_daisy_common_1.findContributorInMeta(publication, undefined, opf);
-        yield epub_daisy_common_1.fillSpineAndResource(publication, undefined, opf, zip, addLinkData);
+        const opf = yield (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath);
+        (0, epub_daisy_common_1.addLanguage)(publication, opf);
+        (0, epub_daisy_common_1.addTitle)(publication, undefined, opf);
+        (0, epub_daisy_common_1.addIdentifier)(publication, opf);
+        (0, epub_daisy_common_1.addOtherMetadata)(publication, undefined, opf);
+        (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
+        (0, epub_daisy_common_1.findContributorInMeta)(publication, undefined, opf);
+        yield (0, epub_daisy_common_1.fillSpineAndResource)(publication, undefined, opf, zip, addLinkData);
         let ncx;
         if (opf.Manifest) {
             let ncxManItem = opf.Manifest.find((manifestItem) => {
@@ -115,28 +115,28 @@ function DaisyParsePromise(filePath) {
                 });
             }
             if (ncxManItem) {
-                ncx = yield epub_daisy_common_1.getNcx(ncxManItem, opf, zip);
+                ncx = yield (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip);
             }
         }
-        epub_daisy_common_1.fillTOC(publication, opf, ncx);
-        epub_daisy_common_1.fillSubject(publication, opf);
-        epub_daisy_common_1.fillPublicationDate(publication, undefined, opf);
+        (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
+        (0, epub_daisy_common_1.fillSubject)(publication, opf);
+        (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
         return publication;
     });
 }
 exports.DaisyParsePromise = DaisyParsePromise;
-const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
         const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
         const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
         const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
         if (isFullTextAudio || isTextOnly || isAudioOnly) {
-            yield epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
+            yield (0, epub_daisy_common_1.addMediaOverlaySMIL)(linkItem, item, opf, zip);
             if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
-                yield epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
+                yield (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays);
                 if (isFullTextAudio || isAudioOnly) {
-                    epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                    (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                 }
             }
         }

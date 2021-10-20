@@ -21,7 +21,7 @@ var DaisyBookis;
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 async function isDaisyPublication(urlOrPath) {
     let p = urlOrPath;
-    const http = UrlUtils_1.isHTTP(urlOrPath);
+    const http = (0, UrlUtils_1.isHTTP)(urlOrPath);
     if (http) {
         const url = new URL(urlOrPath);
         p = url.pathname;
@@ -40,13 +40,13 @@ async function isDaisyPublication(urlOrPath) {
     else {
         let zip;
         try {
-            zip = await zipFactory_1.zipLoadPromise(urlOrPath);
+            zip = await (0, zipFactory_1.zipLoadPromise)(urlOrPath);
         }
         catch (err) {
             debug(err);
             return Promise.reject(err);
         }
-        if (!await zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined)) {
+        if (!await (0, zipHasEntry_1.zipHasEntry)(zip, "META-INF/container.xml", undefined)) {
             const entries = await zip.getEntries();
             const opfZipEntryPath = entries.find((entry) => {
                 return entry.endsWith(".opf");
@@ -63,7 +63,7 @@ exports.isDaisyPublication = isDaisyPublication;
 async function DaisyParsePromise(filePath) {
     let zip;
     try {
-        zip = await zipFactory_1.zipLoadPromise(filePath);
+        zip = await (0, zipFactory_1.zipLoadPromise)(filePath);
     }
     catch (err) {
         debug(err);
@@ -91,14 +91,14 @@ async function DaisyParsePromise(filePath) {
     if (!rootfilePathDecoded) {
         return Promise.reject("?!rootfile.PathDecoded");
     }
-    const opf = await epub_daisy_common_1.getOpf(zip, rootfilePathDecoded, opfZipEntryPath);
-    epub_daisy_common_1.addLanguage(publication, opf);
-    epub_daisy_common_1.addTitle(publication, undefined, opf);
-    epub_daisy_common_1.addIdentifier(publication, opf);
-    epub_daisy_common_1.addOtherMetadata(publication, undefined, opf);
-    epub_daisy_common_1.setPublicationDirection(publication, opf);
-    epub_daisy_common_1.findContributorInMeta(publication, undefined, opf);
-    await epub_daisy_common_1.fillSpineAndResource(publication, undefined, opf, zip, addLinkData);
+    const opf = await (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath);
+    (0, epub_daisy_common_1.addLanguage)(publication, opf);
+    (0, epub_daisy_common_1.addTitle)(publication, undefined, opf);
+    (0, epub_daisy_common_1.addIdentifier)(publication, opf);
+    (0, epub_daisy_common_1.addOtherMetadata)(publication, undefined, opf);
+    (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
+    (0, epub_daisy_common_1.findContributorInMeta)(publication, undefined, opf);
+    await (0, epub_daisy_common_1.fillSpineAndResource)(publication, undefined, opf, zip, addLinkData);
     let ncx;
     if (opf.Manifest) {
         let ncxManItem = opf.Manifest.find((manifestItem) => {
@@ -111,12 +111,12 @@ async function DaisyParsePromise(filePath) {
             });
         }
         if (ncxManItem) {
-            ncx = await epub_daisy_common_1.getNcx(ncxManItem, opf, zip);
+            ncx = await (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip);
         }
     }
-    epub_daisy_common_1.fillTOC(publication, opf, ncx);
-    epub_daisy_common_1.fillSubject(publication, opf);
-    epub_daisy_common_1.fillPublicationDate(publication, undefined, opf);
+    (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
+    (0, epub_daisy_common_1.fillSubject)(publication, opf);
+    (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
     return publication;
 }
 exports.DaisyParsePromise = DaisyParsePromise;
@@ -127,11 +127,11 @@ const addLinkData = async (publication, _rootfile, opf, zip, linkItem, item) => 
         const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
         const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
         if (isFullTextAudio || isTextOnly || isAudioOnly) {
-            await epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip);
+            await (0, epub_daisy_common_1.addMediaOverlaySMIL)(linkItem, item, opf, zip);
             if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {
-                await epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
+                await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays);
                 if (isFullTextAudio || isAudioOnly) {
-                    epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                    (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                 }
             }
         }

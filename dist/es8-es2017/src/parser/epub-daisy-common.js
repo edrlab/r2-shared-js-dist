@@ -61,7 +61,7 @@ const fillPublicationDate = (publication, rootfile, opf) => {
             opf.Metadata.Date :
             undefined);
     if (opfMetadataDate) {
-        if ((!rootfile || exports.isEpub3OrMore(rootfile, opf)) &&
+        if ((!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf)) &&
             opfMetadataDate[0] && opfMetadataDate[0].Data) {
             const token = opfMetadataDate[0].Data;
             try {
@@ -121,13 +121,13 @@ const fillSubject = (publication, opf) => {
 exports.fillSubject = fillSubject;
 const findContributorInMeta = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e;
-    if (!rootfile || exports.isEpub3OrMore(rootfile, opf)) {
+    if (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf)) {
         const func = (meta) => {
             if (meta.Property === "dcterms:creator" || meta.Property === "dcterms:contributor") {
                 const cont = new opf_author_1.Author();
                 cont.Data = meta.Data;
                 cont.ID = meta.ID;
-                exports.addContributor(publication, rootfile, opf, cont, undefined);
+                (0, exports.addContributor)(publication, rootfile, opf, cont, undefined);
             }
         };
         if ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.XMetadata) === null || _b === void 0 ? void 0 : _b.Meta) === null || _c === void 0 ? void 0 : _c.length) {
@@ -142,24 +142,24 @@ exports.findContributorInMeta = findContributorInMeta;
 const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
     const contributor = new metadata_contributor_1.Contributor();
     let role;
-    if (rootfile && exports.isEpub3OrMore(rootfile, opf)) {
+    if (rootfile && (0, exports.isEpub3OrMore)(rootfile, opf)) {
         if (cont.FileAs) {
             contributor.SortAs = cont.FileAs;
         }
         else {
-            const metaFileAs = exports.findMetaByRefineAndProperty(opf, cont.ID, "file-as");
+            const metaFileAs = (0, exports.findMetaByRefineAndProperty)(opf, cont.ID, "file-as");
             if (metaFileAs && metaFileAs.Property === "file-as") {
                 contributor.SortAs = metaFileAs.Data;
             }
         }
-        const metaRole = exports.findMetaByRefineAndProperty(opf, cont.ID, "role");
+        const metaRole = (0, exports.findMetaByRefineAndProperty)(opf, cont.ID, "role");
         if (metaRole && metaRole.Property === "role") {
             role = metaRole.Data;
         }
         if (!role && forcedRole) {
             role = forcedRole;
         }
-        const metaAlt = exports.findAllMetaByRefineAndProperty(opf, cont.ID, "alternate-script");
+        const metaAlt = (0, exports.findAllMetaByRefineAndProperty)(opf, cont.ID, "alternate-script");
         if (metaAlt && metaAlt.length) {
             contributor.Name = {};
             metaAlt.forEach((m) => {
@@ -283,7 +283,7 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
 };
 exports.addContributor = addContributor;
 const findMetaByRefineAndProperty = (opf, ID, property) => {
-    const ret = exports.findAllMetaByRefineAndProperty(opf, ID, property);
+    const ret = (0, exports.findAllMetaByRefineAndProperty)(opf, ID, property);
     if (ret.length) {
         return ret[0];
     }
@@ -356,7 +356,7 @@ const fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkData
             if (!item.Linear || item.Linear === "yes") {
                 let linkItem;
                 try {
-                    linkItem = await exports.findInManifestByID(publication, rootfile, opf, item.IDref, zip, addLinkData);
+                    linkItem = await (0, exports.findInManifestByID)(publication, rootfile, opf, item.IDref, zip, addLinkData);
                 }
                 catch (err) {
                     debug(err);
@@ -380,7 +380,7 @@ const fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkData
             }
             const zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
                 .replace(/\\/g, "/");
-            const linkSpine = exports.findInSpineByHref(publication, zipPath);
+            const linkSpine = (0, exports.findInSpineByHref)(publication, zipPath);
             if (!linkSpine || !linkSpine.Href) {
                 const linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
@@ -435,7 +435,7 @@ const addTitle = (publication, rootfile, opf) => {
         (((_e = (_d = opf.Metadata) === null || _d === void 0 ? void 0 : _d.Title) === null || _e === void 0 ? void 0 : _e.length) ?
             opf.Metadata.Title :
             undefined);
-    if (rootfile && exports.isEpub3OrMore(rootfile, opf)) {
+    if (rootfile && (0, exports.isEpub3OrMore)(rootfile, opf)) {
         let mainTitle;
         let subTitle;
         let subTitleDisplaySeq = 0;
@@ -517,7 +517,7 @@ const addTitle = (publication, rootfile, opf) => {
             }
         }
         if (mainTitle) {
-            const metaAlt = exports.findAllMetaByRefineAndProperty(opf, mainTitle.ID, "alternate-script");
+            const metaAlt = (0, exports.findAllMetaByRefineAndProperty)(opf, mainTitle.ID, "alternate-script");
             if (metaAlt && metaAlt.length) {
                 publication.Metadata.Title = {};
                 metaAlt.forEach((m) => {
@@ -543,7 +543,7 @@ const addTitle = (publication, rootfile, opf) => {
             }
         }
         if (subTitle) {
-            const metaAlt = exports.findAllMetaByRefineAndProperty(opf, subTitle.ID, "alternate-script");
+            const metaAlt = (0, exports.findAllMetaByRefineAndProperty)(opf, subTitle.ID, "alternate-script");
             if (metaAlt && metaAlt.length) {
                 publication.Metadata.SubTitle = {};
                 metaAlt.forEach((m) => {
@@ -616,7 +616,7 @@ const getNcx = async (ncxManItem, opf, zip) => {
         return Promise.reject("?!ncxManItem.Href");
     }
     const ncxFilePath = path.join(dname, ncxManItemHrefDecoded).replace(/\\/g, "/");
-    const has = await zipHasEntry_1.zipHasEntry(zip, ncxFilePath, undefined);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, ncxFilePath, undefined);
     if (!has) {
         const err = `NOT IN ZIP (NCX): ${ncxManItem.Href} --- ${ncxFilePath}`;
         debug(err);
@@ -637,7 +637,7 @@ const getNcx = async (ncxManItem, opf, zip) => {
     const ncxZipStream = ncxZipStream_.stream;
     let ncxZipData;
     try {
-        ncxZipData = await BufferUtils_1.streamToBufferPromise(ncxZipStream);
+        ncxZipData = await (0, BufferUtils_1.streamToBufferPromise)(ncxZipStream);
     }
     catch (err) {
         debug(err);
@@ -661,7 +661,7 @@ const getNcx = async (ncxManItem, opf, zip) => {
 };
 exports.getNcx = getNcx;
 const getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
-    const has = await zipHasEntry_1.zipHasEntry(zip, rootfilePathDecoded, rootfilePath);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath);
     if (!has) {
         const err = `NOT IN ZIP (container OPF rootfile): ${rootfilePath} --- ${rootfilePathDecoded}`;
         debug(err);
@@ -682,7 +682,7 @@ const getOpf = async (zip, rootfilePathDecoded, rootfilePath) => {
     const opfZipStream = opfZipStream_.stream;
     let opfZipData;
     try {
-        opfZipData = await BufferUtils_1.streamToBufferPromise(opfZipStream);
+        opfZipData = await (0, BufferUtils_1.streamToBufferPromise)(opfZipStream);
     }
     catch (err) {
         debug(err);
@@ -754,7 +754,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
             undefined);
     if (opfMetadataContributor) {
         opfMetadataContributor.forEach((cont) => {
-            exports.addContributor(publication, rootfile, opf, cont, undefined);
+            (0, exports.addContributor)(publication, rootfile, opf, cont, undefined);
         });
     }
     const opfMetadataCreator = ((_3 = (_2 = (_1 = opf.Metadata) === null || _1 === void 0 ? void 0 : _1.DCMetadata) === null || _2 === void 0 ? void 0 : _2.Creator) === null || _3 === void 0 ? void 0 : _3.length) ?
@@ -764,7 +764,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
             undefined);
     if (opfMetadataCreator) {
         opfMetadataCreator.forEach((cont) => {
-            exports.addContributor(publication, rootfile, opf, cont, "aut");
+            (0, exports.addContributor)(publication, rootfile, opf, cont, "aut");
         });
     }
     if ((_6 = opf.Metadata) === null || _6 === void 0 ? void 0 : _6.Link) {
@@ -889,7 +889,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
                 if (!publication.Metadata.AccessModeSufficient) {
                     publication.Metadata.AccessModeSufficient = [];
                 }
-                publication.Metadata.AccessModeSufficient.push(ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient(val));
+                publication.Metadata.AccessModeSufficient.push((0, ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient)(val));
             }
             else if (metaTag.Name === "schema:accessibilityAPI" ||
                 metaTag.Property === "schema:accessibilityAPI") {
@@ -1027,7 +1027,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
             opf.Metadata.XMetadata.Meta.forEach(mFunc);
         }
         if (metasDuration.length) {
-            publication.Metadata.Duration = media_overlay_1.timeStrToSeconds(metasDuration[0].Property ? metasDuration[0].Data : metasDuration[0].Content);
+            publication.Metadata.Duration = (0, media_overlay_1.timeStrToSeconds)(metasDuration[0].Property ? metasDuration[0].Data : metasDuration[0].Content);
         }
         if (metasNarrator.length) {
             if (!publication.Metadata.Narrator) {
@@ -1057,7 +1057,7 @@ exports.addOtherMetadata = addOtherMetadata;
 const loadFileStrFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     let zipData;
     try {
-        zipData = await exports.loadFileBufferFromZipPath(linkHref, linkHrefDecoded, zip);
+        zipData = await (0, exports.loadFileBufferFromZipPath)(linkHref, linkHrefDecoded, zip);
     }
     catch (err) {
         debug(err);
@@ -1074,7 +1074,7 @@ const loadFileBufferFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
         debug("!?link.HrefDecoded");
         return undefined;
     }
-    const has = await zipHasEntry_1.zipHasEntry(zip, linkHrefDecoded, linkHref);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, linkHrefDecoded, linkHref);
     if (!has) {
         debug(`NOT IN ZIP (loadFileBufferFromZipPath): ${linkHref} --- ${linkHrefDecoded}`);
         const zipEntries = await zip.getEntries();
@@ -1094,7 +1094,7 @@ const loadFileBufferFromZipPath = async (linkHref, linkHrefDecoded, zip) => {
     const zipStream = zipStream_.stream;
     let zipData;
     try {
-        zipData = await BufferUtils_1.streamToBufferPromise(zipStream);
+        zipData = await (0, BufferUtils_1.streamToBufferPromise)(zipStream);
     }
     catch (err) {
         debug(err);
@@ -1146,8 +1146,8 @@ const addAlternateAudioLinkFromNCX = (ncx, link, navLabel) => {
                 .replace(/\\/g, "/");
             let timeHref = zipPath;
             timeHref += "#t=";
-            const begin = navLabel.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(navLabel.Audio.ClipBegin) : 0;
-            const end = navLabel.Audio.ClipEnd ? media_overlay_1.timeStrToSeconds(navLabel.Audio.ClipEnd) : 0;
+            const begin = navLabel.Audio.ClipBegin ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipBegin) : 0;
+            const end = navLabel.Audio.ClipEnd ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipEnd) : 0;
             timeHref += begin.toString();
             if (navLabel.Audio.ClipEnd) {
                 timeHref += ",";
@@ -1231,7 +1231,7 @@ const addMediaOverlaySMIL = async (link, manItemSmil, opf, zip) => {
             }
             const smilFilePath = path.join(path.dirname(opf.ZipPath), manItemSmilHrefDecoded)
                 .replace(/\\/g, "/");
-            const has = await zipHasEntry_1.zipHasEntry(zip, smilFilePath, smilFilePath);
+            const has = await (0, zipHasEntry_1.zipHasEntry)(zip, smilFilePath, smilFilePath);
             if (!has) {
                 debug(`NOT IN ZIP (addMediaOverlay): ${smilFilePath}`);
                 const zipEntries = await zip.getEntries();
@@ -1246,7 +1246,7 @@ const addMediaOverlaySMIL = async (link, manItemSmil, opf, zip) => {
             link.MediaOverlays = mo;
             const moURL = exports.mediaOverlayURLPath + "?" +
                 exports.mediaOverlayURLParam + "=" +
-                UrlUtils_1.encodeURIComponent_RFC3986(link.HrefDecoded ? link.HrefDecoded : link.Href);
+                (0, UrlUtils_1.encodeURIComponent_RFC3986)(link.HrefDecoded ? link.HrefDecoded : link.Href);
             if (!link.Properties) {
                 link.Properties = new metadata_properties_1.Properties();
             }
@@ -1300,7 +1300,7 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
         return;
     }
     const zip = zipInternal.Value;
-    const has = await zipHasEntry_1.zipHasEntry(zip, mo.SmilPathInZip, undefined);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, mo.SmilPathInZip, undefined);
     if (!has) {
         const err = `NOT IN ZIP (lazyLoadMediaOverlays): ${mo.SmilPathInZip}`;
         debug(err);
@@ -1343,7 +1343,7 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
     const smilZipStream = smilZipStream_.stream;
     let smilZipData;
     try {
-        smilZipData = await BufferUtils_1.streamToBufferPromise(smilZipStream);
+        smilZipData = await (0, BufferUtils_1.streamToBufferPromise)(smilZipStream);
     }
     catch (err) {
         debug(err);
@@ -1370,16 +1370,16 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
     if ((_a = smil.Head) === null || _a === void 0 ? void 0 : _a.Meta) {
         for (const m of smil.Head.Meta) {
             if (m.Content && m.Name === "dtb:totalElapsedTime") {
-                mo.totalElapsedTime = media_overlay_1.timeStrToSeconds(m.Content);
+                mo.totalElapsedTime = (0, media_overlay_1.timeStrToSeconds)(m.Content);
             }
         }
     }
     if (smil.Body) {
         if (smil.Body.Duration) {
-            mo.duration = media_overlay_1.timeStrToSeconds(smil.Body.Duration);
+            mo.duration = (0, media_overlay_1.timeStrToSeconds)(smil.Body.Duration);
         }
         if (smil.Body.EpubType) {
-            const roles = exports.parseSpaceSeparatedString(smil.Body.EpubType);
+            const roles = (0, exports.parseSpaceSeparatedString)(smil.Body.EpubType);
             for (const role of roles) {
                 if (!role.length) {
                     continue;
@@ -1432,7 +1432,7 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
             const getDur = !smil.Body.Duration && smil.Body.Children.length === 1;
             smil.Body.Children.forEach((seqChild) => {
                 if (getDur && seqChild.Duration) {
-                    mo.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+                    mo.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
                 }
                 if (!mo.Children) {
                     mo.Children = [];
@@ -1452,7 +1452,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
     moc.initialized = rootMO.initialized;
     let doAdd = true;
     if (seqChild.Duration) {
-        moc.duration = media_overlay_1.timeStrToSeconds(seqChild.Duration);
+        moc.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
     }
     if (seqChild instanceof smil_seq_1.Seq) {
         moc.Role = [];
@@ -1462,7 +1462,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
             moc.SeqID = seq.ID;
         }
         if (seq.EpubType) {
-            const roles = exports.parseSpaceSeparatedString(seq.EpubType);
+            const roles = (0, exports.parseSpaceSeparatedString)(seq.EpubType);
             for (const role of roles) {
                 if (!role.length) {
                     continue;
@@ -1550,7 +1550,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
             moc.ParID = par.ID;
         }
         if (par.EpubType) {
-            const roles = exports.parseSpaceSeparatedString(par.EpubType);
+            const roles = (0, exports.parseSpaceSeparatedString)(par.EpubType);
             for (const role of roles) {
                 if (!role.length) {
                     continue;
@@ -1636,9 +1636,9 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                     .replace(/\\/g, "/");
                 moc.Audio = zipPath;
                 moc.Audio += "#t=";
-                const begin = par.Audio.ClipBegin ? media_overlay_1.timeStrToSeconds(par.Audio.ClipBegin) : 0;
+                const begin = par.Audio.ClipBegin ? (0, media_overlay_1.timeStrToSeconds)(par.Audio.ClipBegin) : 0;
                 moc.AudioClipBegin = begin;
-                const end = par.Audio.ClipEnd ? media_overlay_1.timeStrToSeconds(par.Audio.ClipEnd) : 0;
+                const end = par.Audio.ClipEnd ? (0, media_overlay_1.timeStrToSeconds)(par.Audio.ClipEnd) : 0;
                 moc.AudioClipEnd = end;
                 moc.Audio += begin.toString();
                 if (par.Audio.ClipEnd) {

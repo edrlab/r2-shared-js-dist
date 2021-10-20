@@ -14,7 +14,7 @@ class JsonSubjectConverter {
                 return s.Name;
             }
         }
-        return serializable_1.TaJsonSerialize(s);
+        return (0, serializable_1.TaJsonSerialize)(s);
     }
     deserialize(value) {
         if (typeof value === "string") {
@@ -22,7 +22,7 @@ class JsonSubjectConverter {
             s.Name = value;
             return s;
         }
-        return serializable_1.TaJsonDeserialize(value, metadata_subject_1.Subject);
+        return (0, serializable_1.TaJsonDeserialize)(value, metadata_subject_1.Subject);
     }
     collapseArrayWithSingleItem() {
         return true;

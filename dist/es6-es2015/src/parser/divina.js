@@ -17,15 +17,15 @@ const zipFactory_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/zip/zipFact
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const debug = debug_("r2:shared#parser/divina");
 function absolutizeURLs(rootUrl, jsonObj) {
-    JsonUtils_1.traverseJsonObjects(jsonObj, (obj) => {
+    (0, JsonUtils_1.traverseJsonObjects)(jsonObj, (obj) => {
         if (obj.href && typeof obj.href === "string"
-            && !UrlUtils_1.isHTTP(obj.href)) {
+            && !(0, UrlUtils_1.isHTTP)(obj.href)) {
             obj.href = rootUrl + "/" + obj.href;
         }
     });
 }
 function DivinaParsePromise(filePath, isDivina, pubtype) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         const isAnDivina = isDivina || (yield isDivinaPublication(filePath));
         const publicationType = pubtype || (isAnDivina ? "divina" : "generic");
         let entryName = "manifest.json";
@@ -41,7 +41,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
         }
         let zip;
         try {
-            zip = yield zipFactory_1.zipLoadPromise(filePathToLoad);
+            zip = yield (0, zipFactory_1.zipLoadPromise)(filePathToLoad);
         }
         catch (err) {
             return Promise.reject(err);
@@ -51,7 +51,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
         }
         if (isAnDivina === Divinais.LocalExploded ||
             isAnDivina === Divinais.LocalPacked) {
-            const has = yield zipHasEntry_1.zipHasEntry(zip, entryName, undefined);
+            const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, entryName, undefined);
             if (!has) {
                 const zipEntries = yield zip.getEntries();
                 for (const zipEntry of zipEntries) {
@@ -71,7 +71,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
         const manifestZipStream = manifestZipStream_.stream;
         let manifestZipData;
         try {
-            manifestZipData = yield BufferUtils_1.streamToBufferPromise(manifestZipStream);
+            manifestZipData = yield (0, BufferUtils_1.streamToBufferPromise)(manifestZipStream);
         }
         catch (err) {
             debug(err);
@@ -84,7 +84,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
             url.pathname = path.dirname(url.pathname);
             absolutizeURLs(url.toString(), manifestJson);
         }
-        const publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
+        const publication = (0, serializable_1.TaJsonDeserialize)(manifestJson, publication_1.Publication);
         publication.AddToInternal("type", publicationType);
         publication.AddToInternal("zip", zip);
         const lcpEntryName = "license.lcpl";
@@ -92,7 +92,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
         let hasLCP = false;
         if (isAnDivina === Divinais.LocalExploded ||
             isAnDivina === Divinais.LocalPacked) {
-            const has = yield zipHasEntry_1.zipHasEntry(zip, lcpEntryName, undefined);
+            const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, lcpEntryName, undefined);
             if (!has) {
                 checkLCP = false;
             }
@@ -119,7 +119,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 const lcpZipStream = lcpZipStream_.stream;
                 let lcpZipData;
                 try {
-                    lcpZipData = yield BufferUtils_1.streamToBufferPromise(lcpZipStream);
+                    lcpZipData = yield (0, BufferUtils_1.streamToBufferPromise)(lcpZipStream);
                 }
                 catch (err) {
                     debug(err);
@@ -127,7 +127,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 }
                 const lcpJsonStr = lcpZipData.toString("utf8");
                 const lcpJson = JSON.parse(lcpJsonStr);
-                const lcpl = serializable_1.TaJsonDeserialize(lcpJson, lcp_1.LCP);
+                const lcpl = (0, serializable_1.TaJsonDeserialize)(lcpJson, lcp_1.LCP);
                 lcpl.ZipPath = lcpEntryName;
                 lcpl.JsonSource = lcpJsonStr;
                 lcpl.init();
@@ -146,7 +146,7 @@ var Divinais;
     Divinais["RemotePacked"] = "RemotePacked";
 })(Divinais = exports.Divinais || (exports.Divinais = {}));
 function doRequest(u) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         return new Promise((resolve, _reject) => {
             const url = new URL(u);
             const secure = url.protocol === "https:";
@@ -175,7 +175,7 @@ function doRequest(u) {
                     const loc = res.headers.Location || res.headers.location;
                     if (loc && loc.length) {
                         const l = Array.isArray(loc) ? loc[0] : loc;
-                        process.nextTick(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                        process.nextTick(() => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
                             try {
                                 const redirectRes = yield doRequest(l);
                                 resolve(redirectRes);
@@ -232,9 +232,9 @@ function doRequest(u) {
     });
 }
 function isDivinaPublication(urlOrPath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         let p = urlOrPath;
-        const isHttp = UrlUtils_1.isHTTP(urlOrPath);
+        const isHttp = (0, UrlUtils_1.isHTTP)(urlOrPath);
         if (isHttp) {
             const url = new URL(urlOrPath);
             p = url.pathname;

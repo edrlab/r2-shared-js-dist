@@ -178,7 +178,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
             const createHtmlFromSmilFile = async (smilPathInZip) => {
                 let smilDoc = smilDocs[smilPathInZip];
                 if (!smilDoc) {
-                    const smilStr = await epub_daisy_common_1.loadFileStrFromZipPath(smilPathInZip, smilPathInZip, zip);
+                    const smilStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip);
                     if (!smilStr) {
                         debug("!loadFileStrFromZipPath", smilStr);
                         return undefined;
@@ -237,9 +237,9 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                         continue;
                     }
                     if (!linkItem.MediaOverlays.initialized) {
-                        await epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays);
+                        await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays);
                         if (isFullTextAudio || isAudioOnly) {
-                            epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                            (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                         }
                     }
                     if (isFullTextAudio || isAudioOnly) {
@@ -247,7 +247,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                         if (computedDur) {
                             if (!linkItem.MediaOverlays.duration) {
                                 linkItem.MediaOverlays.duration = computedDur;
-                                epub_daisy_common_1.updateDurations(computedDur, linkItem);
+                                (0, epub_daisy_common_1.updateDurations)(computedDur, linkItem);
                             }
                             else {
                                 if (Math.round(linkItem.MediaOverlays.duration) !== Math.round(computedDur)) {
@@ -263,7 +263,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                             if (dur > 0) {
                                 if (!previousLinkItem.MediaOverlays.duration) {
                                     previousLinkItem.MediaOverlays.duration = dur;
-                                    epub_daisy_common_1.updateDurations(dur, previousLinkItem);
+                                    (0, epub_daisy_common_1.updateDurations)(dur, previousLinkItem);
                                 }
                                 else {
                                     if (Math.round(previousLinkItem.MediaOverlays.duration) !== Math.round(dur)) {
@@ -311,7 +311,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                     continue;
                 }
                 if (resLink.TypeLink === "text/css" || resLink.HrefDecoded.endsWith(".css")) {
-                    let cssText = await epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip);
+                    let cssText = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
                     if (!cssText) {
                         debug("!loadFileStrFromZipPath", resLink.HrefDecoded);
                         continue;
@@ -333,7 +333,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication) => {
                     resourcesToKeep.push(resLink);
                 }
                 else if (resLink.TypeLink === "application/x-dtbook+xml" || resLink.HrefDecoded.endsWith(".xml")) {
-                    let dtBookStr = await epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip);
+                    let dtBookStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
                     if (!dtBookStr) {
                         debug("!loadFileStrFromZipPath", dtBookStr);
                         continue;
@@ -436,8 +436,8 @@ ${cssHrefs.reduce((pv, cv) => {
 `);
                     const xhtmlFilePath = resLink.HrefDecoded.replace(/\.(.+)$/, ".xhtml");
                     zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
-                    const resLinkJson = serializable_1.TaJsonSerialize(resLink);
-                    const resLinkClone = serializable_1.TaJsonDeserialize(resLinkJson, publication_link_1.Link);
+                    const resLinkJson = (0, serializable_1.TaJsonSerialize)(resLink);
+                    const resLinkClone = (0, serializable_1.TaJsonDeserialize)(resLinkJson, publication_link_1.Link);
                     resLinkClone.setHrefDecoded(xhtmlFilePath);
                     resLinkClone.TypeLink = "application/xhtml+xml";
                     dtBooks.push(resLinkClone);
@@ -445,7 +445,7 @@ ${cssHrefs.reduce((pv, cv) => {
                 else if (!resLink.HrefDecoded.endsWith(".opf") &&
                     !resLink.HrefDecoded.endsWith(".res") &&
                     !resLink.HrefDecoded.endsWith(".ncx")) {
-                    const buff = await epub_daisy_common_1.loadFileBufferFromZipPath(resLink.Href, resLink.HrefDecoded, zip);
+                    const buff = await (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
                     if (buff) {
                         zipfile.addBuffer(buff, resLink.HrefDecoded);
                     }
@@ -536,7 +536,7 @@ ${cssHrefs.reduce((pv, cv) => {
                             moLink.TypeLink = "application/vnd.syncnarr+json";
                             moLink.Duration = dtBookLink.Duration;
                             dtBookLink.Alternate.push(moLink);
-                            const jsonObjMO = serializable_1.TaJsonSerialize(mediaOverlay.mo);
+                            const jsonObjMO = (0, serializable_1.TaJsonSerialize)(mediaOverlay.mo);
                             const jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
                             zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
                             debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
@@ -601,7 +601,7 @@ ${cssHrefs.reduce((pv, cv) => {
                 }
                 let smilDoc = smilDocs[href];
                 if (!smilDoc) {
-                    const smilStr = await epub_daisy_common_1.loadFileStrFromZipPath(href, href, zip);
+                    const smilStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(href, href, zip);
                     if (!smilStr) {
                         debug("!loadFileStrFromZipPath", smilStr);
                         return;
@@ -649,7 +649,7 @@ ${cssHrefs.reduce((pv, cv) => {
             if (publication.TOC) {
                 await processLinks(publication.TOC);
             }
-            const jsonObj = serializable_1.TaJsonSerialize(publication);
+            const jsonObj = (0, serializable_1.TaJsonSerialize)(publication);
             const jsonStr = global.JSON.stringify(jsonObj, null, "  ");
             zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
         }

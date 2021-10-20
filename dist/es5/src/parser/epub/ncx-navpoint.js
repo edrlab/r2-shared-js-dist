@@ -10,29 +10,29 @@ var NavPoint = (function () {
     }
     NavPoint_1 = NavPoint;
     var NavPoint_1;
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("ncx:navPoint"),
-        xml_js_mapper_1.XmlItemType(NavPoint_1),
-        tslib_1.__metadata("design:type", Array)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navPoint"),
+        (0, xml_js_mapper_1.XmlItemType)(NavPoint_1),
+        (0, tslib_1.__metadata)("design:type", Array)
     ], NavPoint.prototype, "Points", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("ncx:navLabel"),
-        tslib_1.__metadata("design:type", ncx_navlabel_1.NavLabel)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navLabel"),
+        (0, tslib_1.__metadata)("design:type", ncx_navlabel_1.NavLabel)
     ], NavPoint.prototype, "NavLabel", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("ncx:content"),
-        tslib_1.__metadata("design:type", ncx_content_1.Content)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("ncx:content"),
+        (0, tslib_1.__metadata)("design:type", ncx_content_1.Content)
     ], NavPoint.prototype, "Content", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@playOrder"),
-        tslib_1.__metadata("design:type", Number)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@playOrder"),
+        (0, tslib_1.__metadata)("design:type", Number)
     ], NavPoint.prototype, "PlayerOrder", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@id | @xml:id"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], NavPoint.prototype, "ID", void 0);
-    NavPoint = NavPoint_1 = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    NavPoint = NavPoint_1 = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
             xml: "http://www.w3.org/XML/1998/namespace",
         })

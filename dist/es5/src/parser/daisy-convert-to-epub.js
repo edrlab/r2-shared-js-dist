@@ -22,12 +22,12 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    return tslib_1.__generator(this, function (_a) {
-        return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    return (0, tslib_1.__generator)(this, function (_a) {
+        return [2, new Promise(function (resolve, reject) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
                 var isFullTextAudio, isAudioOnly, isTextOnly, zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, smilDocs_1, findLinkInToc_1, createHtmlFromSmilFile, audioOnlySmilHtmls, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, audioOnlySmilHtmlHref, smilHtml, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantText_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, erreur_1;
                 var _p, _q, _r, _s, _t;
-                return tslib_1.__generator(this, function (_u) {
+                return (0, tslib_1.__generator)(this, function (_u) {
                     switch (_u.label) {
                         case 0:
                             isFullTextAudio = ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
@@ -184,14 +184,14 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 }
                                 return undefined;
                             };
-                            createHtmlFromSmilFile = function (smilPathInZip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+                            createHtmlFromSmilFile = function (smilPathInZip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
                                 var smilDoc, smilStr, parEls, _i, parEls_1, parEl, audioElements, _a, audioElements_1, audioElement, elmId, hrefDecoded, tocLinkItem, text, textNode, bodyContent, bodyContentStr, contentStr, htmlDoc, htmlFilePath;
-                                return tslib_1.__generator(this, function (_b) {
+                                return (0, tslib_1.__generator)(this, function (_b) {
                                     switch (_b.label) {
                                         case 0:
                                             smilDoc = smilDocs_1[smilPathInZip];
                                             if (!!smilDoc) return [3, 2];
-                                            return [4, epub_daisy_common_1.loadFileStrFromZipPath(smilPathInZip, smilPathInZip, zip)];
+                                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip)];
                                         case 1:
                                             smilStr = _b.sent();
                                             if (!smilStr) {
@@ -253,11 +253,11 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 return [3, 7];
                             }
                             if (!!linkItem.MediaOverlays.initialized) return [3, 4];
-                            return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
+                            return [4, (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays)];
                         case 3:
                             _u.sent();
                             if (isFullTextAudio || isAudioOnly) {
-                                epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                                (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                             }
                             _u.label = 4;
                         case 4:
@@ -266,7 +266,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 if (computedDur) {
                                     if (!linkItem.MediaOverlays.duration) {
                                         linkItem.MediaOverlays.duration = computedDur;
-                                        epub_daisy_common_1.updateDurations(computedDur, linkItem);
+                                        (0, epub_daisy_common_1.updateDurations)(computedDur, linkItem);
                                     }
                                     else {
                                         if (Math.round(linkItem.MediaOverlays.duration) !== Math.round(computedDur)) {
@@ -282,7 +282,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                     if (dur > 0) {
                                         if (!previousLinkItem.MediaOverlays.duration) {
                                             previousLinkItem.MediaOverlays.duration = dur;
-                                            epub_daisy_common_1.updateDurations(dur, previousLinkItem);
+                                            (0, epub_daisy_common_1.updateDurations)(dur, previousLinkItem);
                                         }
                                         else {
                                             if (Math.round(previousLinkItem.MediaOverlays.duration) !== Math.round(dur)) {
@@ -329,7 +329,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                         case 8:
                             publication.Spine = [];
                             resourcesToKeep = [];
-                            dtBooks = tslib_1.__spreadArray([], audioOnlySmilHtmls);
+                            dtBooks = (0, tslib_1.__spreadArray)([], audioOnlySmilHtmls, true);
                             _b = 0, _c = publication.Resources;
                             _u.label = 9;
                         case 9:
@@ -339,7 +339,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 return [3, 15];
                             }
                             if (!(resLink.TypeLink === "text/css" || resLink.HrefDecoded.endsWith(".css"))) return [3, 11];
-                            return [4, epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
+                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
                         case 10:
                             cssText = _u.sent();
                             if (!cssText) {
@@ -365,7 +365,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             return [3, 15];
                         case 11:
                             if (!(resLink.TypeLink === "application/x-dtbook+xml" || resLink.HrefDecoded.endsWith(".xml"))) return [3, 13];
-                            return [4, epub_daisy_common_1.loadFileStrFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
+                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
                         case 12:
                             dtBookStr = _u.sent();
                             if (!dtBookStr) {
@@ -465,8 +465,8 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             }, "") + "\n</head>\n");
                             xhtmlFilePath = resLink.HrefDecoded.replace(/\.(.+)$/, ".xhtml");
                             zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
-                            resLinkJson = serializable_1.TaJsonSerialize(resLink);
-                            resLinkClone = serializable_1.TaJsonDeserialize(resLinkJson, publication_link_1.Link);
+                            resLinkJson = (0, serializable_1.TaJsonSerialize)(resLink);
+                            resLinkClone = (0, serializable_1.TaJsonDeserialize)(resLinkJson, publication_link_1.Link);
                             resLinkClone.setHrefDecoded(xhtmlFilePath);
                             resLinkClone.TypeLink = "application/xhtml+xml";
                             dtBooks.push(resLinkClone);
@@ -475,7 +475,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             if (!(!resLink.HrefDecoded.endsWith(".opf") &&
                                 !resLink.HrefDecoded.endsWith(".res") &&
                                 !resLink.HrefDecoded.endsWith(".ncx"))) return [3, 15];
-                            return [4, epub_daisy_common_1.loadFileBufferFromZipPath(resLink.Href, resLink.HrefDecoded, zip)];
+                            return [4, (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
                         case 14:
                             buff = _u.sent();
                             if (buff) {
@@ -572,7 +572,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                             moLink.TypeLink = "application/vnd.syncnarr+json";
                                             moLink.Duration = dtBookLink.Duration;
                                             dtBookLink.Alternate.push(moLink);
-                                            var jsonObjMO = serializable_1.TaJsonSerialize(mediaOverlay.mo);
+                                            var jsonObjMO = (0, serializable_1.TaJsonSerialize)(mediaOverlay.mo);
                                             var jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
                                             zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
                                             debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
@@ -621,9 +621,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 }
                                 return undefined;
                             };
-                            processLink_1 = function (link) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+                            processLink_1 = function (link) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
                                 var href, fragment, arr, smilDoc, smilStr, targetEl, src;
-                                return tslib_1.__generator(this, function (_a) {
+                                return (0, tslib_1.__generator)(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             href = link.HrefDecoded;
@@ -644,7 +644,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                             }
                                             smilDoc = smilDocs_1[href];
                                             if (!!smilDoc) return [3, 2];
-                                            return [4, epub_daisy_common_1.loadFileStrFromZipPath(href, href, zip)];
+                                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(href, href, zip)];
                                         case 1:
                                             smilStr = _a.sent();
                                             if (!smilStr) {
@@ -677,9 +677,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                     }
                                 });
                             }); };
-                            processLinks_1 = function (links) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+                            processLinks_1 = function (links) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
                                 var _i, links_2, link;
-                                return tslib_1.__generator(this, function (_a) {
+                                return (0, tslib_1.__generator)(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             _i = 0, links_2 = links;
@@ -736,7 +736,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             _u.sent();
                             _u.label = 26;
                         case 26:
-                            jsonObj = serializable_1.TaJsonSerialize(publication);
+                            jsonObj = (0, serializable_1.TaJsonSerialize)(publication);
                             jsonStr = global.JSON.stringify(jsonObj, null, "  ");
                             zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
                             return [3, 29];

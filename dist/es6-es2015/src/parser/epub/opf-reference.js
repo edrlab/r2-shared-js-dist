@@ -23,7 +23,7 @@ let Reference = class Reference {
             this._urlDecoded = null;
             return undefined;
         }
-        this._urlDecoded = decodeURI_1.tryDecodeURI(this.Href);
+        this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.Href);
         return !this._urlDecoded ? undefined : this._urlDecoded;
     }
     set HrefDecoded(href) {
@@ -34,20 +34,20 @@ let Reference = class Reference {
         this.HrefDecoded = href;
     }
 };
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@title"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@title"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Reference.prototype, "Title", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@type"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@type"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Reference.prototype, "Type", void 0);
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("@href"),
-    tslib_1.__metadata("design:type", String)
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@href"),
+    (0, tslib_1.__metadata)("design:type", String)
 ], Reference.prototype, "Href1", void 0);
-Reference = tslib_1.__decorate([
-    xml_js_mapper_1.XmlObject({
+Reference = (0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",
     })

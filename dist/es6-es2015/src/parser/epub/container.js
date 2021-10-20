@@ -6,16 +6,16 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-m
 const container_rootfile_1 = require("./container-rootfile");
 let Container = class Container {
 };
-tslib_1.__decorate([
-    xml_js_mapper_1.XmlXPathSelector("epub:rootfiles/epub:rootfile", {
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("epub:rootfiles/epub:rootfile", {
         epub: "urn:oasis:names:tc:opendocument:xmlns:container",
         rendition: "http://www.idpf.org/2013/rendition",
     }),
-    xml_js_mapper_1.XmlItemType(container_rootfile_1.Rootfile),
-    tslib_1.__metadata("design:type", Array)
+    (0, xml_js_mapper_1.XmlItemType)(container_rootfile_1.Rootfile),
+    (0, tslib_1.__metadata)("design:type", Array)
 ], Container.prototype, "Rootfile", void 0);
-Container = tslib_1.__decorate([
-    xml_js_mapper_1.XmlObject({
+Container = (0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlObject)({
         dummyNS: "dummyURI",
         epub: "wrong2",
         rendition: "wrong1",

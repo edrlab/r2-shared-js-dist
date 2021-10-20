@@ -25,13 +25,13 @@ function isCBZPublication(filePath) {
 }
 exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var zip, err_1, publication, comicInfoEntryName, entries, err_2, _i, entries_1, entryName, link, mediaType, _b, err_3;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4, zipFactory_1.zipLoadPromise(filePath)];
+                    return [4, (0, zipFactory_1.zipLoadPromise)(filePath)];
                 case 1:
                     zip = _a.sent();
                     return [3, 3];
@@ -110,16 +110,16 @@ var filePathToTitle = function (filePath) {
     var fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var comicRackMetadata = function (zip, entryName, publication) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     var entryNameDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _a, _c, p, l;
-    return tslib_1.__generator(this, function (_d) {
+    return (0, tslib_1.__generator)(this, function (_d) {
         switch (_d.label) {
             case 0:
-                entryNameDecoded = decodeURI_1.tryDecodeURI(entryName);
+                entryNameDecoded = (0, decodeURI_1.tryDecodeURI)(entryName);
                 if (!entryNameDecoded) {
                     return [2];
                 }
-                return [4, zipHasEntry_1.zipHasEntry(zip, entryNameDecoded, entryName)];
+                return [4, (0, zipHasEntry_1.zipHasEntry)(zip, entryNameDecoded, entryName)];
             case 1:
                 has = _d.sent();
                 if (!!has) return [3, 3];
@@ -147,7 +147,7 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 _d.label = 7;
             case 7:
                 _d.trys.push([7, 9, , 10]);
-                return [4, BufferUtils_1.streamToBufferPromise(comicZipStream)];
+                return [4, (0, BufferUtils_1.streamToBufferPromise)(comicZipStream)];
             case 8:
                 comicZipData = _d.sent();
                 return [3, 10];
@@ -216,7 +216,7 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 l = new publication_link_1.Link();
                 if (!(p.Type === "FrontCover")) return [3, 13];
                 l.AddRel("cover");
-                return [4, epub_1.addCoverDimensions(publication, l)];
+                return [4, (0, epub_1.addCoverDimensions)(publication, l)];
             case 12:
                 _d.sent();
                 _d.label = 13;

@@ -15,7 +15,7 @@ class JsonContributorConverter {
                 return c.Name;
             }
         }
-        return serializable_1.TaJsonSerialize(c);
+        return (0, serializable_1.TaJsonSerialize)(c);
     }
     deserialize(value) {
         if (typeof value === "string") {
@@ -23,7 +23,7 @@ class JsonContributorConverter {
             c.Name = value;
             return c;
         }
-        return serializable_1.TaJsonDeserialize(value, metadata_contributor_1.Contributor);
+        return (0, serializable_1.TaJsonDeserialize)(value, metadata_contributor_1.Contributor);
     }
     collapseArrayWithSingleItem() {
         return true;

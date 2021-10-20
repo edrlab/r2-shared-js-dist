@@ -24,9 +24,9 @@ var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils"
 var transformer_1 = require("../transform/transformer");
 var init_globals_1 = require("../init-globals");
 var zipHasEntry_1 = require("./zipHasEntry");
-init_globals_1.initGlobalConverters_SHARED();
-init_globals_1.initGlobalConverters_GENERIC();
-lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
+(0, init_globals_1.initGlobalConverters_SHARED)();
+(0, init_globals_1.initGlobalConverters_GENERIC)();
+(0, lcp_1.setLcpNativePluginPath)(path.join(process.cwd(), "LCP", "lcp.node"));
 console.log("process.cwd():");
 console.log(process.cwd());
 console.log("__dirname: ");
@@ -41,7 +41,7 @@ if (!args[0]) {
 var argPath = args[0].trim();
 var filePath = argPath;
 console.log(filePath);
-if (!UrlUtils_1.isHTTP(filePath)) {
+if (!(0, UrlUtils_1.isHTTP)(filePath)) {
     if (!fs.existsSync(filePath)) {
         filePath = path.join(__dirname, argPath);
         console.log(filePath);
@@ -61,7 +61,7 @@ if (!UrlUtils_1.isHTTP(filePath)) {
     }
 }
 var fileName = filePath;
-if (UrlUtils_1.isHTTP(filePath)) {
+if ((0, UrlUtils_1.isHTTP)(filePath)) {
     var url = new url_1.URL(filePath);
     fileName = url.pathname;
 }
@@ -104,13 +104,13 @@ var decryptKeys;
 if (args[2]) {
     decryptKeys = args[2].trim().split(";");
 }
-(function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+(function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, isDaisyBook, _err_2, err_2;
-    return tslib_1.__generator(this, function (_a) {
+    return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4, publication_parser_1.PublicationParsePromise(filePath)];
+                return [4, (0, publication_parser_1.PublicationParsePromise)(filePath)];
             case 1:
                 publication = _a.sent();
                 return [3, 3];
@@ -120,11 +120,11 @@ if (args[2]) {
                 console.log(err_1);
                 return [2];
             case 3:
-                isAnEPUB = epub_1.isEPUBlication(filePath);
+                isAnEPUB = (0, epub_1.isEPUBlication)(filePath);
                 _a.label = 4;
             case 4:
                 _a.trys.push([4, 6, , 7]);
-                return [4, audiobook_1.isAudioBookPublication(filePath)];
+                return [4, (0, audiobook_1.isAudioBookPublication)(filePath)];
             case 5:
                 isAnAudioBook = _a.sent();
                 return [3, 7];
@@ -133,7 +133,7 @@ if (args[2]) {
                 return [3, 7];
             case 7:
                 _a.trys.push([7, 9, , 10]);
-                return [4, daisy_1.isDaisyPublication(filePath)];
+                return [4, (0, daisy_1.isDaisyPublication)(filePath)];
             case 8:
                 isDaisyBook = _a.sent();
                 return [3, 10];
@@ -146,7 +146,7 @@ if (args[2]) {
             case 11:
                 _a.trys.push([11, 16, , 17]);
                 if (!isDaisyBook) return [3, 13];
-                return [4, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub(outputDirPath, publication)];
+                return [4, (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication)];
             case 12:
                 _a.sent();
                 return [3, 15];
@@ -170,7 +170,7 @@ if (args[2]) {
     });
 }); })();
 function extractEPUB_ManifestJSON(pub, outDir, keys) {
-    var manifestJson = serializable_1.TaJsonSerialize(pub);
+    var manifestJson = (0, serializable_1.TaJsonSerialize)(pub);
     var arrLinks = [];
     if (manifestJson.readingOrder) {
         arrLinks.push.apply(arrLinks, manifestJson.readingOrder);
@@ -244,9 +244,9 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
     fs.writeFileSync(manifestJsonPath, manifestJsonStr, "utf8");
 }
 function extractEPUB_Check(zip, outDir) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var zipEntries, err_3, _i, zipEntries_1, zipEntry, expectedOutputPath;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
@@ -283,9 +283,9 @@ function extractEPUB_Check(zip, outDir) {
     });
 }
 function extractEPUB_ProcessKeys(pub, keys) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var keysSha256Hex, err_4;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!pub.LCP || !keys) {
@@ -331,9 +331,9 @@ function extractEPUB_ProcessKeys(pub, keys) {
     });
 }
 function extractEPUB_Link(pub, zip, outDir, link) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var hrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, zipStream_, err_5, transformedStream, err_6, zipData, err_7, linkOutputPath;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     hrefDecoded = link.HrefDecoded;
@@ -342,7 +342,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                         console.log("!?link.HrefDecoded");
                         return [2];
                     }
-                    return [4, zipHasEntry_1.zipHasEntry(zip, hrefDecoded, link.Href)];
+                    return [4, (0, zipHasEntry_1.zipHasEntry)(zip, hrefDecoded, link.Href)];
                 case 1:
                     has = _a.sent();
                     if (!!has) return [3, 3];
@@ -382,7 +382,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                     _a.label = 10;
                 case 10:
                     _a.trys.push([10, 12, , 13]);
-                    return [4, BufferUtils_1.streamToBufferPromise(zipStream_.stream)];
+                    return [4, (0, BufferUtils_1.streamToBufferPromise)(zipStream_.stream)];
                 case 11:
                     zipData = _a.sent();
                     return [3, 13];
@@ -401,9 +401,9 @@ function extractEPUB_Link(pub, zip, outDir, link) {
     });
 }
 function extractEPUB(isEPUB, pub, outDir, keys) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var zipInternal, zip, err_8, err_9, links, lic, has, l, _i, links_1, link, err_10, err_11;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     zipInternal = pub.findFromInternal("zip");
@@ -447,7 +447,7 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
                     }
                     if (!!keys) return [3, 10];
                     lic = (isEPUB ? "META-INF/" : "") + "license.lcpl";
-                    return [4, zipHasEntry_1.zipHasEntry(zip, lic, undefined)];
+                    return [4, (0, zipHasEntry_1.zipHasEntry)(zip, lic, undefined)];
                 case 9:
                     has = _a.sent();
                     if (has) {
@@ -492,9 +492,9 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
     });
 }
 function extractEPUB_MediaOverlays(pub, _zip, outDir) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var i, _i, _a, spineItem, mo, err_12, moJsonObj, moJsonStr, p, moJsonPath, _b, _c, altLink;
-        return tslib_1.__generator(this, function (_d) {
+        return (0, tslib_1.__generator)(this, function (_d) {
             switch (_d.label) {
                 case 0:
                     if (!pub.Spine) {
@@ -511,7 +511,7 @@ function extractEPUB_MediaOverlays(pub, _zip, outDir) {
                     _d.label = 2;
                 case 2:
                     _d.trys.push([2, 4, , 5]);
-                    return [4, epub_daisy_common_1.lazyLoadMediaOverlays(pub, mo)];
+                    return [4, (0, epub_daisy_common_1.lazyLoadMediaOverlays)(pub, mo)];
                 case 3:
                     _d.sent();
                     return [3, 5];
@@ -519,7 +519,7 @@ function extractEPUB_MediaOverlays(pub, _zip, outDir) {
                     err_12 = _d.sent();
                     return [2, Promise.reject(err_12)];
                 case 5:
-                    moJsonObj = serializable_1.TaJsonSerialize(mo);
+                    moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                     moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
                     i++;
                     p = "media-overlays_" + i + ".json";
@@ -553,18 +553,18 @@ function ensureDirs(fspath) {
     }
 }
 function dumpPublication(publication) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var publicationJsonObj, publicationJsonStr, publicationReverse, publicationJsonObjReverse, eq, _i, _a, spineItem, _b, _c, altLink, mo, err_13, moJsonObj, moJsonStr, moReverse, moJsonObjReverse, equa;
-        return tslib_1.__generator(this, function (_d) {
+        return (0, tslib_1.__generator)(this, function (_d) {
             switch (_d.label) {
                 case 0:
                     console.log("#### RAW OBJECT:");
                     console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
-                    publicationJsonObj = serializable_1.TaJsonSerialize(publication);
+                    publicationJsonObj = (0, serializable_1.TaJsonSerialize)(publication);
                     console.log(util.inspect(publicationJsonObj, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
                     publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
-                    publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
-                    publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
+                    publicationReverse = (0, serializable_1.TaJsonDeserialize)(publicationJsonObj, publication_1.Publication);
+                    publicationJsonObjReverse = (0, serializable_1.TaJsonSerialize)(publicationReverse);
                     eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
                     if (!eq) {
                         console.log("#### TA-JSON SERIALIZED JSON OBJ:");
@@ -610,7 +610,7 @@ function dumpPublication(publication) {
                     _d.label = 2;
                 case 2:
                     _d.trys.push([2, 4, , 5]);
-                    return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo)];
+                    return [4, (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, mo)];
                 case 3:
                     _d.sent();
                     return [3, 5];
@@ -618,11 +618,11 @@ function dumpPublication(publication) {
                     err_13 = _d.sent();
                     return [2, Promise.reject(err_13)];
                 case 5:
-                    moJsonObj = serializable_1.TaJsonSerialize(mo);
+                    moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                     moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
                     console.log(moJsonStr.substr(0, 1000) + "\n...\n");
-                    moReverse = serializable_1.TaJsonDeserialize(moJsonObj, media_overlay_1.MediaOverlayNode);
-                    moJsonObjReverse = serializable_1.TaJsonSerialize(moReverse);
+                    moReverse = (0, serializable_1.TaJsonDeserialize)(moJsonObj, media_overlay_1.MediaOverlayNode);
+                    moJsonObjReverse = (0, serializable_1.TaJsonSerialize)(moReverse);
                     equa = deepEqual(moJsonObj, moJsonObjReverse);
                     if (!equa) {
                         console.log("#### TA-JSON SERIALIZED JSON OBJ:");

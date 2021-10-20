@@ -30,7 +30,7 @@ var Rootfile = (function () {
                 this._urlDecoded = null;
                 return undefined;
             }
-            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Path);
+            this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.Path);
             return !this._urlDecoded ? undefined : this._urlDecoded;
         },
         set: function (href) {
@@ -43,20 +43,20 @@ var Rootfile = (function () {
         this.Path = href;
         this.PathDecoded = href;
     };
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@media-type"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@media-type"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Rootfile.prototype, "Type", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@version"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@version"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Rootfile.prototype, "Version", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@full-path"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@full-path"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Rootfile.prototype, "Path1", void 0);
-    Rootfile = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject()
+    Rootfile = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)()
     ], Rootfile);
     return Rootfile;
 }());

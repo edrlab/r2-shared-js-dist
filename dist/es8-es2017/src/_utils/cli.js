@@ -23,9 +23,9 @@ const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/Buf
 const transformer_1 = require("../transform/transformer");
 const init_globals_1 = require("../init-globals");
 const zipHasEntry_1 = require("./zipHasEntry");
-init_globals_1.initGlobalConverters_SHARED();
-init_globals_1.initGlobalConverters_GENERIC();
-lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
+(0, init_globals_1.initGlobalConverters_SHARED)();
+(0, init_globals_1.initGlobalConverters_GENERIC)();
+(0, lcp_1.setLcpNativePluginPath)(path.join(process.cwd(), "LCP", "lcp.node"));
 console.log("process.cwd():");
 console.log(process.cwd());
 console.log("__dirname: ");
@@ -40,7 +40,7 @@ if (!args[0]) {
 const argPath = args[0].trim();
 let filePath = argPath;
 console.log(filePath);
-if (!UrlUtils_1.isHTTP(filePath)) {
+if (!(0, UrlUtils_1.isHTTP)(filePath)) {
     if (!fs.existsSync(filePath)) {
         filePath = path.join(__dirname, argPath);
         console.log(filePath);
@@ -60,7 +60,7 @@ if (!UrlUtils_1.isHTTP(filePath)) {
     }
 }
 let fileName = filePath;
-if (UrlUtils_1.isHTTP(filePath)) {
+if ((0, UrlUtils_1.isHTTP)(filePath)) {
     const url = new url_1.URL(filePath);
     fileName = url.pathname;
 }
@@ -106,30 +106,30 @@ if (args[2]) {
 (async () => {
     let publication;
     try {
-        publication = await publication_parser_1.PublicationParsePromise(filePath);
+        publication = await (0, publication_parser_1.PublicationParsePromise)(filePath);
     }
     catch (err) {
         console.log("== Publication Parser: reject");
         console.log(err);
         return;
     }
-    const isAnEPUB = epub_1.isEPUBlication(filePath);
+    const isAnEPUB = (0, epub_1.isEPUBlication)(filePath);
     let isAnAudioBook;
     try {
-        isAnAudioBook = await audiobook_1.isAudioBookPublication(filePath);
+        isAnAudioBook = await (0, audiobook_1.isAudioBookPublication)(filePath);
     }
     catch (_err) {
     }
     let isDaisyBook;
     try {
-        isDaisyBook = await daisy_1.isDaisyPublication(filePath);
+        isDaisyBook = await (0, daisy_1.isDaisyPublication)(filePath);
     }
     catch (_err) {
     }
     if ((isDaisyBook || isAnAudioBook || isAnEPUB) && outputDirPath) {
         try {
             if (isDaisyBook) {
-                await daisy_convert_to_epub_1.convertDaisyToReadiumWebPub(outputDirPath, publication);
+                await (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication);
             }
             else {
                 await extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys);
@@ -146,7 +146,7 @@ if (args[2]) {
     }
 })();
 function extractEPUB_ManifestJSON(pub, outDir, keys) {
-    const manifestJson = serializable_1.TaJsonSerialize(pub);
+    const manifestJson = (0, serializable_1.TaJsonSerialize)(pub);
     const arrLinks = [];
     if (manifestJson.readingOrder) {
         arrLinks.push(...manifestJson.readingOrder);
@@ -287,7 +287,7 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
         console.log("!?link.HrefDecoded");
         return;
     }
-    const has = await zipHasEntry_1.zipHasEntry(zip, hrefDecoded, link.Href);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, hrefDecoded, link.Href);
     if (!has) {
         console.log(`NOT IN ZIP (extractEPUB_Link): ${link.Href} --- ${hrefDecoded}`);
         const zipEntries = await zip.getEntries();
@@ -317,7 +317,7 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
     zipStream_ = transformedStream;
     let zipData;
     try {
-        zipData = await BufferUtils_1.streamToBufferPromise(zipStream_.stream);
+        zipData = await (0, BufferUtils_1.streamToBufferPromise)(zipStream_.stream);
     }
     catch (err) {
         console.log(hrefDecoded);
@@ -359,7 +359,7 @@ async function extractEPUB(isEPUB, pub, outDir, keys) {
     }
     if (!keys) {
         const lic = (isEPUB ? "META-INF/" : "") + "license.lcpl";
-        const has = await zipHasEntry_1.zipHasEntry(zip, lic, undefined);
+        const has = await (0, zipHasEntry_1.zipHasEntry)(zip, lic, undefined);
         if (has) {
             const l = new publication_link_1.Link();
             l.setHrefDecoded(lic);
@@ -390,12 +390,12 @@ async function extractEPUB_MediaOverlays(pub, _zip, outDir) {
         if (spineItem.MediaOverlays) {
             const mo = spineItem.MediaOverlays;
             try {
-                await epub_daisy_common_1.lazyLoadMediaOverlays(pub, mo);
+                await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(pub, mo);
             }
             catch (err) {
                 return Promise.reject(err);
             }
-            const moJsonObj = serializable_1.TaJsonSerialize(mo);
+            const moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
             const moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
             i++;
             const p = `media-overlays_${i}.json`;
@@ -424,11 +424,11 @@ function ensureDirs(fspath) {
 async function dumpPublication(publication) {
     console.log("#### RAW OBJECT:");
     console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
-    const publicationJsonObj = serializable_1.TaJsonSerialize(publication);
+    const publicationJsonObj = (0, serializable_1.TaJsonSerialize)(publication);
     console.log(util.inspect(publicationJsonObj, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
     const publicationJsonStr = global.JSON.stringify(publicationJsonObj, null, "  ");
-    const publicationReverse = serializable_1.TaJsonDeserialize(publicationJsonObj, publication_1.Publication);
-    const publicationJsonObjReverse = serializable_1.TaJsonSerialize(publicationReverse);
+    const publicationReverse = (0, serializable_1.TaJsonDeserialize)(publicationJsonObj, publication_1.Publication);
+    const publicationJsonObjReverse = (0, serializable_1.TaJsonSerialize)(publicationReverse);
     const eq = deepEqual(publicationJsonObj, publicationJsonObjReverse);
     if (!eq) {
         console.log("#### TA-JSON SERIALIZED JSON OBJ:");
@@ -467,16 +467,16 @@ async function dumpPublication(publication) {
                 }
                 console.log(mo.SmilPathInZip);
                 try {
-                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
+                    await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);
                 }
-                const moJsonObj = serializable_1.TaJsonSerialize(mo);
+                const moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                 const moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
                 console.log(moJsonStr.substr(0, 1000) + "\n...\n");
-                const moReverse = serializable_1.TaJsonDeserialize(moJsonObj, media_overlay_1.MediaOverlayNode);
-                const moJsonObjReverse = serializable_1.TaJsonSerialize(moReverse);
+                const moReverse = (0, serializable_1.TaJsonDeserialize)(moJsonObj, media_overlay_1.MediaOverlayNode);
+                const moJsonObjReverse = (0, serializable_1.TaJsonSerialize)(moReverse);
                 const equa = deepEqual(moJsonObj, moJsonObjReverse);
                 if (!equa) {
                     console.log("#### TA-JSON SERIALIZED JSON OBJ:");

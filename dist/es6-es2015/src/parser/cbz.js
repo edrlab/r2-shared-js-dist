@@ -25,10 +25,10 @@ function isCBZPublication(filePath) {
 }
 exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
         let zip;
         try {
-            zip = yield zipFactory_1.zipLoadPromise(filePath);
+            zip = yield (0, zipFactory_1.zipLoadPromise)(filePath);
         }
         catch (err) {
             return Promise.reject(err);
@@ -94,12 +94,12 @@ const filePathToTitle = (filePath) => {
     const fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    const entryNameDecoded = decodeURI_1.tryDecodeURI(entryName);
+const comicRackMetadata = (zip, entryName, publication) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+    const entryNameDecoded = (0, decodeURI_1.tryDecodeURI)(entryName);
     if (!entryNameDecoded) {
         return;
     }
-    const has = yield zipHasEntry_1.zipHasEntry(zip, entryNameDecoded, entryName);
+    const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, entryNameDecoded, entryName);
     if (!has) {
         console.log(`NOT IN ZIP: ${entryName} --- ${entryNameDecoded}`);
         const zipEntries = yield zip.getEntries();
@@ -119,7 +119,7 @@ const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(voi
     const comicZipStream = comicZipStream_.stream;
     let comicZipData;
     try {
-        comicZipData = yield BufferUtils_1.streamToBufferPromise(comicZipStream);
+        comicZipData = yield (0, BufferUtils_1.streamToBufferPromise)(comicZipStream);
     }
     catch (err) {
         console.log(err);
@@ -181,7 +181,7 @@ const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(voi
             const l = new publication_link_1.Link();
             if (p.Type === "FrontCover") {
                 l.AddRel("cover");
-                yield epub_1.addCoverDimensions(publication, l);
+                yield (0, epub_1.addCoverDimensions)(publication, l);
             }
             if (publication.Spine) {
                 l.setHrefDecoded(publication.Spine[p.Image].Href);

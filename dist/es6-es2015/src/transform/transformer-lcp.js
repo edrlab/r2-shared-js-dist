@@ -7,11 +7,11 @@ class TransformerLCP {
     supports(publication, link) {
         return (typeof publication.LCP !== "undefined") &&
             link.Properties && link.Properties.Encrypted &&
-            transformer_lcp_1.supports(publication.LCP, link.Href, link.Properties.Encrypted);
+            (0, transformer_lcp_1.supports)(publication.LCP, link.Href, link.Properties.Encrypted);
     }
     transformStream(publication, link, _url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, _sessionInfo) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            return transformer_lcp_1.transformStream(publication.LCP, link.Href, link.Properties.Encrypted, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+            return (0, transformer_lcp_1.transformStream)(publication.LCP, link.Href, link.Properties.Encrypted, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd);
         });
     }
 }

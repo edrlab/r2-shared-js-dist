@@ -17,17 +17,17 @@ var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var debug = debug_("r2:shared#parser/divina");
 function absolutizeURLs(rootUrl, jsonObj) {
-    JsonUtils_1.traverseJsonObjects(jsonObj, function (obj) {
+    (0, JsonUtils_1.traverseJsonObjects)(jsonObj, function (obj) {
         if (obj.href && typeof obj.href === "string"
-            && !UrlUtils_1.isHTTP(obj.href)) {
+            && !(0, UrlUtils_1.isHTTP)(obj.href)) {
             obj.href = rootUrl + "/" + obj.href;
         }
     });
 }
 function DivinaParsePromise(filePath, isDivina, pubtype) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var isAnDivina, _a, publicationType, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication, lcpEntryName, checkLCP, hasLCP, has, lcpZipStream_, err_4, lcpZipStream, lcpZipData, err_5, lcpJsonStr, lcpJson, lcpl;
-        return tslib_1.__generator(this, function (_b) {
+        return (0, tslib_1.__generator)(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _a = isDivina;
@@ -53,7 +53,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     _b.label = 3;
                 case 3:
                     _b.trys.push([3, 5, , 6]);
-                    return [4, zipFactory_1.zipLoadPromise(filePathToLoad)];
+                    return [4, (0, zipFactory_1.zipLoadPromise)(filePathToLoad)];
                 case 4:
                     zip = _b.sent();
                     return [3, 6];
@@ -66,7 +66,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     }
                     if (!(isAnDivina === Divinais.LocalExploded ||
                         isAnDivina === Divinais.LocalPacked)) return [3, 9];
-                    return [4, zipHasEntry_1.zipHasEntry(zip, entryName, undefined)];
+                    return [4, (0, zipHasEntry_1.zipHasEntry)(zip, entryName, undefined)];
                 case 7:
                     has = _b.sent();
                     if (!!has) return [3, 9];
@@ -93,7 +93,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     _b.label = 13;
                 case 13:
                     _b.trys.push([13, 15, , 16]);
-                    return [4, BufferUtils_1.streamToBufferPromise(manifestZipStream)];
+                    return [4, (0, BufferUtils_1.streamToBufferPromise)(manifestZipStream)];
                 case 14:
                     manifestZipData = _b.sent();
                     return [3, 16];
@@ -109,7 +109,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                         url.pathname = path.dirname(url.pathname);
                         absolutizeURLs(url.toString(), manifestJson);
                     }
-                    publication = serializable_1.TaJsonDeserialize(manifestJson, publication_1.Publication);
+                    publication = (0, serializable_1.TaJsonDeserialize)(manifestJson, publication_1.Publication);
                     publication.AddToInternal("type", publicationType);
                     publication.AddToInternal("zip", zip);
                     lcpEntryName = "license.lcpl";
@@ -117,7 +117,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     hasLCP = false;
                     if (!(isAnDivina === Divinais.LocalExploded ||
                         isAnDivina === Divinais.LocalPacked)) return [3, 18];
-                    return [4, zipHasEntry_1.zipHasEntry(zip, lcpEntryName, undefined)];
+                    return [4, (0, zipHasEntry_1.zipHasEntry)(zip, lcpEntryName, undefined)];
                 case 17:
                     has = _b.sent();
                     if (!has) {
@@ -155,7 +155,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     _b.label = 23;
                 case 23:
                     _b.trys.push([23, 25, , 26]);
-                    return [4, BufferUtils_1.streamToBufferPromise(lcpZipStream)];
+                    return [4, (0, BufferUtils_1.streamToBufferPromise)(lcpZipStream)];
                 case 24:
                     lcpZipData = _b.sent();
                     return [3, 26];
@@ -166,7 +166,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 case 26:
                     lcpJsonStr = lcpZipData.toString("utf8");
                     lcpJson = JSON.parse(lcpJsonStr);
-                    lcpl = serializable_1.TaJsonDeserialize(lcpJson, lcp_1.LCP);
+                    lcpl = (0, serializable_1.TaJsonDeserialize)(lcpJson, lcp_1.LCP);
                     lcpl.ZipPath = lcpEntryName;
                     lcpl.JsonSource = lcpJsonStr;
                     lcpl.init();
@@ -186,9 +186,9 @@ var Divinais;
     Divinais["RemotePacked"] = "RemotePacked";
 })(Divinais = exports.Divinais || (exports.Divinais = {}));
 function doRequest(u) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var _this = this;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             return [2, new Promise(function (resolve, _reject) {
                     var url = new URL(u);
                     var secure = url.protocol === "https:";
@@ -217,9 +217,9 @@ function doRequest(u) {
                             var loc = res.headers.Location || res.headers.location;
                             if (loc && loc.length) {
                                 var l_1 = Array.isArray(loc) ? loc[0] : loc;
-                                process.nextTick(function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                                process.nextTick(function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
                                     var redirectRes, err_6;
-                                    return tslib_1.__generator(this, function (_a) {
+                                    return (0, tslib_1.__generator)(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
                                                 _a.trys.push([0, 2, , 3]);
@@ -285,11 +285,11 @@ function doRequest(u) {
     });
 }
 function isDivinaPublication(urlOrPath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var p, isHttp, url, fileName, ext, dnva, dnvaLcp, manStr, manJson;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             p = urlOrPath;
-            isHttp = UrlUtils_1.isHTTP(urlOrPath);
+            isHttp = (0, UrlUtils_1.isHTTP)(urlOrPath);
             if (isHttp) {
                 url = new URL(urlOrPath);
                 p = url.pathname;

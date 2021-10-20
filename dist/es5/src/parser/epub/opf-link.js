@@ -6,16 +6,16 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var MetaLink = (function () {
     function MetaLink() {
     }
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@property"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@property"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], MetaLink.prototype, "Property", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@href"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@href"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], MetaLink.prototype, "Href", void 0);
-    MetaLink = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    MetaLink = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             opf: "http://www.idpf.org/2007/opf",
         })
     ], MetaLink);

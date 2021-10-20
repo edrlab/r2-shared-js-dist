@@ -41,7 +41,7 @@ const addCoverDimensions = async (publication, coverLink) => {
         if (!coverLinkHrefDecoded) {
             return;
         }
-        const has = await zipHasEntry_1.zipHasEntry(zip, coverLinkHrefDecoded, coverLink.Href);
+        const has = await (0, zipHasEntry_1.zipHasEntry)(zip, coverLinkHrefDecoded, coverLink.Href);
         if (!has) {
             debug(`NOT IN ZIP (addCoverDimensions): ${coverLink.Href} --- ${coverLinkHrefDecoded}`);
             const zipEntries = await zip.getEntries();
@@ -62,8 +62,8 @@ const addCoverDimensions = async (publication, coverLink) => {
         }
         let zipData;
         try {
-            zipData = await BufferUtils_1.streamToBufferPromise(zipStream.stream);
-            const imageInfo = image_size_1.imageSize(zipData);
+            zipData = await (0, BufferUtils_1.streamToBufferPromise)(zipStream.stream);
+            const imageInfo = (0, image_size_1.imageSize)(zipData);
             if (imageInfo && imageInfo.width && imageInfo.height) {
                 coverLink.Width = imageInfo.width;
                 coverLink.Height = imageInfo.height;
@@ -91,7 +91,7 @@ var EPUBis;
 })(EPUBis = exports.EPUBis || (exports.EPUBis = {}));
 function isEPUBlication(urlOrPath) {
     let p = urlOrPath;
-    const http = UrlUtils_1.isHTTP(urlOrPath);
+    const http = (0, UrlUtils_1.isHTTP)(urlOrPath);
     if (http) {
         const url = new url_1.URL(urlOrPath);
         p = url.pathname;
@@ -124,7 +124,7 @@ async function EpubParsePromise(filePath) {
     }
     let zip;
     try {
-        zip = await zipFactory_1.zipLoadPromise(filePathToLoad);
+        zip = await (0, zipFactory_1.zipLoadPromise)(filePathToLoad);
     }
     catch (err) {
         debug(err);
@@ -143,7 +143,7 @@ async function EpubParsePromise(filePath) {
     publication.AddToInternal("zip", zip);
     let lcpl;
     const lcplZipPath = "META-INF/license.lcpl";
-    let has = await zipHasEntry_1.zipHasEntry(zip, lcplZipPath, undefined);
+    let has = await (0, zipHasEntry_1.zipHasEntry)(zip, lcplZipPath, undefined);
     if (has) {
         let lcplZipStream_;
         try {
@@ -156,7 +156,7 @@ async function EpubParsePromise(filePath) {
         const lcplZipStream = lcplZipStream_.stream;
         let lcplZipData;
         try {
-            lcplZipData = await BufferUtils_1.streamToBufferPromise(lcplZipStream);
+            lcplZipData = await (0, BufferUtils_1.streamToBufferPromise)(lcplZipStream);
         }
         catch (err) {
             debug(err);
@@ -164,7 +164,7 @@ async function EpubParsePromise(filePath) {
         }
         const lcplStr = lcplZipData.toString("utf8");
         const lcplJson = global.JSON.parse(lcplStr);
-        lcpl = serializable_1.TaJsonDeserialize(lcplJson, lcp_1.LCP);
+        lcpl = (0, serializable_1.TaJsonDeserialize)(lcplJson, lcp_1.LCP);
         lcpl.ZipPath = lcplZipPath;
         lcpl.JsonSource = lcplStr;
         lcpl.init();
@@ -174,7 +174,7 @@ async function EpubParsePromise(filePath) {
     }
     let encryption;
     const encZipPath = "META-INF/encryption.xml";
-    has = await zipHasEntry_1.zipHasEntry(zip, encZipPath, undefined);
+    has = await (0, zipHasEntry_1.zipHasEntry)(zip, encZipPath, undefined);
     if (has) {
         let encryptionXmlZipStream_;
         try {
@@ -187,7 +187,7 @@ async function EpubParsePromise(filePath) {
         const encryptionXmlZipStream = encryptionXmlZipStream_.stream;
         let encryptionXmlZipData;
         try {
-            encryptionXmlZipData = await BufferUtils_1.streamToBufferPromise(encryptionXmlZipStream);
+            encryptionXmlZipData = await (0, BufferUtils_1.streamToBufferPromise)(encryptionXmlZipStream);
         }
         catch (err) {
             debug(err);
@@ -210,7 +210,7 @@ async function EpubParsePromise(filePath) {
     const containerXmlZipStream = containerXmlZipStream_.stream;
     let containerXmlZipData;
     try {
-        containerXmlZipData = await BufferUtils_1.streamToBufferPromise(containerXmlZipStream);
+        containerXmlZipData = await (0, BufferUtils_1.streamToBufferPromise)(containerXmlZipStream);
     }
     catch (err) {
         debug(err);
@@ -225,14 +225,14 @@ async function EpubParsePromise(filePath) {
     if (!rootfilePathDecoded) {
         return Promise.reject("?!rootfile.PathDecoded");
     }
-    const opf = await epub_daisy_common_1.getOpf(zip, rootfilePathDecoded, rootfile.Path);
-    epub_daisy_common_1.addLanguage(publication, opf);
-    epub_daisy_common_1.addTitle(publication, rootfile, opf);
-    epub_daisy_common_1.addIdentifier(publication, opf);
-    epub_daisy_common_1.addOtherMetadata(publication, rootfile, opf);
-    epub_daisy_common_1.setPublicationDirection(publication, opf);
-    epub_daisy_common_1.findContributorInMeta(publication, rootfile, opf);
-    await epub_daisy_common_1.fillSpineAndResource(publication, rootfile, opf, zip, addLinkData);
+    const opf = await (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, rootfile.Path);
+    (0, epub_daisy_common_1.addLanguage)(publication, opf);
+    (0, epub_daisy_common_1.addTitle)(publication, rootfile, opf);
+    (0, epub_daisy_common_1.addIdentifier)(publication, opf);
+    (0, epub_daisy_common_1.addOtherMetadata)(publication, rootfile, opf);
+    (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
+    (0, epub_daisy_common_1.findContributorInMeta)(publication, rootfile, opf);
+    await (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData);
     await addRendition(publication, opf, zip);
     await addCoverRel(publication, rootfile, opf, zip);
     if (encryption) {
@@ -246,10 +246,10 @@ async function EpubParsePromise(filePath) {
                 return manifestItem.ID === opf.Spine.Toc;
             });
             if (ncxManItem) {
-                ncx = await epub_daisy_common_1.getNcx(ncxManItem, opf, zip);
+                ncx = await (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip);
             }
         }
-        epub_daisy_common_1.fillTOC(publication, opf, ncx);
+        (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
     }
     if (!publication.PageList && publication.Resources) {
         const pageMapLink = publication.Resources.find((item) => {
@@ -260,8 +260,8 @@ async function EpubParsePromise(filePath) {
         }
     }
     fillCalibreSerieInfo(publication, opf);
-    epub_daisy_common_1.fillSubject(publication, opf);
-    epub_daisy_common_1.fillPublicationDate(publication, rootfile, opf);
+    (0, epub_daisy_common_1.fillSubject)(publication, opf);
+    (0, epub_daisy_common_1.fillPublicationDate)(publication, rootfile, opf);
     return publication;
 }
 exports.EpubParsePromise = EpubParsePromise;
@@ -275,7 +275,7 @@ async function getAllMediaOverlays(publication) {
             const mo = link.MediaOverlays;
             if (!mo.initialized) {
                 try {
-                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
+                    await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);
@@ -296,7 +296,7 @@ async function getMediaOverlay(publication, spineHref) {
             const mo = link.MediaOverlays;
             if (!mo.initialized) {
                 try {
-                    await epub_daisy_common_1.lazyLoadMediaOverlays(publication, mo);
+                    await (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, mo);
                 }
                 catch (err) {
                     return Promise.reject(err);
@@ -318,13 +318,13 @@ const addRelAndPropertiesToLink = async (publication, link, linkEpub, opf) => {
     }
 };
 const addToLinkFromProperties = async (publication, link, propertiesString) => {
-    const properties = epub_daisy_common_1.parseSpaceSeparatedString(propertiesString);
+    const properties = (0, epub_daisy_common_1.parseSpaceSeparatedString)(propertiesString);
     const propertiesStruct = new metadata_properties_1.Properties();
     for (const p of properties) {
         switch (p) {
             case "cover-image": {
                 link.AddRel("cover");
-                await exports.addCoverDimensions(publication, link);
+                await (0, exports.addCoverDimensions)(publication, link);
                 break;
             }
             case "nav": {
@@ -457,9 +457,9 @@ const addToLinkFromProperties = async (publication, link, propertiesString) => {
 };
 const addMediaOverlay = async (link, linkEpub, opf, zip) => {
     if (linkEpub.MediaOverlay) {
-        const meta = epub_daisy_common_1.findMetaByRefineAndProperty(opf, linkEpub.MediaOverlay, "media:duration");
+        const meta = (0, epub_daisy_common_1.findMetaByRefineAndProperty)(opf, linkEpub.MediaOverlay, "media:duration");
         if (meta) {
-            link.Duration = media_overlay_1.timeStrToSeconds(meta.Data);
+            link.Duration = (0, media_overlay_1.timeStrToSeconds)(meta.Data);
         }
         const manItemSmil = opf.Manifest.find((mi) => {
             if (mi.ID === linkEpub.MediaOverlay) {
@@ -468,7 +468,7 @@ const addMediaOverlay = async (link, linkEpub, opf, zip) => {
             return false;
         });
         if (manItemSmil) {
-            await epub_daisy_common_1.addMediaOverlaySMIL(link, manItemSmil, opf, zip);
+            await (0, epub_daisy_common_1.addMediaOverlaySMIL)(link, manItemSmil, opf, zip);
         }
     }
 };
@@ -560,13 +560,13 @@ const addRendition = async (publication, opf, zip) => {
         });
         if (!rendition.Layout || !rendition.Orientation) {
             let displayOptionsZipPath = "META-INF/com.apple.ibooks.display-options.xml";
-            let has = await zipHasEntry_1.zipHasEntry(zip, displayOptionsZipPath, undefined);
+            let has = await (0, zipHasEntry_1.zipHasEntry)(zip, displayOptionsZipPath, undefined);
             if (has) {
                 debug("Info: found iBooks display-options XML");
             }
             else {
                 displayOptionsZipPath = "META-INF/com.kobobooks.display-options.xml";
-                has = await zipHasEntry_1.zipHasEntry(zip, displayOptionsZipPath, undefined);
+                has = await (0, zipHasEntry_1.zipHasEntry)(zip, displayOptionsZipPath, undefined);
                 if (has) {
                     debug("Info: found Kobo display-options XML");
                 }
@@ -586,7 +586,7 @@ const addRendition = async (publication, opf, zip) => {
                     const displayOptionsZipStream = displayOptionsZipStream_.stream;
                     let displayOptionsZipData;
                     try {
-                        displayOptionsZipData = await BufferUtils_1.streamToBufferPromise(displayOptionsZipStream);
+                        displayOptionsZipData = await (0, BufferUtils_1.streamToBufferPromise)(displayOptionsZipStream);
                     }
                     catch (err) {
                         debug(err);
@@ -725,7 +725,7 @@ const fillPageListFromAdobePageMap = async (publication, zip, l) => {
     if (!l.HrefDecoded) {
         return;
     }
-    const pageMapContent = await epub_daisy_common_1.loadFileStrFromZipPath(l.Href, l.HrefDecoded, zip);
+    const pageMapContent = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(l.Href, l.HrefDecoded, zip);
     if (!pageMapContent) {
         return;
     }
@@ -743,7 +743,7 @@ const fillPageListFromAdobePageMap = async (publication, zip, l) => {
             if (!publication.PageList) {
                 publication.PageList = [];
             }
-            const hrefDecoded = decodeURI_1.tryDecodeURI(href);
+            const hrefDecoded = (0, decodeURI_1.tryDecodeURI)(href);
             if (!hrefDecoded) {
                 continue;
             }
@@ -793,7 +793,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
         debug("!?navLink.HrefDecoded");
         return;
     }
-    const has = await zipHasEntry_1.zipHasEntry(zip, navLinkHrefDecoded, navLink.Href);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, navLinkHrefDecoded, navLink.Href);
     if (!has) {
         debug(`NOT IN ZIP (fillTOCFromNavDoc): ${navLink.Href} --- ${navLinkHrefDecoded}`);
         const zipEntries = await zip.getEntries();
@@ -813,7 +813,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
     const navDocZipStream = navDocZipStream_.stream;
     let navDocZipData;
     try {
-        navDocZipData = await BufferUtils_1.streamToBufferPromise(navDocZipStream);
+        navDocZipData = await (0, BufferUtils_1.streamToBufferPromise)(navDocZipStream);
     }
     catch (err) {
         debug(err);
@@ -832,7 +832,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
             if (epubType && epubType.length) {
                 const olElem = select("xhtml:ol", navElement);
                 const rolesString = epubType[0].value;
-                const rolesArray = epub_daisy_common_1.parseSpaceSeparatedString(rolesString);
+                const rolesArray = (0, epub_daisy_common_1.parseSpaceSeparatedString)(rolesString);
                 if (rolesArray.length) {
                     for (const role of rolesArray) {
                         switch (role) {
@@ -893,7 +893,7 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
                     const epubType = select("@epub:type", aElems[0]);
                     if (epubType && epubType.length) {
                         const rolesString = epubType[0].value;
-                        const rolesArray = epub_daisy_common_1.parseSpaceSeparatedString(rolesString);
+                        const rolesArray = (0, epub_daisy_common_1.parseSpaceSeparatedString)(rolesString);
                         if (rolesArray.length) {
                             link.AddRels(rolesArray);
                         }
@@ -901,7 +901,7 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
                     const aHref = select("@href", aElems[0]);
                     if (aHref && aHref.length) {
                         const val = aHref[0].value;
-                        let valDecoded = decodeURI_1.tryDecodeURI(val);
+                        let valDecoded = (0, decodeURI_1.tryDecodeURI)(val);
                         if (!valDecoded) {
                             debug("!?valDecoded");
                             return;
@@ -951,7 +951,7 @@ const addCoverRel = async (publication, rootfile, opf, zip) => {
     if (coverID) {
         let manifestInfo;
         try {
-            manifestInfo = await epub_daisy_common_1.findInManifestByID(publication, rootfile, opf, coverID, zip, addLinkData);
+            manifestInfo = await (0, epub_daisy_common_1.findInManifestByID)(publication, rootfile, opf, coverID, zip, addLinkData);
         }
         catch (err) {
             debug(err);
@@ -967,7 +967,7 @@ const addCoverRel = async (publication, rootfile, opf, zip) => {
             });
             if (linky) {
                 linky.AddRel("cover");
-                await exports.addCoverDimensions(publication, linky);
+                await (0, exports.addCoverDimensions)(publication, linky);
             }
         }
     }

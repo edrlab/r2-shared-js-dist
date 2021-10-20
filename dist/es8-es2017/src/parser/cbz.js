@@ -26,7 +26,7 @@ exports.isCBZPublication = isCBZPublication;
 async function CbzParsePromise(filePath) {
     let zip;
     try {
-        zip = await zipFactory_1.zipLoadPromise(filePath);
+        zip = await (0, zipFactory_1.zipLoadPromise)(filePath);
     }
     catch (err) {
         return Promise.reject(err);
@@ -92,11 +92,11 @@ const filePathToTitle = (filePath) => {
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
 const comicRackMetadata = async (zip, entryName, publication) => {
-    const entryNameDecoded = decodeURI_1.tryDecodeURI(entryName);
+    const entryNameDecoded = (0, decodeURI_1.tryDecodeURI)(entryName);
     if (!entryNameDecoded) {
         return;
     }
-    const has = await zipHasEntry_1.zipHasEntry(zip, entryNameDecoded, entryName);
+    const has = await (0, zipHasEntry_1.zipHasEntry)(zip, entryNameDecoded, entryName);
     if (!has) {
         console.log(`NOT IN ZIP: ${entryName} --- ${entryNameDecoded}`);
         const zipEntries = await zip.getEntries();
@@ -116,7 +116,7 @@ const comicRackMetadata = async (zip, entryName, publication) => {
     const comicZipStream = comicZipStream_.stream;
     let comicZipData;
     try {
-        comicZipData = await BufferUtils_1.streamToBufferPromise(comicZipStream);
+        comicZipData = await (0, BufferUtils_1.streamToBufferPromise)(comicZipStream);
     }
     catch (err) {
         console.log(err);
@@ -178,7 +178,7 @@ const comicRackMetadata = async (zip, entryName, publication) => {
             const l = new publication_link_1.Link();
             if (p.Type === "FrontCover") {
                 l.AddRel("cover");
-                await epub_1.addCoverDimensions(publication, l);
+                await (0, epub_1.addCoverDimensions)(publication, l);
             }
             if (publication.Spine) {
                 l.setHrefDecoded(publication.Spine[p.Image].Href);

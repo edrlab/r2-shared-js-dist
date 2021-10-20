@@ -7,13 +7,13 @@ var smil_custom_test_1 = require("./smil-custom-test");
 var CustomAttributes = (function () {
     function CustomAttributes() {
     }
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("customTest"),
-        xml_js_mapper_1.XmlItemType(smil_custom_test_1.CustomTest),
-        tslib_1.__metadata("design:type", Array)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("customTest"),
+        (0, xml_js_mapper_1.XmlItemType)(smil_custom_test_1.CustomTest),
+        (0, tslib_1.__metadata)("design:type", Array)
     ], CustomAttributes.prototype, "CustomTest", void 0);
-    CustomAttributes = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    CustomAttributes = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             epub: "http://www.idpf.org/2007/ops",
             smil: "http://www.w3.org/ns/SMIL",
             smil2: "http://www.w3.org/2001/SMIL20/",

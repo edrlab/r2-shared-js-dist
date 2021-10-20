@@ -21,10 +21,10 @@ class TransformerHTML {
         return false;
     }
     transformStream(publication, link, url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
             let data;
             try {
-                data = yield BufferUtils_1.streamToBufferPromise(stream.stream);
+                data = yield (0, BufferUtils_1.streamToBufferPromise)(stream.stream);
             }
             catch (err) {
                 return Promise.reject(err);
@@ -38,16 +38,16 @@ class TransformerHTML {
             }
             const sal = {
                 length: buff.length,
-                reset: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                reset: () => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
                     return Promise.resolve(sal);
                 }),
-                stream: BufferUtils_1.bufferToStream(buff),
+                stream: (0, BufferUtils_1.bufferToStream)(buff),
             };
             return Promise.resolve(sal);
         });
     }
     transformBuffer(publication, link, url, data, sessionInfo) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+        return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
             try {
                 const str = data.toString("utf8");
                 const str_ = this.transformString(publication, link, url, str, sessionInfo);

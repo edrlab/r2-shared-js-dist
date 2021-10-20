@@ -21,13 +21,13 @@ var DaisyBookis;
     DaisyBookis["RemotePacked"] = "RemotePacked";
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var p, http, url, zip, err_1, entries, opfZipEntryPath;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     p = urlOrPath;
-                    http = UrlUtils_1.isHTTP(urlOrPath);
+                    http = (0, UrlUtils_1.isHTTP)(urlOrPath);
                     if (!http) return [3, 1];
                     url = new URL(urlOrPath);
                     p = url.pathname;
@@ -48,7 +48,7 @@ function isDaisyPublication(urlOrPath) {
                     _a.label = 4;
                 case 4:
                     _a.trys.push([4, 6, , 7]);
-                    return [4, zipFactory_1.zipLoadPromise(urlOrPath)];
+                    return [4, (0, zipFactory_1.zipLoadPromise)(urlOrPath)];
                 case 5:
                     zip = _a.sent();
                     return [3, 7];
@@ -56,7 +56,7 @@ function isDaisyPublication(urlOrPath) {
                     err_1 = _a.sent();
                     debug(err_1);
                     return [2, Promise.reject(err_1)];
-                case 7: return [4, zipHasEntry_1.zipHasEntry(zip, "META-INF/container.xml", undefined)];
+                case 7: return [4, (0, zipHasEntry_1.zipHasEntry)(zip, "META-INF/container.xml", undefined)];
                 case 8:
                     if (!!(_a.sent())) return [3, 10];
                     return [4, zip.getEntries()];
@@ -76,13 +76,13 @@ function isDaisyPublication(urlOrPath) {
 }
 exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
-    return tslib_1.__awaiter(this, void 0, void 0, function () {
+    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var zip, err_2, publication, entries, opfZipEntryPath, rootfilePathDecoded, opf, ncx, ncxManItem;
-        return tslib_1.__generator(this, function (_a) {
+        return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    return [4, zipFactory_1.zipLoadPromise(filePath)];
+                    return [4, (0, zipFactory_1.zipLoadPromise)(filePath)];
                 case 1:
                     zip = _a.sent();
                     return [3, 3];
@@ -115,16 +115,16 @@ function DaisyParsePromise(filePath) {
                     if (!rootfilePathDecoded) {
                         return [2, Promise.reject("?!rootfile.PathDecoded")];
                     }
-                    return [4, epub_daisy_common_1.getOpf(zip, rootfilePathDecoded, opfZipEntryPath)];
+                    return [4, (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath)];
                 case 5:
                     opf = _a.sent();
-                    epub_daisy_common_1.addLanguage(publication, opf);
-                    epub_daisy_common_1.addTitle(publication, undefined, opf);
-                    epub_daisy_common_1.addIdentifier(publication, opf);
-                    epub_daisy_common_1.addOtherMetadata(publication, undefined, opf);
-                    epub_daisy_common_1.setPublicationDirection(publication, opf);
-                    epub_daisy_common_1.findContributorInMeta(publication, undefined, opf);
-                    return [4, epub_daisy_common_1.fillSpineAndResource(publication, undefined, opf, zip, addLinkData)];
+                    (0, epub_daisy_common_1.addLanguage)(publication, opf);
+                    (0, epub_daisy_common_1.addTitle)(publication, undefined, opf);
+                    (0, epub_daisy_common_1.addIdentifier)(publication, opf);
+                    (0, epub_daisy_common_1.addOtherMetadata)(publication, undefined, opf);
+                    (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
+                    (0, epub_daisy_common_1.findContributorInMeta)(publication, undefined, opf);
+                    return [4, (0, epub_daisy_common_1.fillSpineAndResource)(publication, undefined, opf, zip, addLinkData)];
                 case 6:
                     _a.sent();
                     if (!opf.Manifest) return [3, 8];
@@ -138,24 +138,24 @@ function DaisyParsePromise(filePath) {
                         });
                     }
                     if (!ncxManItem) return [3, 8];
-                    return [4, epub_daisy_common_1.getNcx(ncxManItem, opf, zip)];
+                    return [4, (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip)];
                 case 7:
                     ncx = _a.sent();
                     _a.label = 8;
                 case 8:
-                    epub_daisy_common_1.fillTOC(publication, opf, ncx);
-                    epub_daisy_common_1.fillSubject(publication, opf);
-                    epub_daisy_common_1.fillPublicationDate(publication, undefined, opf);
+                    (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
+                    (0, epub_daisy_common_1.fillSubject)(publication, opf);
+                    (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
                     return [2, publication];
             }
         });
     });
 }
 exports.DaisyParsePromise = DaisyParsePromise;
-var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     var isFullTextAudio, isTextOnly, isAudioOnly;
     var _a;
-    return tslib_1.__generator(this, function (_b) {
+    return (0, tslib_1.__generator)(this, function (_b) {
         switch (_b.label) {
             case 0:
                 if (!((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON)) return [3, 3];
@@ -163,15 +163,15 @@ var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { 
                 isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
                 isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
                 if (!(isFullTextAudio || isTextOnly || isAudioOnly)) return [3, 3];
-                return [4, epub_daisy_common_1.addMediaOverlaySMIL(linkItem, item, opf, zip)];
+                return [4, (0, epub_daisy_common_1.addMediaOverlaySMIL)(linkItem, item, opf, zip)];
             case 1:
                 _b.sent();
                 if (!(linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized)) return [3, 3];
-                return [4, epub_daisy_common_1.lazyLoadMediaOverlays(publication, linkItem.MediaOverlays)];
+                return [4, (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays)];
             case 2:
                 _b.sent();
                 if (isFullTextAudio || isAudioOnly) {
-                    epub_daisy_common_1.updateDurations(linkItem.MediaOverlays.duration, linkItem);
+                    (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                 }
                 _b.label = 3;
             case 3: return [2];

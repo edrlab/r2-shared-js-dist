@@ -10,7 +10,7 @@ const DelinearizeAccessModeSufficient = (ams) => {
 };
 exports.DelinearizeAccessModeSufficient = DelinearizeAccessModeSufficient;
 const DelinearizeAccessModeSufficients = (accessModeSufficients) => {
-    return accessModeSufficients.map((ams) => exports.DelinearizeAccessModeSufficient(ams));
+    return accessModeSufficients.map((ams) => (0, exports.DelinearizeAccessModeSufficient)(ams));
 };
 exports.DelinearizeAccessModeSufficients = DelinearizeAccessModeSufficients;
 const LinearizeAccessModeSufficients = (accessModeSufficients) => {

@@ -30,7 +30,7 @@ var Content = (function () {
                 this._urlDecoded = null;
                 return undefined;
             }
-            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Src);
+            this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.Src);
             return !this._urlDecoded ? undefined : this._urlDecoded;
         },
         set: function (href) {
@@ -43,12 +43,12 @@ var Content = (function () {
         this.Src = href;
         this.SrcDecoded = href;
     };
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@src"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Content.prototype, "Src1", void 0);
-    Content = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    Content = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
         })
     ], Content);

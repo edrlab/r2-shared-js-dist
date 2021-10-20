@@ -6,7 +6,7 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
 var smil_seq_or_par_1 = require("./smil-seq-or-par");
 var Seq = (function (_super) {
-    tslib_1.__extends(Seq, _super);
+    (0, tslib_1.__extends)(Seq, _super);
     function Seq() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
@@ -33,7 +33,7 @@ var Seq = (function (_super) {
                 this._urlDecoded = null;
                 return undefined;
             }
-            this._urlDecoded = decodeURI_1.tryDecodeURI(this.TextRef);
+            this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.TextRef);
             return !this._urlDecoded ? undefined : this._urlDecoded;
         },
         set: function (href) {
@@ -46,22 +46,22 @@ var Seq = (function (_super) {
         this.TextRef = href;
         this.TextRefDecoded = href;
     };
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("smil:par | smil:seq | smil2:par | smil2:seq"),
-        xml_js_mapper_1.XmlItemType(smil_seq_or_par_1.SeqOrPar),
-        tslib_1.__metadata("design:type", Array)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("smil:par | smil:seq | smil2:par | smil2:seq"),
+        (0, xml_js_mapper_1.XmlItemType)(smil_seq_or_par_1.SeqOrPar),
+        (0, tslib_1.__metadata)("design:type", Array)
     ], Seq.prototype, "Children", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@epub:textref"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@epub:textref"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Seq.prototype, "TextRef1", void 0);
-    Seq = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    Seq = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             epub: "http://www.idpf.org/2007/ops",
             smil: "http://www.w3.org/ns/SMIL",
             smil2: "http://www.w3.org/2001/SMIL20/",
         }),
-        xml_js_mapper_1.XmlDiscriminatorValue("seq")
+        (0, xml_js_mapper_1.XmlDiscriminatorValue)("seq")
     ], Seq);
     return Seq;
 }(smil_seq_or_par_1.SeqOrPar));

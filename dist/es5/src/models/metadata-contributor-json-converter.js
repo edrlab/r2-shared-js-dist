@@ -17,7 +17,7 @@ var JsonContributorConverter = (function () {
                 return c.Name;
             }
         }
-        return serializable_1.TaJsonSerialize(c);
+        return (0, serializable_1.TaJsonSerialize)(c);
     };
     JsonContributorConverter.prototype.deserialize = function (value) {
         if (typeof value === "string") {
@@ -25,7 +25,7 @@ var JsonContributorConverter = (function () {
             c.Name = value;
             return c;
         }
-        return serializable_1.TaJsonDeserialize(value, metadata_contributor_1.Contributor);
+        return (0, serializable_1.TaJsonDeserialize)(value, metadata_contributor_1.Contributor);
     };
     JsonContributorConverter.prototype.collapseArrayWithSingleItem = function () {
         return true;

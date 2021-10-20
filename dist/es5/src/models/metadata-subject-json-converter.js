@@ -16,7 +16,7 @@ var JsonSubjectConverter = (function () {
                 return s.Name;
             }
         }
-        return serializable_1.TaJsonSerialize(s);
+        return (0, serializable_1.TaJsonSerialize)(s);
     };
     JsonSubjectConverter.prototype.deserialize = function (value) {
         if (typeof value === "string") {
@@ -24,7 +24,7 @@ var JsonSubjectConverter = (function () {
             s.Name = value;
             return s;
         }
-        return serializable_1.TaJsonDeserialize(value, metadata_subject_1.Subject);
+        return (0, serializable_1.TaJsonDeserialize)(value, metadata_subject_1.Subject);
     };
     JsonSubjectConverter.prototype.collapseArrayWithSingleItem = function () {
         return true;

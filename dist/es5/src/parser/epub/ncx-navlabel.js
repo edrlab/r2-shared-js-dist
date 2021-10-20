@@ -7,16 +7,16 @@ var ncx_audio_1 = require("./ncx-audio");
 var NavLabel = (function () {
     function NavLabel() {
     }
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("ncx:text/text()"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("ncx:text/text()"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], NavLabel.prototype, "Text", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("ncx:audio"),
-        tslib_1.__metadata("design:type", ncx_audio_1.Audio)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("ncx:audio"),
+        (0, tslib_1.__metadata)("design:type", ncx_audio_1.Audio)
     ], NavLabel.prototype, "Audio", void 0);
-    NavLabel = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    NavLabel = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
         })
     ], NavLabel);

@@ -8,14 +8,14 @@ const lcp_1 = require("r2-lcp-js/dist/es6-es2015/src/parser/epub/lcp");
 const serializable_1 = require("r2-lcp-js/dist/es6-es2015/src/serializable");
 const init_globals_1 = require("../src/init-globals");
 const helpers_1 = require("./helpers");
-init_globals_1.initGlobalConverters_SHARED();
-init_globals_1.initGlobalConverters_GENERIC();
-lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
+(0, init_globals_1.initGlobalConverters_SHARED)();
+(0, init_globals_1.initGlobalConverters_GENERIC)();
+(0, lcp_1.setLcpNativePluginPath)(path.join(process.cwd(), "LCP", "lcp.node"));
 const titleStr1 = "str1";
 const titleStr2 = "str2";
 const titleStr3 = "str3";
 const n = 999;
-ava_1.default("JSON SERIALIZE: Metadata.AdditionalJSON", (t) => {
+(0, ava_1.default)("JSON SERIALIZE: Metadata.AdditionalJSON", (t) => {
     const md = new metadata_1.Metadata();
     md.Title = titleStr1;
     md.AdditionalJSON = {
@@ -31,17 +31,17 @@ ava_1.default("JSON SERIALIZE: Metadata.AdditionalJSON", (t) => {
     };
     const pub = new publication_1.Publication();
     pub.Metadata = md;
-    helpers_1.inspect(pub);
-    const jsonPub = serializable_1.TaJsonSerialize(pub);
-    helpers_1.logJSON(jsonPub);
+    (0, helpers_1.inspect)(pub);
+    const jsonPub = (0, serializable_1.TaJsonSerialize)(pub);
+    (0, helpers_1.logJSON)(jsonPub);
     const json = jsonPub.metadata;
-    helpers_1.checkType_String(t, json.title);
+    (0, helpers_1.checkType_String)(t, json.title);
     t.is(json.title, titleStr1);
     if (!json.tizz) {
         t.fail();
         return;
     }
-    helpers_1.checkType_Object(t, json.tizz);
+    (0, helpers_1.checkType_Object)(t, json.tizz);
     t.is(json.tizz.sub1, true);
     if (json.tizz.sub2 || json.tizz.sub2 !== null) {
         t.fail();
@@ -51,20 +51,20 @@ ava_1.default("JSON SERIALIZE: Metadata.AdditionalJSON", (t) => {
         t.fail();
         return;
     }
-    helpers_1.checkType_Number(t, json.tizz.sub3.inner1);
+    (0, helpers_1.checkType_Number)(t, json.tizz.sub3.inner1);
     t.is(json.tizz.sub3.inner1, n);
     if (!json.tizz.sub3.inner2) {
         t.fail();
         return;
     }
-    helpers_1.checkType_Array(t, json.tizz.sub3.inner2);
+    (0, helpers_1.checkType_Array)(t, json.tizz.sub3.inner2);
     t.is(json.tizz.sub3.inner2[0], titleStr3);
     if (!json.tizz.sub3.inner1) {
         t.fail();
         return;
     }
 });
-ava_1.default("JSON DESERIALIZE: Metadata.AdditionalJSON", (t) => {
+(0, ava_1.default)("JSON DESERIALIZE: Metadata.AdditionalJSON", (t) => {
     const json = {
         title: titleStr1,
         title2: titleStr2,
@@ -80,23 +80,23 @@ ava_1.default("JSON DESERIALIZE: Metadata.AdditionalJSON", (t) => {
     const jsonPub = {
         metadata: json,
     };
-    helpers_1.logJSON(jsonPub);
-    const pub = serializable_1.TaJsonDeserialize(jsonPub, publication_1.Publication);
+    (0, helpers_1.logJSON)(jsonPub);
+    const pub = (0, serializable_1.TaJsonDeserialize)(jsonPub, publication_1.Publication);
     const md = pub.Metadata;
-    helpers_1.inspect(md);
-    helpers_1.checkType_String(t, md.Title);
+    (0, helpers_1.inspect)(md);
+    (0, helpers_1.checkType_String)(t, md.Title);
     t.is(md.Title, titleStr1);
     if (!md.AdditionalJSON) {
         t.fail();
         return;
     }
-    helpers_1.checkType_String(t, md.AdditionalJSON.title2);
+    (0, helpers_1.checkType_String)(t, md.AdditionalJSON.title2);
     t.is(md.AdditionalJSON.title2, titleStr2);
     if (!md.AdditionalJSON.tizz) {
         t.fail();
         return;
     }
-    helpers_1.checkType_Object(t, md.AdditionalJSON.tizz);
+    (0, helpers_1.checkType_Object)(t, md.AdditionalJSON.tizz);
     t.is(md.AdditionalJSON.tizz.sub1, true);
     if (md.AdditionalJSON.tizz.sub2 ||
         md.AdditionalJSON.tizz.sub2 !== null) {
@@ -107,13 +107,13 @@ ava_1.default("JSON DESERIALIZE: Metadata.AdditionalJSON", (t) => {
         t.fail();
         return;
     }
-    helpers_1.checkType_Number(t, md.AdditionalJSON.tizz.sub3.inner1);
+    (0, helpers_1.checkType_Number)(t, md.AdditionalJSON.tizz.sub3.inner1);
     t.is(md.AdditionalJSON.tizz.sub3.inner1, n);
     if (!md.AdditionalJSON.tizz.sub3.inner2) {
         t.fail();
         return;
     }
-    helpers_1.checkType_Array(t, md.AdditionalJSON.tizz.sub3.inner2);
+    (0, helpers_1.checkType_Array)(t, md.AdditionalJSON.tizz.sub3.inner2);
     t.is(md.AdditionalJSON.tizz.sub3.inner2[0], titleStr3);
     if (!md.AdditionalJSON.tizz.sub3.inner1) {
         t.fail();

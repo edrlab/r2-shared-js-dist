@@ -6,16 +6,16 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var MetaDate = (function () {
     function MetaDate() {
     }
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("text()"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("text()"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], MetaDate.prototype, "Data", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@event"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@event"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], MetaDate.prototype, "Event", void 0);
-    MetaDate = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    MetaDate = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",
         })

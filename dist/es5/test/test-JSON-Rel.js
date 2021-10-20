@@ -7,68 +7,68 @@ var lcp_1 = require("r2-lcp-js/dist/es5/src/parser/epub/lcp");
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var init_globals_1 = require("../src/init-globals");
 var helpers_1 = require("./helpers");
-init_globals_1.initGlobalConverters_SHARED();
-init_globals_1.initGlobalConverters_GENERIC();
-lcp_1.setLcpNativePluginPath(path.join(process.cwd(), "LCP", "lcp.node"));
+(0, init_globals_1.initGlobalConverters_SHARED)();
+(0, init_globals_1.initGlobalConverters_GENERIC)();
+(0, lcp_1.setLcpNativePluginPath)(path.join(process.cwd(), "LCP", "lcp.node"));
 var relStr1 = "rel1";
 var relStr2 = "rel2";
-ava_1.default("JSON SERIALIZE: Publication Link.Rel => string[]", function (t) {
+(0, ava_1.default)("JSON SERIALIZE: Publication Link.Rel => string[]", function (t) {
     var link = new publication_link_1.Link();
     link.AddRel(relStr1);
     link.AddRel(relStr2);
-    helpers_1.inspect(link);
-    var json = serializable_1.TaJsonSerialize(link);
-    helpers_1.logJSON(json);
-    helpers_1.checkType_Array(t, json.rel);
+    (0, helpers_1.inspect)(link);
+    var json = (0, serializable_1.TaJsonSerialize)(link);
+    (0, helpers_1.logJSON)(json);
+    (0, helpers_1.checkType_Array)(t, json.rel);
     var arr = json.rel;
     t.is(arr.length, 2);
-    helpers_1.checkType_String(t, arr[0]);
+    (0, helpers_1.checkType_String)(t, arr[0]);
     t.is(arr[0], relStr1);
-    helpers_1.checkType_String(t, arr[1]);
+    (0, helpers_1.checkType_String)(t, arr[1]);
     t.is(arr[1], relStr2);
 });
-ava_1.default("JSON SERIALIZE: Publication Link.Rel => string", function (t) {
+(0, ava_1.default)("JSON SERIALIZE: Publication Link.Rel => string", function (t) {
     var link = new publication_link_1.Link();
     link.AddRel(relStr1);
-    helpers_1.inspect(link);
-    var json = serializable_1.TaJsonSerialize(link);
-    helpers_1.logJSON(json);
-    helpers_1.checkType_String(t, json.rel);
+    (0, helpers_1.inspect)(link);
+    var json = (0, serializable_1.TaJsonSerialize)(link);
+    (0, helpers_1.logJSON)(json);
+    (0, helpers_1.checkType_String)(t, json.rel);
     t.is(json.rel, relStr1);
 });
-ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[]", function (t) {
+(0, ava_1.default)("JSON DESERIALIZE: Publication Link.Rel => string[]", function (t) {
     var json = {};
     json.rel = [relStr1, relStr2];
-    helpers_1.logJSON(json);
-    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
-    helpers_1.inspect(link);
-    helpers_1.checkType_Array(t, link.Rel);
+    (0, helpers_1.logJSON)(json);
+    var link = (0, serializable_1.TaJsonDeserialize)(json, publication_link_1.Link);
+    (0, helpers_1.inspect)(link);
+    (0, helpers_1.checkType_Array)(t, link.Rel);
     t.is(link.Rel.length, 2);
-    helpers_1.checkType_String(t, link.Rel[0]);
+    (0, helpers_1.checkType_String)(t, link.Rel[0]);
     t.is(link.Rel[0], relStr1);
-    helpers_1.checkType_String(t, link.Rel[1]);
+    (0, helpers_1.checkType_String)(t, link.Rel[1]);
     t.is(link.Rel[1], relStr2);
 });
-ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string[1]", function (t) {
+(0, ava_1.default)("JSON DESERIALIZE: Publication Link.Rel => string[1]", function (t) {
     var json = {};
     json.rel = [relStr1];
-    helpers_1.logJSON(json);
-    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
-    helpers_1.inspect(link);
-    helpers_1.checkType_Array(t, link.Rel);
+    (0, helpers_1.logJSON)(json);
+    var link = (0, serializable_1.TaJsonDeserialize)(json, publication_link_1.Link);
+    (0, helpers_1.inspect)(link);
+    (0, helpers_1.checkType_Array)(t, link.Rel);
     t.is(link.Rel.length, 1);
-    helpers_1.checkType_String(t, link.Rel[0]);
+    (0, helpers_1.checkType_String)(t, link.Rel[0]);
     t.is(link.Rel[0], relStr1);
 });
-ava_1.default("JSON DESERIALIZE: Publication Link.Rel => string", function (t) {
+(0, ava_1.default)("JSON DESERIALIZE: Publication Link.Rel => string", function (t) {
     var json = {};
     json.rel = relStr1;
-    helpers_1.logJSON(json);
-    var link = serializable_1.TaJsonDeserialize(json, publication_link_1.Link);
-    helpers_1.inspect(link);
-    helpers_1.checkType_Array(t, link.Rel);
+    (0, helpers_1.logJSON)(json);
+    var link = (0, serializable_1.TaJsonDeserialize)(json, publication_link_1.Link);
+    (0, helpers_1.inspect)(link);
+    (0, helpers_1.checkType_Array)(t, link.Rel);
     t.is(link.Rel.length, 1);
-    helpers_1.checkType_String(t, link.Rel[0]);
+    (0, helpers_1.checkType_String)(t, link.Rel[0]);
     t.is(link.Rel[0], relStr1);
 });
 //# sourceMappingURL=test-JSON-Rel.js.map

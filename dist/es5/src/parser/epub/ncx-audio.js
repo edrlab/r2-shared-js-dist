@@ -30,7 +30,7 @@ var Audio = (function () {
                 this._urlDecoded = null;
                 return undefined;
             }
-            this._urlDecoded = decodeURI_1.tryDecodeURI(this.Src);
+            this._urlDecoded = (0, decodeURI_1.tryDecodeURI)(this.Src);
             return !this._urlDecoded ? undefined : this._urlDecoded;
         },
         set: function (href) {
@@ -43,20 +43,20 @@ var Audio = (function () {
         this.Src = href;
         this.SrcDecoded = href;
     };
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@clipBegin"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@clipBegin"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Audio.prototype, "ClipBegin", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@clipEnd"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@clipEnd"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Audio.prototype, "ClipEnd", void 0);
-    tslib_1.__decorate([
-        xml_js_mapper_1.XmlXPathSelector("@src"),
-        tslib_1.__metadata("design:type", String)
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
+        (0, tslib_1.__metadata)("design:type", String)
     ], Audio.prototype, "Src1", void 0);
-    Audio = tslib_1.__decorate([
-        xml_js_mapper_1.XmlObject({
+    Audio = (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
         })
     ], Audio);
