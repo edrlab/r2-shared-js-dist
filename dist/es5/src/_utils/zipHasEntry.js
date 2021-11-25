@@ -25,7 +25,7 @@ function zipHasEntry(zip, zipPath, zipPathOther) {
                     return [3, 4];
                 case 4:
                     if (!(!has && zipPathOther && zipPathOther !== zipPath)) return [3, 8];
-                    debug("zipHasEntry: " + zipPath + " => " + zipPathOther);
+                    debug("zipHasEntry: ".concat(zipPath, " => ").concat(zipPathOther));
                     has = zip.hasEntry(zipPathOther);
                     if (!zip.hasEntryAsync) return [3, 8];
                     _a.label = 5;

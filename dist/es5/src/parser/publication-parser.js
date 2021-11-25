@@ -27,12 +27,12 @@ function PublicationParsePromise(filePath) {
                     _c = (0, divina_1.DivinaParsePromise)(filePath, isDivina);
                     return [3, 13];
                 case 4:
-                    if (!/\.webpub$/.test(path.extname(path.basename(filePath)).toLowerCase())) return [3, 5];
-                    _d = (0, divina_1.DivinaParsePromise)(filePath, (/^http[s]?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "webpub");
+                    if (!/\.webpub$/i.test(path.extname(path.basename(filePath)))) return [3, 5];
+                    _d = (0, divina_1.DivinaParsePromise)(filePath, (/^https?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "webpub");
                     return [3, 12];
                 case 5:
-                    if (!/\.lcpdf$/.test(path.extname(path.basename(filePath)).toLowerCase())) return [3, 6];
-                    _e = (0, divina_1.DivinaParsePromise)(filePath, (/^http[s]?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "pdf");
+                    if (!/\.lcpdf$/i.test(path.extname(path.basename(filePath)))) return [3, 6];
+                    _e = (0, divina_1.DivinaParsePromise)(filePath, (/^https?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "pdf");
                     return [3, 11];
                 case 6: return [4, (0, daisy_1.isDaisyPublication)(filePath)];
                 case 7:
@@ -42,7 +42,7 @@ function PublicationParsePromise(filePath) {
                 case 8: return [4, (0, audiobook_1.isAudioBookPublication)(filePath)];
                 case 9:
                     _f = (isAudio = _g.sent()) ? (0, audiobook_1.AudioBookParsePromise)(filePath, isAudio) :
-                        Promise.reject("Unrecognized publication type " + filePath);
+                        Promise.reject("Unrecognized publication type ".concat(filePath));
                     _g.label = 10;
                 case 10:
                     _e = (_f);

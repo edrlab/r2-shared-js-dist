@@ -11,6 +11,7 @@ var publication_1 = require("../models/publication");
 var UrlUtils_1 = require("r2-utils-js/dist/es5/src/_utils/http/UrlUtils");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
+var daisy_convert_ncc_to_opf_ncx_1 = require("./daisy-convert-ncc-to-opf-ncx");
 var epub_daisy_common_1 = require("./epub-daisy-common");
 var debug = debug_("r2:shared#parser/daisy");
 var DaisyBookis;
@@ -33,11 +34,12 @@ function isDaisyPublication(urlOrPath) {
                     p = url.pathname;
                     return [2, undefined];
                 case 1:
-                    if (!/\.daisy[23]?$/.test(path.extname(path.basename(p)).toLowerCase())) return [3, 2];
+                    if (!/\.daisy[23]?$/i.test(path.extname(path.basename(p)))) return [3, 2];
                     return [2, DaisyBookis.LocalPacked];
                 case 2:
                     if (!(fs.existsSync(path.join(urlOrPath, "package.opf")) ||
                         fs.existsSync(path.join(urlOrPath, "Book.opf")) ||
+                        fs.existsSync(path.join(urlOrPath, "ncc.html")) ||
                         fs.existsSync(path.join(urlOrPath, "speechgen.opf")))) return [3, 3];
                     if (!fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
                         return [2, DaisyBookis.LocalExploded];
@@ -63,7 +65,7 @@ function isDaisyPublication(urlOrPath) {
                 case 9:
                     entries = _a.sent();
                     opfZipEntryPath = entries.find(function (entry) {
-                        return entry.endsWith(".opf");
+                        return /ncc\.html$/i.test(entry) || /\.opf$/i.test(entry);
                     });
                     if (!opfZipEntryPath) {
                         return [2, undefined];
@@ -77,17 +79,18 @@ function isDaisyPublication(urlOrPath) {
 exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
     return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-        var zip, err_2, publication, entries, opfZipEntryPath, rootfilePathDecoded, opf, ncx, ncxManItem;
-        return (0, tslib_1.__generator)(this, function (_a) {
-            switch (_a.label) {
+        var zip, err_2, publication, entries, opfZipEntryPath, daisy2NccZipEntryPath, rootfilePathDecoded, opf, ncx, ncxManItem;
+        var _a;
+        return (0, tslib_1.__generator)(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 3]);
                     return [4, (0, zipFactory_1.zipLoadPromise)(filePath)];
                 case 1:
-                    zip = _a.sent();
+                    zip = _b.sent();
                     return [3, 3];
                 case 2:
-                    err_2 = _a.sent();
+                    err_2 = _b.sent();
                     debug(err_2);
                     return [2, Promise.reject(err_2)];
                 case 3:
@@ -104,20 +107,47 @@ function DaisyParsePromise(filePath) {
                     publication.AddToInternal("zip", zip);
                     return [4, zip.getEntries()];
                 case 4:
-                    entries = _a.sent();
+                    entries = _b.sent();
                     opfZipEntryPath = entries.find(function (entry) {
-                        return entry.endsWith(".opf");
+                        return /\.opf$/i.test(entry);
                     });
                     if (!opfZipEntryPath) {
-                        return [2, Promise.reject("OPF package XML file cannot be found.")];
+                        daisy2NccZipEntryPath = entries.find(function (entry) {
+                            return /ncc\.html$/i.test(entry);
+                        });
+                        opfZipEntryPath = daisy2NccZipEntryPath;
+                    }
+                    if (!opfZipEntryPath) {
+                        return [2, Promise.reject("DAISY3 OPF package XML file or DAISY2 NCC cannot be found.")];
                     }
                     rootfilePathDecoded = opfZipEntryPath;
                     if (!rootfilePathDecoded) {
                         return [2, Promise.reject("?!rootfile.PathDecoded")];
                     }
-                    return [4, (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath)];
+                    if (!daisy2NccZipEntryPath) return [3, 6];
+                    return [4, (0, daisy_convert_ncc_to_opf_ncx_1.convertNccToOpfAndNcx)(zip, rootfilePathDecoded, opfZipEntryPath)];
                 case 5:
-                    opf = _a.sent();
+                    _a = _b.sent(), opf = _a[0], ncx = _a[1];
+                    return [3, 9];
+                case 6: return [4, (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath)];
+                case 7:
+                    opf = _b.sent();
+                    if (!opf.Manifest) return [3, 9];
+                    ncxManItem = opf.Manifest.find(function (manifestItem) {
+                        return manifestItem.MediaType === "application/x-dtbncx+xml";
+                    });
+                    if (!ncxManItem) {
+                        ncxManItem = opf.Manifest.find(function (manifestItem) {
+                            return manifestItem.MediaType === "text/xml" &&
+                                manifestItem.Href && /\.ncx$/i.test(manifestItem.Href);
+                        });
+                    }
+                    if (!ncxManItem) return [3, 9];
+                    return [4, (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip)];
+                case 8:
+                    ncx = _b.sent();
+                    _b.label = 9;
+                case 9:
                     (0, epub_daisy_common_1.addLanguage)(publication, opf);
                     (0, epub_daisy_common_1.addTitle)(publication, undefined, opf);
                     (0, epub_daisy_common_1.addIdentifier)(publication, opf);
@@ -125,24 +155,8 @@ function DaisyParsePromise(filePath) {
                     (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
                     (0, epub_daisy_common_1.findContributorInMeta)(publication, undefined, opf);
                     return [4, (0, epub_daisy_common_1.fillSpineAndResource)(publication, undefined, opf, zip, addLinkData)];
-                case 6:
-                    _a.sent();
-                    if (!opf.Manifest) return [3, 8];
-                    ncxManItem = opf.Manifest.find(function (manifestItem) {
-                        return manifestItem.MediaType === "application/x-dtbncx+xml";
-                    });
-                    if (!ncxManItem) {
-                        ncxManItem = opf.Manifest.find(function (manifestItem) {
-                            return manifestItem.MediaType === "text/xml" &&
-                                manifestItem.Href && manifestItem.Href.endsWith(".ncx");
-                        });
-                    }
-                    if (!ncxManItem) return [3, 8];
-                    return [4, (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip)];
-                case 7:
-                    ncx = _a.sent();
-                    _a.label = 8;
-                case 8:
+                case 10:
+                    _b.sent();
                     (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
                     (0, epub_daisy_common_1.fillSubject)(publication, opf);
                     (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
@@ -153,15 +167,18 @@ function DaisyParsePromise(filePath) {
 }
 exports.DaisyParsePromise = DaisyParsePromise;
 var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var isFullTextAudio, isTextOnly, isAudioOnly;
+    var isFullTextAudio, isAudioOnly, isTextOnly;
     var _a;
     return (0, tslib_1.__generator)(this, function (_b) {
         switch (_b.label) {
             case 0:
                 if (!((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON)) return [3, 3];
-                isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
-                isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
-                isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
+                isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
+                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText";
+                isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
+                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc";
+                isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
+                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "textNcc";
                 if (!(isFullTextAudio || isTextOnly || isAudioOnly)) return [3, 3];
                 return [4, (0, epub_daisy_common_1.addMediaOverlaySMIL)(linkItem, item, opf, zip)];
             case 1:

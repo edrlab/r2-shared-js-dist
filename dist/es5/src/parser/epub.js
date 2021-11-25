@@ -50,12 +50,15 @@ var addCoverDimensions = function (publication, coverLink) { return (0, tslib_1.
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                debug("NOT IN ZIP (addCoverDimensions): " + coverLink.Href + " --- " + coverLinkHrefDecoded);
+                debug("NOT IN ZIP (addCoverDimensions): ".concat(coverLink.Href, " --- ").concat(coverLinkHrefDecoded));
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                     zipEntry = zipEntries_1[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2];
@@ -89,7 +92,7 @@ var addCoverDimensions = function (publication, coverLink) { return (0, tslib_1.
                     if (coverLink.TypeLink &&
                         coverLink.TypeLink.replace("jpeg", "jpg").replace("+xml", "")
                             !== ("image/" + imageInfo.type)) {
-                        debug("Wrong image type? " + coverLink.TypeLink + " -- " + imageInfo.type);
+                        debug("Wrong image type? ".concat(coverLink.TypeLink, " -- ").concat(imageInfo.type));
                     }
                 }
                 return [3, 11];
@@ -122,8 +125,8 @@ function isEPUBlication(urlOrPath) {
         return EPUBis.LocalExploded;
     }
     var fileName = path.basename(p);
-    var ext = path.extname(fileName).toLowerCase();
-    var epub = /\.epub[3]?$/.test(ext);
+    var ext = path.extname(fileName);
+    var epub = /\.epub3?$/i.test(ext);
     if (epub) {
         return http ? EPUBis.RemotePacked : EPUBis.LocalPacked;
     }
@@ -417,7 +420,7 @@ function getMediaOverlay(publication, spineHref) {
                 case 6:
                     _i++;
                     return [3, 1];
-                case 7: return [2, Promise.reject("No Media Overlays " + spineHref)];
+                case 7: return [2, Promise.reject("No Media Overlays ".concat(spineHref))];
             }
         });
     });
@@ -1001,6 +1004,9 @@ var fillPageListFromAdobePageMap = function (publication, zip, l) { return (0, t
                 if (pages && pages.length) {
                     for (i = 0; i < pages.length; i += 1) {
                         page = pages.item(i);
+                        if (!page) {
+                            continue;
+                        }
                         link = new publication_link_1.Link();
                         href = page.getAttribute("href");
                         title = page.getAttribute("name");
@@ -1071,12 +1077,15 @@ var fillTOCFromNavDoc = function (publication, zip) { return (0, tslib_1.__await
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                debug("NOT IN ZIP (fillTOCFromNavDoc): " + navLink.Href + " --- " + navLinkHrefDecoded);
+                debug("NOT IN ZIP (fillTOCFromNavDoc): ".concat(navLink.Href, " --- ").concat(navLinkHrefDecoded));
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
                     zipEntry = zipEntries_2[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2];

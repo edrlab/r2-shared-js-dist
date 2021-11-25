@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDurations = exports.lazyLoadMediaOverlays = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var mime = require("mime-types");
@@ -71,7 +71,7 @@ var fillPublicationDate = function (publication, rootfile, opf) {
                     publication.Metadata.PublicationDate = mom.toDate();
                 }
             }
-            catch (err) {
+            catch (_err) {
                 debug("INVALID DATE/TIME? " + token);
             }
             return;
@@ -85,7 +85,7 @@ var fillPublicationDate = function (publication, rootfile, opf) {
                         publication.Metadata.PublicationDate = mom.toDate();
                     }
                 }
-                catch (err) {
+                catch (_err) {
                     debug("INVALID DATE/TIME? " + token);
                 }
             }
@@ -349,7 +349,7 @@ var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkD
             case 1:
                 _a.sent();
                 return [2, linkItem];
-            case 2: return [2, Promise.reject("ID " + ID + " not found")];
+            case 2: return [2, Promise.reject("ID ".concat(ID, " not found"))];
         }
     });
 }); };
@@ -401,7 +401,7 @@ var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkDat
                 item = _c[_b];
                 itemHrefDecoded = item.HrefDecoded;
                 if (!itemHrefDecoded) {
-                    debug("!? item.Href");
+                    debug("!? item.Href", JSON.stringify(item, null, 4));
                     return [3, 10];
                 }
                 zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
@@ -411,13 +411,13 @@ var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkDat
                 linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
                 linkItem.setHrefDecoded(zipPath);
-                return [4, addLinkData(publication, rootfile, opf, zip, linkItem, item)];
-            case 9:
-                _d.sent();
                 if (!publication.Resources) {
                     publication.Resources = [];
                 }
                 publication.Resources.push(linkItem);
+                return [4, addLinkData(publication, rootfile, opf, zip, linkItem, item)];
+            case 9:
+                _d.sent();
                 _d.label = 10;
             case 10:
                 _b++;
@@ -639,7 +639,7 @@ var setPublicationDirection = function (publication, opf) {
 };
 exports.setPublicationDirection = setPublicationDirection;
 var getNcx = function (ncxManItem, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr, iStart, iEnd, clip, ncxDoc, ncx;
+    var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -656,13 +656,16 @@ var getNcx = function (ncxManItem, opf, zip) { return (0, tslib_1.__awaiter)(voi
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                err = "NOT IN ZIP (NCX): " + ncxManItem.Href + " --- " + ncxFilePath;
+                err = "NOT IN ZIP (NCX): ".concat(ncxManItem.Href, " --- ").concat(ncxFilePath);
                 debug(err);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                     zipEntry = zipEntries_1[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2, Promise.reject(err)];
@@ -691,39 +694,46 @@ var getNcx = function (ncxManItem, opf, zip) { return (0, tslib_1.__awaiter)(voi
                 return [2, Promise.reject(err_3)];
             case 10:
                 ncxStr = ncxZipData.toString("utf8");
-                iStart = ncxStr.indexOf("<ncx");
-                if (iStart >= 0) {
-                    iEnd = ncxStr.indexOf(">", iStart);
-                    if (iEnd > iStart) {
-                        clip = ncxStr.substr(iStart, iEnd - iStart);
-                        if (clip.indexOf("xmlns") < 0) {
-                            ncxStr = ncxStr.replace(/<ncx/, "<ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" ");
-                        }
-                    }
-                }
-                ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
-                ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
-                ncx.ZipPath = ncxFilePath;
-                return [2, ncx];
+                return [2, (0, exports.getNcx_)(ncxStr, ncxFilePath)];
         }
     });
 }); };
 exports.getNcx = getNcx;
+var getNcx_ = function (ncxStr, ncxFilePath) {
+    var iStart = ncxStr.indexOf("<ncx");
+    if (iStart >= 0) {
+        var iEnd = ncxStr.indexOf(">", iStart);
+        if (iEnd > iStart) {
+            var clip = ncxStr.substr(iStart, iEnd - iStart);
+            if (clip.indexOf("xmlns") < 0) {
+                ncxStr = ncxStr.replace(/<ncx/, "<ncx xmlns=\"http://www.daisy.org/z3986/2005/ncx/\" ");
+            }
+        }
+    }
+    var ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
+    var ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
+    ncx.ZipPath = ncxFilePath;
+    return ncx;
+};
+exports.getNcx_ = getNcx_;
 var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr, iStart, iEnd, clip, opfDoc, opf;
+    var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0: return [4, (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath)];
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                err = "NOT IN ZIP (container OPF rootfile): " + rootfilePath + " --- " + rootfilePathDecoded;
+                err = "NOT IN ZIP (container OPF rootfile): ".concat(rootfilePath, " --- ").concat(rootfilePathDecoded);
                 debug(err);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
                     zipEntry = zipEntries_2[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2, Promise.reject(err)];
@@ -752,24 +762,28 @@ var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return (0, tsli
                 return [2, Promise.reject(err_5)];
             case 10:
                 opfStr = opfZipData.toString("utf8");
-                iStart = opfStr.indexOf("<package");
-                if (iStart >= 0) {
-                    iEnd = opfStr.indexOf(">", iStart);
-                    if (iEnd > iStart) {
-                        clip = opfStr.substr(iStart, iEnd - iStart);
-                        if (clip.indexOf("xmlns") < 0) {
-                            opfStr = opfStr.replace(/<package/, "<package xmlns=\"http://openebook.org/namespaces/oeb-package/1.0/\" ");
-                        }
-                    }
-                }
-                opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
-                opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
-                opf.ZipPath = rootfilePathDecoded;
-                return [2, opf];
+                return [2, (0, exports.getOpf_)(opfStr, rootfilePathDecoded)];
         }
     });
 }); };
 exports.getOpf = getOpf;
+var getOpf_ = function (opfStr, rootfilePathDecoded) {
+    var iStart = opfStr.indexOf("<package");
+    if (iStart >= 0) {
+        var iEnd = opfStr.indexOf(">", iStart);
+        if (iEnd > iStart) {
+            var clip = opfStr.substr(iStart, iEnd - iStart);
+            if (clip.indexOf("xmlns") < 0) {
+                opfStr = opfStr.replace(/<package/, "<package xmlns=\"http://openebook.org/namespaces/oeb-package/1.0/\" ");
+            }
+        }
+    }
+    var opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
+    var opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
+    opf.ZipPath = rootfilePathDecoded;
+    return opf;
+};
+exports.getOpf_ = getOpf_;
 var addOtherMetadata = function (publication, rootfile, opf) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
     if (!opf.Metadata) {
@@ -1155,12 +1169,15 @@ var loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { retu
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                debug("NOT IN ZIP (loadFileBufferFromZipPath): " + linkHref + " --- " + linkHrefDecoded);
+                debug("NOT IN ZIP (loadFileBufferFromZipPath): ".concat(linkHref, " --- ").concat(linkHrefDecoded));
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_3 = zipEntries; _i < zipEntries_3.length; _i++) {
                     zipEntry = zipEntries_3[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2, undefined];
@@ -1238,7 +1255,7 @@ var addAlternateAudioLinkFromNCX = function (ncx, link, navLabel) {
             var begin = navLabel.Audio.ClipBegin ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipBegin) : 0;
             var end = navLabel.Audio.ClipEnd ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipEnd) : 0;
             timeHref += begin.toString();
-            if (navLabel.Audio.ClipEnd) {
+            if (navLabel.Audio.ClipEnd && end) {
                 timeHref += ",";
                 timeHref += end.toString();
             }
@@ -1246,10 +1263,14 @@ var addAlternateAudioLinkFromNCX = function (ncx, link, navLabel) {
                 link.Alternate = [];
             }
             var altLink = new publication_link_1.Link();
+            altLink.Rel = ["daisyAudioLabel"];
             altLink.setHrefDecoded(timeHref);
             var mediaType = mime.lookup(audioSrcDcoded);
             if (mediaType) {
                 altLink.TypeLink = mediaType;
+            }
+            if (navLabel.Audio.ClipEnd && end > begin) {
+                altLink.Duration = end - begin;
             }
             link.Alternate.push(altLink);
         }
@@ -1328,12 +1349,15 @@ var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return (0, ts
             case 1:
                 has = _a.sent();
                 if (!!has) return [3, 3];
-                debug("NOT IN ZIP (addMediaOverlay): " + smilFilePath);
+                debug("NOT IN ZIP (addMediaOverlay): ".concat(smilFilePath, " -- ").concat(opf.ZipPath));
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _a.sent();
                 for (_i = 0, zipEntries_4 = zipEntries; _i < zipEntries_4.length; _i++) {
                     zipEntry = zipEntries_4[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2];
@@ -1366,8 +1390,73 @@ var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return (0, ts
     });
 }); };
 exports.addMediaOverlaySMIL = addMediaOverlaySMIL;
+var flattenDaisy2SmilAudioSeq = function (_smilPathInZip, smilXmlDoc) {
+    var iClone = 0;
+    var pars = Array.from(smilXmlDoc.getElementsByTagName("par"));
+    for (var _i = 0, pars_1 = pars; _i < pars_1.length; _i++) {
+        var par = pars_1[_i];
+        var seq = par.getElementsByTagName("seq")[0];
+        if (seq) {
+            var text = par.getElementsByTagName("text")[0];
+            var audios = Array.from(seq.getElementsByTagName("audio"));
+            for (var j = 0; j < audios.length; j++) {
+                var audio = audios[j];
+                seq.removeChild(audio);
+                if (j === 0) {
+                    if (text) {
+                        if (text.insertAdjacentElement) {
+                            text.insertAdjacentElement("afterend", audio);
+                        }
+                        else if (text.parentNode) {
+                            text.parentNode.insertBefore(audio, text.nextElementSibling);
+                        }
+                        var parId = par.getAttribute("id");
+                        if (!parId) {
+                            var txtId = text.getAttribute("id");
+                            if (txtId) {
+                                par.setAttribute("id", txtId);
+                                text.removeAttribute("id");
+                            }
+                        }
+                    }
+                    else {
+                        par.appendChild(audio);
+                    }
+                }
+                else {
+                    var newPar = par.namespaceURI ?
+                        smilXmlDoc.createElementNS(par.namespaceURI, "par") :
+                        smilXmlDoc.createElement("par");
+                    iClone++;
+                    if (text) {
+                        var cloneText = text.cloneNode(false);
+                        var tId = cloneText.getAttribute("id");
+                        if (tId) {
+                            cloneText.removeAttribute("id");
+                        }
+                        newPar.setAttribute("id", (tId ? tId : "id") + "r2__" + iClone);
+                        newPar.appendChild(cloneText);
+                    }
+                    else {
+                        newPar.setAttribute("id", "id" + "r2__" + iClone);
+                    }
+                    newPar.appendChild(audio);
+                    newPar.appendChild(smilXmlDoc.createTextNode("\n"));
+                    if (par.insertAdjacentElement) {
+                        par.insertAdjacentElement("afterend", newPar);
+                    }
+                    else if (par.parentNode) {
+                        par.parentNode.insertBefore(newPar, par.nextElementSibling);
+                    }
+                }
+            }
+            par.removeChild(seq);
+        }
+    }
+};
+exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
 var lazyLoadMediaOverlays = function (publication, mo) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
+    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, nccZipEntry, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
     var _d;
     return (0, tslib_1.__generator)(this, function (_e) {
         switch (_e.label) {
@@ -1407,13 +1496,16 @@ var lazyLoadMediaOverlays = function (publication, mo) { return (0, tslib_1.__aw
             case 1:
                 has = _e.sent();
                 if (!!has) return [3, 3];
-                err = "NOT IN ZIP (lazyLoadMediaOverlays): " + mo.SmilPathInZip;
+                err = "NOT IN ZIP (lazyLoadMediaOverlays): ".concat(mo.SmilPathInZip);
                 debug(err);
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _e.sent();
                 for (_i = 0, zipEntries_5 = zipEntries; _i < zipEntries_5.length; _i++) {
                     zipEntry = zipEntries_5[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return [2, Promise.reject(err)];
@@ -1481,6 +1573,14 @@ var lazyLoadMediaOverlays = function (publication, mo) { return (0, tslib_1.__aw
                     }
                 }
                 smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+                return [4, zip.getEntries()];
+            case 16:
+                nccZipEntry = (_e.sent()).find(function (entry) {
+                    return /ncc\.html$/i.test(entry);
+                });
+                if (nccZipEntry) {
+                    (0, exports.flattenDaisy2SmilAudioSeq)(mo.SmilPathInZip, smilXmlDoc);
+                }
                 smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
                 smil.ZipPath = mo.SmilPathInZip;
                 mo.initialized = true;
@@ -1537,6 +1637,11 @@ var lazyLoadMediaOverlays = function (publication, mo) { return (0, tslib_1.__aw
                         }
                         else if (smil.Body.CustomTest.indexOf("annotation") >= 0) {
                             mo.Role.push("annotation");
+                        }
+                    }
+                    else if (smil.Body.SystemRequired) {
+                        if (smil.Body.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                            mo.Role.push("pagebreak");
                         }
                     }
                     if (smil.Body.TextRef) {
@@ -1649,6 +1754,14 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                 moc.Role.push("annotation");
             }
         }
+        else if (seq.SystemRequired) {
+            if (seq.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+        }
         if (seq.TextRef) {
             var seqTextRefDecoded = seq.TextRefDecoded;
             if (!seqTextRefDecoded) {
@@ -1741,6 +1854,14 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                 moc.Role.push("annotation");
             }
         }
+        else if (par.SystemRequired) {
+            if (par.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+        }
         if (par.Text && par.Text.Src) {
             var parTextSrcDcoded = par.Text.SrcDecoded;
             if (!parTextSrcDcoded) {
@@ -1750,6 +1871,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                 var zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
                     .replace(/\\/g, "/");
                 moc.Text = zipPath;
+            }
+            if (par.Text.ID) {
+                moc.TextID = par.Text.ID;
             }
         }
         if (par.Audio && par.Audio.Src) {
@@ -1772,6 +1896,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                     moc.Audio += end.toString();
                 }
             }
+            if (par.Audio.ID) {
+                moc.AudioID = par.Audio.ID;
+            }
         }
         if (par.Img && par.Img.Src) {
             var parImgSrcDcoded = par.Img.SrcDecoded;
@@ -1786,6 +1913,9 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
             if (!par.Audio && !par.Text) {
                 moc.initialized = false;
                 doAdd = false;
+            }
+            if (par.Img.ID) {
+                moc.ImgID = par.Img.ID;
             }
         }
     }

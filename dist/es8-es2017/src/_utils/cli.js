@@ -66,6 +66,16 @@ if ((0, UrlUtils_1.isHTTP)(filePath)) {
 }
 fileName = fileName.replace(/META-INF[\/|\\]container.xml$/, "");
 fileName = path.basename(fileName);
+let generateDaisyAudioManifestOnly = false;
+let decryptKeys;
+if (args[2]) {
+    if (args[2] === "generate-daisy-audio-manifest-only") {
+        generateDaisyAudioManifestOnly = true;
+    }
+    else {
+        decryptKeys = args[2].trim().split(";");
+    }
+}
 let outputDirPath;
 if (args[1]) {
     const argDir = args[1].trim();
@@ -90,18 +100,20 @@ if (args[1]) {
         }
     }
     dirPath = fs.realpathSync(dirPath);
-    const fileNameNoExt = fileName + "_R2_EXTRACTED";
-    console.log(fileNameNoExt);
-    outputDirPath = path.join(dirPath, fileNameNoExt);
-    console.log(outputDirPath);
-    if (fs.existsSync(outputDirPath)) {
-        console.log("OUTPUT FOLDER ALREADY EXISTS!");
-        process.exit(1);
+    if (generateDaisyAudioManifestOnly) {
+        outputDirPath = dirPath;
+        console.log(outputDirPath);
     }
-}
-let decryptKeys;
-if (args[2]) {
-    decryptKeys = args[2].trim().split(";");
+    else {
+        const fileNameNoExt = fileName + "_R2_EXTRACTED";
+        console.log(fileNameNoExt);
+        outputDirPath = path.join(dirPath, fileNameNoExt);
+        console.log(outputDirPath);
+        if (fs.existsSync(outputDirPath)) {
+            console.log("OUTPUT FOLDER ALREADY EXISTS!");
+            process.exit(1);
+        }
+    }
 }
 (async () => {
     let publication;
@@ -129,7 +141,7 @@ if (args[2]) {
     if ((isDaisyBook || isAnAudioBook || isAnEPUB) && outputDirPath) {
         try {
             if (isDaisyBook) {
-                await (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication);
+                await (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined);
             }
             else {
                 await extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys);
@@ -231,7 +243,8 @@ async function extractEPUB_Check(zip, outDir) {
         for (const zipEntry of zipEntries) {
             if (zipEntry !== "mimetype" &&
                 !zipEntry.startsWith("META-INF/") &&
-                !zipEntry.endsWith(".opf") &&
+                !/\.opf$/i.test(zipEntry) &&
+                !/ncc\.html$/i.test(zipEntry) &&
                 zipEntry !== "publication.json" &&
                 zipEntry !== "license.lcpl" &&
                 !zipEntry.endsWith(".DS_Store") &&
@@ -292,6 +305,9 @@ async function extractEPUB_Link(pub, zip, outDir, link) {
         console.log(`NOT IN ZIP (extractEPUB_Link): ${link.Href} --- ${hrefDecoded}`);
         const zipEntries = await zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             console.log(zipEntry);
         }
         return;

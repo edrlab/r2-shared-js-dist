@@ -4,6 +4,7 @@ exports.convertDaisyToReadiumWebPub = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
+var mime = require("mime-types");
 var path = require("path");
 var xmldom = require("xmldom");
 var xpath = require("xpath");
@@ -11,6 +12,7 @@ var yazl_1 = require("yazl");
 var media_overlay_1 = require("../models/media-overlay");
 var metadata_1 = require("../models/metadata");
 var metadata_properties_1 = require("../models/metadata-properties");
+var publication_1 = require("../models/publication");
 var publication_link_1 = require("../models/publication-link");
 var serializable_1 = require("r2-lcp-js/dist/es5/src/serializable");
 var epub_daisy_common_1 = require("./epub-daisy-common");
@@ -22,46 +24,58 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generateDaisyAudioManifestOnly) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     return (0, tslib_1.__generator)(this, function (_a) {
         return [2, new Promise(function (resolve, reject) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-                var isFullTextAudio, isAudioOnly, isTextOnly, zipInternal, zip, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, smilDocs_1, findLinkInToc_1, createHtmlFromSmilFile, audioOnlySmilHtmls, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, audioOnlySmilHtmlHref, smilHtml, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantText_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, erreur_1;
+                var isFullTextAudio, isAudioOnly, isTextOnly, zipInternal, zip, nccZipEntry, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, smilDocs_1, loadOrGetCachedSmil_1, findLinkInToc_1, createHtmlFromSmilFile, audioOnlySmilHtmls, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, audioOnlySmilHtmlHref, smilHtml, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantTextOrAudio_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, transformPublicationToAudioBook, audioPublication, jsonObjAudio, jsonStrAudio, outputManifestPath, ero_1, erreur_1;
                 var _p, _q, _r, _s, _t;
                 return (0, tslib_1.__generator)(this, function (_u) {
                     switch (_u.label) {
                         case 0:
                             isFullTextAudio = ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
-                                publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
+                                (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
+                                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText");
                             isAudioOnly = ((_q = publication.Metadata) === null || _q === void 0 ? void 0 : _q.AdditionalJSON) &&
-                                publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
+                                (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
+                                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc");
                             isTextOnly = ((_r = publication.Metadata) === null || _r === void 0 ? void 0 : _r.AdditionalJSON) &&
-                                publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
+                                (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
+                                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "textNcc");
                             zipInternal = publication.findFromInternal("zip");
                             if (!zipInternal) {
                                 debug("No publication zip!?");
                                 return [2, reject("No publication zip!?")];
                             }
                             zip = zipInternal.Value;
-                            outputZipPath = path.join(outputDirPath, (isAudioOnly ? "daisy_audioNCX" : (isTextOnly ? "daisy_textNCX" : "daisy_audioFullText")) + "-to-epub.webpub");
-                            ensureDirs(outputZipPath);
-                            zipfile = new yazl_1.ZipFile();
-                            _u.label = 1;
+                            return [4, zip.getEntries()];
                         case 1:
-                            _u.trys.push([1, 27, 28, 29]);
-                            writeStream = fs.createWriteStream(outputZipPath);
-                            zipfile.outputStream.pipe(writeStream)
-                                .on("close", function () {
-                                debug("ZIP close");
-                                if (timeoutId) {
-                                    clearTimeout(timeoutId);
-                                    timeoutId = undefined;
-                                    resolve(outputZipPath);
-                                }
-                            })
-                                .on("error", function (e) {
-                                debug("ZIP error", e);
-                                reject(e);
+                            nccZipEntry = (_u.sent()).find(function (entry) {
+                                return /ncc\.html$/i.test(entry);
                             });
+                            outputZipPath = path.join(outputDirPath, "".concat(isAudioOnly ? "daisy_audioNCX" : (isTextOnly ? "daisy_textNCX" : "daisy_audioFullText"), "-to-epub.webpub"));
+                            if (!generateDaisyAudioManifestOnly) {
+                                ensureDirs(outputZipPath);
+                            }
+                            zipfile = generateDaisyAudioManifestOnly ? undefined : new yazl_1.ZipFile();
+                            _u.label = 2;
+                        case 2:
+                            _u.trys.push([2, 33, 34, 35]);
+                            if (!generateDaisyAudioManifestOnly) {
+                                writeStream = fs.createWriteStream(outputZipPath);
+                                zipfile.outputStream.pipe(writeStream)
+                                    .on("close", function () {
+                                    debug("ZIP close");
+                                    if (timeoutId) {
+                                        clearTimeout(timeoutId);
+                                        timeoutId = undefined;
+                                        resolve(outputZipPath);
+                                    }
+                                })
+                                    .on("error", function (e) {
+                                    debug("ZIP error", e);
+                                    reject(e);
+                                });
+                            }
                             select = xpath.useNamespaces({
                                 dtbook: "http://www.daisy.org/z3986/2005/dtbook/",
                             });
@@ -139,12 +153,12 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             };
                             patchMediaOverlaysTextHref_1 = function (mo, audioOnlySmilHtmlHref) {
                                 var smilTextRef;
-                                if (audioOnlySmilHtmlHref && !mo.Text && mo.Audio) {
+                                if (audioOnlySmilHtmlHref && mo.Audio) {
                                     smilTextRef = audioOnlySmilHtmlHref;
-                                    mo.Text = smilTextRef + "#" + (mo.ParID || "_yyy_");
+                                    mo.Text = "".concat(smilTextRef, "#").concat(mo.ParID || mo.TextID || "_yyy_");
                                 }
                                 else if (mo.Text) {
-                                    mo.Text = mo.Text.replace(/\.xml/, ".xhtml");
+                                    mo.Text = mo.Text.replace(/((\.xml)|(\.html))(#.*)?$/i, ".xhtml$4");
                                     smilTextRef = mo.Text;
                                     var k = smilTextRef.indexOf("#");
                                     if (k > 0) {
@@ -169,6 +183,30 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 return smilTextRef;
                             };
                             smilDocs_1 = {};
+                            loadOrGetCachedSmil_1 = function (smilPathInZip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                var smilDoc, smilStr;
+                                return (0, tslib_1.__generator)(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            smilDoc = smilDocs_1[smilPathInZip];
+                                            if (!!smilDoc) return [3, 2];
+                                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip)];
+                                        case 1:
+                                            smilStr = _a.sent();
+                                            if (!smilStr) {
+                                                debug("!loadFileStrFromZipPath", smilPathInZip);
+                                                return [2, Promise.reject("!loadFileStrFromZipPath " + smilPathInZip)];
+                                            }
+                                            smilDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
+                                            if (nccZipEntry) {
+                                                (0, epub_daisy_common_1.flattenDaisy2SmilAudioSeq)(smilPathInZip, smilDoc);
+                                            }
+                                            smilDocs_1[smilPathInZip] = smilDoc;
+                                            _a.label = 2;
+                                        case 2: return [2, Promise.resolve(smilDoc)];
+                                    }
+                                });
+                            }); };
                             findLinkInToc_1 = function (links, hrefDecoded) {
                                 for (var _i = 0, links_1 = links; _i < links_1.length; _i++) {
                                     var link = links_1[_i];
@@ -185,24 +223,15 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 return undefined;
                             };
                             createHtmlFromSmilFile = function (smilPathInZip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-                                var smilDoc, smilStr, parEls, _i, parEls_1, parEl, audioElements, _a, audioElements_1, audioElement, elmId, hrefDecoded, tocLinkItem, text, textNode, bodyContent, bodyContentStr, contentStr, htmlDoc, htmlFilePath;
-                                return (0, tslib_1.__generator)(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0:
-                                            smilDoc = smilDocs_1[smilPathInZip];
-                                            if (!!smilDoc) return [3, 2];
-                                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip)];
+                                var smilDoc, smilDocClone, txtCounter, parEls, _i, parEls_1, parEl, audioElements, _a, audioElements_1, audioElement, textId, textElements, _b, textElements_1, textElement, src, elmId, hrefDecoded, tocLinkItem, hrefDecoded_, text, textNode, bodyContent, bodyContentStr, contentStr, htmlDoc, htmlFilePath;
+                                return (0, tslib_1.__generator)(this, function (_c) {
+                                    switch (_c.label) {
+                                        case 0: return [4, loadOrGetCachedSmil_1(smilPathInZip)];
                                         case 1:
-                                            smilStr = _b.sent();
-                                            if (!smilStr) {
-                                                debug("!loadFileStrFromZipPath", smilStr);
-                                                return [2, undefined];
-                                            }
-                                            smilDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
-                                            smilDocs_1[smilPathInZip] = smilDoc;
-                                            _b.label = 2;
-                                        case 2:
-                                            parEls = Array.from(smilDoc.getElementsByTagName("par"));
+                                            smilDoc = _c.sent();
+                                            smilDocClone = smilDoc.cloneNode(true);
+                                            txtCounter = 0;
+                                            parEls = Array.from(smilDocClone.getElementsByTagName("par"));
                                             for (_i = 0, parEls_1 = parEls; _i < parEls_1.length; _i++) {
                                                 parEl = parEls_1[_i];
                                                 audioElements = Array.from(parEl.getElementsByTagName("audio")).filter(function (el) { return el; });
@@ -212,55 +241,80 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                                         audioElement.parentNode.removeChild(audioElement);
                                                     }
                                                 }
+                                                textId = void 0;
+                                                textElements = Array.from(parEl.getElementsByTagName("text")).filter(function (el) { return el; });
+                                                for (_b = 0, textElements_1 = textElements; _b < textElements_1.length; _b++) {
+                                                    textElement = textElements_1[_b];
+                                                    src = textElement.getAttribute("src");
+                                                    if (src) {
+                                                        textElement.setAttribute("data-src", src.replace(/((\.xml)|(\.html))(#.*)?$/i, ".xhtml$4"));
+                                                        textElement.removeAttribute("src");
+                                                    }
+                                                    if (!textId) {
+                                                        textId = textElement.getAttribute("id");
+                                                    }
+                                                }
                                                 elmId = parEl.getAttribute("id");
-                                                hrefDecoded = smilPathInZip + "#" + elmId;
-                                                tocLinkItem = findLinkInToc_1(publication.TOC, hrefDecoded);
+                                                hrefDecoded = "".concat(smilPathInZip, "#").concat(elmId);
+                                                tocLinkItem = publication.TOC ? findLinkInToc_1(publication.TOC, hrefDecoded) : undefined;
+                                                if (!tocLinkItem && textId) {
+                                                    hrefDecoded_ = "".concat(smilPathInZip, "#").concat(textId);
+                                                    tocLinkItem = publication.TOC ? findLinkInToc_1(publication.TOC, hrefDecoded_) : undefined;
+                                                }
                                                 text = tocLinkItem ? tocLinkItem.Title : undefined;
-                                                textNode = smilDoc.createTextNode(text ? text : ".");
+                                                if (text) {
+                                                    txtCounter = 0;
+                                                }
+                                                textNode = smilDocClone.createTextNode(text ? text : "... [".concat(++txtCounter, "]"));
                                                 parEl.appendChild(textNode);
                                             }
-                                            bodyContent = smilDoc.getElementsByTagName("body")[0];
+                                            bodyContent = smilDocClone.getElementsByTagName("body")[0];
                                             bodyContentStr = new xmldom.XMLSerializer().serializeToString(bodyContent);
                                             contentStr = bodyContentStr
                                                 .replace("xmlns=\"http://www.w3.org/2001/SMIL20/\"", "")
                                                 .replace(/dur=/g, "data-dur=")
+                                                .replace(/endsync=/g, "data-endsync=")
                                                 .replace(/fill=/g, "data-fill=")
+                                                .replace(/system-required=/g, "data-system-required=")
                                                 .replace(/customTest=/g, "data-customTest=")
                                                 .replace(/class=/g, "data-class=")
-                                                .replace(/<seq/g, '<div class="smil-seq"')
-                                                .replace(/<par/g, '<p class="smil-par"')
+                                                .replace(/<seq/g, "<div class=\"smil-seq\"")
+                                                .replace(/<text/g, "<hr class=\"smil-text\"")
+                                                .replace(/<par/g, "<p class=\"smil-par\"")
                                                 .replace(/<\/seq>/g, "</div>")
                                                 .replace(/<\/par>/g, "</p>");
-                                            htmlDoc = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xml:lang=\"en\" lang=\"en\">\n    <head>\n        <title>" + smilPathInZip + "</title>\n    </head>\n    " + contentStr + "\n</html>\n";
-                                            htmlFilePath = smilPathInZip.replace(/\.smil$/, ".xhtml");
-                                            zipfile.addBuffer(Buffer.from(htmlDoc), htmlFilePath);
+                                            htmlDoc = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:epub=\"http://www.idpf.org/2007/ops\" xml:lang=\"en\" lang=\"en\">\n    <head>\n        <title>".concat(smilPathInZip, "</title>\n    </head>\n    ").concat(contentStr, "\n</html>\n");
+                                            htmlFilePath = smilPathInZip.replace(/\.smil$/i, ".xhtml");
+                                            if (!generateDaisyAudioManifestOnly) {
+                                                zipfile.addBuffer(Buffer.from(htmlDoc), htmlFilePath);
+                                            }
                                             return [2, htmlFilePath];
                                     }
                                 });
                             }); };
                             audioOnlySmilHtmls = [];
-                            if (!publication.Spine) return [3, 8];
+                            if (!publication.Spine) return [3, 9];
                             mediaOverlaysMap_1 = {};
                             previousLinkItem = void 0;
                             spineIndex = -1;
                             _i = 0, _a = publication.Spine;
-                            _u.label = 2;
-                        case 2:
-                            if (!(_i < _a.length)) return [3, 8];
+                            _u.label = 3;
+                        case 3:
+                            if (!(_i < _a.length)) return [3, 9];
                             linkItem = _a[_i];
                             spineIndex++;
                             if (!linkItem.MediaOverlays) {
-                                return [3, 7];
+                                return [3, 8];
                             }
-                            if (!!linkItem.MediaOverlays.initialized) return [3, 4];
+                            if (!!linkItem.MediaOverlays.initialized) return [3, 5];
                             return [4, (0, epub_daisy_common_1.lazyLoadMediaOverlays)(publication, linkItem.MediaOverlays)];
-                        case 3:
+                        case 4:
                             _u.sent();
                             if (isFullTextAudio || isAudioOnly) {
                                 (0, epub_daisy_common_1.updateDurations)(linkItem.MediaOverlays.duration, linkItem);
                             }
-                            _u.label = 4;
-                        case 4:
+                            _u.label = 5;
+                        case 5:
                             if (isFullTextAudio || isAudioOnly) {
                                 computedDur = getMediaOverlaysDuration_1(linkItem.MediaOverlays);
                                 if (computedDur) {
@@ -295,7 +349,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             }
                             smilTextRef = void 0;
                             if (isAudioOnly) {
-                                audioOnlySmilHtmlHref = (_s = linkItem.MediaOverlays.SmilPathInZip) === null || _s === void 0 ? void 0 : _s.replace(/\.smil$/, ".xhtml");
+                                audioOnlySmilHtmlHref = (_s = linkItem.MediaOverlays.SmilPathInZip) === null || _s === void 0 ? void 0 : _s.replace(/\.smil$/i, ".xhtml");
                                 if (audioOnlySmilHtmlHref) {
                                     smilTextRef = patchMediaOverlaysTextHref_1(linkItem.MediaOverlays, audioOnlySmilHtmlHref);
                                 }
@@ -303,17 +357,17 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             else {
                                 smilTextRef = patchMediaOverlaysTextHref_1(linkItem.MediaOverlays, undefined);
                             }
-                            if (!smilTextRef) return [3, 7];
-                            if (!(isAudioOnly && linkItem.MediaOverlays.SmilPathInZip)) return [3, 6];
+                            if (!smilTextRef) return [3, 8];
+                            if (!(isAudioOnly && linkItem.MediaOverlays.SmilPathInZip)) return [3, 7];
                             return [4, createHtmlFromSmilFile(linkItem.MediaOverlays.SmilPathInZip)];
-                        case 5:
+                        case 6:
                             _u.sent();
                             smilHtml = new publication_link_1.Link();
                             smilHtml.Href = smilTextRef;
                             smilHtml.TypeLink = "application/xhtml+xml";
                             audioOnlySmilHtmls.push(smilHtml);
-                            _u.label = 6;
-                        case 6:
+                            _u.label = 7;
+                        case 7:
                             if (!mediaOverlaysMap_1[smilTextRef]) {
                                 mediaOverlaysMap_1[smilTextRef] = {
                                     index: spineIndex,
@@ -322,55 +376,57 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             }
                             mediaOverlaysMap_1[smilTextRef].index = spineIndex;
                             mediaOverlaysMap_1[smilTextRef].mos.push(linkItem.MediaOverlays);
-                            _u.label = 7;
-                        case 7:
-                            _i++;
-                            return [3, 2];
+                            _u.label = 8;
                         case 8:
+                            _i++;
+                            return [3, 3];
+                        case 9:
                             publication.Spine = [];
                             resourcesToKeep = [];
                             dtBooks = (0, tslib_1.__spreadArray)([], audioOnlySmilHtmls, true);
                             _b = 0, _c = publication.Resources;
-                            _u.label = 9;
-                        case 9:
-                            if (!(_b < _c.length)) return [3, 16];
+                            _u.label = 10;
+                        case 10:
+                            if (!(_b < _c.length)) return [3, 18];
                             resLink = _c[_b];
                             if (!resLink.HrefDecoded) {
-                                return [3, 15];
+                                return [3, 17];
                             }
-                            if (!(resLink.TypeLink === "text/css" || resLink.HrefDecoded.endsWith(".css"))) return [3, 11];
+                            if (!(resLink.TypeLink === "text/css" || /\.css$/i.test(resLink.HrefDecoded))) return [3, 12];
                             return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
-                        case 10:
+                        case 11:
                             cssText = _u.sent();
                             if (!cssText) {
                                 debug("!loadFileStrFromZipPath", resLink.HrefDecoded);
-                                return [3, 15];
+                                return [3, 17];
                             }
                             cssText = cssText.replace(/\/\*([\s\S]+?)\*\//gm, function (_match, p1, _offset, _string) {
                                 var base64 = Buffer.from(p1).toString("base64");
-                                return "/*__" + base64 + "__*/";
+                                return "/*__".concat(base64, "__*/");
                             });
                             for (_d = 0, elementNames_1 = elementNames; _d < elementNames_1.length; _d++) {
                                 elementName = elementNames_1[_d];
-                                regex = new RegExp("([^#.a-zA-Z0-9-_])(" + elementName + ")([^a-zA-Z0-9-_;])", "g");
+                                regex = new RegExp("([^#.a-zA-Z0-9-_])(".concat(elementName, ")([^a-zA-Z0-9-_;])"), "g");
                                 cssText = cssText.replace(regex, "$1.$2_R2$3");
                                 cssText = cssText.replace(regex, "$1.$2_R2$3");
                             }
                             cssText = cssText.replace(/\/\*__([\s\S]+?)__\*\//g, function (_match, p1, _offset, _string) {
                                 var comment = Buffer.from(p1, "base64").toString("utf8");
-                                return "/*" + comment + "*/";
+                                return "/*".concat(comment, "*/");
                             });
-                            zipfile.addBuffer(Buffer.from(cssText), resLink.HrefDecoded);
+                            if (!generateDaisyAudioManifestOnly) {
+                                zipfile.addBuffer(Buffer.from(cssText), resLink.HrefDecoded);
+                            }
                             resourcesToKeep.push(resLink);
-                            return [3, 15];
-                        case 11:
-                            if (!(resLink.TypeLink === "application/x-dtbook+xml" || resLink.HrefDecoded.endsWith(".xml"))) return [3, 13];
-                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
+                            return [3, 17];
                         case 12:
+                            if (!(resLink.TypeLink === "application/x-dtbook+xml" || /\.xml$/i.test(resLink.HrefDecoded))) return [3, 14];
+                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
+                        case 13:
                             dtBookStr = _u.sent();
                             if (!dtBookStr) {
                                 debug("!loadFileStrFromZipPath", dtBookStr);
-                                return [3, 15];
+                                return [3, 17];
                             }
                             dtBookStr = dtBookStr.replace(/xmlns=""/, " ");
                             dtBookStr = dtBookStr.replace(/<dtbook/, "<dtbook xmlns:epub=\"http://www.idpf.org/2007/ops\" ");
@@ -400,7 +456,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                     el = els_1[_f];
                                     el.setAttribute("data-dtbook", elementName);
                                     cls = el.getAttribute("class");
-                                    el.setAttribute("class", "" + (cls ? (cls + " ") : "") + elementName + "_R2");
+                                    el.setAttribute("class", "".concat(cls ? (cls + " ") : "").concat(elementName, "_R2"));
                                     el.tagName =
                                         ((elementName === "dtbook") ? "html" :
                                             ((elementName === "book") ? "body" :
@@ -459,34 +515,51 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/, "xmlns=\"http://www.w3.org/1999/xhtml\"")
                                 .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/g, " ")
                                 .replace(/^([\s\S]*)<html/gm, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE html>\n<html ")
-                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n" + (title ? "<title>" + title + "</title>" : "") + "\n")
-                                .replace(/<\/head[\s\S]*?>/gm, "\n" + cssHrefs.reduce(function (pv, cv) {
-                                return pv + "\n" + ("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + cv + "\" />");
-                            }, "") + "\n</head>\n");
-                            xhtmlFilePath = resLink.HrefDecoded.replace(/\.(.+)$/, ".xhtml");
-                            zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
+                                .replace(/<head([\s\S]*?)>/gm, "\n<head$1>\n<meta charset=\"UTF-8\" />\n".concat(title ? "<title>".concat(title, "</title>") : "", "\n"))
+                                .replace(/<\/head[\s\S]*?>/gm, "\n".concat(cssHrefs.reduce(function (pv, cv) {
+                                return pv + "\n" + "<link rel=\"stylesheet\" type=\"text/css\" href=\"".concat(cv, "\" />");
+                            }, ""), "\n</head>\n"));
+                            xhtmlFilePath = resLink.HrefDecoded.replace(/\.([^\.]+)$/i, ".xhtml");
+                            if (!generateDaisyAudioManifestOnly) {
+                                zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
+                            }
                             resLinkJson = (0, serializable_1.TaJsonSerialize)(resLink);
                             resLinkClone = (0, serializable_1.TaJsonDeserialize)(resLinkJson, publication_link_1.Link);
                             resLinkClone.setHrefDecoded(xhtmlFilePath);
                             resLinkClone.TypeLink = "application/xhtml+xml";
                             dtBooks.push(resLinkClone);
-                            return [3, 15];
-                        case 13:
-                            if (!(!resLink.HrefDecoded.endsWith(".opf") &&
-                                !resLink.HrefDecoded.endsWith(".res") &&
-                                !resLink.HrefDecoded.endsWith(".ncx"))) return [3, 15];
-                            return [4, (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
+                            return [3, 17];
                         case 14:
+                            if (!(!/\.opf$/i.test(resLink.HrefDecoded) &&
+                                !/\.res$/i.test(resLink.HrefDecoded) &&
+                                !/\.ncx$/i.test(resLink.HrefDecoded) &&
+                                !/ncc\.html$/i.test(resLink.HrefDecoded))) return [3, 17];
+                            if (!!generateDaisyAudioManifestOnly) return [3, 16];
+                            return [4, (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip)];
+                        case 15:
                             buff = _u.sent();
+                            if (/\.html$/i.test(resLink.HrefDecoded)) {
+                                resLink.setHrefDecoded(resLink.HrefDecoded.replace(/\.html$/i, ".xhtml"));
+                            }
                             if (buff) {
                                 zipfile.addBuffer(buff, resLink.HrefDecoded);
                             }
-                            resourcesToKeep.push(resLink);
-                            _u.label = 15;
-                        case 15:
-                            _b++;
-                            return [3, 9];
+                            _u.label = 16;
                         case 16:
+                            resourcesToKeep.push(resLink);
+                            if (/\.x?html$/i.test(resLink.HrefDecoded) ||
+                                resLink.TypeLink === "text/html" ||
+                                resLink.TypeLink === "application/xhtml+xml") {
+                                if (resLink.TypeLink === "text/html") {
+                                    resLink.TypeLink = "application/xhtml+xml";
+                                }
+                                dtBooks.push(resLink);
+                            }
+                            _u.label = 17;
+                        case 17:
+                            _b++;
+                            return [3, 10];
+                        case 18:
                             if (mediaOverlaysMap_1) {
                                 Object.keys(mediaOverlaysMap_1).forEach(function (smilTextRef) {
                                     if (!mediaOverlaysMap_1) {
@@ -509,7 +582,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                         var mo = mos_1[_i];
                                         i++;
                                         if (mo.Children) {
-                                            debug("smilTextRef [" + i + "]: " + smilTextRef);
+                                            debug("smilTextRef [".concat(i, "]: ") + smilTextRef);
                                             if (!mergedMediaOverlays.Children) {
                                                 mergedMediaOverlays.Children = [];
                                             }
@@ -545,12 +618,15 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                     }
                                     debug("mediaOverlay:", mediaOverlay.index, mediaOverlay.smilTextRef);
                                     var dtBookLink = dtBooks.find(function (l) {
-                                        return l.HrefDecoded === mediaOverlay.smilTextRef;
+                                        return l.HrefDecoded && mediaOverlay.smilTextRef ?
+                                            l.HrefDecoded.toLowerCase() === mediaOverlay.smilTextRef.toLowerCase()
+                                            : false;
                                     });
                                     if (!dtBookLink) {
-                                        debug("!!dtBookLink");
+                                        debug("!!dtBookLink", JSON.stringify(dtBooks, null, 4));
                                     }
-                                    else if (dtBookLink.HrefDecoded !== mediaOverlay.smilTextRef) {
+                                    else if (dtBookLink.HrefDecoded && mediaOverlay.smilTextRef &&
+                                        dtBookLink.HrefDecoded.toLowerCase() !== mediaOverlay.smilTextRef.toLowerCase()) {
                                         debug("dtBook.HrefDecoded !== mediaOverlay.smilTextRef", dtBookLink.HrefDecoded, mediaOverlay.smilTextRef);
                                     }
                                     else {
@@ -559,7 +635,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                             if (mediaOverlay.mo.duration) {
                                                 dtBookLink.Duration = mediaOverlay.mo.duration;
                                             }
-                                            var moURL = "smil-media-overlays_" + mediaOverlay.index + ".json";
+                                            var moURL = "smil-media-overlays_".concat(mediaOverlay.index, ".json");
                                             if (!dtBookLink.Properties) {
                                                 dtBookLink.Properties = new metadata_properties_1.Properties();
                                             }
@@ -574,7 +650,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                             dtBookLink.Alternate.push(moLink);
                                             var jsonObjMO = (0, serializable_1.TaJsonSerialize)(mediaOverlay.mo);
                                             var jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
-                                            zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
+                                            if (!generateDaisyAudioManifestOnly) {
+                                                zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
+                                            }
                                             debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
                                         }
                                         else {
@@ -597,13 +675,14 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                             }
                             publication.Metadata.AdditionalJSON.ReadiumWebPublicationConvertedFrom =
                                 isAudioOnly ? "DAISY_audioNCX" : (isTextOnly ? "DAISY_textNCX" : "DAISY_audioFullText");
-                            findFirstDescendantText_1 = function (parent) {
+                            findFirstDescendantTextOrAudio_1 = function (parent, audio) {
                                 if (parent.childNodes && parent.childNodes.length) {
                                     for (var i = 0; i < parent.childNodes.length; i++) {
                                         var child = parent.childNodes[i];
                                         if (child.nodeType === 1) {
                                             var element = child;
-                                            if (element.localName && element.localName.toLowerCase() === "text") {
+                                            if (element.localName &&
+                                                element.localName.toLowerCase() === (audio ? "audio" : "text")) {
                                                 return element;
                                             }
                                         }
@@ -612,7 +691,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                         var child = parent.childNodes[i];
                                         if (child.nodeType === 1) {
                                             var element = child;
-                                            var found = findFirstDescendantText_1(element);
+                                            var found = findFirstDescendantTextOrAudio_1(element, audio);
                                             if (found) {
                                                 return found;
                                             }
@@ -622,7 +701,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                 return undefined;
                             };
                             processLink_1 = function (link) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-                                var href, fragment, arr, smilDoc, smilStr, targetEl, src;
+                                var href, fragment, arr, smilDoc, targetEl, src;
                                 return (0, tslib_1.__generator)(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
@@ -631,7 +710,8 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                                 return [2];
                                             }
                                             if (isAudioOnly) {
-                                                link.setHrefDecoded(href.replace(/\.smil/, ".xhtml"));
+                                                link.setHrefDecoded(href.replace(/\.smil(#.*)?$/i, ".xhtml$1"));
+                                                link.TypeLink = "application/xhtml+xml";
                                                 return [2];
                                             }
                                             if (href.indexOf("#") >= 0) {
@@ -642,37 +722,30 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                             if (!href) {
                                                 return [2];
                                             }
-                                            smilDoc = smilDocs_1[href];
-                                            if (!!smilDoc) return [3, 2];
-                                            return [4, (0, epub_daisy_common_1.loadFileStrFromZipPath)(href, href, zip)];
+                                            return [4, loadOrGetCachedSmil_1(href)];
                                         case 1:
-                                            smilStr = _a.sent();
-                                            if (!smilStr) {
-                                                debug("!loadFileStrFromZipPath", smilStr);
-                                                return [2];
-                                            }
-                                            smilDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
-                                            smilDocs_1[href] = smilDoc;
-                                            _a.label = 2;
-                                        case 2:
+                                            smilDoc = _a.sent();
                                             targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
                                             if (!targetEl) {
-                                                targetEl = findFirstDescendantText_1(smilDoc.documentElement);
+                                                targetEl = findFirstDescendantTextOrAudio_1(smilDoc.documentElement, false);
                                             }
                                             if (!targetEl) {
+                                                debug("--??-- !targetEl1 ", href);
                                                 return [2];
                                             }
                                             if (targetEl.nodeName !== "text") {
-                                                targetEl = findFirstDescendantText_1(targetEl);
+                                                targetEl = findFirstDescendantTextOrAudio_1(targetEl, false);
                                             }
                                             if (!targetEl || targetEl.nodeName !== "text") {
+                                                debug("--??-- !targetEl2 ", href);
                                                 return [2];
                                             }
                                             src = targetEl.getAttribute("src");
                                             if (!src) {
                                                 return [2];
                                             }
-                                            link.Href = src.replace(/\.xml/, ".xhtml");
+                                            link.Href = path.join(href, "..", src.replace(/((\.xml)|(\.html))(#.*)?$/i, ".xhtml$4")).replace(/\\/g, "/");
+                                            link.TypeLink = "application/xhtml+xml";
                                             return [2];
                                     }
                                 });
@@ -702,56 +775,272 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication) { return
                                     }
                                 });
                             }); };
-                            if (!publication.PageList) return [3, 20];
+                            if (!publication.PageList) return [3, 22];
                             _k = 0, _l = publication.PageList;
-                            _u.label = 17;
-                        case 17:
-                            if (!(_k < _l.length)) return [3, 20];
-                            link = _l[_k];
-                            return [4, processLink_1(link)];
-                        case 18:
-                            _u.sent();
                             _u.label = 19;
                         case 19:
-                            _k++;
-                            return [3, 17];
+                            if (!(_k < _l.length)) return [3, 22];
+                            link = _l[_k];
+                            return [4, processLink_1(link)];
                         case 20:
-                            if (!publication.Landmarks) return [3, 24];
-                            _m = 0, _o = publication.Landmarks;
+                            _u.sent();
                             _u.label = 21;
                         case 21:
-                            if (!(_m < _o.length)) return [3, 24];
-                            link = _o[_m];
-                            return [4, processLink_1(link)];
+                            _k++;
+                            return [3, 19];
                         case 22:
-                            _u.sent();
+                            if (!publication.Landmarks) return [3, 26];
+                            _m = 0, _o = publication.Landmarks;
                             _u.label = 23;
                         case 23:
-                            _m++;
-                            return [3, 21];
+                            if (!(_m < _o.length)) return [3, 26];
+                            link = _o[_m];
+                            return [4, processLink_1(link)];
                         case 24:
-                            if (!publication.TOC) return [3, 26];
-                            return [4, processLinks_1(publication.TOC)];
-                        case 25:
                             _u.sent();
-                            _u.label = 26;
+                            _u.label = 25;
+                        case 25:
+                            _m++;
+                            return [3, 23];
                         case 26:
+                            if (!publication.TOC) return [3, 28];
+                            return [4, processLinks_1(publication.TOC)];
+                        case 27:
+                            _u.sent();
+                            _u.label = 28;
+                        case 28:
                             jsonObj = (0, serializable_1.TaJsonSerialize)(publication);
                             jsonStr = global.JSON.stringify(jsonObj, null, "  ");
-                            zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
-                            return [3, 29];
-                        case 27:
+                            if (!generateDaisyAudioManifestOnly) {
+                                zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
+                            }
+                            if (!isAudioOnly) return [3, 32];
+                            debug("DAISY audio only book => manifest-audio.json");
+                            transformPublicationToAudioBook = function (pubAudio) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                var pubJson, audioPublication, processLinkAudio, processLinksAudio, _i, _a, link, _b, _c, link, _loop_2, _d, _e, spineLink;
+                                var _f;
+                                return (0, tslib_1.__generator)(this, function (_g) {
+                                    switch (_g.label) {
+                                        case 0:
+                                            pubJson = (0, serializable_1.TaJsonSerialize)(pubAudio);
+                                            audioPublication = (0, serializable_1.TaJsonDeserialize)(pubJson, publication_1.Publication);
+                                            if (!audioPublication.Metadata) {
+                                                audioPublication.Metadata = new metadata_1.Metadata();
+                                            }
+                                            audioPublication.Metadata.RDFType = "http://schema.org/Audiobook";
+                                            processLinkAudio = function (link) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                                var href, fragment, arr, smilHref, smilDoc, targetEl, targetElOriginal, src, clipBegin, timeStamp, begin, mediaType;
+                                                return (0, tslib_1.__generator)(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0:
+                                                            href = link.HrefDecoded;
+                                                            if (!href) {
+                                                                return [2];
+                                                            }
+                                                            if (href.indexOf("#") >= 0) {
+                                                                arr = href.split("#");
+                                                                href = arr[0].trim();
+                                                                fragment = arr[1].trim();
+                                                            }
+                                                            if (!href) {
+                                                                return [2];
+                                                            }
+                                                            smilHref = href.replace(/\.xhtml(#.*)?$/i, ".smil$1");
+                                                            return [4, loadOrGetCachedSmil_1(smilHref)];
+                                                        case 1:
+                                                            smilDoc = _a.sent();
+                                                            targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
+                                                            if (!targetEl) {
+                                                                targetEl = findFirstDescendantTextOrAudio_1(smilDoc.documentElement, true);
+                                                            }
+                                                            if (!targetEl) {
+                                                                debug("==?? !targetEl1 ", href, new xmldom.XMLSerializer().serializeToString(smilDoc.documentElement));
+                                                                return [2];
+                                                            }
+                                                            targetElOriginal = targetEl;
+                                                            if (targetEl.nodeName !== "audio") {
+                                                                targetEl = findFirstDescendantTextOrAudio_1((targetEl.nodeName === "text" && targetEl.parentNode) ?
+                                                                    targetEl.parentNode :
+                                                                    targetEl, true);
+                                                            }
+                                                            if (!targetEl || targetEl.nodeName !== "audio") {
+                                                                debug("==?? !targetEl2 ", href, new xmldom.XMLSerializer().serializeToString(targetElOriginal));
+                                                                return [2];
+                                                            }
+                                                            src = targetEl.getAttribute("src");
+                                                            if (!src) {
+                                                                debug("==?? !src");
+                                                                return [2];
+                                                            }
+                                                            clipBegin = targetEl.getAttribute("clipBegin") || targetEl.getAttribute("clip-begin");
+                                                            timeStamp = "#t=";
+                                                            begin = clipBegin ? (0, media_overlay_1.timeStrToSeconds)(clipBegin) : 0;
+                                                            timeStamp += begin.toString();
+                                                            link.Href = path.join(smilHref, "..", src + timeStamp).replace(/\\/g, "/");
+                                                            link.TypeLink = "audio/?";
+                                                            mediaType = mime.lookup(src);
+                                                            if (mediaType) {
+                                                                link.TypeLink = mediaType;
+                                                            }
+                                                            return [2];
+                                                    }
+                                                });
+                                            }); };
+                                            processLinksAudio = function (links) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                                var _i, links_3, link;
+                                                return (0, tslib_1.__generator)(this, function (_a) {
+                                                    switch (_a.label) {
+                                                        case 0:
+                                                            _i = 0, links_3 = links;
+                                                            _a.label = 1;
+                                                        case 1:
+                                                            if (!(_i < links_3.length)) return [3, 5];
+                                                            link = links_3[_i];
+                                                            return [4, processLinkAudio(link)];
+                                                        case 2:
+                                                            _a.sent();
+                                                            if (!link.Children) return [3, 4];
+                                                            return [4, processLinksAudio(link.Children)];
+                                                        case 3:
+                                                            _a.sent();
+                                                            _a.label = 4;
+                                                        case 4:
+                                                            _i++;
+                                                            return [3, 1];
+                                                        case 5: return [2];
+                                                    }
+                                                });
+                                            }); };
+                                            if (!audioPublication.PageList) return [3, 4];
+                                            _i = 0, _a = audioPublication.PageList;
+                                            _g.label = 1;
+                                        case 1:
+                                            if (!(_i < _a.length)) return [3, 4];
+                                            link = _a[_i];
+                                            return [4, processLinkAudio(link)];
+                                        case 2:
+                                            _g.sent();
+                                            _g.label = 3;
+                                        case 3:
+                                            _i++;
+                                            return [3, 1];
+                                        case 4:
+                                            if (!audioPublication.Landmarks) return [3, 8];
+                                            _b = 0, _c = audioPublication.Landmarks;
+                                            _g.label = 5;
+                                        case 5:
+                                            if (!(_b < _c.length)) return [3, 8];
+                                            link = _c[_b];
+                                            return [4, processLinkAudio(link)];
+                                        case 6:
+                                            _g.sent();
+                                            _g.label = 7;
+                                        case 7:
+                                            _b++;
+                                            return [3, 5];
+                                        case 8:
+                                            if (!audioPublication.TOC) return [3, 10];
+                                            return [4, processLinksAudio(audioPublication.TOC)];
+                                        case 9:
+                                            _g.sent();
+                                            _g.label = 10;
+                                        case 10:
+                                            audioPublication.Spine = [];
+                                            if (!pubAudio.Spine) return [3, 14];
+                                            _loop_2 = function (spineLink) {
+                                                var smilDoc, firstAudioElement, src, link, resAudio;
+                                                return (0, tslib_1.__generator)(this, function (_h) {
+                                                    switch (_h.label) {
+                                                        case 0:
+                                                            if (!((_f = spineLink.MediaOverlays) === null || _f === void 0 ? void 0 : _f.SmilPathInZip)) {
+                                                                debug("???- !spineLink.MediaOverlays?.SmilPathInZip");
+                                                                return [2, "continue"];
+                                                            }
+                                                            return [4, loadOrGetCachedSmil_1(spineLink.MediaOverlays.SmilPathInZip)];
+                                                        case 1:
+                                                            smilDoc = _h.sent();
+                                                            firstAudioElement = findFirstDescendantTextOrAudio_1(smilDoc.documentElement, true);
+                                                            if (!firstAudioElement) {
+                                                                debug("???- !firstAudioElement ", spineLink.MediaOverlays.SmilPathInZip);
+                                                                return [2, "continue"];
+                                                            }
+                                                            src = firstAudioElement.getAttribute("src");
+                                                            if (!src) {
+                                                                return [2, "continue"];
+                                                            }
+                                                            link = new publication_link_1.Link();
+                                                            link.Href = path.join(spineLink.MediaOverlays.SmilPathInZip, "..", src).replace(/\\/g, "/");
+                                                            link.TypeLink = "audio/?";
+                                                            if (audioPublication.Resources) {
+                                                                resAudio = audioPublication.Resources.find(function (l) {
+                                                                    return l.Href === src;
+                                                                });
+                                                                if (resAudio === null || resAudio === void 0 ? void 0 : resAudio.TypeLink) {
+                                                                    link.TypeLink = resAudio.TypeLink;
+                                                                }
+                                                            }
+                                                            if (spineLink.MediaOverlays.duration) {
+                                                                link.Duration = spineLink.MediaOverlays.duration;
+                                                            }
+                                                            audioPublication.Spine.push(link);
+                                                            return [2];
+                                                    }
+                                                });
+                                            };
+                                            _d = 0, _e = pubAudio.Spine;
+                                            _g.label = 11;
+                                        case 11:
+                                            if (!(_d < _e.length)) return [3, 14];
+                                            spineLink = _e[_d];
+                                            return [5, _loop_2(spineLink)];
+                                        case 12:
+                                            _g.sent();
+                                            _g.label = 13;
+                                        case 13:
+                                            _d++;
+                                            return [3, 11];
+                                        case 14: return [2, audioPublication];
+                                    }
+                                });
+                            }); };
+                            _u.label = 29;
+                        case 29:
+                            _u.trys.push([29, 31, , 32]);
+                            return [4, transformPublicationToAudioBook(publication)];
+                        case 30:
+                            audioPublication = _u.sent();
+                            jsonObjAudio = (0, serializable_1.TaJsonSerialize)(audioPublication);
+                            jsonStrAudio = global.JSON.stringify(jsonObjAudio, null, "  ");
+                            if (!generateDaisyAudioManifestOnly) {
+                                zipfile.addBuffer(Buffer.from(jsonStrAudio), "manifest-audio.json");
+                            }
+                            else {
+                                outputManifestPath = path.join(outputDirPath, generateDaisyAudioManifestOnly + "_manifest.json");
+                                ensureDirs(outputManifestPath);
+                                fs.writeFileSync(outputManifestPath, jsonStrAudio, "utf8");
+                                resolve(outputManifestPath);
+                            }
+                            return [3, 32];
+                        case 31:
+                            ero_1 = _u.sent();
+                            debug(ero_1);
+                            return [3, 32];
+                        case 32: return [3, 35];
+                        case 33:
                             erreur_1 = _u.sent();
                             debug(erreur_1);
-                            return [3, 29];
-                        case 28:
-                            timeoutId = setTimeout(function () {
-                                timeoutId = undefined;
-                                reject("YAZL zip took too long!? " + outputZipPath);
-                            }, 10000);
-                            zipfile.end();
+                            return [3, 35];
+                        case 34:
+                            debug("DAISY-EPUB-RWPM done.");
+                            if (!generateDaisyAudioManifestOnly) {
+                                timeoutId = setTimeout(function () {
+                                    timeoutId = undefined;
+                                    reject("YAZL zip took too long!? " + outputZipPath);
+                                }, 10000);
+                                zipfile.end();
+                            }
                             return [7];
-                        case 29: return [2];
+                        case 35: return [2];
                     }
                 });
             }); })];

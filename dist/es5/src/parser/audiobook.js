@@ -74,6 +74,9 @@ function AudioBookParsePromise(filePath, isAudio) {
                     zipEntries = _b.sent();
                     for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                         zipEntry = zipEntries_1[_i];
+                        if (zipEntry.startsWith("__MACOSX/")) {
+                            continue;
+                        }
                         debug(zipEntry);
                     }
                     return [2, Promise.reject("AudioBook no manifest?!")];
@@ -86,7 +89,7 @@ function AudioBookParsePromise(filePath, isAudio) {
                 case 11:
                     err_2 = _b.sent();
                     debug(err_2);
-                    return [2, Promise.reject("Problem streaming AudioBook zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem streaming AudioBook zip entry?! ".concat(entryName))];
                 case 12:
                     manifestZipStream = manifestZipStream_.stream;
                     _b.label = 13;
@@ -99,7 +102,7 @@ function AudioBookParsePromise(filePath, isAudio) {
                 case 15:
                     err_3 = _b.sent();
                     debug(err_3);
-                    return [2, Promise.reject("Problem buffering AudioBook zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem buffering AudioBook zip entry?! ".concat(entryName))];
                 case 16:
                     manifestJsonStr = manifestZipData.toString("utf8");
                     manifestJson = JSON.parse(manifestJsonStr);
@@ -140,7 +143,7 @@ function AudioBookParsePromise(filePath, isAudio) {
                     err_4 = _b.sent();
                     if (hasLCP) {
                         debug(err_4);
-                        return [2, Promise.reject("Problem streaming AudioBook LCP zip entry?! " + entryName)];
+                        return [2, Promise.reject("Problem streaming AudioBook LCP zip entry?! ".concat(entryName))];
                     }
                     else {
                         debug("Audiobook no LCP.");
@@ -161,7 +164,7 @@ function AudioBookParsePromise(filePath, isAudio) {
                 case 25:
                     err_5 = _b.sent();
                     debug(err_5);
-                    return [2, Promise.reject("Problem buffering AudioBook LCP zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem buffering AudioBook LCP zip entry?! ".concat(entryName))];
                 case 26:
                     lcpJsonStr = lcpZipData.toString("utf8");
                     lcpJson = JSON.parse(lcpJsonStr);
@@ -206,7 +209,7 @@ function doRequest(u) {
                     debug(JSON.stringify(options));
                     (secure ? https : http).request(options, function (res) {
                         if (!res) {
-                            reject("HTTP no response " + u);
+                            reject("HTTP no response ".concat(u));
                             return;
                         }
                         debug(res.statusCode);
@@ -228,7 +231,7 @@ function doRequest(u) {
                                                 return [3, 3];
                                             case 2:
                                                 err_6 = _a.sent();
-                                                reject("HTTP audiobook redirect, then fail " + u + " " + err_6);
+                                                reject("HTTP audiobook redirect, then fail ".concat(u, " ").concat(err_6));
                                                 return [3, 3];
                                             case 3: return [2];
                                         }
@@ -236,7 +239,7 @@ function doRequest(u) {
                                 }); });
                             }
                             else {
-                                reject("HTTP audiobook redirect without location?! " + u);
+                                reject("HTTP audiobook redirect without location?! ".concat(u));
                             }
                             return;
                         }
@@ -256,26 +259,26 @@ function doRequest(u) {
                                     try {
                                         var manJson = JSON.parse(responseBody_1);
                                         if (manJson.metadata && manJson.metadata["@type"] &&
-                                            /http[s]?:\/\/schema\.org\/Audiobook$/.test(manJson.metadata["@type"])) {
+                                            /https?:\/\/schema\.org\/Audiobook$/.test(manJson.metadata["@type"])) {
                                             resolve(AudioBookis.RemoteExploded);
                                             return;
                                         }
                                         else {
-                                            reject("HTTP JSON not audiobook " + u);
+                                            reject("HTTP JSON not audiobook ".concat(u));
                                         }
                                     }
                                     catch (ex) {
                                         debug(ex);
-                                        reject("HTTP audiobook invalid JSON?! " + u + " " + ex);
+                                        reject("HTTP audiobook invalid JSON?! ".concat(u, " ").concat(ex));
                                     }
                                 });
                                 return;
                             }
                         }
-                        reject("Not HTTP audiobook type " + u);
+                        reject("Not HTTP audiobook type ".concat(u));
                     }).on("error", function (err) {
                         debug(err);
-                        reject("HTTP error " + u + " " + err);
+                        reject("HTTP error ".concat(u, " ").concat(err));
                     }).end();
                 })];
         });
@@ -292,10 +295,10 @@ function isAudioBookPublication(urlOrPath) {
                 p = url.pathname;
             }
             fileName = path.basename(p);
-            ext = path.extname(fileName).toLowerCase();
-            audio = /\.audiobook$/.test(ext);
-            audioLcp = /\.lcpa$/.test(ext);
-            audioLcpAlt = /\.lcpaudiobook$/.test(ext);
+            ext = path.extname(fileName);
+            audio = /\.audiobook$/i.test(ext);
+            audioLcp = /\.lcpa$/i.test(ext);
+            audioLcpAlt = /\.lcpaudiobook$/i.test(ext);
             if (audio || audioLcp || audioLcpAlt) {
                 if (!isHttp) {
                     return [2, AudioBookis.LocalPacked];
@@ -306,7 +309,7 @@ function isAudioBookPublication(urlOrPath) {
                     manStr = fs.readFileSync(p, { encoding: "utf8" });
                     manJson = JSON.parse(manStr);
                     if (manJson.metadata && manJson.metadata["@type"] &&
-                        /http[s]?:\/\/schema\.org\/Audiobook$/.test(manJson.metadata["@type"])) {
+                        /https?:\/\/schema\.org\/Audiobook$/.test(manJson.metadata["@type"])) {
                         return [2, AudioBookis.LocalExploded];
                     }
                 }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDurations = exports.lazyLoadMediaOverlays = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const mime = require("mime-types");
@@ -71,7 +71,7 @@ const fillPublicationDate = (publication, rootfile, opf) => {
                     publication.Metadata.PublicationDate = mom.toDate();
                 }
             }
-            catch (err) {
+            catch (_err) {
                 debug("INVALID DATE/TIME? " + token);
             }
             return;
@@ -85,7 +85,7 @@ const fillPublicationDate = (publication, rootfile, opf) => {
                         publication.Metadata.PublicationDate = mom.toDate();
                     }
                 }
-                catch (err) {
+                catch (_err) {
                     debug("INVALID DATE/TIME? " + token);
                 }
             }
@@ -376,7 +376,7 @@ const fillSpineAndResource = (publication, rootfile, opf, zip, addLinkData) => (
         for (const item of opf.Manifest) {
             const itemHrefDecoded = item.HrefDecoded;
             if (!itemHrefDecoded) {
-                debug("!? item.Href");
+                debug("!? item.Href", JSON.stringify(item, null, 4));
                 continue;
             }
             const zipPath = path.join(path.dirname(opf.ZipPath), itemHrefDecoded)
@@ -386,11 +386,11 @@ const fillSpineAndResource = (publication, rootfile, opf, zip, addLinkData) => (
                 const linkItem = new publication_link_1.Link();
                 linkItem.TypeLink = item.MediaType;
                 linkItem.setHrefDecoded(zipPath);
-                yield addLinkData(publication, rootfile, opf, zip, linkItem, item);
                 if (!publication.Resources) {
                     publication.Resources = [];
                 }
                 publication.Resources.push(linkItem);
+                yield addLinkData(publication, rootfile, opf, zip, linkItem, item);
             }
         }
     }
@@ -623,6 +623,9 @@ const getNcx = (ncxManItem, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, 
         debug(err);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             debug(zipEntry);
         }
         return Promise.reject(err);
@@ -644,7 +647,11 @@ const getNcx = (ncxManItem, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, 
         debug(err);
         return Promise.reject(err);
     }
-    let ncxStr = ncxZipData.toString("utf8");
+    const ncxStr = ncxZipData.toString("utf8");
+    return (0, exports.getNcx_)(ncxStr, ncxFilePath);
+});
+exports.getNcx = getNcx;
+const getNcx_ = (ncxStr, ncxFilePath) => {
     const iStart = ncxStr.indexOf("<ncx");
     if (iStart >= 0) {
         const iEnd = ncxStr.indexOf(">", iStart);
@@ -659,8 +666,8 @@ const getNcx = (ncxManItem, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, 
     const ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
     ncx.ZipPath = ncxFilePath;
     return ncx;
-});
-exports.getNcx = getNcx;
+};
+exports.getNcx_ = getNcx_;
 const getOpf = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
     const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath);
     if (!has) {
@@ -668,6 +675,9 @@ const getOpf = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter
         debug(err);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             debug(zipEntry);
         }
         return Promise.reject(err);
@@ -689,7 +699,11 @@ const getOpf = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter
         debug(err);
         return Promise.reject(err);
     }
-    let opfStr = opfZipData.toString("utf8");
+    const opfStr = opfZipData.toString("utf8");
+    return (0, exports.getOpf_)(opfStr, rootfilePathDecoded);
+});
+exports.getOpf = getOpf;
+const getOpf_ = (opfStr, rootfilePathDecoded) => {
     const iStart = opfStr.indexOf("<package");
     if (iStart >= 0) {
         const iEnd = opfStr.indexOf(">", iStart);
@@ -704,8 +718,8 @@ const getOpf = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter
     const opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
     opf.ZipPath = rootfilePathDecoded;
     return opf;
-});
-exports.getOpf = getOpf;
+};
+exports.getOpf_ = getOpf_;
 const addOtherMetadata = (publication, rootfile, opf) => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
     if (!opf.Metadata) {
@@ -1080,6 +1094,9 @@ const loadFileBufferFromZipPath = (linkHref, linkHrefDecoded, zip) => (0, tslib_
         debug(`NOT IN ZIP (loadFileBufferFromZipPath): ${linkHref} --- ${linkHrefDecoded}`);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             debug(zipEntry);
         }
         return undefined;
@@ -1150,7 +1167,7 @@ const addAlternateAudioLinkFromNCX = (ncx, link, navLabel) => {
             const begin = navLabel.Audio.ClipBegin ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipBegin) : 0;
             const end = navLabel.Audio.ClipEnd ? (0, media_overlay_1.timeStrToSeconds)(navLabel.Audio.ClipEnd) : 0;
             timeHref += begin.toString();
-            if (navLabel.Audio.ClipEnd) {
+            if (navLabel.Audio.ClipEnd && end) {
                 timeHref += ",";
                 timeHref += end.toString();
             }
@@ -1158,10 +1175,14 @@ const addAlternateAudioLinkFromNCX = (ncx, link, navLabel) => {
                 link.Alternate = [];
             }
             const altLink = new publication_link_1.Link();
+            altLink.Rel = ["daisyAudioLabel"];
             altLink.setHrefDecoded(timeHref);
             const mediaType = mime.lookup(audioSrcDcoded);
             if (mediaType) {
                 altLink.TypeLink = mediaType;
+            }
+            if (navLabel.Audio.ClipEnd && end > begin) {
+                altLink.Duration = end - begin;
             }
             link.Alternate.push(altLink);
         }
@@ -1234,9 +1255,12 @@ const addMediaOverlaySMIL = (link, manItemSmil, opf, zip) => (0, tslib_1.__await
                 .replace(/\\/g, "/");
             const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, smilFilePath, smilFilePath);
             if (!has) {
-                debug(`NOT IN ZIP (addMediaOverlay): ${smilFilePath}`);
+                debug(`NOT IN ZIP (addMediaOverlay): ${smilFilePath} -- ${opf.ZipPath}`);
                 const zipEntries = yield zip.getEntries();
                 for (const zipEntry of zipEntries) {
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     debug(zipEntry);
                 }
                 return;
@@ -1267,6 +1291,70 @@ const addMediaOverlaySMIL = (link, manItemSmil, opf, zip) => (0, tslib_1.__await
     }
 });
 exports.addMediaOverlaySMIL = addMediaOverlaySMIL;
+const flattenDaisy2SmilAudioSeq = (_smilPathInZip, smilXmlDoc) => {
+    let iClone = 0;
+    const pars = Array.from(smilXmlDoc.getElementsByTagName("par"));
+    for (const par of pars) {
+        const seq = par.getElementsByTagName("seq")[0];
+        if (seq) {
+            const text = par.getElementsByTagName("text")[0];
+            const audios = Array.from(seq.getElementsByTagName("audio"));
+            for (let j = 0; j < audios.length; j++) {
+                const audio = audios[j];
+                seq.removeChild(audio);
+                if (j === 0) {
+                    if (text) {
+                        if (text.insertAdjacentElement) {
+                            text.insertAdjacentElement("afterend", audio);
+                        }
+                        else if (text.parentNode) {
+                            text.parentNode.insertBefore(audio, text.nextElementSibling);
+                        }
+                        const parId = par.getAttribute("id");
+                        if (!parId) {
+                            const txtId = text.getAttribute("id");
+                            if (txtId) {
+                                par.setAttribute("id", txtId);
+                                text.removeAttribute("id");
+                            }
+                        }
+                    }
+                    else {
+                        par.appendChild(audio);
+                    }
+                }
+                else {
+                    const newPar = par.namespaceURI ?
+                        smilXmlDoc.createElementNS(par.namespaceURI, "par") :
+                        smilXmlDoc.createElement("par");
+                    iClone++;
+                    if (text) {
+                        const cloneText = text.cloneNode(false);
+                        const tId = cloneText.getAttribute("id");
+                        if (tId) {
+                            cloneText.removeAttribute("id");
+                        }
+                        newPar.setAttribute("id", (tId ? tId : "id") + "r2__" + iClone);
+                        newPar.appendChild(cloneText);
+                    }
+                    else {
+                        newPar.setAttribute("id", "id" + "r2__" + iClone);
+                    }
+                    newPar.appendChild(audio);
+                    newPar.appendChild(smilXmlDoc.createTextNode("\n"));
+                    if (par.insertAdjacentElement) {
+                        par.insertAdjacentElement("afterend", newPar);
+                    }
+                    else if (par.parentNode) {
+                        par.parentNode.insertBefore(newPar, par.nextElementSibling);
+                    }
+                }
+            }
+            par.removeChild(seq);
+        }
+    }
+};
+exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
 const lazyLoadMediaOverlays = (publication, mo) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
     var _a;
     if (mo.initialized || !mo.SmilPathInZip) {
@@ -1307,6 +1395,9 @@ const lazyLoadMediaOverlays = (publication, mo) => (0, tslib_1.__awaiter)(void 0
         debug(err);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             debug(zipEntry);
         }
         return Promise.reject(err);
@@ -1362,6 +1453,12 @@ const lazyLoadMediaOverlays = (publication, mo) => (0, tslib_1.__awaiter)(void 0
         }
     }
     const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+    const nccZipEntry = (yield zip.getEntries()).find((entry) => {
+        return /ncc\.html$/i.test(entry);
+    });
+    if (nccZipEntry) {
+        (0, exports.flattenDaisy2SmilAudioSeq)(mo.SmilPathInZip, smilXmlDoc);
+    }
     const smil = xml_js_mapper_1.XML.deserialize(smilXmlDoc, smil_1.SMIL);
     smil.ZipPath = mo.SmilPathInZip;
     mo.initialized = true;
@@ -1416,6 +1513,11 @@ const lazyLoadMediaOverlays = (publication, mo) => (0, tslib_1.__awaiter)(void 0
             }
             else if (smil.Body.CustomTest.indexOf("annotation") >= 0) {
                 mo.Role.push("annotation");
+            }
+        }
+        else if (smil.Body.SystemRequired) {
+            if (smil.Body.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                mo.Role.push("pagebreak");
             }
         }
         if (smil.Body.TextRef) {
@@ -1525,6 +1627,14 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 moc.Role.push("annotation");
             }
         }
+        else if (seq.SystemRequired) {
+            if (seq.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+        }
         if (seq.TextRef) {
             const seqTextRefDecoded = seq.TextRefDecoded;
             if (!seqTextRefDecoded) {
@@ -1616,6 +1726,14 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 moc.Role.push("annotation");
             }
         }
+        else if (par.SystemRequired) {
+            if (par.SystemRequired.indexOf("pagenumber-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("pagebreak");
+            }
+        }
         if (par.Text && par.Text.Src) {
             const parTextSrcDcoded = par.Text.SrcDecoded;
             if (!parTextSrcDcoded) {
@@ -1625,6 +1743,9 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 const zipPath = path.join(path.dirname(smil.ZipPath), parTextSrcDcoded)
                     .replace(/\\/g, "/");
                 moc.Text = zipPath;
+            }
+            if (par.Text.ID) {
+                moc.TextID = par.Text.ID;
             }
         }
         if (par.Audio && par.Audio.Src) {
@@ -1647,6 +1768,9 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                     moc.Audio += end.toString();
                 }
             }
+            if (par.Audio.ID) {
+                moc.AudioID = par.Audio.ID;
+            }
         }
         if (par.Img && par.Img.Src) {
             const parImgSrcDcoded = par.Img.SrcDecoded;
@@ -1661,6 +1785,9 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
             if (!par.Audio && !par.Text) {
                 moc.initialized = false;
                 doAdd = false;
+            }
+            if (par.Img.ID) {
+                moc.ImgID = par.Img.ID;
             }
         }
     }

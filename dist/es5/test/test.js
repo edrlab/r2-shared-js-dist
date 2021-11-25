@@ -72,7 +72,7 @@ function delay(okay) {
             case 0:
                 dirPath = path.join(process.cwd(), "misc/epubs/");
                 filePaths = fs.readdirSync(dirPath, { withFileTypes: true }).
-                    filter(function (f) { return f.isFile() && /\.epub3?$/.test(f.name); }).map(function (f) { return path.join(dirPath, f.name); });
+                    filter(function (f) { return f.isFile() && /\.epub3?$/i.test(f.name); }).map(function (f) { return path.join(dirPath, f.name); });
                 _i = 0, filePaths_1 = filePaths;
                 _e.label = 1;
             case 1:

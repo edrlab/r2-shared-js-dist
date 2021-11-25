@@ -1,4 +1,5 @@
 export declare class Img {
+    ID: string;
     Src1: string;
     get Src(): string;
     set Src(href: string);

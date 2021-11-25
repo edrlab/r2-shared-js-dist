@@ -75,6 +75,9 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     zipEntries = _b.sent();
                     for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                         zipEntry = zipEntries_1[_i];
+                        if (zipEntry.startsWith("__MACOSX/")) {
+                            continue;
+                        }
                         debug(zipEntry);
                     }
                     return [2, Promise.reject("Divina no manifest?!")];
@@ -87,7 +90,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 case 11:
                     err_2 = _b.sent();
                     debug(err_2);
-                    return [2, Promise.reject("Problem streaming Divina zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem streaming Divina zip entry?! ".concat(entryName))];
                 case 12:
                     manifestZipStream = manifestZipStream_.stream;
                     _b.label = 13;
@@ -100,7 +103,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 case 15:
                     err_3 = _b.sent();
                     debug(err_3);
-                    return [2, Promise.reject("Problem buffering Divina zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem buffering Divina zip entry?! ".concat(entryName))];
                 case 16:
                     manifestJsonStr = manifestZipData.toString("utf8");
                     manifestJson = JSON.parse(manifestJsonStr);
@@ -141,7 +144,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                     err_4 = _b.sent();
                     if (hasLCP) {
                         debug(err_4);
-                        return [2, Promise.reject("Problem streaming Divina LCP zip entry?! " + entryName)];
+                        return [2, Promise.reject("Problem streaming Divina LCP zip entry?! ".concat(entryName))];
                     }
                     else {
                         debug("Divina no LCP.");
@@ -162,7 +165,7 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
                 case 25:
                     err_5 = _b.sent();
                     debug(err_5);
-                    return [2, Promise.reject("Problem buffering Divina LCP zip entry?! " + entryName)];
+                    return [2, Promise.reject("Problem buffering Divina LCP zip entry?! ".concat(entryName))];
                 case 26:
                     lcpJsonStr = lcpZipData.toString("utf8");
                     lcpJson = JSON.parse(lcpJsonStr);
@@ -218,7 +221,7 @@ function doRequest(u) {
                             if (loc && loc.length) {
                                 var l_1 = Array.isArray(loc) ? loc[0] : loc;
                                 process.nextTick(function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                                    var redirectRes, err_6;
+                                    var redirectRes, _err_1;
                                     return (0, tslib_1.__generator)(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
@@ -229,7 +232,7 @@ function doRequest(u) {
                                                 resolve(redirectRes);
                                                 return [3, 3];
                                             case 2:
-                                                err_6 = _a.sent();
+                                                _err_1 = _a.sent();
                                                 resolve(undefined);
                                                 return [3, 3];
                                             case 3: return [2];
@@ -258,8 +261,8 @@ function doRequest(u) {
                                     try {
                                         var manJson = JSON.parse(responseBody_1);
                                         if (manJson.metadata && manJson.metadata["@type"] &&
-                                            (/http[s]?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
-                                                /http[s]?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
+                                            (/https?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
+                                                /https?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
                                             resolve(Divinais.RemoteExploded);
                                             return;
                                         }
@@ -295,9 +298,9 @@ function isDivinaPublication(urlOrPath) {
                 p = url.pathname;
             }
             fileName = path.basename(p);
-            ext = path.extname(fileName).toLowerCase();
-            dnva = /\.divina$/.test(ext);
-            dnvaLcp = /\.lcpdivina$/.test(ext);
+            ext = path.extname(fileName);
+            dnva = /\.divina$/i.test(ext);
+            dnvaLcp = /\.lcpdivina$/i.test(ext);
             if (dnva || dnvaLcp) {
                 if (!isHttp) {
                     return [2, Divinais.LocalPacked];
@@ -308,8 +311,8 @@ function isDivinaPublication(urlOrPath) {
                     manStr = fs.readFileSync(p, { encoding: "utf8" });
                     manJson = JSON.parse(manStr);
                     if (manJson.metadata && manJson.metadata["@type"] &&
-                        (/http[s]?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
-                            /http[s]?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
+                        (/https?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
+                            /https?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
                         return [2, Divinais.LocalExploded];
                     }
                 }

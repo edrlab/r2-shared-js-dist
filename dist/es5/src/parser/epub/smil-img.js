@@ -44,6 +44,10 @@ var Img = (function () {
         this.SrcDecoded = href;
     };
     (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+        (0, tslib_1.__metadata)("design:type", String)
+    ], Img.prototype, "ID", void 0);
+    (0, tslib_1.__decorate)([
         (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
         (0, tslib_1.__metadata)("design:type", String)
     ], Img.prototype, "Src1", void 0);

@@ -48,6 +48,10 @@ var Text = (function () {
         (0, tslib_1.__metadata)("design:type", String)
     ], Text.prototype, "EpubType", void 0);
     (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+        (0, tslib_1.__metadata)("design:type", String)
+    ], Text.prototype, "ID", void 0);
+    (0, tslib_1.__decorate)([
         (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
         (0, tslib_1.__metadata)("design:type", String)
     ], Text.prototype, "Src1", void 0);

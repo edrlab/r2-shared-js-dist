@@ -3,5 +3,6 @@ export declare class SeqOrPar {
     ID: string;
     Duration: string;
     CustomTest: string;
+    SystemRequired: string;
     Class: string;
 }

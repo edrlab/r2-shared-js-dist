@@ -53,6 +53,9 @@ async function DivinaParsePromise(filePath, isDivina, pubtype) {
         if (!has) {
             const zipEntries = await zip.getEntries();
             for (const zipEntry of zipEntries) {
+                if (zipEntry.startsWith("__MACOSX/")) {
+                    continue;
+                }
                 debug(zipEntry);
             }
             return Promise.reject("Divina no manifest?!");
@@ -176,7 +179,7 @@ async function doRequest(u) {
                             const redirectRes = await doRequest(l);
                             resolve(redirectRes);
                         }
-                        catch (err) {
+                        catch (_err) {
                             resolve(undefined);
                         }
                     });
@@ -202,8 +205,8 @@ async function doRequest(u) {
                         try {
                             const manJson = JSON.parse(responseBody);
                             if (manJson.metadata && manJson.metadata["@type"] &&
-                                (/http[s]?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
-                                    /http[s]?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
+                                (/https?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
+                                    /https?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
                                 resolve(Divinais.RemoteExploded);
                                 return;
                             }
@@ -234,9 +237,9 @@ async function isDivinaPublication(urlOrPath) {
         p = url.pathname;
     }
     const fileName = path.basename(p);
-    const ext = path.extname(fileName).toLowerCase();
-    const dnva = /\.divina$/.test(ext);
-    const dnvaLcp = /\.lcpdivina$/.test(ext);
+    const ext = path.extname(fileName);
+    const dnva = /\.divina$/i.test(ext);
+    const dnvaLcp = /\.lcpdivina$/i.test(ext);
     if (dnva || dnvaLcp) {
         if (!isHttp) {
             return Divinais.LocalPacked;
@@ -247,8 +250,8 @@ async function isDivinaPublication(urlOrPath) {
             const manStr = fs.readFileSync(p, { encoding: "utf8" });
             const manJson = JSON.parse(manStr);
             if (manJson.metadata && manJson.metadata["@type"] &&
-                (/http[s]?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
-                    /http[s]?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
+                (/https?:\/\/schema\.org\/VisualArtwork$/.test(manJson.metadata["@type"]) ||
+                    /https?:\/\/schema\.org\/ComicStory$/.test(manJson.metadata["@type"]))) {
                 return Divinais.LocalExploded;
             }
         }

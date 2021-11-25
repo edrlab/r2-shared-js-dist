@@ -22,6 +22,10 @@ let SeqOrPar = class SeqOrPar {
     (0, tslib_1.__metadata)("design:type", String)
 ], SeqOrPar.prototype, "CustomTest", void 0);
 (0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@system-required"),
+    (0, tslib_1.__metadata)("design:type", String)
+], SeqOrPar.prototype, "SystemRequired", void 0);
+(0, tslib_1.__decorate)([
     (0, xml_js_mapper_1.XmlXPathSelector)("@class"),
     (0, tslib_1.__metadata)("design:type", String)
 ], SeqOrPar.prototype, "Class", void 0);

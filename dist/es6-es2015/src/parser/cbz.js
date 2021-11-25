@@ -19,8 +19,8 @@ const comicrack_1 = require("./comicrack/comicrack");
 const epub_1 = require("./epub");
 function isCBZPublication(filePath) {
     const fileName = path.basename(filePath);
-    const ext = path.extname(fileName).toLowerCase();
-    const cbz = /\.cbz$/.test(ext);
+    const ext = path.extname(fileName);
+    const cbz = /\.cbz$/i.test(ext);
     return cbz;
 }
 exports.isCBZPublication = isCBZPublication;
@@ -104,6 +104,9 @@ const comicRackMetadata = (zip, entryName, publication) => (0, tslib_1.__awaiter
         console.log(`NOT IN ZIP: ${entryName} --- ${entryNameDecoded}`);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             console.log(zipEntry);
         }
         return;

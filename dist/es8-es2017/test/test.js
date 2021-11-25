@@ -49,7 +49,7 @@ async function delay(okay) {
 (0, ava_1.default)("EPUB parsing (de)serialize roundtrip", async (t) => {
     const dirPath = path.join(process.cwd(), "misc/epubs/");
     const filePaths = fs.readdirSync(dirPath, { withFileTypes: true }).
-        filter((f) => f.isFile() && /\.epub3?$/.test(f.name)).map((f) => path.join(dirPath, f.name));
+        filter((f) => f.isFile() && /\.epub3?$/i.test(f.name)).map((f) => path.join(dirPath, f.name));
     for (const filePath of filePaths) {
         debug("------------------------");
         debug(filePath);

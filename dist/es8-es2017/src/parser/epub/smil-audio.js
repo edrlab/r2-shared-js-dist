@@ -5,6 +5,24 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
 let Audio = class Audio {
+    get ClipBegin() {
+        return this.ClipBegin1 ? this.ClipBegin1 : this.ClipBegin2;
+    }
+    set ClipBegin(clipBegin) {
+        if (clipBegin) {
+            this.ClipBegin1 = clipBegin;
+            this.ClipBegin2 = undefined;
+        }
+    }
+    get ClipEnd() {
+        return this.ClipEnd1 ? this.ClipEnd1 : this.ClipEnd2;
+    }
+    set ClipEnd(clipEnd) {
+        if (clipEnd) {
+            this.ClipEnd1 = clipEnd;
+            this.ClipEnd2 = undefined;
+        }
+    }
     get Src() {
         return this.Src1;
     }
@@ -35,13 +53,25 @@ let Audio = class Audio {
     }
 };
 (0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+    (0, tslib_1.__metadata)("design:type", String)
+], Audio.prototype, "ID", void 0);
+(0, tslib_1.__decorate)([
     (0, xml_js_mapper_1.XmlXPathSelector)("@clipBegin"),
     (0, tslib_1.__metadata)("design:type", String)
-], Audio.prototype, "ClipBegin", void 0);
+], Audio.prototype, "ClipBegin1", void 0);
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@clip-begin"),
+    (0, tslib_1.__metadata)("design:type", Object)
+], Audio.prototype, "ClipBegin2", void 0);
 (0, tslib_1.__decorate)([
     (0, xml_js_mapper_1.XmlXPathSelector)("@clipEnd"),
     (0, tslib_1.__metadata)("design:type", String)
-], Audio.prototype, "ClipEnd", void 0);
+], Audio.prototype, "ClipEnd1", void 0);
+(0, tslib_1.__decorate)([
+    (0, xml_js_mapper_1.XmlXPathSelector)("@clip-end"),
+    (0, tslib_1.__metadata)("design:type", Object)
+], Audio.prototype, "ClipEnd2", void 0);
 (0, tslib_1.__decorate)([
     (0, xml_js_mapper_1.XmlXPathSelector)("@epub:type"),
     (0, tslib_1.__metadata)("design:type", String)

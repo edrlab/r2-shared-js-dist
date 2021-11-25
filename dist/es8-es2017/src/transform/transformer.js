@@ -30,7 +30,7 @@ class Transformers {
                     try {
                         s = await transformedData;
                     }
-                    catch (err) {
+                    catch (_err) {
                         transformedData = undefined;
                         break;
                     }

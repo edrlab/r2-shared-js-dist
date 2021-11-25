@@ -29,12 +29,15 @@ export declare const addIdentifier: (publication: Publication, opf: OPF) => void
 export declare const addTitle: (publication: Publication, rootfile: Rootfile | undefined, opf: OPF) => void;
 export declare const setPublicationDirection: (publication: Publication, opf: OPF) => void;
 export declare const getNcx: (ncxManItem: Manifest, opf: OPF, zip: IZip) => Promise<NCX>;
+export declare const getNcx_: (ncxStr: string, ncxFilePath: string) => NCX;
 export declare const getOpf: (zip: IZip, rootfilePathDecoded: string, rootfilePath: string) => Promise<OPF>;
+export declare const getOpf_: (opfStr: string, rootfilePathDecoded: string) => OPF;
 export declare const addOtherMetadata: (publication: Publication, rootfile: Rootfile | undefined, opf: OPF) => void;
 export declare const loadFileStrFromZipPath: (linkHref: string, linkHrefDecoded: string, zip: IZip) => Promise<string | undefined>;
 export declare const loadFileBufferFromZipPath: (linkHref: string, linkHrefDecoded: string, zip: IZip) => Promise<Buffer | undefined>;
 export declare const fillTOC: (publication: Publication, opf: OPF, ncx: NCX | undefined) => void;
 export declare const addMediaOverlaySMIL: (link: Link, manItemSmil: Manifest, opf: OPF, zip: IZip) => Promise<void>;
+export declare const flattenDaisy2SmilAudioSeq: (_smilPathInZip: string, smilXmlDoc: Document) => void;
 export declare const lazyLoadMediaOverlays: (publication: Publication, mo: MediaOverlayNode) => Promise<undefined>;
 export declare const updateDurations: (dur: number | undefined, link: Link) => void;
 export {};

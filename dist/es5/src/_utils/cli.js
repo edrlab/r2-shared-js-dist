@@ -67,6 +67,16 @@ if ((0, UrlUtils_1.isHTTP)(filePath)) {
 }
 fileName = fileName.replace(/META-INF[\/|\\]container.xml$/, "");
 fileName = path.basename(fileName);
+var generateDaisyAudioManifestOnly = false;
+var decryptKeys;
+if (args[2]) {
+    if (args[2] === "generate-daisy-audio-manifest-only") {
+        generateDaisyAudioManifestOnly = true;
+    }
+    else {
+        decryptKeys = args[2].trim().split(";");
+    }
+}
 var outputDirPath;
 if (args[1]) {
     var argDir = args[1].trim();
@@ -91,18 +101,20 @@ if (args[1]) {
         }
     }
     dirPath = fs.realpathSync(dirPath);
-    var fileNameNoExt = fileName + "_R2_EXTRACTED";
-    console.log(fileNameNoExt);
-    outputDirPath = path.join(dirPath, fileNameNoExt);
-    console.log(outputDirPath);
-    if (fs.existsSync(outputDirPath)) {
-        console.log("OUTPUT FOLDER ALREADY EXISTS!");
-        process.exit(1);
+    if (generateDaisyAudioManifestOnly) {
+        outputDirPath = dirPath;
+        console.log(outputDirPath);
     }
-}
-var decryptKeys;
-if (args[2]) {
-    decryptKeys = args[2].trim().split(";");
+    else {
+        var fileNameNoExt = fileName + "_R2_EXTRACTED";
+        console.log(fileNameNoExt);
+        outputDirPath = path.join(dirPath, fileNameNoExt);
+        console.log(outputDirPath);
+        if (fs.existsSync(outputDirPath)) {
+            console.log("OUTPUT FOLDER ALREADY EXISTS!");
+            process.exit(1);
+        }
+    }
 }
 (function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, isDaisyBook, _err_2, err_2;
@@ -146,7 +158,7 @@ if (args[2]) {
             case 11:
                 _a.trys.push([11, 16, , 17]);
                 if (!isDaisyBook) return [3, 13];
-                return [4, (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication)];
+                return [4, (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined)];
             case 12:
                 _a.sent();
                 return [3, 15];
@@ -264,7 +276,8 @@ function extractEPUB_Check(zip, outDir) {
                             zipEntry = zipEntries_1[_i];
                             if (zipEntry !== "mimetype" &&
                                 !zipEntry.startsWith("META-INF/") &&
-                                !zipEntry.endsWith(".opf") &&
+                                !/\.opf$/i.test(zipEntry) &&
+                                !/ncc\.html$/i.test(zipEntry) &&
                                 zipEntry !== "publication.json" &&
                                 zipEntry !== "license.lcpl" &&
                                 !zipEntry.endsWith(".DS_Store") &&
@@ -346,12 +359,15 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                 case 1:
                     has = _a.sent();
                     if (!!has) return [3, 3];
-                    console.log("NOT IN ZIP (extractEPUB_Link): " + link.Href + " --- " + hrefDecoded);
+                    console.log("NOT IN ZIP (extractEPUB_Link): ".concat(link.Href, " --- ").concat(hrefDecoded));
                     return [4, zip.getEntries()];
                 case 2:
                     zipEntries = _a.sent();
                     for (_i = 0, zipEntries_2 = zipEntries; _i < zipEntries_2.length; _i++) {
                         zipEntry = zipEntries_2[_i];
+                        if (zipEntry.startsWith("__MACOSX/")) {
+                            continue;
+                        }
                         console.log(zipEntry);
                     }
                     return [2];
@@ -522,7 +538,7 @@ function extractEPUB_MediaOverlays(pub, _zip, outDir) {
                     moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                     moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
                     i++;
-                    p = "media-overlays_" + i + ".json";
+                    p = "media-overlays_".concat(i, ".json");
                     moJsonPath = path.join(outDir, p);
                     fs.writeFileSync(moJsonPath, moJsonStr, "utf8");
                     if (spineItem.Properties && spineItem.Properties.MediaOverlay) {

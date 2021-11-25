@@ -7,6 +7,32 @@ var decodeURI_1 = require("../../_utils/decodeURI");
 var Audio = (function () {
     function Audio() {
     }
+    Object.defineProperty(Audio.prototype, "ClipBegin", {
+        get: function () {
+            return this.ClipBegin1 ? this.ClipBegin1 : this.ClipBegin2;
+        },
+        set: function (clipBegin) {
+            if (clipBegin) {
+                this.ClipBegin1 = clipBegin;
+                this.ClipBegin2 = undefined;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Audio.prototype, "ClipEnd", {
+        get: function () {
+            return this.ClipEnd1 ? this.ClipEnd1 : this.ClipEnd2;
+        },
+        set: function (clipEnd) {
+            if (clipEnd) {
+                this.ClipEnd1 = clipEnd;
+                this.ClipEnd2 = undefined;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Audio.prototype, "Src", {
         get: function () {
             return this.Src1;
@@ -44,13 +70,25 @@ var Audio = (function () {
         this.SrcDecoded = href;
     };
     (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
+        (0, tslib_1.__metadata)("design:type", String)
+    ], Audio.prototype, "ID", void 0);
+    (0, tslib_1.__decorate)([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clipBegin"),
         (0, tslib_1.__metadata)("design:type", String)
-    ], Audio.prototype, "ClipBegin", void 0);
+    ], Audio.prototype, "ClipBegin1", void 0);
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@clip-begin"),
+        (0, tslib_1.__metadata)("design:type", Object)
+    ], Audio.prototype, "ClipBegin2", void 0);
     (0, tslib_1.__decorate)([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clipEnd"),
         (0, tslib_1.__metadata)("design:type", String)
-    ], Audio.prototype, "ClipEnd", void 0);
+    ], Audio.prototype, "ClipEnd1", void 0);
+    (0, tslib_1.__decorate)([
+        (0, xml_js_mapper_1.XmlXPathSelector)("@clip-end"),
+        (0, tslib_1.__metadata)("design:type", Object)
+    ], Audio.prototype, "ClipEnd2", void 0);
     (0, tslib_1.__decorate)([
         (0, xml_js_mapper_1.XmlXPathSelector)("@epub:type"),
         (0, tslib_1.__metadata)("design:type", String)

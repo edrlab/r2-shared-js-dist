@@ -1,5 +1,6 @@
 export declare class Text {
     EpubType: string;
+    ID: string;
     Src1: string;
     get Src(): string;
     set Src(href: string);

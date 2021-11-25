@@ -26,7 +26,7 @@ var Transformers = (function () {
     };
     Transformers.prototype._tryStream = function (publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
         return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            var transformedData, atLeastOne, s, _i, _a, t, err_1;
+            var transformedData, atLeastOne, s, _i, _a, t, _err_1;
             return (0, tslib_1.__generator)(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -48,7 +48,7 @@ var Transformers = (function () {
                         s = _b.sent();
                         return [3, 5];
                     case 4:
-                        err_1 = _b.sent();
+                        _err_1 = _b.sent();
                         transformedData = undefined;
                         return [3, 7];
                     case 5:

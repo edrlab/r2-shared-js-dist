@@ -19,8 +19,8 @@ var comicrack_1 = require("./comicrack/comicrack");
 var epub_1 = require("./epub");
 function isCBZPublication(filePath) {
     var fileName = path.basename(filePath);
-    var ext = path.extname(fileName).toLowerCase();
-    var cbz = /\.cbz$/.test(ext);
+    var ext = path.extname(fileName);
+    var cbz = /\.cbz$/i.test(ext);
     return cbz;
 }
 exports.isCBZPublication = isCBZPublication;
@@ -123,12 +123,15 @@ var comicRackMetadata = function (zip, entryName, publication) { return (0, tsli
             case 1:
                 has = _d.sent();
                 if (!!has) return [3, 3];
-                console.log("NOT IN ZIP: " + entryName + " --- " + entryNameDecoded);
+                console.log("NOT IN ZIP: ".concat(entryName, " --- ").concat(entryNameDecoded));
                 return [4, zip.getEntries()];
             case 2:
                 zipEntries = _d.sent();
                 for (_i = 0, zipEntries_1 = zipEntries; _i < zipEntries_1.length; _i++) {
                     zipEntry = zipEntries_1[_i];
+                    if (zipEntry.startsWith("__MACOSX/")) {
+                        continue;
+                    }
                     console.log(zipEntry);
                 }
                 return [2];

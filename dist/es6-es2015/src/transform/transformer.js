@@ -34,7 +34,7 @@ class Transformers {
                         try {
                             s = yield transformedData;
                         }
-                        catch (err) {
+                        catch (_err) {
                             transformedData = undefined;
                             break;
                         }

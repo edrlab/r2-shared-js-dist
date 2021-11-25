@@ -11,6 +11,7 @@ const publication_1 = require("../models/publication");
 const UrlUtils_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/http/UrlUtils");
 const zipFactory_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/zip/zipFactory");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
+const daisy_convert_ncc_to_opf_ncx_1 = require("./daisy-convert-ncc-to-opf-ncx");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const debug = debug_("r2:shared#parser/daisy");
 var DaisyBookis;
@@ -29,11 +30,12 @@ function isDaisyPublication(urlOrPath) {
             p = url.pathname;
             return undefined;
         }
-        else if (/\.daisy[23]?$/.test(path.extname(path.basename(p)).toLowerCase())) {
+        else if (/\.daisy[23]?$/i.test(path.extname(path.basename(p)))) {
             return DaisyBookis.LocalPacked;
         }
         else if (fs.existsSync(path.join(urlOrPath, "package.opf")) ||
             fs.existsSync(path.join(urlOrPath, "Book.opf")) ||
+            fs.existsSync(path.join(urlOrPath, "ncc.html")) ||
             fs.existsSync(path.join(urlOrPath, "speechgen.opf"))) {
             if (!fs.existsSync(path.join(urlOrPath, "META-INF", "container.xml"))) {
                 return DaisyBookis.LocalExploded;
@@ -51,7 +53,7 @@ function isDaisyPublication(urlOrPath) {
             if (!(yield (0, zipHasEntry_1.zipHasEntry)(zip, "META-INF/container.xml", undefined))) {
                 const entries = yield zip.getEntries();
                 const opfZipEntryPath = entries.find((entry) => {
-                    return entry.endsWith(".opf");
+                    return /ncc\.html$/i.test(entry) || /\.opf$/i.test(entry);
                 });
                 if (!opfZipEntryPath) {
                     return undefined;
@@ -85,17 +87,45 @@ function DaisyParsePromise(filePath) {
         publication.AddToInternal("type", "daisy");
         publication.AddToInternal("zip", zip);
         const entries = yield zip.getEntries();
-        const opfZipEntryPath = entries.find((entry) => {
-            return entry.endsWith(".opf");
+        let opfZipEntryPath = entries.find((entry) => {
+            return /\.opf$/i.test(entry);
         });
+        let daisy2NccZipEntryPath;
         if (!opfZipEntryPath) {
-            return Promise.reject("OPF package XML file cannot be found.");
+            daisy2NccZipEntryPath = entries.find((entry) => {
+                return /ncc\.html$/i.test(entry);
+            });
+            opfZipEntryPath = daisy2NccZipEntryPath;
+        }
+        if (!opfZipEntryPath) {
+            return Promise.reject("DAISY3 OPF package XML file or DAISY2 NCC cannot be found.");
         }
         const rootfilePathDecoded = opfZipEntryPath;
         if (!rootfilePathDecoded) {
             return Promise.reject("?!rootfile.PathDecoded");
         }
-        const opf = yield (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath);
+        let opf;
+        let ncx;
+        if (daisy2NccZipEntryPath) {
+            [opf, ncx] = yield (0, daisy_convert_ncc_to_opf_ncx_1.convertNccToOpfAndNcx)(zip, rootfilePathDecoded, opfZipEntryPath);
+        }
+        else {
+            opf = yield (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, opfZipEntryPath);
+            if (opf.Manifest) {
+                let ncxManItem = opf.Manifest.find((manifestItem) => {
+                    return manifestItem.MediaType === "application/x-dtbncx+xml";
+                });
+                if (!ncxManItem) {
+                    ncxManItem = opf.Manifest.find((manifestItem) => {
+                        return manifestItem.MediaType === "text/xml" &&
+                            manifestItem.Href && /\.ncx$/i.test(manifestItem.Href);
+                    });
+                }
+                if (ncxManItem) {
+                    ncx = yield (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip);
+                }
+            }
+        }
         (0, epub_daisy_common_1.addLanguage)(publication, opf);
         (0, epub_daisy_common_1.addTitle)(publication, undefined, opf);
         (0, epub_daisy_common_1.addIdentifier)(publication, opf);
@@ -103,21 +133,6 @@ function DaisyParsePromise(filePath) {
         (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
         (0, epub_daisy_common_1.findContributorInMeta)(publication, undefined, opf);
         yield (0, epub_daisy_common_1.fillSpineAndResource)(publication, undefined, opf, zip, addLinkData);
-        let ncx;
-        if (opf.Manifest) {
-            let ncxManItem = opf.Manifest.find((manifestItem) => {
-                return manifestItem.MediaType === "application/x-dtbncx+xml";
-            });
-            if (!ncxManItem) {
-                ncxManItem = opf.Manifest.find((manifestItem) => {
-                    return manifestItem.MediaType === "text/xml" &&
-                        manifestItem.Href && manifestItem.Href.endsWith(".ncx");
-                });
-            }
-            if (ncxManItem) {
-                ncx = yield (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip);
-            }
-        }
         (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
         (0, epub_daisy_common_1.fillSubject)(publication, opf);
         (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
@@ -128,9 +143,12 @@ exports.DaisyParsePromise = DaisyParsePromise;
 const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
-        const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText";
-        const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX";
-        const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX";
+        const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
+            publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText";
+        const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
+            publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc";
+        const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
+            publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "textNcc";
         if (isFullTextAudio || isTextOnly || isAudioOnly) {
             yield (0, epub_daisy_common_1.addMediaOverlaySMIL)(linkItem, item, opf, zip);
             if (linkItem.MediaOverlays && !linkItem.MediaOverlays.initialized) {

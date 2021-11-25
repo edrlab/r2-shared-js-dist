@@ -8,6 +8,7 @@ function timeStrToSeconds(timeStr) {
     if (!timeStr) {
         return 0;
     }
+    timeStr = timeStr.replace("npt=", "");
     var hours = 0;
     var minutes = 0;
     var seconds = 0;

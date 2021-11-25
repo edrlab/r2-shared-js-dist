@@ -13,8 +13,8 @@ async function PublicationParsePromise(filePath) {
     return (0, epub_1.isEPUBlication)(filePath) ? (0, epub_1.EpubParsePromise)(filePath) :
         ((0, cbz_1.isCBZPublication)(filePath) ? (0, cbz_1.CbzParsePromise)(filePath) :
             ((isDivina = await (0, divina_1.isDivinaPublication)(filePath)) ? (0, divina_1.DivinaParsePromise)(filePath, isDivina) :
-                (/\.webpub$/.test(path.extname(path.basename(filePath)).toLowerCase()) ? (0, divina_1.DivinaParsePromise)(filePath, (/^http[s]?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "webpub") :
-                    (/\.lcpdf$/.test(path.extname(path.basename(filePath)).toLowerCase()) ? (0, divina_1.DivinaParsePromise)(filePath, (/^http[s]?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "pdf") :
+                (/\.webpub$/i.test(path.extname(path.basename(filePath))) ? (0, divina_1.DivinaParsePromise)(filePath, (/^https?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "webpub") :
+                    (/\.lcpdf$/i.test(path.extname(path.basename(filePath))) ? (0, divina_1.DivinaParsePromise)(filePath, (/^https?:\/\//.test(filePath) ? divina_1.Divinais.RemotePacked : divina_1.Divinais.LocalPacked), "pdf") :
                         (await (0, daisy_1.isDaisyPublication)(filePath) ? (0, daisy_1.DaisyParsePromise)(filePath) :
                             (isAudio = await (0, audiobook_1.isAudioBookPublication)(filePath)) ? (0, audiobook_1.AudioBookParsePromise)(filePath, isAudio) :
                                 Promise.reject(`Unrecognized publication type ${filePath}`))))));

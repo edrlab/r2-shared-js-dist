@@ -47,6 +47,9 @@ const addCoverDimensions = (publication, coverLink) => (0, tslib_1.__awaiter)(vo
             debug(`NOT IN ZIP (addCoverDimensions): ${coverLink.Href} --- ${coverLinkHrefDecoded}`);
             const zipEntries = yield zip.getEntries();
             for (const zipEntry of zipEntries) {
+                if (zipEntry.startsWith("__MACOSX/")) {
+                    continue;
+                }
                 debug(zipEntry);
             }
             return;
@@ -101,8 +104,8 @@ function isEPUBlication(urlOrPath) {
         return EPUBis.LocalExploded;
     }
     const fileName = path.basename(p);
-    const ext = path.extname(fileName).toLowerCase();
-    const epub = /\.epub[3]?$/.test(ext);
+    const ext = path.extname(fileName);
+    const epub = /\.epub3?$/i.test(ext);
     if (epub) {
         return http ? EPUBis.RemotePacked : EPUBis.LocalPacked;
     }
@@ -741,6 +744,9 @@ const fillPageListFromAdobePageMap = (publication, zip, l) => (0, tslib_1.__awai
     if (pages && pages.length) {
         for (let i = 0; i < pages.length; i += 1) {
             const page = pages.item(i);
+            if (!page) {
+                continue;
+            }
             const link = new publication_link_1.Link();
             const href = page.getAttribute("href");
             const title = page.getAttribute("name");
@@ -805,6 +811,9 @@ const fillTOCFromNavDoc = (publication, zip) => (0, tslib_1.__awaiter)(void 0, v
         debug(`NOT IN ZIP (fillTOCFromNavDoc): ${navLink.Href} --- ${navLinkHrefDecoded}`);
         const zipEntries = yield zip.getEntries();
         for (const zipEntry of zipEntries) {
+            if (zipEntry.startsWith("__MACOSX/")) {
+                continue;
+            }
             debug(zipEntry);
         }
         return;
