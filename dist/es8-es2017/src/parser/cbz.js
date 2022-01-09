@@ -4,7 +4,7 @@ exports.CbzParsePromise = exports.isCBZPublication = void 0;
 const mime = require("mime-types");
 const path = require("path");
 const slugify = require("slugify");
-const xmldom = require("xmldom");
+const xmldom = require("@xmldom/xmldom");
 const metadata_1 = require("../models/metadata");
 const metadata_contributor_1 = require("../models/metadata-contributor");
 const publication_1 = require("../models/publication");
