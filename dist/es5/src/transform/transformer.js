@@ -13,8 +13,8 @@ var Transformers = (function () {
         return Transformers._instance;
     };
     Transformers.tryStream = function (publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-            return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
                 return [2, Transformers.instance()._tryStream(publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo)];
             });
         });
@@ -25,9 +25,9 @@ var Transformers = (function () {
         }
     };
     Transformers.prototype._tryStream = function (publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var transformedData, atLeastOne, s, _i, _a, t, _err_1;
-            return (0, tslib_1.__generator)(this, function (_b) {
+            return tslib_1.__generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         atLeastOne = false;

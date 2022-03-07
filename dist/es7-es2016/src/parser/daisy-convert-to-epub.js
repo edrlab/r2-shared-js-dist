@@ -24,8 +24,8 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAudioManifestOnly) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
-    return new Promise((resolve, reject) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAudioManifestOnly) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
         var _a, _b, _c, _d, _e;
         const isFullTextAudio = ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
             (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
@@ -174,7 +174,7 @@ const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAu
                 return smilTextRef;
             };
             const smilDocs = {};
-            const loadOrGetCachedSmil = (smilPathInZip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+            const loadOrGetCachedSmil = (smilPathInZip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 let smilDoc = smilDocs[smilPathInZip];
                 if (!smilDoc) {
                     const smilStr = yield (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip);
@@ -204,7 +204,7 @@ const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAu
                 }
                 return undefined;
             };
-            const createHtmlFromSmilFile = (smilPathInZip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+            const createHtmlFromSmilFile = (smilPathInZip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 const smilDoc = yield loadOrGetCachedSmil(smilPathInZip);
                 const smilDocClone = smilDoc.cloneNode(true);
                 let txtCounter = 0;
@@ -651,7 +651,7 @@ ${cssHrefs.reduce((pv, cv) => {
                 }
                 return undefined;
             };
-            const processLink = (link) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+            const processLink = (link) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 let href = link.HrefDecoded;
                 if (!href) {
                     return;
@@ -693,7 +693,7 @@ ${cssHrefs.reduce((pv, cv) => {
                 link.Href = path.join(href, "..", src.replace(/((\.xml)|(\.html))(#.*)?$/i, ".xhtml$4")).replace(/\\/g, "/");
                 link.TypeLink = "application/xhtml+xml";
             });
-            const processLinks = (links) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+            const processLinks = (links) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                 for (const link of links) {
                     yield processLink(link);
                     if (link.Children) {
@@ -721,7 +721,7 @@ ${cssHrefs.reduce((pv, cv) => {
             }
             if (isAudioOnly) {
                 debug("DAISY audio only book => manifest-audio.json");
-                const transformPublicationToAudioBook = (pubAudio) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+                const transformPublicationToAudioBook = (pubAudio) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                     var _f;
                     const pubJson = (0, serializable_1.TaJsonSerialize)(pubAudio);
                     const audioPublication = (0, serializable_1.TaJsonDeserialize)(pubJson, publication_1.Publication);
@@ -729,7 +729,7 @@ ${cssHrefs.reduce((pv, cv) => {
                         audioPublication.Metadata = new metadata_1.Metadata();
                     }
                     audioPublication.Metadata.RDFType = "http://schema.org/Audiobook";
-                    const processLinkAudio = (link) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+                    const processLinkAudio = (link) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                         let href = link.HrefDecoded;
                         if (!href) {
                             return;
@@ -779,7 +779,7 @@ ${cssHrefs.reduce((pv, cv) => {
                             link.TypeLink = mediaType;
                         }
                     });
-                    const processLinksAudio = (links) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+                    const processLinksAudio = (links) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                         for (const link of links) {
                             yield processLinkAudio(link);
                             if (link.Children) {

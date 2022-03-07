@@ -75,26 +75,26 @@ var MediaOverlayNode = (function () {
     }
     MediaOverlayNode_1 = MediaOverlayNode;
     var MediaOverlayNode_1;
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("text"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], MediaOverlayNode.prototype, "Text", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("audio"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], MediaOverlayNode.prototype, "Audio", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("role"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], MediaOverlayNode.prototype, "Role", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("narration"),
         (0, ta_json_x_1.JsonElementType)(MediaOverlayNode_1),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], MediaOverlayNode.prototype, "Children", void 0);
-    MediaOverlayNode = MediaOverlayNode_1 = (0, tslib_1.__decorate)([
+    MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
         (0, ta_json_x_1.JsonObject)()
     ], MediaOverlayNode);
     return MediaOverlayNode;

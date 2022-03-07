@@ -34,19 +34,19 @@ let Rootfile = class Rootfile {
         this.PathDecoded = href;
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@media-type"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Rootfile.prototype, "Type", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@version"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Rootfile.prototype, "Version", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@full-path"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Rootfile.prototype, "Path1", void 0);
-Rootfile = (0, tslib_1.__decorate)([
+Rootfile = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)()
 ], Rootfile);
 exports.Rootfile = Rootfile;

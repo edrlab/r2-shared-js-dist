@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const debug = debug_("r2:shared#utils/zipHasEntry");
 function zipHasEntry(zip, zipPath, zipPathOther) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let has = zip.hasEntry(zipPath);
         if (zip.hasEntryAsync) {
             try {

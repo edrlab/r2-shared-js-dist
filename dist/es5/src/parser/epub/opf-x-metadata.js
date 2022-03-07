@@ -7,12 +7,12 @@ var opf_metafield_1 = require("./opf-metafield");
 var XMetadata = (function () {
     function XMetadata() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("meta"),
         (0, xml_js_mapper_1.XmlItemType)(opf_metafield_1.Metafield),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], XMetadata.prototype, "Meta", void 0);
-    XMetadata = (0, tslib_1.__decorate)([
+    XMetadata = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",

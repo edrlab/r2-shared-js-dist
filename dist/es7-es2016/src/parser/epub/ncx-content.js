@@ -34,11 +34,11 @@ let Content = class Content {
         this.SrcDecoded = href;
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Content.prototype, "Src1", void 0);
-Content = (0, tslib_1.__decorate)([
+Content = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         ncx: "http://www.daisy.org/z3986/2005/ncx/",
     })

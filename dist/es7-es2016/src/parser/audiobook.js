@@ -25,7 +25,7 @@ function absolutizeURLs(rootUrl, jsonObj) {
     });
 }
 function AudioBookParsePromise(filePath, isAudio) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const isAnAudioBook = isAudio || (yield isAudioBookPublication(filePath));
         let entryName = "manifest.json";
         let filePathToLoad = filePath;
@@ -147,7 +147,7 @@ var AudioBookis;
     AudioBookis["RemoteExploded"] = "RemoteExploded";
 })(AudioBookis = exports.AudioBookis || (exports.AudioBookis = {}));
 function doRequest(u) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             const url = new URL(u);
             const secure = url.protocol === "https:";
@@ -176,7 +176,7 @@ function doRequest(u) {
                     const loc = res.headers.Location || res.headers.location;
                     if (loc && loc.length) {
                         const l = Array.isArray(loc) ? loc[0] : loc;
-                        process.nextTick(() => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+                        process.nextTick(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
                             try {
                                 const redirectRes = yield doRequest(l);
                                 resolve(redirectRes);
@@ -232,7 +232,7 @@ function doRequest(u) {
     });
 }
 function isAudioBookPublication(urlOrPath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let p = urlOrPath;
         const isHttp = (0, UrlUtils_1.isHTTP)(urlOrPath);
         if (isHttp) {

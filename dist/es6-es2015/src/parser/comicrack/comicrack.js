@@ -6,60 +6,60 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-m
 const comicrack_page_1 = require("./comicrack-page");
 let ComicInfo = class ComicInfo {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Title"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Title", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Series"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Series", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Volume"),
-    (0, tslib_1.__metadata)("design:type", Number)
+    tslib_1.__metadata("design:type", Number)
 ], ComicInfo.prototype, "Volume", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Number"),
-    (0, tslib_1.__metadata)("design:type", Number)
+    tslib_1.__metadata("design:type", Number)
 ], ComicInfo.prototype, "Number", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Writer"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Writer", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Penciller"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Penciller", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Inker"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Inker", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Colorist"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Colorist", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ScanInformation"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "ScanInformation", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Summary"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], ComicInfo.prototype, "Summary", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Year"),
-    (0, tslib_1.__metadata)("design:type", Number)
+    tslib_1.__metadata("design:type", Number)
 ], ComicInfo.prototype, "Year", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("PageCount"),
-    (0, tslib_1.__metadata)("design:type", Number)
+    tslib_1.__metadata("design:type", Number)
 ], ComicInfo.prototype, "PageCount", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Pages/Page"),
     (0, xml_js_mapper_1.XmlItemType)(comicrack_page_1.Page),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], ComicInfo.prototype, "Pages", void 0);
-ComicInfo = (0, tslib_1.__decorate)([
+ComicInfo = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         xsd: "http://www.w3.org/2001/XMLSchema",
         xsi: "http://www.w3.org/2001/XMLSchema-instance",

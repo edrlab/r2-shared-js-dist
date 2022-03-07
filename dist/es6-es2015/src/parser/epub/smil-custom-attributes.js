@@ -6,12 +6,12 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-m
 const smil_custom_test_1 = require("./smil-custom-test");
 let CustomAttributes = class CustomAttributes {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("customTest"),
     (0, xml_js_mapper_1.XmlItemType)(smil_custom_test_1.CustomTest),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], CustomAttributes.prototype, "CustomTest", void 0);
-CustomAttributes = (0, tslib_1.__decorate)([
+CustomAttributes = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",

@@ -9,9 +9,9 @@ var daisy_1 = require("./daisy");
 var epub_1 = require("./epub");
 var divina_1 = require("./divina");
 function PublicationParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var isAudio, isDivina, _a, _b, _c, _d, _e, _f;
-        return (0, tslib_1.__generator)(this, function (_g) {
+        return tslib_1.__generator(this, function (_g) {
             switch (_g.label) {
                 case 0:
                     if (!(0, epub_1.isEPUBlication)(filePath)) return [3, 1];

@@ -35,16 +35,16 @@ let Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
         this.TextRefDecoded = href;
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("smil:par | smil:seq | smil2:par | smil2:seq"),
     (0, xml_js_mapper_1.XmlItemType)(smil_seq_or_par_1.SeqOrPar),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], Seq.prototype, "Children", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@epub:textref"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Seq.prototype, "TextRef1", void 0);
-Seq = (0, tslib_1.__decorate)([
+Seq = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",

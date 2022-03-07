@@ -10,82 +10,82 @@ const opf_subject_1 = require("./opf-subject");
 const opf_title_1 = require("./opf-title");
 let DCMetadata = class DCMetadata {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Title | dc2:Title | dc:title"),
     (0, xml_js_mapper_1.XmlItemType)(opf_title_1.Title),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Title", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Language/text() | dc2:Language/text() | dc:language/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Language", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Identifier | dc2:Identifier | dc:identifier"),
     (0, xml_js_mapper_1.XmlItemType)(opf_identifier_1.Identifier),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Identifier", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Creator | dc2:Creator | dc:creator"),
     (0, xml_js_mapper_1.XmlItemType)(opf_author_1.Author),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Creator", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Subject | dc2:Subject | dc:subject"),
     (0, xml_js_mapper_1.XmlItemType)(opf_subject_1.Subject),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Subject", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Description/text() | dc2:Description/text() | dc:description/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Description", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Publisher/text() | dc2:Publisher/text() | dc:publisher/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Publisher", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Contributor | dc2:Contributor | dc:contributor"),
     (0, xml_js_mapper_1.XmlItemType)(opf_author_1.Author),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Contributor", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Date | dc2:Date | dc:date"),
     (0, xml_js_mapper_1.XmlItemType)(opf_date_1.MetaDate),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Date", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Type/text() | dc2:Type/text() | dc:type/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Type", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Format/text() | dc2:Format/text() | dc:format/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Format", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Source/text() | dc2:Source/text() | dc:source/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Source", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Relation/text() | dc2:Relation/text() | dc:relation/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Relation", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Coverage/text() | dc2:Coverage/text() | dc:coverage/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Coverage", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Rights/text() | dc2:Rights/text() | dc:rights/text()"),
     (0, xml_js_mapper_1.XmlItemType)(String),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Rights", void 0);
-DCMetadata = (0, tslib_1.__decorate)([
+DCMetadata = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         dc2: "http://purl.org/dc/elements/1.0/",

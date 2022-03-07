@@ -34,31 +34,31 @@ let Manifest = class Manifest {
         this.HrefDecoded = href;
     }
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "ID", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@media-type"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "MediaType", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@media-fallback"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "Fallback", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@properties"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "Properties", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@media-overlay"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "MediaOverlay", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@href"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], Manifest.prototype, "Href1", void 0);
-Manifest = (0, tslib_1.__decorate)([
+Manifest = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",

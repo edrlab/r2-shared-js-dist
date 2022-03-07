@@ -25,7 +25,7 @@ function absolutizeURLs(rootUrl, jsonObj) {
     });
 }
 function DivinaParsePromise(filePath, isDivina, pubtype) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const isAnDivina = isDivina || (yield isDivinaPublication(filePath));
         const publicationType = pubtype || (isAnDivina ? "divina" : "generic");
         let entryName = "manifest.json";
@@ -149,7 +149,7 @@ var Divinais;
     Divinais["RemotePacked"] = "RemotePacked";
 })(Divinais = exports.Divinais || (exports.Divinais = {}));
 function doRequest(u) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, _reject) => {
             const url = new URL(u);
             const secure = url.protocol === "https:";
@@ -178,7 +178,7 @@ function doRequest(u) {
                     const loc = res.headers.Location || res.headers.location;
                     if (loc && loc.length) {
                         const l = Array.isArray(loc) ? loc[0] : loc;
-                        process.nextTick(() => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+                        process.nextTick(() => tslib_1.__awaiter(this, void 0, void 0, function* () {
                             try {
                                 const redirectRes = yield doRequest(l);
                                 resolve(redirectRes);
@@ -235,7 +235,7 @@ function doRequest(u) {
     });
 }
 function isDivinaPublication(urlOrPath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let p = urlOrPath;
         const isHttp = (0, UrlUtils_1.isHTTP)(urlOrPath);
         if (isHttp) {

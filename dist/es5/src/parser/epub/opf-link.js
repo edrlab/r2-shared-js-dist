@@ -6,15 +6,15 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var MetaLink = (function () {
     function MetaLink() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@property"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], MetaLink.prototype, "Property", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@href"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], MetaLink.prototype, "Href", void 0);
-    MetaLink = (0, tslib_1.__decorate)([
+    MetaLink = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             opf: "http://www.idpf.org/2007/opf",
         })

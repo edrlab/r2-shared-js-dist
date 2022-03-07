@@ -9,19 +9,19 @@ const SERIES_JSON_PROP = "series";
 const COLLECTION_JSON_PROP = "collection";
 let BelongsTo = class BelongsTo {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(SERIES_JSON_PROP),
     (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
     (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], BelongsTo.prototype, "Series", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(COLLECTION_JSON_PROP),
     (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
     (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], BelongsTo.prototype, "Collection", void 0);
-BelongsTo = (0, tslib_1.__decorate)([
+BelongsTo = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], BelongsTo);
 exports.BelongsTo = BelongsTo;

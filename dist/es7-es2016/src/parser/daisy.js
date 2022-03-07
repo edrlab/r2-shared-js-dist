@@ -22,7 +22,7 @@ var DaisyBookis;
     DaisyBookis["RemotePacked"] = "RemotePacked";
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let p = urlOrPath;
         const http = (0, UrlUtils_1.isHTTP)(urlOrPath);
         if (http) {
@@ -66,7 +66,7 @@ function isDaisyPublication(urlOrPath) {
 }
 exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let zip;
         try {
             zip = yield (0, zipFactory_1.zipLoadPromise)(filePath);
@@ -140,7 +140,7 @@ function DaisyParsePromise(filePath) {
     });
 }
 exports.DaisyParsePromise = DaisyParsePromise;
-const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
         const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||

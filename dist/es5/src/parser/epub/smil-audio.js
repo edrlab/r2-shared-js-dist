@@ -69,35 +69,35 @@ var Audio = (function () {
         this.Src = href;
         this.SrcDecoded = href;
     };
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Audio.prototype, "ID", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clipBegin"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Audio.prototype, "ClipBegin1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clip-begin"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Audio.prototype, "ClipBegin2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clipEnd"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Audio.prototype, "ClipEnd1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@clip-end"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Audio.prototype, "ClipEnd2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@epub:type"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Audio.prototype, "EpubType", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Audio.prototype, "Src1", void 0);
-    Audio = (0, tslib_1.__decorate)([
+    Audio = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             epub: "http://www.idpf.org/2007/ops",
             smil: "http://www.w3.org/ns/SMIL",

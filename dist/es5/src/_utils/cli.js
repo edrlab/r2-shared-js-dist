@@ -116,9 +116,9 @@ if (args[1]) {
         }
     }
 }
-(function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+(function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, isDaisyBook, _err_2, err_2;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
@@ -256,9 +256,9 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
     fs.writeFileSync(manifestJsonPath, manifestJsonStr, "utf8");
 }
 function extractEPUB_Check(zip, outDir) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zipEntries, err_3, _i, zipEntries_1, zipEntry, expectedOutputPath;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
@@ -296,9 +296,9 @@ function extractEPUB_Check(zip, outDir) {
     });
 }
 function extractEPUB_ProcessKeys(pub, keys) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var keysSha256Hex, err_4;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     if (!pub.LCP || !keys) {
@@ -344,9 +344,9 @@ function extractEPUB_ProcessKeys(pub, keys) {
     });
 }
 function extractEPUB_Link(pub, zip, outDir, link) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var hrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, zipStream_, err_5, transformedStream, err_6, zipData, err_7, linkOutputPath;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     hrefDecoded = link.HrefDecoded;
@@ -417,9 +417,9 @@ function extractEPUB_Link(pub, zip, outDir, link) {
     });
 }
 function extractEPUB(isEPUB, pub, outDir, keys) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zipInternal, zip, err_8, err_9, links, lic, has, l, _i, links_1, link, err_10, err_11;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     zipInternal = pub.findFromInternal("zip");
@@ -508,9 +508,9 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
     });
 }
 function extractEPUB_MediaOverlays(pub, _zip, outDir) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var i, _i, _a, spineItem, mo, err_12, moJsonObj, moJsonStr, p, moJsonPath, _b, _c, altLink;
-        return (0, tslib_1.__generator)(this, function (_d) {
+        return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
                     if (!pub.Spine) {
@@ -569,9 +569,9 @@ function ensureDirs(fspath) {
     }
 }
 function dumpPublication(publication) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var publicationJsonObj, publicationJsonStr, publicationReverse, publicationJsonObjReverse, eq, _i, _a, spineItem, _b, _c, altLink, mo, err_13, moJsonObj, moJsonStr, moReverse, moJsonObjReverse, equa;
-        return (0, tslib_1.__generator)(this, function (_d) {
+        return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
                     console.log("#### RAW OBJECT:");

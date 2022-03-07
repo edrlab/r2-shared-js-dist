@@ -6,16 +6,16 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-m
 const display_options_platform_prop_1 = require("./display-options-platform-prop");
 let DisplayOptionsPlatform = class DisplayOptionsPlatform {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@name"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], DisplayOptionsPlatform.prototype, "Name", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("option"),
     (0, xml_js_mapper_1.XmlItemType)(display_options_platform_prop_1.DisplayOptionsPlatformProp),
-    (0, tslib_1.__metadata)("design:type", Array)
+    tslib_1.__metadata("design:type", Array)
 ], DisplayOptionsPlatform.prototype, "Options", void 0);
-DisplayOptionsPlatform = (0, tslib_1.__decorate)([
+DisplayOptionsPlatform = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)()
 ], DisplayOptionsPlatform);
 exports.DisplayOptionsPlatform = DisplayOptionsPlatform;

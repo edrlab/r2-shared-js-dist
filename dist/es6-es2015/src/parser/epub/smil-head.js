@@ -7,11 +7,11 @@ const opf_x_metadata_1 = require("./opf-x-metadata");
 const smil_custom_attributes_1 = require("./smil-custom-attributes");
 let Head = class Head extends opf_x_metadata_1.XMetadata {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("customAttributes"),
-    (0, tslib_1.__metadata)("design:type", smil_custom_attributes_1.CustomAttributes)
+    tslib_1.__metadata("design:type", smil_custom_attributes_1.CustomAttributes)
 ], Head.prototype, "CustomAttributes", void 0);
-Head = (0, tslib_1.__decorate)([
+Head = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",

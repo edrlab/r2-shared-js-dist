@@ -25,7 +25,7 @@ function isCBZPublication(filePath) {
 }
 exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let zip;
         try {
             zip = yield (0, zipFactory_1.zipLoadPromise)(filePath);
@@ -94,7 +94,7 @@ const filePathToTitle = (filePath) => {
     const fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-const comicRackMetadata = (zip, entryName, publication) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const entryNameDecoded = (0, decodeURI_1.tryDecodeURI)(entryName);
     if (!entryNameDecoded) {
         return;

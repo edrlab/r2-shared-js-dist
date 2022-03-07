@@ -5,13 +5,13 @@ var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var smil_seq_1 = require("./smil-seq");
 var Body = (function (_super) {
-    (0, tslib_1.__extends)(Body, _super);
+    tslib_1.__extends(Body, _super);
     function Body() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.isBody = true;
         return _this;
     }
-    Body = (0, tslib_1.__decorate)([
+    Body = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             epub: "http://www.idpf.org/2007/ops",
             smil: "http://www.w3.org/ns/SMIL",

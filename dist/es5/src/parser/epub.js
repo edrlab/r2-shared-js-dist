@@ -34,9 +34,9 @@ var debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
 exports.mediaOverlayURLParam = epub_daisy_common_1.mediaOverlayURLParam;
-var addCoverDimensions = function (publication, coverLink) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addCoverDimensions = function (publication, coverLink) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var zipInternal, zip, coverLinkHrefDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, zipStream, err_1, zipData, imageInfo, err_2;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 zipInternal = publication.findFromInternal("zip");
@@ -137,9 +137,9 @@ function isEPUBlication(urlOrPath) {
 }
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ncx, ncxManItem, pageMapLink;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     isAnEPUB = isEPUBlication(filePath);
@@ -350,9 +350,9 @@ function EpubParsePromise(filePath) {
 }
 exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var mos, links, _i, links_1, link, mo, err_10;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     mos = [];
@@ -390,9 +390,9 @@ function getAllMediaOverlays(publication) {
 }
 exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var links, _i, links_2, link, mo, err_11;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     links = [].
@@ -426,9 +426,9 @@ function getMediaOverlay(publication, spineHref) {
     });
 }
 exports.getMediaOverlay = getMediaOverlay;
-var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var spineProperties;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!linkEpub.Properties) return [3, 2];
@@ -447,9 +447,9 @@ var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { re
         }
     });
 }); };
-var addToLinkFromProperties = function (publication, link, propertiesString) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addToLinkFromProperties = function (publication, link, propertiesString) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var properties, propertiesStruct, _i, properties_1, p, _a;
-    return (0, tslib_1.__generator)(this, function (_b) {
+    return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 properties = (0, epub_daisy_common_1.parseSpaceSeparatedString)(propertiesString);
@@ -678,9 +678,9 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
         }
     });
 }); };
-var addMediaOverlay = function (link, linkEpub, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addMediaOverlay = function (link, linkEpub, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var meta, manItemSmil;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!linkEpub.MediaOverlay) return [3, 2];
@@ -703,9 +703,9 @@ var addMediaOverlay = function (link, linkEpub, opf, zip) { return (0, tslib_1._
         }
     });
 }); };
-var addRendition = function (publication, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var rendition_1, displayOptionsZipPath, has, displayOptionsZipStream_, err_12, displayOptionsZipStream, displayOptionsZipData, err_13, displayOptionsStr, displayOptionsDoc, displayOptions, renditionPlatformAll_1, renditionPlatformIpad_1, renditionPlatformIphone_1;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!(opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length)) return [3, 15];
@@ -920,8 +920,8 @@ var addRendition = function (publication, opf, zip) { return (0, tslib_1.__await
         }
     });
 }); };
-var addLinkData = function (publication, rootfile, opf, zip, linkItem, item) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    return (0, tslib_1.__generator)(this, function (_a) {
+var addLinkData = function (publication, rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!rootfile) return [3, 2];
@@ -985,9 +985,9 @@ var fillEncryptionInfo = function (publication, encryption, lcp) {
         }
     });
 };
-var fillPageListFromAdobePageMap = function (publication, zip, l) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var fillPageListFromAdobePageMap = function (publication, zip, l) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var pageMapContent, pageMapXmlDoc, pages, i, page, link, href, title, hrefDecoded, zipPath;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!l.HrefDecoded) {
@@ -1059,9 +1059,9 @@ var fillCalibreSerieInfo = function (publication, opf) {
         publication.Metadata.BelongsTo.Series.push(contributor);
     }
 };
-var fillTOCFromNavDoc = function (publication, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var navLink, navLinkHrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, navDocZipStream_, err_14, navDocZipStream, navDocZipData, err_15, navDocStr, navXmlDoc, select, navs;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 navLink = publication.GetNavDoc();
@@ -1235,9 +1235,9 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
         }
     });
 };
-var addCoverRel = function (publication, rootfile, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addCoverRel = function (publication, rootfile, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var coverID, manifestInfo, err_16, href_1, linky;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {

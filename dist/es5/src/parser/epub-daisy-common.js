@@ -324,9 +324,9 @@ var findInSpineByHref = function (publication, href) {
     return undefined;
 };
 exports.findInSpineByHref = findInSpineByHref;
-var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkData) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var item, linkItem, itemHrefDecoded;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!(opf.Manifest && opf.Manifest.length)) return [3, 2];
@@ -354,9 +354,9 @@ var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkD
     });
 }); };
 exports.findInManifestByID = findInManifestByID;
-var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkData) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _i, _a, item, linkItem, err_1, _b, _c, item, itemHrefDecoded, zipPath, linkSpine, linkItem;
-    return (0, tslib_1.__generator)(this, function (_d) {
+    return tslib_1.__generator(this, function (_d) {
         switch (_d.label) {
             case 0:
                 if (!opf.ZipPath) {
@@ -638,9 +638,9 @@ var setPublicationDirection = function (publication, opf) {
     }
 };
 exports.setPublicationDirection = setPublicationDirection;
-var getNcx = function (ncxManItem, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!opf.ZipPath) {
@@ -716,9 +716,9 @@ var getNcx_ = function (ncxStr, ncxFilePath) {
     return ncx;
 };
 exports.getNcx_ = getNcx_;
-var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var has, err, zipEntries, _i, zipEntries_2, zipEntry, opfZipStream_, err_4, opfZipStream, opfZipData, err_5, opfStr;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4, (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath)];
             case 1:
@@ -1133,9 +1133,9 @@ var addOtherMetadata = function (publication, rootfile, opf) {
     }
 };
 exports.addOtherMetadata = addOtherMetadata;
-var loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var zipData, err_6;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
@@ -1156,9 +1156,9 @@ var loadFileStrFromZipPath = function (linkHref, linkHrefDecoded, zip) { return 
     });
 }); };
 exports.loadFileStrFromZipPath = loadFileStrFromZipPath;
-var loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var loadFileBufferFromZipPath = function (linkHref, linkHrefDecoded, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var has, zipEntries, _i, zipEntries_3, zipEntry, zipStream_, err_7, zipStream, zipData, err_8;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!linkHrefDecoded) {
@@ -1331,9 +1331,9 @@ var fillTOC = function (publication, opf, ncx) {
     fillLandmarksFromGuide(publication, opf);
 };
 exports.fillTOC = fillTOC;
-var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var manItemSmilHrefDecoded, smilFilePath, has, zipEntries, _i, zipEntries_4, zipEntry, mo, moURL, moLink;
-    return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!(manItemSmil && manItemSmil.MediaType && manItemSmil.MediaType.startsWith("application/smil"))) return [3, 4];
@@ -1455,10 +1455,10 @@ var flattenDaisy2SmilAudioSeq = function (_smilPathInZip, smilXmlDoc) {
     }
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
-var lazyLoadMediaOverlays = function (publication, mo) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, nccZipEntry, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
     var _d;
-    return (0, tslib_1.__generator)(this, function (_e) {
+    return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
             case 0:
                 if (mo.initialized || !mo.SmilPathInZip) {

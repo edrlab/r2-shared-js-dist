@@ -116,7 +116,7 @@ if (args[1]) {
         }
     }
 }
-(() => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+(() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let publication;
     try {
         publication = yield (0, publication_parser_1.PublicationParsePromise)(filePath);
@@ -233,7 +233,7 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
     fs.writeFileSync(manifestJsonPath, manifestJsonStr, "utf8");
 }
 function extractEPUB_Check(zip, outDir) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let zipEntries;
         try {
             zipEntries = yield zip.getEntries();
@@ -262,7 +262,7 @@ function extractEPUB_Check(zip, outDir) {
     });
 }
 function extractEPUB_ProcessKeys(pub, keys) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         if (!pub.LCP || !keys) {
             return;
         }
@@ -299,7 +299,7 @@ function extractEPUB_ProcessKeys(pub, keys) {
     });
 }
 function extractEPUB_Link(pub, zip, outDir, link) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const hrefDecoded = link.HrefDecoded;
         console.log("===== " + hrefDecoded);
         if (!hrefDecoded) {
@@ -352,7 +352,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
     });
 }
 function extractEPUB(isEPUB, pub, outDir, keys) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const zipInternal = pub.findFromInternal("zip");
         if (!zipInternal) {
             console.log("No publication zip!?");
@@ -407,7 +407,7 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
     });
 }
 function extractEPUB_MediaOverlays(pub, _zip, outDir) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         if (!pub.Spine) {
             return;
         }
@@ -449,7 +449,7 @@ function ensureDirs(fspath) {
     }
 }
 function dumpPublication(publication) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         console.log("#### RAW OBJECT:");
         console.log(util.inspect(publication, { showHidden: false, depth: 1000, colors: true, customInspect: true }));
         const publicationJsonObj = (0, serializable_1.TaJsonSerialize)(publication);

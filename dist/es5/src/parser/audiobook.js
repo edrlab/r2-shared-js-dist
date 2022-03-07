@@ -25,9 +25,9 @@ function absolutizeURLs(rootUrl, jsonObj) {
     });
 }
 function AudioBookParsePromise(filePath, isAudio) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var isAnAudioBook, _a, entryName, filePathToLoad, url, zip, err_1, has, zipEntries, _i, zipEntries_1, zipEntry, manifestZipStream_, err_2, manifestZipStream, manifestZipData, err_3, manifestJsonStr, manifestJson, url, publication, lcpEntryName, checkLCP, hasLCP, has, lcpZipStream_, err_4, lcpZipStream, lcpZipData, err_5, lcpJsonStr, lcpJson, lcpl;
-        return (0, tslib_1.__generator)(this, function (_b) {
+        return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _a = isAudio;
@@ -187,9 +187,9 @@ var AudioBookis;
     AudioBookis["RemoteExploded"] = "RemoteExploded";
 })(AudioBookis = exports.AudioBookis || (exports.AudioBookis = {}));
 function doRequest(u) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var _this = this;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             return [2, new Promise(function (resolve, reject) {
                     var url = new URL(u);
                     var secure = url.protocol === "https:";
@@ -218,9 +218,9 @@ function doRequest(u) {
                             var loc = res.headers.Location || res.headers.location;
                             if (loc && loc.length) {
                                 var l_1 = Array.isArray(loc) ? loc[0] : loc;
-                                process.nextTick(function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
+                                process.nextTick(function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
                                     var redirectRes, err_6;
-                                    return (0, tslib_1.__generator)(this, function (_a) {
+                                    return tslib_1.__generator(this, function (_a) {
                                         switch (_a.label) {
                                             case 0:
                                                 _a.trys.push([0, 2, , 3]);
@@ -285,9 +285,9 @@ function doRequest(u) {
     });
 }
 function isAudioBookPublication(urlOrPath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var p, isHttp, url, fileName, ext, audio, audioLcp, audioLcpAlt, manStr, manJson;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             p = urlOrPath;
             isHttp = (0, UrlUtils_1.isHTTP)(urlOrPath);
             if (isHttp) {

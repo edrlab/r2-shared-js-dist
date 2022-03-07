@@ -7,11 +7,11 @@ var encryption_compression_1 = require("./encryption-compression");
 var EncryptionProperty = (function () {
     function EncryptionProperty() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("ns:Compression"),
-        (0, tslib_1.__metadata)("design:type", encryption_compression_1.Compression)
+        tslib_1.__metadata("design:type", encryption_compression_1.Compression)
     ], EncryptionProperty.prototype, "Compression", void 0);
-    EncryptionProperty = (0, tslib_1.__decorate)([
+    EncryptionProperty = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             ds: "http://www.w3.org/2000/09/xmldsig#",
             enc: "http://www.w3.org/2001/04/xmlenc#",

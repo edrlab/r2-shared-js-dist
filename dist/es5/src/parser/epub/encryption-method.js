@@ -6,11 +6,11 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var EncryptionMethod = (function () {
     function EncryptionMethod() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@Algorithm"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], EncryptionMethod.prototype, "Algorithm", void 0);
-    EncryptionMethod = (0, tslib_1.__decorate)([
+    EncryptionMethod = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             ds: "http://www.w3.org/2000/09/xmldsig#",
             enc: "http://www.w3.org/2001/04/xmlenc#",

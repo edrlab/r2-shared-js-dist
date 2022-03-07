@@ -7,20 +7,20 @@ var ncx_pagetarget_1 = require("./ncx-pagetarget");
 var PageList = (function () {
     function PageList() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("ncx:pageTarget"),
         (0, xml_js_mapper_1.XmlItemType)(ncx_pagetarget_1.PageTarget),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], PageList.prototype, "PageTarget", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@class"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], PageList.prototype, "Class", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], PageList.prototype, "ID", void 0);
-    PageList = (0, tslib_1.__decorate)([
+    PageList = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
             xml: "http://www.w3.org/XML/1998/namespace",

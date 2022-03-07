@@ -10,7 +10,7 @@ let Body = class Body extends smil_seq_1.Seq {
         this.isBody = true;
     }
 };
-Body = (0, tslib_1.__decorate)([
+Body = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",

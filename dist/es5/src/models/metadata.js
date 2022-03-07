@@ -65,242 +65,242 @@ var Metadata = (function () {
             console.log("Metadata.Title is not set!");
         }
     };
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessMode"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessMode", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessibilityFeature"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessibilityFeature", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessibilityHazard"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessibilityHazard", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessibilitySummary"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "AccessibilitySummary", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessModeSufficient"),
         (0, ta_json_x_1.JsonElementType)(Array),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessModeSufficient", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessibilityAPI"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessibilityAPI", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessibilityControl"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "AccessibilityControl", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("certifiedBy"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "CertifiedBy", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("certifierCredential"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "CertifierCredential", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("certifierReport"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "CertifierReport", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("conformsTo"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
         (0, ta_json_x_1.JsonElementType)(String),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "ConformsTo", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("@type"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "RDFType", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("title"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "Title", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("subtitle"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "SubTitle", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("identifier"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Identifier", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("author"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Author", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("translator"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Translator", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("editor"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Editor", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("artist"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Artist", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("illustrator"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Illustrator", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("letterer"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Letterer", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("penciler"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Penciler", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("colorist"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Colorist", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("inker"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Inker", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("narrator"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Narrator", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("contributor"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Contributor", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("publisher"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Publisher", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("imprint"),
         (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),
         (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Imprint", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("language"),
         (0, ta_json_x_1.JsonElementType)(String),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Language", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("modified"),
-        (0, tslib_1.__metadata)("design:type", Date)
+        tslib_1.__metadata("design:type", Date)
     ], Metadata.prototype, "Modified", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("published"),
-        (0, tslib_1.__metadata)("design:type", Date)
+        tslib_1.__metadata("design:type", Date)
     ], Metadata.prototype, "PublicationDate", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("sortAs"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "SortAs2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("sort_as"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "SortAs1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("description"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Description", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("readingProgression"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Direction2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("direction"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "Direction1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("belongsTo"),
-        (0, tslib_1.__metadata)("design:type", metadata_belongsto_1.BelongsTo)
+        tslib_1.__metadata("design:type", metadata_belongsto_1.BelongsTo)
     ], Metadata.prototype, "BelongsTo2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("belongs_to"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Metadata.prototype, "BelongsTo1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("duration"),
-        (0, tslib_1.__metadata)("design:type", Number)
+        tslib_1.__metadata("design:type", Number)
     ], Metadata.prototype, "Duration", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("numberOfPages"),
-        (0, tslib_1.__metadata)("design:type", Number)
+        tslib_1.__metadata("design:type", Number)
     ], Metadata.prototype, "NumberOfPages", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("media-overlay"),
-        (0, tslib_1.__metadata)("design:type", metadata_media_overlay_1.MediaOverlay)
+        tslib_1.__metadata("design:type", metadata_media_overlay_1.MediaOverlay)
     ], Metadata.prototype, "MediaOverlay", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("rights"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Rights", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("rendition"),
-        (0, tslib_1.__metadata)("design:type", metadata_properties_1.Properties)
+        tslib_1.__metadata("design:type", metadata_properties_1.Properties)
     ], Metadata.prototype, "Rendition", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("source"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Metadata.prototype, "Source", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("subject"),
         (0, ta_json_x_1.JsonConverter)(metadata_subject_json_converter_1.JsonSubjectConverter),
         (0, ta_json_x_1.JsonElementType)(metadata_subject_1.Subject),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Subject", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.OnDeserialized)(),
-        (0, tslib_1.__metadata)("design:type", Function),
-        (0, tslib_1.__metadata)("design:paramtypes", []),
-        (0, tslib_1.__metadata)("design:returntype", void 0)
+        tslib_1.__metadata("design:type", Function),
+        tslib_1.__metadata("design:paramtypes", []),
+        tslib_1.__metadata("design:returntype", void 0)
     ], Metadata.prototype, "_OnDeserialized", null);
-    Metadata = (0, tslib_1.__decorate)([
+    Metadata = tslib_1.__decorate([
         (0, ta_json_x_1.JsonObject)()
     ], Metadata);
     return Metadata;

@@ -8,19 +8,19 @@ const smil_head_1 = require("./smil-head");
 const smil_par_1 = require("./smil-par");
 let SMIL = class SMIL {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("head"),
-    (0, tslib_1.__metadata)("design:type", smil_head_1.Head)
+    tslib_1.__metadata("design:type", smil_head_1.Head)
 ], SMIL.prototype, "Head", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("body"),
-    (0, tslib_1.__metadata)("design:type", smil_body_1.Body)
+    tslib_1.__metadata("design:type", smil_body_1.Body)
 ], SMIL.prototype, "Body", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dummy"),
-    (0, tslib_1.__metadata)("design:type", smil_par_1.Par)
+    tslib_1.__metadata("design:type", smil_par_1.Par)
 ], SMIL.prototype, "Par", void 0);
-SMIL = (0, tslib_1.__decorate)([
+SMIL = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",

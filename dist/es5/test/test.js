@@ -15,15 +15,15 @@ var init_globals_1 = require("../src/init-globals");
 (0, init_globals_1.initGlobalConverters_GENERIC)();
 var debug = debug_("r2:shared#test");
 function fn() {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-        return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return tslib_1.__generator(this, function (_a) {
             return [2, Promise.resolve("foo")];
         });
     });
 }
-(0, ava_1.default)("dummy async test", function (t) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+(0, ava_1.default)("dummy async test", function (t) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _a, _b;
-    return (0, tslib_1.__generator)(this, function (_c) {
+    return tslib_1.__generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 debug("test ASYNC");
@@ -55,8 +55,8 @@ function fn() {
     t.is((0, media_overlay_1.timeStrToSeconds)(""), 0);
 });
 function delay(okay) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-        return (0, tslib_1.__generator)(this, function (_a) {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
+        return tslib_1.__generator(this, function (_a) {
             return [2, new Promise(function (resolve, _reject) {
                     setTimeout(function () {
                         resolve(okay);
@@ -65,9 +65,9 @@ function delay(okay) {
         });
     });
 }
-(0, ava_1.default)("EPUB parsing (de)serialize roundtrip", function (t) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+(0, ava_1.default)("EPUB parsing (de)serialize roundtrip", function (t) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var dirPath, filePaths, _i, filePaths_1, filePath, pub, err_1, publicationJson1, publication, publicationJson2, str1, str2, _a, _b, _c, _d;
-    return (0, tslib_1.__generator)(this, function (_e) {
+    return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
             case 0:
                 dirPath = path.join(process.cwd(), "misc/epubs/");

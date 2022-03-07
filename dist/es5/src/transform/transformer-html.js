@@ -21,10 +21,10 @@ var TransformerHTML = (function () {
         return false;
     };
     TransformerHTML.prototype.transformStream = function (publication, link, url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var data, err_1, buff, err_2, sal;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
@@ -47,8 +47,8 @@ var TransformerHTML = (function () {
                     case 6:
                         sal = {
                             length: buff.length,
-                            reset: function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                                return (0, tslib_1.__generator)(this, function (_a) {
+                            reset: function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                                return tslib_1.__generator(this, function (_a) {
                                     return [2, Promise.resolve(sal)];
                                 });
                             }); },
@@ -60,9 +60,9 @@ var TransformerHTML = (function () {
         });
     };
     TransformerHTML.prototype.transformBuffer = function (publication, link, url, data, sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var str, str_;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 try {
                     str = data.toString("utf8");
                     str_ = this.transformString(publication, link, url, str, sessionInfo);

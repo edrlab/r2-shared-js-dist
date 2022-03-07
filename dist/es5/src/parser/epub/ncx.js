@@ -8,16 +8,16 @@ var ncx_pagelist_1 = require("./ncx-pagelist");
 var NCX = (function () {
     function NCX() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navMap/ncx:navPoint"),
         (0, xml_js_mapper_1.XmlItemType)(ncx_navpoint_1.NavPoint),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], NCX.prototype, "Points", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("ncx:pageList"),
-        (0, tslib_1.__metadata)("design:type", ncx_pagelist_1.PageList)
+        tslib_1.__metadata("design:type", ncx_pagelist_1.PageList)
     ], NCX.prototype, "PageList", void 0);
-    NCX = (0, tslib_1.__decorate)([
+    NCX = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             ncx: "http://www.daisy.org/z3986/2005/ncx/",
         })

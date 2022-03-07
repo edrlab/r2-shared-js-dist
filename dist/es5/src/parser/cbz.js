@@ -25,9 +25,9 @@ function isCBZPublication(filePath) {
 }
 exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zip, err_1, publication, comicInfoEntryName, entries, err_2, _i, entries_1, entryName, link, mediaType, _b, err_3;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
@@ -110,9 +110,9 @@ var filePathToTitle = function (filePath) {
     var fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
 };
-var comicRackMetadata = function (zip, entryName, publication) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var entryNameDecoded, has, zipEntries, _i, zipEntries_1, zipEntry, comicZipStream_, err_4, comicZipStream, comicZipData, err_5, comicXmlStr, comicXmlDoc, comicMeta, cont, cont, cont, cont, title, _a, _c, p, l;
-    return (0, tslib_1.__generator)(this, function (_d) {
+    return tslib_1.__generator(this, function (_d) {
         switch (_d.label) {
             case 0:
                 entryNameDecoded = (0, decodeURI_1.tryDecodeURI)(entryName);

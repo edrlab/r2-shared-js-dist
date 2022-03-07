@@ -15,11 +15,11 @@ const init_globals_1 = require("../src/init-globals");
 (0, init_globals_1.initGlobalConverters_GENERIC)();
 const debug = debug_("r2:shared#test");
 function fn() {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return Promise.resolve("foo");
     });
 }
-(0, ava_1.default)("dummy async test", (t) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+(0, ava_1.default)("dummy async test", (t) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     debug("test ASYNC");
     t.is(yield fn(), "foo");
 }));
@@ -43,7 +43,7 @@ function fn() {
     t.is((0, media_overlay_1.timeStrToSeconds)(""), 0);
 });
 function delay(okay) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, _reject) => {
             setTimeout(() => {
                 resolve(okay);
@@ -51,7 +51,7 @@ function delay(okay) {
         });
     });
 }
-(0, ava_1.default)("EPUB parsing (de)serialize roundtrip", (t) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+(0, ava_1.default)("EPUB parsing (de)serialize roundtrip", (t) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const dirPath = path.join(process.cwd(), "misc/epubs/");
     const filePaths = fs.readdirSync(dirPath, { withFileTypes: true }).
         filter((f) => f.isFile() && /\.epub3?$/i.test(f.name)).map((f) => path.join(dirPath, f.name));

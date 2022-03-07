@@ -24,12 +24,12 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generateDaisyAudioManifestOnly) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    return (0, tslib_1.__generator)(this, function (_a) {
-        return [2, new Promise(function (resolve, reject) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generateDaisyAudioManifestOnly) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+    return tslib_1.__generator(this, function (_a) {
+        return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                 var isFullTextAudio, isAudioOnly, isTextOnly, zipInternal, zip, nccZipEntry, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, smilDocs_1, loadOrGetCachedSmil_1, findLinkInToc_1, createHtmlFromSmilFile, audioOnlySmilHtmls, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, audioOnlySmilHtmlHref, smilHtml, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, _d, elementNames_1, elementName, regex, dtBookStr, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, mediaOverlaysSequence, _loop_1, _j, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantTextOrAudio_1, processLink_1, processLinks_1, _k, _l, link, _m, _o, link, jsonObj, jsonStr, transformPublicationToAudioBook, audioPublication, jsonObjAudio, jsonStrAudio, outputManifestPath, ero_1, erreur_1;
                 var _p, _q, _r, _s, _t;
-                return (0, tslib_1.__generator)(this, function (_u) {
+                return tslib_1.__generator(this, function (_u) {
                     switch (_u.label) {
                         case 0:
                             isFullTextAudio = ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
@@ -183,9 +183,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                 return smilTextRef;
                             };
                             smilDocs_1 = {};
-                            loadOrGetCachedSmil_1 = function (smilPathInZip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                            loadOrGetCachedSmil_1 = function (smilPathInZip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                 var smilDoc, smilStr;
-                                return (0, tslib_1.__generator)(this, function (_a) {
+                                return tslib_1.__generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             smilDoc = smilDocs_1[smilPathInZip];
@@ -222,9 +222,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                 }
                                 return undefined;
                             };
-                            createHtmlFromSmilFile = function (smilPathInZip) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                            createHtmlFromSmilFile = function (smilPathInZip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                 var smilDoc, smilDocClone, txtCounter, parEls, _i, parEls_1, parEl, audioElements, _a, audioElements_1, audioElement, textId, textElements, _b, textElements_1, textElement, src, elmId, hrefDecoded, tocLinkItem, hrefDecoded_, text, textNode, bodyContent, bodyContentStr, contentStr, htmlDoc, htmlFilePath;
-                                return (0, tslib_1.__generator)(this, function (_c) {
+                                return tslib_1.__generator(this, function (_c) {
                                     switch (_c.label) {
                                         case 0: return [4, loadOrGetCachedSmil_1(smilPathInZip)];
                                         case 1:
@@ -383,7 +383,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                         case 9:
                             publication.Spine = [];
                             resourcesToKeep = [];
-                            dtBooks = (0, tslib_1.__spreadArray)([], audioOnlySmilHtmls, true);
+                            dtBooks = tslib_1.__spreadArray([], audioOnlySmilHtmls, true);
                             _b = 0, _c = publication.Resources;
                             _u.label = 10;
                         case 10:
@@ -700,9 +700,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                 }
                                 return undefined;
                             };
-                            processLink_1 = function (link) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                            processLink_1 = function (link) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                 var href, fragment, arr, smilDoc, targetEl, src;
-                                return (0, tslib_1.__generator)(this, function (_a) {
+                                return tslib_1.__generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             href = link.HrefDecoded;
@@ -750,9 +750,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                     }
                                 });
                             }); };
-                            processLinks_1 = function (links) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                            processLinks_1 = function (links) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                 var _i, links_2, link;
-                                return (0, tslib_1.__generator)(this, function (_a) {
+                                return tslib_1.__generator(this, function (_a) {
                                     switch (_a.label) {
                                         case 0:
                                             _i = 0, links_2 = links;
@@ -816,10 +816,10 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                             }
                             if (!isAudioOnly) return [3, 32];
                             debug("DAISY audio only book => manifest-audio.json");
-                            transformPublicationToAudioBook = function (pubAudio) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                            transformPublicationToAudioBook = function (pubAudio) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                 var pubJson, audioPublication, processLinkAudio, processLinksAudio, _i, _a, link, _b, _c, link, _loop_2, _d, _e, spineLink;
                                 var _f;
-                                return (0, tslib_1.__generator)(this, function (_g) {
+                                return tslib_1.__generator(this, function (_g) {
                                     switch (_g.label) {
                                         case 0:
                                             pubJson = (0, serializable_1.TaJsonSerialize)(pubAudio);
@@ -828,9 +828,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                 audioPublication.Metadata = new metadata_1.Metadata();
                                             }
                                             audioPublication.Metadata.RDFType = "http://schema.org/Audiobook";
-                                            processLinkAudio = function (link) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                            processLinkAudio = function (link) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                                 var href, fragment, arr, smilHref, smilDoc, targetEl, targetElOriginal, src, clipBegin, timeStamp, begin, mediaType;
-                                                return (0, tslib_1.__generator)(this, function (_a) {
+                                                return tslib_1.__generator(this, function (_a) {
                                                     switch (_a.label) {
                                                         case 0:
                                                             href = link.HrefDecoded;
@@ -886,9 +886,9 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                     }
                                                 });
                                             }); };
-                                            processLinksAudio = function (links) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+                                            processLinksAudio = function (links) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                                                 var _i, links_3, link;
-                                                return (0, tslib_1.__generator)(this, function (_a) {
+                                                return tslib_1.__generator(this, function (_a) {
                                                     switch (_a.label) {
                                                         case 0:
                                                             _i = 0, links_3 = links;
@@ -949,7 +949,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                             if (!pubAudio.Spine) return [3, 14];
                                             _loop_2 = function (spineLink) {
                                                 var smilDoc, firstAudioElement, src, link, resAudio;
-                                                return (0, tslib_1.__generator)(this, function (_h) {
+                                                return tslib_1.__generator(this, function (_h) {
                                                     switch (_h.label) {
                                                         case 0:
                                                             if (!((_f = spineLink.MediaOverlays) === null || _f === void 0 ? void 0 : _f.SmilPathInZip)) {

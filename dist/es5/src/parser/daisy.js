@@ -22,9 +22,9 @@ var DaisyBookis;
     DaisyBookis["RemotePacked"] = "RemotePacked";
 })(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var p, http, url, zip, err_1, entries, opfZipEntryPath;
-        return (0, tslib_1.__generator)(this, function (_a) {
+        return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     p = urlOrPath;
@@ -78,10 +78,10 @@ function isDaisyPublication(urlOrPath) {
 }
 exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+    return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zip, err_2, publication, entries, opfZipEntryPath, daisy2NccZipEntryPath, rootfilePathDecoded, opf, ncx, ncxManItem;
         var _a;
-        return (0, tslib_1.__generator)(this, function (_b) {
+        return tslib_1.__generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
@@ -166,10 +166,10 @@ function DaisyParsePromise(filePath) {
     });
 }
 exports.DaisyParsePromise = DaisyParsePromise;
-var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var isFullTextAudio, isAudioOnly, isTextOnly;
     var _a;
-    return (0, tslib_1.__generator)(this, function (_b) {
+    return tslib_1.__generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 if (!((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON)) return [3, 3];

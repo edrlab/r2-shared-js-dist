@@ -26,38 +26,38 @@ var Subject = (function () {
             console.log("Subject.Name is not set!");
         }
     };
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("name"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Subject.prototype, "Name", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("sortAs"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Subject.prototype, "SortAs2", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("sort_as"),
-        (0, tslib_1.__metadata)("design:type", Object)
+        tslib_1.__metadata("design:type", Object)
     ], Subject.prototype, "SortAs1", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("scheme"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Subject.prototype, "Scheme", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("code"),
-        (0, tslib_1.__metadata)("design:type", String)
+        tslib_1.__metadata("design:type", String)
     ], Subject.prototype, "Code", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)(LINKS_JSON_PROP),
         (0, ta_json_x_1.JsonElementType)(publication_link_1.Link),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Subject.prototype, "Links", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, ta_json_x_1.OnDeserialized)(),
-        (0, tslib_1.__metadata)("design:type", Function),
-        (0, tslib_1.__metadata)("design:paramtypes", []),
-        (0, tslib_1.__metadata)("design:returntype", void 0)
+        tslib_1.__metadata("design:type", Function),
+        tslib_1.__metadata("design:paramtypes", []),
+        tslib_1.__metadata("design:returntype", void 0)
     ], Subject.prototype, "_OnDeserialized", null);
-    Subject = (0, tslib_1.__decorate)([
+    Subject = tslib_1.__decorate([
         (0, ta_json_x_1.JsonObject)()
     ], Subject);
     return Subject;

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertNccToOpfAndNcx = void 0;
 const tslib_1 = require("tslib");
+const he = require("he");
 const debug_ = require("debug");
 const mime = require("mime-types");
 const path = require("path");
@@ -11,6 +12,20 @@ const BufferUtils_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/stream/Buf
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const debug = debug_("r2:shared#parser/daisy-convert-to-epub");
+const decodeHtmlAttributeValue = (val) => {
+    const decoded = he.decode(val, { isAttributeValue: true });
+    return decoded;
+};
+const decodeHtmlTextContent = (textContent) => {
+    const decoded = he.decode(textContent);
+    return decoded;
+};
+const encodeXmlAttributeValue = (val) => {
+    return val.replace(/"/g, "&quot;");
+};
+const encodeXmlTextContent = (textContent) => {
+    return textContent.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
 const getMediaTypeFromFileExtension = (ext) => {
     if (/\.smil$/i.test(ext)) {
         return "application/smil+xml";
@@ -41,7 +56,7 @@ const getMediaTypeFromFileExtension = (ext) => {
     }
     return mime.lookup("dummy" + ext);
 };
-const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath);
     if (!has) {
         const err = `NOT IN ZIP (NCC.html): ${rootfilePath} --- ${rootfilePathDecoded}`;
@@ -73,13 +88,13 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
         return Promise.reject(err);
     }
     const nccStr = nccZipData.toString("utf8");
-    const nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "application/xml");
+    const nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
     const metas = Array.from(nccDoc.getElementsByTagName("meta")).
         reduce((prevVal, curVal) => {
         const name = curVal.getAttribute("name");
         const content = curVal.getAttribute("content");
         if (name && content) {
-            prevVal[name] = content;
+            prevVal[name] = decodeHtmlAttributeValue(content.trim());
         }
         return prevVal;
     }, {});
@@ -110,7 +125,7 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
         const ext = path.extname(cv);
         return `${pv}${!cv.startsWith("__MACOSX/") && !/ncc\.html$/i.test(cv) && !/\.ent$/i.test(ext) && !/\.dtd$/i.test(ext) && !/\.smil$/i.test(ext) ? `
         <item
-            href="${path.relative("file:///" + path.dirname(rootfilePathDecoded), "file:///" + cv).replace(/\\/g, "/")}"
+            href="${encodeXmlAttributeValue(path.relative("file:///" + path.dirname(rootfilePathDecoded), "file:///" + cv).replace(/\\/g, "/"))}"
             id="opf-zip-${ci}"
             media-type="${getMediaTypeFromFileExtension(ext)}" />` : ""}`;
     }, "");
@@ -130,7 +145,7 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
         arrSmils.push(smil);
         return `${pv}${`
             <item
-                href="${smil}"
+                href="${encodeXmlAttributeValue(smil)}"
                 id="opf-ncc-${arrSmils.length - 1}"
                 media-type="application/smil+xml" />`}`;
     }, manifestItemsBaseStr);
@@ -156,14 +171,14 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
         if (!clazz || !clazz.startsWith("page")) {
             return pv;
         }
-        const txt = cv.textContent ? cv.textContent.trim() : "";
+        const txtContent = cv.textContent ? decodeHtmlTextContent(cv.textContent.trim()) : "";
         pCount++;
         return `${pv}${`
 <pageTarget class="pagenum" id="ncx-p${pCount}" playOrder="${playOrder}" type="normal" value="${pCount}">
 <navLabel>
-<text>${txt ? txt : pCount}</text>
+<text>${txtContent ? encodeXmlTextContent(txtContent) : pCount}</text>
 </navLabel>
-<content src="${href}"/>
+<content src="${encodeXmlAttributeValue(href)}"/>
 </pageTarget>
 `}`;
     }, "");
@@ -186,16 +201,16 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
             return pv;
         }
         const level = parseInt(name.substr(1), 10);
-        const txt = cv.textContent ? cv.textContent.trim() : "";
+        const txtContent = cv.textContent ? decodeHtmlTextContent(cv.textContent.trim()) : "";
         pCount++;
         const inner = `<!-- h${level - 1}_${pCount - 1} -->`;
         if (pv.indexOf(inner) >= 0) {
             return pv.replace(inner, `
 <navPoint class="${name}" id="ncx-t${pCount}" playOrder="${playOrder}">
 <navLabel>
-<text>${txt ? txt : `_${pCount}`}</text>
+<text>${txtContent ? encodeXmlTextContent(txtContent) : `_${pCount}`}</text>
 </navLabel>
-<content src="${href}"/>
+<content src="${encodeXmlAttributeValue(href)}"/>
 <!-- ${name}_${pCount} -->
 </navPoint>
 <!-- h${level - 1}_${pCount} -->
@@ -205,9 +220,9 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => (0, ts
             return `${pv}${`
 <navPoint class="${name}" id="ncx-t${pCount}" playOrder="${playOrder}">
 <navLabel>
-<text>${txt ? txt : `_${pCount}`}</text>
+<text>${txtContent ? encodeXmlTextContent(txtContent) : `_${pCount}`}</text>
 </navLabel>
-<content src="${href}"/>
+<content src="${encodeXmlAttributeValue(href)}"/>
 <!-- ${name}_${pCount} -->
 </navPoint>
 `}`;
@@ -223,25 +238,25 @@ PUBLIC "+//ISBN 0-9673008-1-9//DTD OEB 1.2 Package//EN"
 <dc-metadata xmlns:dc="http://purl.org/dc/elements/1.1/"
 xmlns:oebpackage="http://openebook.org/namespaces/oeb-package/1.0/">
     <dc:Format>ANSI/NISO Z39.86-2005</dc:Format>
-    ${metas["dc:date"] ? `<dc:Date>${metas["dc:date"]}</dc:Date>` : ""}
-    ${metas["dc:language"] ? `<dc:Language>${metas["dc:language"]}</dc:Language>` : ""}
-    ${metas["dc:creator"] ? `<dc:Creator>${metas["dc:creator"]}</dc:Creator>` : ""}
-    ${metas["dc:publisher"] ? `<dc:Publisher>${metas["dc:publisher"]}</dc:Publisher>` : ""}
-    ${metas["dc:title"] ? `<dc:Title>${metas["dc:title"]}</dc:Title>` : ""}
-    ${metas["dc:identifier"] ? `<dc:Identifier id="uid">${metas["dc:identifier"]}</dc:Identifier>` : ""}
+    ${metas["dc:date"] ? `<dc:Date>${encodeXmlTextContent(metas["dc:date"])}</dc:Date>` : ""}
+    ${metas["dc:language"] ? `<dc:Language>${encodeXmlTextContent(metas["dc:language"])}</dc:Language>` : ""}
+    ${metas["dc:creator"] ? `<dc:Creator>${encodeXmlTextContent(metas["dc:creator"])}</dc:Creator>` : ""}
+    ${metas["dc:publisher"] ? `<dc:Publisher>${encodeXmlTextContent(metas["dc:publisher"])}</dc:Publisher>` : ""}
+    ${metas["dc:title"] ? `<dc:Title>${encodeXmlTextContent(metas["dc:title"])}</dc:Title>` : ""}
+    ${metas["dc:identifier"] ? `<dc:Identifier id="uid">${encodeXmlTextContent(metas["dc:identifier"])}</dc:Identifier>` : ""}
 </dc-metadata>
 
 <x-metadata>
-    ${metas["ncc:narrator"] ? `<meta name="dtb:narrator" content="${metas["ncc:narrator"]}" />` : ""}
-    ${metas["ncc:totalTime"] ? `<meta name="dtb:totalTime" content="${metas["ncc:totalTime"]}" />` : ""}
+    ${metas["ncc:narrator"] ? `<meta name="dtb:narrator" content="${encodeXmlAttributeValue(metas["ncc:narrator"])}" />` : ""}
+    ${metas["ncc:totalTime"] ? `<meta name="dtb:totalTime" content="${encodeXmlAttributeValue(metas["ncc:totalTime"])}" />` : ""}
 
-    <meta name="dtb:multimediaType" content="${multimediaType}" />
-    <meta name="dtb:multimediaContent" content="${multimediaContent}" />
+    <meta name="dtb:multimediaType" content="${encodeXmlAttributeValue(multimediaType)}" />
+    <meta name="dtb:multimediaContent" content="${encodeXmlAttributeValue(multimediaContent)}" />
 
     <!-- RAW COPY FROM DAISY2: -->
     ${Object.keys(metas).reduce((pv, cv) => {
         return `${pv}
-    <meta name="${cv}" content="${metas[cv]}" />`;
+    <meta name="${cv}" content="${encodeXmlAttributeValue(metas[cv])}" />`;
     }, "")}
 </x-metadata>
 
@@ -263,19 +278,19 @@ ${spineItemsStr}
     const ncxStr = `<?xml version="1.0" encoding="UTF-8"?>
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
 <head>
-    ${metas["dc:identifier"] ? `<meta name="dtb:uid" content="${metas["dc:identifier"]}" />` : ""}
-    ${metas["ncc:generator"] ? `<meta name="dtb:generator" content="${metas["ncc:generator"]}"/>` : ""}
-    ${metas["ncc:depth"] ? `<meta name="dtb:depth" content="${metas["ncc:depth"]}"/>` : ""}
-    ${metas["ncc:pageNormal"] ? `<meta name="dtb:totalPageCount" content="${metas["ncc:pageNormal"]}"/>` : ""}
-    ${metas["ncc:maxPageNormal"] ? `<meta name="dtb:maxPageNumber" content="${metas["ncc:maxPageNormal"]}"/>` : ""}
+    ${metas["dc:identifier"] ? `<meta name="dtb:uid" content="${encodeXmlAttributeValue(metas["dc:identifier"])}" />` : ""}
+    ${metas["ncc:generator"] ? `<meta name="dtb:generator" content="${encodeXmlAttributeValue(metas["ncc:generator"])}"/>` : ""}
+    ${metas["ncc:depth"] ? `<meta name="dtb:depth" content="${encodeXmlAttributeValue(metas["ncc:depth"])}"/>` : ""}
+    ${metas["ncc:pageNormal"] ? `<meta name="dtb:totalPageCount" content="${encodeXmlAttributeValue(metas["ncc:pageNormal"])}"/>` : ""}
+    ${metas["ncc:maxPageNormal"] ? `<meta name="dtb:maxPageNumber" content="${encodeXmlAttributeValue(metas["ncc:maxPageNormal"])}"/>` : ""}
 </head>
 
 <docTitle>
-<text>${metas["dc:title"] ? metas["dc:title"] : "_"}</text>
+<text>${metas["dc:title"] ? encodeXmlTextContent(metas["dc:title"]) : "_"}</text>
 </docTitle>
 
 <docAuthor>
-<text>${metas["dc:creator"] ? metas["dc:creator"] : "-"}</text>
+<text>${metas["dc:creator"] ? encodeXmlTextContent(metas["dc:creator"]) : "-"}</text>
 </docAuthor>
 
 <navMap id="navMap">

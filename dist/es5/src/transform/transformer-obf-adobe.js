@@ -11,10 +11,10 @@ var TransformerObfAdobe = (function () {
             link.Properties.Encrypted.Algorithm === "http://ns.adobe.com/pdf/enc#RC";
     };
     TransformerObfAdobe.prototype.transformStream = function (publication, link, _url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var data, err_1, buff, err_2, sal;
             var _this = this;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
@@ -37,8 +37,8 @@ var TransformerObfAdobe = (function () {
                     case 6:
                         sal = {
                             length: buff.length,
-                            reset: function () { return (0, tslib_1.__awaiter)(_this, void 0, void 0, function () {
-                                return (0, tslib_1.__generator)(this, function (_a) {
+                            reset: function () { return tslib_1.__awaiter(_this, void 0, void 0, function () {
+                                return tslib_1.__generator(this, function (_a) {
                                     return [2, Promise.resolve(sal)];
                                 });
                             }); },
@@ -50,9 +50,9 @@ var TransformerObfAdobe = (function () {
         });
     };
     TransformerObfAdobe.prototype.transformBuffer = function (publication, _link, data) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
             var pubID, key, i, byteHex, byteNumer, prefixLength, zipDataPrefix, i, zipDataRemainder;
-            return (0, tslib_1.__generator)(this, function (_a) {
+            return tslib_1.__generator(this, function (_a) {
                 pubID = publication.Metadata.Identifier;
                 pubID = pubID.replace("urn:uuid:", "");
                 pubID = pubID.replace(/-/g, "");

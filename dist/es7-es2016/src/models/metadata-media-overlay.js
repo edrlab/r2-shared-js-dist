@@ -5,15 +5,15 @@ const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 let MediaOverlay = class MediaOverlay {
 };
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("active-class"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], MediaOverlay.prototype, "ActiveClass", void 0);
-(0, tslib_1.__decorate)([
+tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("playback-active-class"),
-    (0, tslib_1.__metadata)("design:type", String)
+    tslib_1.__metadata("design:type", String)
 ], MediaOverlay.prototype, "PlaybackActiveClass", void 0);
-MediaOverlay = (0, tslib_1.__decorate)([
+MediaOverlay = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], MediaOverlay);
 exports.MediaOverlay = MediaOverlay;

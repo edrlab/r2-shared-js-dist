@@ -34,7 +34,7 @@ const debug = debug_("r2:shared#parser/epub");
 exports.BCP47_UNKNOWN_LANG = epub_daisy_common_1.BCP47_UNKNOWN_LANG;
 exports.mediaOverlayURLPath = epub_daisy_common_1.mediaOverlayURLPath;
 exports.mediaOverlayURLParam = epub_daisy_common_1.mediaOverlayURLParam;
-const addCoverDimensions = (publication, coverLink) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addCoverDimensions = (publication, coverLink) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const zipInternal = publication.findFromInternal("zip");
     if (zipInternal) {
         const zip = zipInternal.Value;
@@ -116,7 +116,7 @@ function isEPUBlication(urlOrPath) {
 }
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const isAnEPUB = isEPUBlication(filePath);
         let filePathToLoad = filePath;
         if (isAnEPUB === EPUBis.LocalExploded) {
@@ -272,7 +272,7 @@ function EpubParsePromise(filePath) {
 }
 exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const mos = [];
         const links = [].
             concat(publication.Spine ? publication.Spine : []).
@@ -296,7 +296,7 @@ function getAllMediaOverlays(publication) {
 }
 exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
-    return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+    return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const links = [].
             concat(publication.Spine ? publication.Spine : []).
             concat(publication.Resources ? publication.Resources : []);
@@ -318,7 +318,7 @@ function getMediaOverlay(publication, spineHref) {
     });
 }
 exports.getMediaOverlay = getMediaOverlay;
-const addRelAndPropertiesToLink = (publication, link, linkEpub, opf) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addRelAndPropertiesToLink = (publication, link, linkEpub, opf) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (linkEpub.Properties) {
         yield addToLinkFromProperties(publication, link, linkEpub.Properties);
     }
@@ -327,7 +327,7 @@ const addRelAndPropertiesToLink = (publication, link, linkEpub, opf) => (0, tsli
         yield addToLinkFromProperties(publication, link, spineProperties);
     }
 });
-const addToLinkFromProperties = (publication, link, propertiesString) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addToLinkFromProperties = (publication, link, propertiesString) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const properties = (0, epub_daisy_common_1.parseSpaceSeparatedString)(propertiesString);
     const propertiesStruct = new metadata_properties_1.Properties();
     for (const p of properties) {
@@ -465,7 +465,7 @@ const addToLinkFromProperties = (publication, link, propertiesString) => (0, tsl
         }
     }
 });
-const addMediaOverlay = (link, linkEpub, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addMediaOverlay = (link, linkEpub, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (linkEpub.MediaOverlay) {
         const meta = (0, epub_daisy_common_1.findMetaByRefineAndProperty)(opf, linkEpub.MediaOverlay, "media:duration");
         if (meta) {
@@ -482,7 +482,7 @@ const addMediaOverlay = (link, linkEpub, opf, zip) => (0, tslib_1.__awaiter)(voi
         }
     }
 });
-const addRendition = (publication, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addRendition = (publication, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
         const rendition = new metadata_properties_1.Properties();
         opf.Metadata.Meta.forEach((meta) => {
@@ -676,7 +676,7 @@ const addRendition = (publication, opf, zip) => (0, tslib_1.__awaiter)(void 0, v
         }
     }
 });
-const addLinkData = (publication, rootfile, opf, zip, linkItem, item) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addLinkData = (publication, rootfile, opf, zip, linkItem, item) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (rootfile) {
         yield addRelAndPropertiesToLink(publication, linkItem, item, opf);
     }
@@ -731,7 +731,7 @@ const fillEncryptionInfo = (publication, encryption, lcp) => {
         }
     });
 };
-const fillPageListFromAdobePageMap = (publication, zip, l) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const fillPageListFromAdobePageMap = (publication, zip, l) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!l.HrefDecoded) {
         return;
     }
@@ -796,7 +796,7 @@ const fillCalibreSerieInfo = (publication, opf) => {
         publication.Metadata.BelongsTo.Series.push(contributor);
     }
 };
-const fillTOCFromNavDoc = (publication, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const fillTOCFromNavDoc = (publication, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const navLink = publication.GetNavDoc();
     if (!navLink) {
         return;
@@ -953,7 +953,7 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
         }
     });
 };
-const addCoverRel = (publication, rootfile, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addCoverRel = (publication, rootfile, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let coverID;
     if (opf.Metadata && opf.Metadata.Meta && opf.Metadata.Meta.length) {
         opf.Metadata.Meta.find((meta) => {

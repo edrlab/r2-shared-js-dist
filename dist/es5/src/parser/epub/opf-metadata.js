@@ -8,29 +8,29 @@ var opf_link_1 = require("./opf-link");
 var opf_metafield_1 = require("./opf-metafield");
 var opf_x_metadata_1 = require("./opf-x-metadata");
 var Metadata = (function (_super) {
-    (0, tslib_1.__extends)(Metadata, _super);
+    tslib_1.__extends(Metadata, _super);
     function Metadata() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("link"),
         (0, xml_js_mapper_1.XmlItemType)(opf_link_1.MetaLink),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Link", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("meta"),
         (0, xml_js_mapper_1.XmlItemType)(opf_metafield_1.Metafield),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], Metadata.prototype, "Meta", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("dc-metadata"),
-        (0, tslib_1.__metadata)("design:type", opf_dc_metadata_1.DCMetadata)
+        tslib_1.__metadata("design:type", opf_dc_metadata_1.DCMetadata)
     ], Metadata.prototype, "DCMetadata", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("x-metadata"),
-        (0, tslib_1.__metadata)("design:type", opf_x_metadata_1.XMetadata)
+        tslib_1.__metadata("design:type", opf_x_metadata_1.XMetadata)
     ], Metadata.prototype, "XMetadata", void 0);
-    Metadata = (0, tslib_1.__decorate)([
+    Metadata = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             dc: "http://purl.org/dc/elements/1.1/",
             opf: "http://www.idpf.org/2007/opf",

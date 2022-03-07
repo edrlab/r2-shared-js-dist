@@ -10,7 +10,7 @@ class TransformerObfIDPF {
             link.Properties.Encrypted.Algorithm === "http://www.idpf.org/2008/embedding";
     }
     transformStream(publication, link, _url, stream, _isPartialByteRangeRequest, _partialByteBegin, _partialByteEnd, _sessionInfo) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let data;
             try {
                 data = yield (0, BufferUtils_1.streamToBufferPromise)(stream.stream);
@@ -27,7 +27,7 @@ class TransformerObfIDPF {
             }
             const sal = {
                 length: buff.length,
-                reset: () => (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+                reset: () => tslib_1.__awaiter(this, void 0, void 0, function* () {
                     return Promise.resolve(sal);
                 }),
                 stream: (0, BufferUtils_1.bufferToStream)(buff),
@@ -36,7 +36,7 @@ class TransformerObfIDPF {
         });
     }
     transformBuffer(publication, _link, data) {
-        return (0, tslib_1.__awaiter)(this, void 0, void 0, function* () {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
             let pubID = publication.Metadata.Identifier;
             pubID = pubID.replace(/\s/g, "");
             const checkSum = crypto.createHash("sha1");

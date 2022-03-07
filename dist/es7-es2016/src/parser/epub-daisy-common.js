@@ -324,7 +324,7 @@ const findInSpineByHref = (publication, href) => {
     return undefined;
 };
 exports.findInSpineByHref = findInSpineByHref;
-const findInManifestByID = (publication, rootfile, opf, ID, zip, addLinkData) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const findInManifestByID = (publication, rootfile, opf, ID, zip, addLinkData) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (opf.Manifest && opf.Manifest.length) {
         const item = opf.Manifest.find((manItem) => {
             if (manItem.ID === ID) {
@@ -348,7 +348,7 @@ const findInManifestByID = (publication, rootfile, opf, ID, zip, addLinkData) =>
     return Promise.reject(`ID ${ID} not found`);
 });
 exports.findInManifestByID = findInManifestByID;
-const fillSpineAndResource = (publication, rootfile, opf, zip, addLinkData) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const fillSpineAndResource = (publication, rootfile, opf, zip, addLinkData) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!opf.ZipPath) {
         return;
     }
@@ -607,7 +607,7 @@ const setPublicationDirection = (publication, opf) => {
     }
 };
 exports.setPublicationDirection = setPublicationDirection;
-const getNcx = (ncxManItem, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const getNcx = (ncxManItem, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!opf.ZipPath) {
         return Promise.reject("?!!opf.ZipPath");
     }
@@ -668,7 +668,7 @@ const getNcx_ = (ncxStr, ncxFilePath) => {
     return ncx;
 };
 exports.getNcx_ = getNcx_;
-const getOpf = (zip, rootfilePathDecoded, rootfilePath) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const getOpf = (zip, rootfilePathDecoded, rootfilePath) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const has = yield (0, zipHasEntry_1.zipHasEntry)(zip, rootfilePathDecoded, rootfilePath);
     if (!has) {
         const err = `NOT IN ZIP (container OPF rootfile): ${rootfilePath} --- ${rootfilePathDecoded}`;
@@ -1069,7 +1069,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
     }
 };
 exports.addOtherMetadata = addOtherMetadata;
-const loadFileStrFromZipPath = (linkHref, linkHrefDecoded, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const loadFileStrFromZipPath = (linkHref, linkHrefDecoded, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     let zipData;
     try {
         zipData = yield (0, exports.loadFileBufferFromZipPath)(linkHref, linkHrefDecoded, zip);
@@ -1084,7 +1084,7 @@ const loadFileStrFromZipPath = (linkHref, linkHrefDecoded, zip) => (0, tslib_1._
     return Promise.reject("?!zipData loadFileStrFromZipPath()");
 });
 exports.loadFileStrFromZipPath = loadFileStrFromZipPath;
-const loadFileBufferFromZipPath = (linkHref, linkHrefDecoded, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const loadFileBufferFromZipPath = (linkHref, linkHrefDecoded, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!linkHrefDecoded) {
         debug("!?link.HrefDecoded");
         return undefined;
@@ -1243,7 +1243,7 @@ const fillTOC = (publication, opf, ncx) => {
     fillLandmarksFromGuide(publication, opf);
 };
 exports.fillTOC = fillTOC;
-const addMediaOverlaySMIL = (link, manItemSmil, opf, zip) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const addMediaOverlaySMIL = (link, manItemSmil, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (manItemSmil && manItemSmil.MediaType && manItemSmil.MediaType.startsWith("application/smil")) {
         if (opf.ZipPath) {
             const manItemSmilHrefDecoded = manItemSmil.HrefDecoded;
@@ -1355,7 +1355,7 @@ const flattenDaisy2SmilAudioSeq = (_smilPathInZip, smilXmlDoc) => {
     }
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
-const lazyLoadMediaOverlays = (publication, mo) => (0, tslib_1.__awaiter)(void 0, void 0, void 0, function* () {
+const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
     if (mo.initialized || !mo.SmilPathInZip) {
         return;

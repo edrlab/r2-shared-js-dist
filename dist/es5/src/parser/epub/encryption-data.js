@@ -10,24 +10,24 @@ var encryption_property_1 = require("./encryption-property");
 var EncryptedData = (function () {
     function EncryptedData() {
     }
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("enc:EncryptionMethod"),
-        (0, tslib_1.__metadata)("design:type", encryption_method_1.EncryptionMethod)
+        tslib_1.__metadata("design:type", encryption_method_1.EncryptionMethod)
     ], EncryptedData.prototype, "EncryptionMethod", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("ds:KeyInfo"),
-        (0, tslib_1.__metadata)("design:type", encryption_keyinfo_1.KeyInfo)
+        tslib_1.__metadata("design:type", encryption_keyinfo_1.KeyInfo)
     ], EncryptedData.prototype, "KeyInfo", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("enc:CipherData"),
-        (0, tslib_1.__metadata)("design:type", encryption_cypherdata_1.CipherData)
+        tslib_1.__metadata("design:type", encryption_cypherdata_1.CipherData)
     ], EncryptedData.prototype, "CipherData", void 0);
-    (0, tslib_1.__decorate)([
+    tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlXPathSelector)("enc:EncryptionProperties/enc:EncryptionProperty"),
         (0, xml_js_mapper_1.XmlItemType)(encryption_property_1.EncryptionProperty),
-        (0, tslib_1.__metadata)("design:type", Array)
+        tslib_1.__metadata("design:type", Array)
     ], EncryptedData.prototype, "EncryptionProperties", void 0);
-    EncryptedData = (0, tslib_1.__decorate)([
+    EncryptedData = tslib_1.__decorate([
         (0, xml_js_mapper_1.XmlObject)({
             ds: "http://www.w3.org/2000/09/xmldsig#",
             enc: "http://www.w3.org/2001/04/xmlenc#",
