@@ -87,8 +87,19 @@ var fillPublicationDate = function (publication, rootfile, opf) {
                 break;
             }
         }
-        if (!publishedDateStr && (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf))) {
-            publishedDateStr = opfMetadataDateArray[0].Data;
+        if (!publishedDateStr) {
+            for (var _k = 0, opfMetadataDateArray_2 = opfMetadataDateArray; _k < opfMetadataDateArray_2.length; _k++) {
+                var metaDate = opfMetadataDateArray_2[_k];
+                if (!metaDate.Event) {
+                    publishedDateStr = metaDate.Data;
+                    break;
+                }
+            }
+        }
+        if (!publishedDateStr) {
+            if (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf)) {
+                publishedDateStr = opfMetadataDateArray[0].Data;
+            }
         }
     }
     if (publishedDateStr) {

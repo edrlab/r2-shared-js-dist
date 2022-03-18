@@ -84,8 +84,18 @@ const fillPublicationDate = (publication, rootfile, opf) => {
                 break;
             }
         }
-        if (!publishedDateStr && (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf))) {
-            publishedDateStr = opfMetadataDateArray[0].Data;
+        if (!publishedDateStr) {
+            for (const metaDate of opfMetadataDateArray) {
+                if (!metaDate.Event) {
+                    publishedDateStr = metaDate.Data;
+                    break;
+                }
+            }
+        }
+        if (!publishedDateStr) {
+            if (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf)) {
+                publishedDateStr = opfMetadataDateArray[0].Data;
+            }
         }
     }
     if (publishedDateStr) {
