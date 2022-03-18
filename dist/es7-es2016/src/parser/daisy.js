@@ -4,7 +4,6 @@ exports.DaisyParsePromise = exports.isDaisyPublication = exports.DaisyBookis = v
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const fs = require("fs");
-const moment = require("moment");
 const path = require("path");
 const metadata_1 = require("../models/metadata");
 const publication_1 = require("../models/publication");
@@ -82,7 +81,6 @@ function DaisyParsePromise(filePath) {
         publication.Context = ["https://readium.org/webpub-manifest/context.jsonld"];
         publication.Metadata = new metadata_1.Metadata();
         publication.Metadata.RDFType = "http://schema.org/Book";
-        publication.Metadata.Modified = moment(Date.now()).toDate();
         publication.AddToInternal("filename", path.basename(filePath));
         publication.AddToInternal("type", "daisy");
         publication.AddToInternal("zip", zip);

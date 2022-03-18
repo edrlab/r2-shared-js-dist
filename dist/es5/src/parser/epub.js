@@ -5,7 +5,6 @@ var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
 var image_size_1 = require("image-size");
-var moment = require("moment");
 var path = require("path");
 var url_1 = require("url");
 var xmldom = require("@xmldom/xmldom");
@@ -171,7 +170,6 @@ function EpubParsePromise(filePath) {
                     publication.Context = ["https://readium.org/webpub-manifest/context.jsonld"];
                     publication.Metadata = new metadata_1.Metadata();
                     publication.Metadata.RDFType = "http://schema.org/Book";
-                    publication.Metadata.Modified = moment(Date.now()).toDate();
                     publication.AddToInternal("filename", path.basename(filePath));
                     publication.AddToInternal("type", "epub");
                     publication.AddToInternal("zip", zip);

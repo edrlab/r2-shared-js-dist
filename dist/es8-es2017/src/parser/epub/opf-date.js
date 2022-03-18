@@ -10,7 +10,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], MetaDate.prototype, "Data", void 0);
 tslib_1.__decorate([
-    (0, xml_js_mapper_1.XmlXPathSelector)("@event"),
+    (0, xml_js_mapper_1.XmlXPathSelector)("@opf:event"),
     tslib_1.__metadata("design:type", String)
 ], MetaDate.prototype, "Event", void 0);
 MetaDate = tslib_1.__decorate([

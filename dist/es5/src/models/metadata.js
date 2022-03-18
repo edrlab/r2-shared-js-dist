@@ -17,7 +17,7 @@ var DirectionEnum;
     DirectionEnum["RTL"] = "rtl";
     DirectionEnum["LTR"] = "ltr";
 })(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
-exports.MetadataSupportedKeys = ["accessMode", "accessibilityFeature", "accessibilityHazard", "accessibilitySummary", "accessModeSufficient", "accessibilityAPI", "accessibilityControl", "certifiedBy", "certifierCredential", "certifierReport", "conformsTo", "title", "subtitle", "identifier", "author", "translator", "editor", "artist", "illustrator", "letterer", "penciler", "colorist", "inker", "narrator", "contributor", "publisher", "imprint", "language", "modified", "published", "sortAs", "description", "readingProgression", "direction", "belongsTo", "duration", "numberOfPages", "rights", "rendition", "source", "subject"];
+exports.MetadataSupportedKeys = ["dcterms:modified", "accessMode", "accessibilityFeature", "accessibilityHazard", "accessibilitySummary", "accessModeSufficient", "accessibilityAPI", "accessibilityControl", "certifiedBy", "certifierCredential", "certifierReport", "conformsTo", "title", "subtitle", "identifier", "author", "translator", "editor", "artist", "illustrator", "letterer", "penciler", "colorist", "inker", "narrator", "contributor", "publisher", "imprint", "language", "modified", "published", "sortAs", "description", "readingProgression", "direction", "belongsTo", "duration", "numberOfPages", "rights", "rendition", "source", "subject"];
 var Metadata = (function () {
     function Metadata() {
     }

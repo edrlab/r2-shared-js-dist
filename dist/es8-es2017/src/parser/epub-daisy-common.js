@@ -54,41 +54,61 @@ const isEpub3OrMore = (rootfile, opf) => {
 };
 exports.isEpub3OrMore = isEpub3OrMore;
 const fillPublicationDate = (publication, rootfile, opf) => {
-    var _a, _b, _c, _d, _e;
-    const opfMetadataDate = ((_c = (_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.DCMetadata) === null || _b === void 0 ? void 0 : _b.Date) === null || _c === void 0 ? void 0 : _c.length) ?
-        opf.Metadata.DCMetadata.Date :
-        (((_e = (_d = opf.Metadata) === null || _d === void 0 ? void 0 : _d.Date) === null || _e === void 0 ? void 0 : _e.length) ?
-            opf.Metadata.Date :
-            undefined);
-    if (opfMetadataDate) {
-        if ((!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf)) &&
-            opfMetadataDate[0] && opfMetadataDate[0].Data) {
-            const token = opfMetadataDate[0].Data;
-            try {
-                const mom = moment(token);
-                if (mom.isValid()) {
-                    publication.Metadata.PublicationDate = mom.toDate();
-                }
+    var _a, _b, _c, _d, _e, _f, _g;
+    let publishedDateStr;
+    let modifiedDateStr;
+    if ((_b = (_a = opf.Metadata) === null || _a === void 0 ? void 0 : _a.Meta) === null || _b === void 0 ? void 0 : _b.length) {
+        for (const m of opf.Metadata.Meta) {
+            if (m.Name === "dcterms:modified" && m.Content) {
+                modifiedDateStr = m.Content;
+                break;
             }
-            catch (_err) {
-                debug("INVALID DATE/TIME? " + token);
+            if (m.Property === "dcterms:modified" && m.Data) {
+                modifiedDateStr = m.Data;
+                break;
             }
-            return;
         }
-        opfMetadataDate.forEach((date) => {
-            if (date.Data && date.Event && date.Event.indexOf("publication") >= 0) {
-                const token = date.Data;
-                try {
-                    const mom = moment(token);
-                    if (mom.isValid()) {
-                        publication.Metadata.PublicationDate = mom.toDate();
-                    }
-                }
-                catch (_err) {
-                    debug("INVALID DATE/TIME? " + token);
-                }
+    }
+    const opfMetadataDateArray = [].concat(((_e = (_d = (_c = opf.Metadata) === null || _c === void 0 ? void 0 : _c.DCMetadata) === null || _d === void 0 ? void 0 : _d.Date) === null || _e === void 0 ? void 0 : _e.length) ? opf.Metadata.DCMetadata.Date : [], ((_g = (_f = opf.Metadata) === null || _f === void 0 ? void 0 : _f.Date) === null || _g === void 0 ? void 0 : _g.length) ? opf.Metadata.Date : []);
+    if (opfMetadataDateArray === null || opfMetadataDateArray === void 0 ? void 0 : opfMetadataDateArray.length) {
+        for (const metaDate of opfMetadataDateArray) {
+            if (!modifiedDateStr &&
+                (metaDate.Event === "modification" || metaDate.Event === "ops-modification")) {
+                modifiedDateStr = metaDate.Data;
             }
-        });
+            if (!publishedDateStr &&
+                (metaDate.Event === "publication" || metaDate.Event === "ops-publication")) {
+                publishedDateStr = metaDate.Data;
+            }
+            if (modifiedDateStr && publishedDateStr) {
+                break;
+            }
+        }
+        if (!publishedDateStr && (!rootfile || (0, exports.isEpub3OrMore)(rootfile, opf))) {
+            publishedDateStr = opfMetadataDateArray[0].Data;
+        }
+    }
+    if (publishedDateStr) {
+        try {
+            const mom = moment(publishedDateStr);
+            if (mom.isValid()) {
+                publication.Metadata.PublicationDate = mom.toDate();
+            }
+        }
+        catch (_err) {
+            debug("INVALID published DATE/TIME? " + publishedDateStr);
+        }
+    }
+    if (modifiedDateStr) {
+        try {
+            const mom = moment(modifiedDateStr);
+            if (mom.isValid()) {
+                publication.Metadata.Modified = mom.toDate();
+            }
+        }
+        catch (_err) {
+            debug("INVALID modified DATE/TIME? " + modifiedDateStr);
+        }
     }
 };
 exports.fillPublicationDate = fillPublicationDate;

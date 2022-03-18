@@ -4,7 +4,6 @@ exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise
 const debug_ = require("debug");
 const fs = require("fs");
 const image_size_1 = require("image-size");
-const moment = require("moment");
 const path = require("path");
 const url_1 = require("url");
 const xmldom = require("@xmldom/xmldom");
@@ -140,7 +139,6 @@ async function EpubParsePromise(filePath) {
     publication.Context = ["https://readium.org/webpub-manifest/context.jsonld"];
     publication.Metadata = new metadata_1.Metadata();
     publication.Metadata.RDFType = "http://schema.org/Book";
-    publication.Metadata.Modified = moment(Date.now()).toDate();
     publication.AddToInternal("filename", path.basename(filePath));
     publication.AddToInternal("type", "epub");
     publication.AddToInternal("zip", zip);
