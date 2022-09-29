@@ -136,9 +136,10 @@ var fillSubject = function (publication, opf) {
     if (opfMetadataSubject) {
         opfMetadataSubject.forEach(function (s) {
             var sub = new metadata_subject_1.Subject();
-            if (s.Lang) {
+            var xmlLang = s.Lang || opf.Lang;
+            if (xmlLang) {
                 sub.Name = {};
-                sub.Name[s.Lang] = s.Data;
+                sub.Name[xmlLang.toLowerCase()] = s.Data;
             }
             else {
                 sub.Name = s.Data;
@@ -216,11 +217,25 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
             }
         }
         else {
-            contributor.Name = cont.Data;
+            var xmlLang = cont.Lang || opf.Lang;
+            if (xmlLang) {
+                contributor.Name = {};
+                contributor.Name[xmlLang.toLowerCase()] = cont.Data;
+            }
+            else {
+                contributor.Name = cont.Data;
+            }
         }
     }
     else {
-        contributor.Name = cont.Data;
+        var xmlLang = cont.Lang || opf.Lang;
+        if (xmlLang) {
+            contributor.Name = {};
+            contributor.Name[xmlLang.toLowerCase()] = cont.Data;
+        }
+        else {
+            contributor.Name = cont.Data;
+        }
         role = cont.Role;
         if (!role && forcedRole) {
             role = forcedRole;
@@ -604,7 +619,14 @@ var addTitle = function (publication, rootfile, opf) {
                 }
             }
             else {
-                publication.Metadata.Title = mainTitle.Data;
+                var xmlLang = mainTitle.Lang || opf.Lang;
+                if (xmlLang) {
+                    publication.Metadata.Title = {};
+                    publication.Metadata.Title[xmlLang.toLowerCase()] = mainTitle.Data;
+                }
+                else {
+                    publication.Metadata.Title = mainTitle.Data;
+                }
             }
         }
         if (subTitle_1) {
@@ -630,13 +652,27 @@ var addTitle = function (publication, rootfile, opf) {
                 }
             }
             else {
-                publication.Metadata.SubTitle = subTitle_1.Data;
+                var xmlLang = subTitle_1.Lang || opf.Lang;
+                if (xmlLang) {
+                    publication.Metadata.SubTitle = {};
+                    publication.Metadata.SubTitle[xmlLang.toLowerCase()] = subTitle_1.Data;
+                }
+                else {
+                    publication.Metadata.SubTitle = subTitle_1.Data;
+                }
             }
         }
     }
     else {
         if (opfMetadataTitle) {
-            publication.Metadata.Title = opfMetadataTitle[0].Data;
+            var xmlLang = opfMetadataTitle[0].Lang || opf.Lang;
+            if (xmlLang) {
+                publication.Metadata.Title = {};
+                publication.Metadata.Title[xmlLang.toLowerCase()] = opfMetadataTitle[0].Data;
+            }
+            else {
+                publication.Metadata.Title = opfMetadataTitle[0].Data;
+            }
         }
     }
 };
@@ -1072,9 +1108,10 @@ var addOtherMetadata = function (publication, rootfile, opf) {
         }
         if (AccessibilitySummarys_1.length === 1) {
             var tuple = AccessibilitySummarys_1[0];
-            if (tuple.metaTag.Lang) {
+            var xmlLang = tuple.metaTag.Lang || opf.Lang;
+            if (xmlLang) {
                 publication.Metadata.AccessibilitySummary = {};
-                publication.Metadata.AccessibilitySummary[tuple.metaTag.Lang.toLowerCase()] = tuple.val;
+                publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
             }
             else {
                 publication.Metadata.AccessibilitySummary = tuple.val;
