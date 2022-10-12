@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.langStringIsRTL = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const mime = require("mime-types");
@@ -134,7 +134,8 @@ const fillSubject = (publication, opf) => {
         opfMetadataSubject.forEach((s) => {
             const sub = new metadata_subject_1.Subject();
             const xmlLang = s.Lang || opf.Lang;
-            if (xmlLang) {
+            const isLangOverride = s.Lang && opf.Lang && s.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 sub.Name = {};
                 sub.Name[xmlLang.toLowerCase()] = s.Data;
             }
@@ -196,7 +197,7 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
             contributor.Name = {};
             metaAlt.forEach((m) => {
                 if (m.Lang) {
-                    contributor.Name[m.Lang] = m.Data;
+                    contributor.Name[m.Lang.toLowerCase()] = m.Data;
                 }
             });
             const xmlLang = cont.Lang || opf.Lang;
@@ -215,7 +216,8 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
         }
         else {
             const xmlLang = cont.Lang || opf.Lang;
-            if (xmlLang) {
+            const isLangOverride = cont.Lang && opf.Lang && cont.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 contributor.Name = {};
                 contributor.Name[xmlLang.toLowerCase()] = cont.Data;
             }
@@ -226,7 +228,8 @@ const addContributor = (publication, rootfile, opf, cont, forcedRole) => {
     }
     else {
         const xmlLang = cont.Lang || opf.Lang;
-        if (xmlLang) {
+        const isLangOverride = cont.Lang && opf.Lang && cont.Lang !== opf.Lang;
+        if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
             contributor.Name = {};
             contributor.Name[xmlLang.toLowerCase()] = cont.Data;
         }
@@ -586,7 +589,8 @@ const addTitle = (publication, rootfile, opf) => {
             }
             else {
                 const xmlLang = mainTitle.Lang || opf.Lang;
-                if (xmlLang) {
+                const isLangOverride = mainTitle.Lang && opf.Lang && mainTitle.Lang !== opf.Lang;
+                if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                     publication.Metadata.Title = {};
                     publication.Metadata.Title[xmlLang.toLowerCase()] = mainTitle.Data;
                 }
@@ -619,7 +623,8 @@ const addTitle = (publication, rootfile, opf) => {
             }
             else {
                 const xmlLang = subTitle.Lang || opf.Lang;
-                if (xmlLang) {
+                const isLangOverride = subTitle.Lang && opf.Lang && subTitle.Lang !== opf.Lang;
+                if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                     publication.Metadata.SubTitle = {};
                     publication.Metadata.SubTitle[xmlLang.toLowerCase()] = subTitle.Data;
                 }
@@ -632,7 +637,8 @@ const addTitle = (publication, rootfile, opf) => {
     else {
         if (opfMetadataTitle) {
             const xmlLang = opfMetadataTitle[0].Lang || opf.Lang;
-            if (xmlLang) {
+            const isLangOverride = opfMetadataTitle[0].Lang && opf.Lang && opfMetadataTitle[0].Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 publication.Metadata.Title = {};
                 publication.Metadata.Title[xmlLang.toLowerCase()] = opfMetadataTitle[0].Data;
             }
@@ -663,16 +669,20 @@ const setPublicationDirection = (publication, opf) => {
     if (publication.Metadata.Language && publication.Metadata.Language.length &&
         (!publication.Metadata.Direction || publication.Metadata.Direction === metadata_1.DirectionEnum.Auto)) {
         const lang = publication.Metadata.Language[0].toLowerCase();
-        if ((lang === "ar" || lang.startsWith("ar-") ||
-            lang === "he" || lang.startsWith("he-") ||
-            lang === "fa" || lang.startsWith("fa-")) ||
-            lang === "zh-Hant" ||
-            lang === "zh-TW") {
+        if ((0, exports.langStringIsRTL)(lang)) {
             publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
         }
     }
 };
 exports.setPublicationDirection = setPublicationDirection;
+const langStringIsRTL = (lang) => {
+    return lang === "ar" || lang.startsWith("ar-") ||
+        lang === "he" || lang.startsWith("he-") ||
+        lang === "fa" || lang.startsWith("fa-") ||
+        lang === "zh-Hant" ||
+        lang === "zh-TW";
+};
+exports.langStringIsRTL = langStringIsRTL;
 const getNcx = (ncxManItem, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (!opf.ZipPath) {
         return Promise.reject("?!!opf.ZipPath");
@@ -1042,7 +1052,8 @@ const addOtherMetadata = (publication, rootfile, opf) => {
         if (AccessibilitySummarys.length === 1) {
             const tuple = AccessibilitySummarys[0];
             const xmlLang = tuple.metaTag.Lang || opf.Lang;
-            if (xmlLang) {
+            const isLangOverride = tuple.metaTag.Lang && opf.Lang && tuple.metaTag.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 publication.Metadata.AccessibilitySummary = {};
                 publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
             }
@@ -1089,7 +1100,7 @@ const addOtherMetadata = (publication, rootfile, opf) => {
             }
             else {
                 const key = metaTag.Name ? metaTag.Name : metaTag.Property;
-                if (key && !metadata_1.MetadataSupportedKeys.includes(key)) {
+                if (key && !metaTag.Refine && !metadata_1.MetadataSupportedKeys.includes(key)) {
                     if (!publication.Metadata.AdditionalJSON) {
                         publication.Metadata.AdditionalJSON = {};
                     }

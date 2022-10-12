@@ -28,6 +28,7 @@ export declare const addLanguage: (publication: Publication, opf: OPF) => void;
 export declare const addIdentifier: (publication: Publication, opf: OPF) => void;
 export declare const addTitle: (publication: Publication, rootfile: Rootfile | undefined, opf: OPF) => void;
 export declare const setPublicationDirection: (publication: Publication, opf: OPF) => void;
+export declare const langStringIsRTL: (lang: string) => boolean;
 export declare const getNcx: (ncxManItem: Manifest, opf: OPF, zip: IZip) => Promise<NCX>;
 export declare const getNcx_: (ncxStr: string, ncxFilePath: string) => NCX;
 export declare const getOpf: (zip: IZip, rootfilePathDecoded: string, rootfilePath: string) => Promise<OPF>;

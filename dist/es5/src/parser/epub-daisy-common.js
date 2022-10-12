@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
+exports.updateDurations = exports.lazyLoadMediaOverlays = exports.flattenDaisy2SmilAudioSeq = exports.addMediaOverlaySMIL = exports.fillTOC = exports.loadFileBufferFromZipPath = exports.loadFileStrFromZipPath = exports.addOtherMetadata = exports.getOpf_ = exports.getOpf = exports.getNcx_ = exports.getNcx = exports.langStringIsRTL = exports.setPublicationDirection = exports.addTitle = exports.addIdentifier = exports.addLanguage = exports.fillSpineAndResource = exports.findInManifestByID = exports.findInSpineByHref = exports.findAllMetaByRefineAndProperty = exports.findMetaByRefineAndProperty = exports.addContributor = exports.findContributorInMeta = exports.fillSubject = exports.fillPublicationDate = exports.isEpub3OrMore = exports.parseSpaceSeparatedString = exports.BCP47_UNKNOWN_LANG = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = void 0;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var mime = require("mime-types");
@@ -137,7 +137,8 @@ var fillSubject = function (publication, opf) {
         opfMetadataSubject.forEach(function (s) {
             var sub = new metadata_subject_1.Subject();
             var xmlLang = s.Lang || opf.Lang;
-            if (xmlLang) {
+            var isLangOverride = s.Lang && opf.Lang && s.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 sub.Name = {};
                 sub.Name[xmlLang.toLowerCase()] = s.Data;
             }
@@ -199,7 +200,7 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
             contributor.Name = {};
             metaAlt.forEach(function (m) {
                 if (m.Lang) {
-                    contributor.Name[m.Lang] = m.Data;
+                    contributor.Name[m.Lang.toLowerCase()] = m.Data;
                 }
             });
             var xmlLang = cont.Lang || opf.Lang;
@@ -218,7 +219,8 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
         }
         else {
             var xmlLang = cont.Lang || opf.Lang;
-            if (xmlLang) {
+            var isLangOverride = cont.Lang && opf.Lang && cont.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 contributor.Name = {};
                 contributor.Name[xmlLang.toLowerCase()] = cont.Data;
             }
@@ -229,7 +231,8 @@ var addContributor = function (publication, rootfile, opf, cont, forcedRole) {
     }
     else {
         var xmlLang = cont.Lang || opf.Lang;
-        if (xmlLang) {
+        var isLangOverride = cont.Lang && opf.Lang && cont.Lang !== opf.Lang;
+        if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
             contributor.Name = {};
             contributor.Name[xmlLang.toLowerCase()] = cont.Data;
         }
@@ -620,7 +623,8 @@ var addTitle = function (publication, rootfile, opf) {
             }
             else {
                 var xmlLang = mainTitle.Lang || opf.Lang;
-                if (xmlLang) {
+                var isLangOverride = mainTitle.Lang && opf.Lang && mainTitle.Lang !== opf.Lang;
+                if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                     publication.Metadata.Title = {};
                     publication.Metadata.Title[xmlLang.toLowerCase()] = mainTitle.Data;
                 }
@@ -653,7 +657,8 @@ var addTitle = function (publication, rootfile, opf) {
             }
             else {
                 var xmlLang = subTitle_1.Lang || opf.Lang;
-                if (xmlLang) {
+                var isLangOverride = subTitle_1.Lang && opf.Lang && subTitle_1.Lang !== opf.Lang;
+                if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                     publication.Metadata.SubTitle = {};
                     publication.Metadata.SubTitle[xmlLang.toLowerCase()] = subTitle_1.Data;
                 }
@@ -666,7 +671,8 @@ var addTitle = function (publication, rootfile, opf) {
     else {
         if (opfMetadataTitle) {
             var xmlLang = opfMetadataTitle[0].Lang || opf.Lang;
-            if (xmlLang) {
+            var isLangOverride = opfMetadataTitle[0].Lang && opf.Lang && opfMetadataTitle[0].Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 publication.Metadata.Title = {};
                 publication.Metadata.Title[xmlLang.toLowerCase()] = opfMetadataTitle[0].Data;
             }
@@ -697,16 +703,20 @@ var setPublicationDirection = function (publication, opf) {
     if (publication.Metadata.Language && publication.Metadata.Language.length &&
         (!publication.Metadata.Direction || publication.Metadata.Direction === metadata_1.DirectionEnum.Auto)) {
         var lang = publication.Metadata.Language[0].toLowerCase();
-        if ((lang === "ar" || lang.startsWith("ar-") ||
-            lang === "he" || lang.startsWith("he-") ||
-            lang === "fa" || lang.startsWith("fa-")) ||
-            lang === "zh-Hant" ||
-            lang === "zh-TW") {
+        if ((0, exports.langStringIsRTL)(lang)) {
             publication.Metadata.Direction = metadata_1.DirectionEnum.RTL;
         }
     }
 };
 exports.setPublicationDirection = setPublicationDirection;
+var langStringIsRTL = function (lang) {
+    return lang === "ar" || lang.startsWith("ar-") ||
+        lang === "he" || lang.startsWith("he-") ||
+        lang === "fa" || lang.startsWith("fa-") ||
+        lang === "zh-Hant" ||
+        lang === "zh-TW";
+};
+exports.langStringIsRTL = langStringIsRTL;
 var getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var dname, ncxManItemHrefDecoded, ncxFilePath, has, err, zipEntries, _i, zipEntries_1, zipEntry, ncxZipStream_, err_2, ncxZipStream, ncxZipData, err_3, ncxStr;
     return tslib_1.__generator(this, function (_a) {
@@ -1109,7 +1119,8 @@ var addOtherMetadata = function (publication, rootfile, opf) {
         if (AccessibilitySummarys_1.length === 1) {
             var tuple = AccessibilitySummarys_1[0];
             var xmlLang = tuple.metaTag.Lang || opf.Lang;
-            if (xmlLang) {
+            var isLangOverride = tuple.metaTag.Lang && opf.Lang && tuple.metaTag.Lang !== opf.Lang;
+            if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 publication.Metadata.AccessibilitySummary = {};
                 publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
             }
@@ -1156,7 +1167,7 @@ var addOtherMetadata = function (publication, rootfile, opf) {
             }
             else {
                 var key = metaTag.Name ? metaTag.Name : metaTag.Property;
-                if (key && !metadata_1.MetadataSupportedKeys.includes(key)) {
+                if (key && !metaTag.Refine && !metadata_1.MetadataSupportedKeys.includes(key)) {
                     if (!publication.Metadata.AdditionalJSON) {
                         publication.Metadata.AdditionalJSON = {};
                     }
