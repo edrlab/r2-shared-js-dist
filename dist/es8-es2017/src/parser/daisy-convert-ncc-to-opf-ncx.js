@@ -103,7 +103,7 @@ const convertNccToOpfAndNcx = async (zip, rootfilePathDecoded, rootfilePath) => 
     if (metas["ncc:multimediaType"] === "audioFullText" ||
         metas["ncc:multimediaType"] === "audioNcc" ||
         metas["ncc:totalTime"] && (0, media_overlay_1.timeStrToSeconds)(metas["ncc:totalTime"]) > 0) {
-        if (metas["ncc:multimediaType"] === "audioFullText") {
+        if (metas["ncc:multimediaType"] === "audioFullText" || !metas["ncc:multimediaType"]) {
             multimediaContent = "audio,text,image";
             multimediaType = "audioFullText";
         }

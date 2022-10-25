@@ -34,7 +34,8 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                         case 0:
                             isFullTextAudio = ((_p = publication.Metadata) === null || _p === void 0 ? void 0 : _p.AdditionalJSON) &&
                                 (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
-                                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText");
+                                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
+                                    !publication.Metadata.AdditionalJSON["ncc:multimediaType"]));
                             isAudioOnly = ((_q = publication.Metadata) === null || _q === void 0 ? void 0 : _q.AdditionalJSON) &&
                                 (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
                                     publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc");

@@ -172,7 +172,8 @@ var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { 
             case 0:
                 if (!((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON)) return [3, 3];
                 isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
-                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText";
+                    publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
+                    !publication.Metadata.AdditionalJSON["ncc:multimediaType"]);
                 isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
                     publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc";
                 isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||

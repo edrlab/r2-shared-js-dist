@@ -137,7 +137,8 @@ const addLinkData = async (publication, _rootfile, opf, zip, linkItem, item) => 
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {
         const isFullTextAudio = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
-            publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText";
+            publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
+            !publication.Metadata.AdditionalJSON["ncc:multimediaType"]);
         const isAudioOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
             publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc";
         const isTextOnly = publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
