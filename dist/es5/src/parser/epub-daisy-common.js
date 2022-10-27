@@ -927,7 +927,8 @@ var addOtherMetadata = function (publication, rootfile, opf) {
     }
     if ((_6 = opf.Metadata) === null || _6 === void 0 ? void 0 : _6.Link) {
         opf.Metadata.Link.forEach(function (metaLink) {
-            if (metaLink.Property === "a11y:certifierCredential") {
+            if (metaLink.Property === "a11y:certifierCredential" ||
+                metaLink.Rel === "a11y:certifierCredential") {
                 var val = metaLink.Href;
                 if (!val) {
                     return;
@@ -941,7 +942,8 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                 }
                 publication.Metadata.CertifierCredential.push(val);
             }
-            else if (metaLink.Property === "a11y:certifierReport") {
+            else if (metaLink.Property === "a11y:certifierReport" ||
+                metaLink.Rel === "a11y:certifierReport") {
                 var val = metaLink.Href;
                 if (!val) {
                     return;
@@ -955,7 +957,8 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                 }
                 publication.Metadata.CertifierReport.push(val);
             }
-            else if (metaLink.Property === "dcterms:conformsTo") {
+            else if (metaLink.Property === "dcterms:conformsTo" ||
+                metaLink.Rel === "dcterms:conformsTo") {
                 var val = metaLink.Href;
                 if (!val) {
                     return;
@@ -1108,6 +1111,21 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.CertifierCredential = [];
                 }
                 publication.Metadata.CertifierCredential.push(val);
+            }
+            else if (metaTag.Name === "dcterms:conformsTo" ||
+                metaTag.Property === "dcterms:conformsTo") {
+                var val = metaTag.Property ? metaTag.Data : metaTag.Content;
+                if (!val) {
+                    return;
+                }
+                val = val.trim();
+                if (!val) {
+                    return;
+                }
+                if (!publication.Metadata.ConformsTo) {
+                    publication.Metadata.ConformsTo = [];
+                }
+                publication.Metadata.ConformsTo.push(val);
             }
         };
         if (opf.Metadata.Meta) {
