@@ -21,7 +21,7 @@ export declare const addContributor: (publication: Publication, rootfile: Rootfi
 export declare const findMetaByRefineAndProperty: (opf: OPF, ID: string, property: string) => Metafield | undefined;
 export declare const findAllMetaByRefineAndProperty: (opf: OPF, ID: string, property: string) => Metafield[];
 export declare const findInSpineByHref: (publication: Publication, href: string) => Link | undefined;
-declare type FuncType = (publication: Publication, rootfile: Rootfile | undefined, opf: OPF, zip: IZip, linkItem: Link, item: Manifest) => Promise<void>;
+type FuncType = (publication: Publication, rootfile: Rootfile | undefined, opf: OPF, zip: IZip, linkItem: Link, item: Manifest) => Promise<void>;
 export declare const findInManifestByID: (publication: Publication, rootfile: Rootfile | undefined, opf: OPF, ID: string, zip: IZip, addLinkData: FuncType) => Promise<Link>;
 export declare const fillSpineAndResource: (publication: Publication, rootfile: Rootfile | undefined, opf: OPF, zip: IZip, addLinkData: FuncType) => Promise<void>;
 export declare const addLanguage: (publication: Publication, opf: OPF) => void;

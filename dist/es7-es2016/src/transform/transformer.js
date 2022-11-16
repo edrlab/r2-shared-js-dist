@@ -6,9 +6,6 @@ const transformer_lcp_1 = require("./transformer-lcp");
 const transformer_obf_adobe_1 = require("./transformer-obf-adobe");
 const transformer_obf_idpf_1 = require("./transformer-obf-idpf");
 class Transformers {
-    constructor() {
-        this.transformers = [];
-    }
     static instance() {
         return Transformers._instance;
     }
@@ -16,6 +13,9 @@ class Transformers {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             return Transformers.instance()._tryStream(publication, link, url, stream, isPartialByteRangeRequest, partialByteBegin, partialByteEnd, sessionInfo);
         });
+    }
+    constructor() {
+        this.transformers = [];
     }
     add(transformer) {
         if (this.transformers.indexOf(transformer) < 0) {
