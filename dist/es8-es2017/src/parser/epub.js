@@ -374,12 +374,24 @@ const addToLinkFromProperties = async (publication, link, propertiesString) => {
                 propertiesStruct.Contains.push("remote-resources");
                 break;
             }
+            case "rendition:page-spread-left": {
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
+                break;
+            }
             case "page-spread-left": {
                 propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
                 break;
             }
+            case "rendition:page-spread-right": {
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
+                break;
+            }
             case "page-spread-right": {
                 propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
+                break;
+            }
+            case "rendition:page-spread-center": {
+                propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
                 break;
             }
             case "page-spread-center": {

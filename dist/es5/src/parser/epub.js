@@ -455,7 +455,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                 _i = 0, properties_1 = properties;
                 _b.label = 1;
             case 1:
-                if (!(_i < properties_1.length)) return [3, 31];
+                if (!(_i < properties_1.length)) return [3, 34];
                 p = properties_1[_i];
                 _a = p;
                 switch (_a) {
@@ -467,35 +467,38 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     case "svg": return [3, 8];
                     case "xmp-record": return [3, 9];
                     case "remote-resources": return [3, 10];
-                    case "page-spread-left": return [3, 11];
-                    case "page-spread-right": return [3, 12];
-                    case "page-spread-center": return [3, 13];
-                    case "rendition:spread-none": return [3, 14];
-                    case "rendition:spread-auto": return [3, 15];
-                    case "rendition:spread-landscape": return [3, 16];
-                    case "rendition:spread-portrait": return [3, 17];
-                    case "rendition:spread-both": return [3, 18];
-                    case "rendition:layout-reflowable": return [3, 19];
-                    case "rendition:layout-pre-paginated": return [3, 20];
-                    case "rendition:orientation-auto": return [3, 21];
-                    case "rendition:orientation-landscape": return [3, 22];
-                    case "rendition:orientation-portrait": return [3, 23];
-                    case "rendition:flow-auto": return [3, 24];
-                    case "rendition:flow-paginated": return [3, 25];
-                    case "rendition:flow-scrolled-continuous": return [3, 26];
-                    case "rendition:flow-scrolled-doc": return [3, 27];
+                    case "rendition:page-spread-left": return [3, 11];
+                    case "page-spread-left": return [3, 12];
+                    case "rendition:page-spread-right": return [3, 13];
+                    case "page-spread-right": return [3, 14];
+                    case "rendition:page-spread-center": return [3, 15];
+                    case "page-spread-center": return [3, 16];
+                    case "rendition:spread-none": return [3, 17];
+                    case "rendition:spread-auto": return [3, 18];
+                    case "rendition:spread-landscape": return [3, 19];
+                    case "rendition:spread-portrait": return [3, 20];
+                    case "rendition:spread-both": return [3, 21];
+                    case "rendition:layout-reflowable": return [3, 22];
+                    case "rendition:layout-pre-paginated": return [3, 23];
+                    case "rendition:orientation-auto": return [3, 24];
+                    case "rendition:orientation-landscape": return [3, 25];
+                    case "rendition:orientation-portrait": return [3, 26];
+                    case "rendition:flow-auto": return [3, 27];
+                    case "rendition:flow-paginated": return [3, 28];
+                    case "rendition:flow-scrolled-continuous": return [3, 29];
+                    case "rendition:flow-scrolled-doc": return [3, 30];
                 }
-                return [3, 28];
+                return [3, 31];
             case 2:
                 link.AddRel("cover");
                 return [4, (0, exports.addCoverDimensions)(publication, link)];
             case 3:
                 _b.sent();
-                return [3, 29];
+                return [3, 32];
             case 4:
                 {
                     link.AddRel("contents");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 5;
             case 5:
@@ -504,7 +507,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("js");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 6;
             case 6:
@@ -513,7 +516,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("mathml");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 7;
             case 7:
@@ -522,7 +525,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("onix");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 8;
             case 8:
@@ -531,7 +534,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("svg");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 9;
             case 9:
@@ -540,7 +543,7 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("xmp");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 10;
             case 10:
@@ -549,117 +552,135 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                         propertiesStruct.Contains = [];
                     }
                     propertiesStruct.Contains.push("remote-resources");
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 11;
             case 11:
                 {
                     propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
-                    return [3, 29];
+                    return [3, 32];
                 }
                 _b.label = 12;
             case 12:
                 {
-                    propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
-                    return [3, 29];
+                    propertiesStruct.Page = metadata_properties_1.PageEnum.Left;
+                    return [3, 32];
                 }
                 _b.label = 13;
             case 13:
                 {
-                    propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
-                    return [3, 29];
+                    propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
+                    return [3, 32];
                 }
                 _b.label = 14;
             case 14:
                 {
-                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.None;
-                    return [3, 29];
+                    propertiesStruct.Page = metadata_properties_1.PageEnum.Right;
+                    return [3, 32];
                 }
                 _b.label = 15;
             case 15:
                 {
-                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Auto;
-                    return [3, 29];
+                    propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
+                    return [3, 32];
                 }
                 _b.label = 16;
             case 16:
                 {
-                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Landscape;
-                    return [3, 29];
+                    propertiesStruct.Page = metadata_properties_1.PageEnum.Center;
+                    return [3, 32];
                 }
                 _b.label = 17;
             case 17:
                 {
-                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
-                    return [3, 29];
+                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.None;
+                    return [3, 32];
                 }
                 _b.label = 18;
             case 18:
                 {
-                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
-                    return [3, 29];
+                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Auto;
+                    return [3, 32];
                 }
                 _b.label = 19;
             case 19:
                 {
-                    propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Reflowable;
-                    return [3, 29];
+                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Landscape;
+                    return [3, 32];
                 }
                 _b.label = 20;
             case 20:
                 {
-                    propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Fixed;
-                    return [3, 29];
+                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
+                    return [3, 32];
                 }
                 _b.label = 21;
             case 21:
                 {
-                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Auto;
-                    return [3, 29];
+                    propertiesStruct.Spread = metadata_properties_1.SpreadEnum.Both;
+                    return [3, 32];
                 }
                 _b.label = 22;
             case 22:
                 {
-                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Landscape;
-                    return [3, 29];
+                    propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Reflowable;
+                    return [3, 32];
                 }
                 _b.label = 23;
             case 23:
                 {
-                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Portrait;
-                    return [3, 29];
+                    propertiesStruct.Layout = metadata_properties_1.LayoutEnum.Fixed;
+                    return [3, 32];
                 }
                 _b.label = 24;
             case 24:
                 {
-                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Auto;
-                    return [3, 29];
+                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Auto;
+                    return [3, 32];
                 }
                 _b.label = 25;
             case 25:
                 {
-                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Paginated;
-                    return [3, 29];
+                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Landscape;
+                    return [3, 32];
                 }
                 _b.label = 26;
             case 26:
                 {
-                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.ScrolledContinuous;
-                    return [3, 29];
+                    propertiesStruct.Orientation = metadata_properties_1.OrientationEnum.Portrait;
+                    return [3, 32];
                 }
                 _b.label = 27;
             case 27:
                 {
-                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Scrolled;
-                    return [3, 29];
+                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Auto;
+                    return [3, 32];
                 }
                 _b.label = 28;
             case 28:
                 {
-                    return [3, 29];
+                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Paginated;
+                    return [3, 32];
                 }
                 _b.label = 29;
             case 29:
+                {
+                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.ScrolledContinuous;
+                    return [3, 32];
+                }
+                _b.label = 30;
+            case 30:
+                {
+                    propertiesStruct.Overflow = metadata_properties_1.OverflowEnum.Scrolled;
+                    return [3, 32];
+                }
+                _b.label = 31;
+            case 31:
+                {
+                    return [3, 32];
+                }
+                _b.label = 32;
+            case 32:
                 if (propertiesStruct.Layout ||
                     propertiesStruct.Orientation ||
                     propertiesStruct.Overflow ||
@@ -668,11 +689,11 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
                     (propertiesStruct.Contains && propertiesStruct.Contains.length)) {
                     link.Properties = propertiesStruct;
                 }
-                _b.label = 30;
-            case 30:
+                _b.label = 33;
+            case 33:
                 _i++;
                 return [3, 1];
-            case 31: return [2];
+            case 34: return [2];
         }
     });
 }); };
