@@ -137,7 +137,7 @@ function isEPUBlication(urlOrPath) {
 exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ncx, ncxManItem, pageMapLink;
+        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ex_1, ncx, ncxManItem, pageMapLink;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -298,10 +298,10 @@ function EpubParsePromise(filePath) {
                     (0, epub_daisy_common_1.addOtherMetadata)(publication, rootfile, opf);
                     (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
                     (0, epub_daisy_common_1.findContributorInMeta)(publication, rootfile, opf);
-                    return [4, (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData)];
+                    return [4, addRendition(publication, opf, zip)];
                 case 34:
                     _a.sent();
-                    return [4, addRendition(publication, opf, zip)];
+                    return [4, (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData)];
                 case 35:
                     _a.sent();
                     return [4, addCoverRel(publication, rootfile, opf, zip)];
@@ -310,34 +310,44 @@ function EpubParsePromise(filePath) {
                     if (encryption) {
                         fillEncryptionInfo(publication, encryption, lcpl);
                     }
-                    return [4, fillTOCFromNavDoc(publication, zip)];
+                    _a.label = 37;
                 case 37:
+                    _a.trys.push([37, 39, , 40]);
+                    return [4, fillTOCFromNavDoc(publication, zip)];
+                case 38:
                     _a.sent();
-                    if (!(!publication.TOC || !publication.TOC.length)) return [3, 40];
+                    return [3, 40];
+                case 39:
+                    ex_1 = _a.sent();
+                    publication.TOC = [];
+                    console.log(ex_1);
+                    return [3, 40];
+                case 40:
+                    if (!(!publication.TOC || !publication.TOC.length)) return [3, 43];
                     ncx = void 0;
-                    if (!(opf.Manifest && opf.Spine.Toc)) return [3, 39];
+                    if (!(opf.Manifest && opf.Spine.Toc)) return [3, 42];
                     ncxManItem = opf.Manifest.find(function (manifestItem) {
                         return manifestItem.ID === opf.Spine.Toc;
                     });
-                    if (!ncxManItem) return [3, 39];
+                    if (!ncxManItem) return [3, 42];
                     return [4, (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip)];
-                case 38:
+                case 41:
                     ncx = _a.sent();
-                    _a.label = 39;
-                case 39:
+                    _a.label = 42;
+                case 42:
                     (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
-                    _a.label = 40;
-                case 40:
-                    if (!(!publication.PageList && publication.Resources)) return [3, 42];
+                    _a.label = 43;
+                case 43:
+                    if (!(!publication.PageList && publication.Resources)) return [3, 45];
                     pageMapLink = publication.Resources.find(function (item) {
                         return item.TypeLink === "application/oebps-page-map+xml";
                     });
-                    if (!pageMapLink) return [3, 42];
+                    if (!pageMapLink) return [3, 45];
                     return [4, fillPageListFromAdobePageMap(publication, zip, pageMapLink)];
-                case 41:
+                case 44:
                     _a.sent();
-                    _a.label = 42;
-                case 42:
+                    _a.label = 45;
+                case 45:
                     fillCalibreSerieInfo(publication, opf);
                     (0, epub_daisy_common_1.fillSubject)(publication, opf);
                     (0, epub_daisy_common_1.fillPublicationDate)(publication, rootfile, opf);
@@ -983,7 +993,7 @@ var fillEncryptionInfo = function (publication, encryption, lcp) {
         if (publication.Resources) {
             publication.Resources.forEach(function (l) {
                 var filePath = l.Href;
-                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                if (filePath === (0, decodeURI_1.tryDecodeURI)(encInfo.CipherData.CipherReference.URI)) {
                     if (!l.Properties) {
                         l.Properties = new metadata_properties_1.Properties();
                     }
@@ -994,7 +1004,7 @@ var fillEncryptionInfo = function (publication, encryption, lcp) {
         if (publication.Spine) {
             publication.Spine.forEach(function (l) {
                 var filePath = l.Href;
-                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                if (filePath === (0, decodeURI_1.tryDecodeURI)(encInfo.CipherData.CipherReference.URI)) {
                     if (!l.Properties) {
                         l.Properties = new metadata_properties_1.Properties();
                     }

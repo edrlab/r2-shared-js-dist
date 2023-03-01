@@ -407,29 +407,31 @@ var findInManifestByID = function (publication, rootfile, opf, ID, zip, addLinkD
 exports.findInManifestByID = findInManifestByID;
 var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkData) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var _i, _a, item, linkItem, err_1, _b, _c, item, itemHrefDecoded, zipPath, linkSpine, linkItem;
-    return tslib_1.__generator(this, function (_d) {
-        switch (_d.label) {
+    var _d, _e;
+    return tslib_1.__generator(this, function (_f) {
+        switch (_f.label) {
             case 0:
                 if (!opf.ZipPath) {
                     return [2];
                 }
                 if (!(opf.Spine && opf.Spine.Items && opf.Spine.Items.length)) return [3, 7];
                 _i = 0, _a = opf.Spine.Items;
-                _d.label = 1;
+                _f.label = 1;
             case 1:
                 if (!(_i < _a.length)) return [3, 7];
                 item = _a[_i];
-                if (!(!item.Linear || item.Linear === "yes")) return [3, 6];
+                if (!(!item.Linear || item.Linear === "yes" ||
+                    (item.Linear === "no" && ((_e = (_d = publication.Metadata) === null || _d === void 0 ? void 0 : _d.Rendition) === null || _e === void 0 ? void 0 : _e.Layout) === metadata_properties_1.LayoutEnum.Fixed))) return [3, 6];
                 linkItem = void 0;
-                _d.label = 2;
+                _f.label = 2;
             case 2:
-                _d.trys.push([2, 4, , 5]);
+                _f.trys.push([2, 4, , 5]);
                 return [4, (0, exports.findInManifestByID)(publication, rootfile, opf, item.IDref, zip, addLinkData)];
             case 3:
-                linkItem = _d.sent();
+                linkItem = _f.sent();
                 return [3, 5];
             case 4:
-                err_1 = _d.sent();
+                err_1 = _f.sent();
                 debug(err_1);
                 return [3, 6];
             case 5:
@@ -439,14 +441,14 @@ var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkDat
                     }
                     publication.Spine.push(linkItem);
                 }
-                _d.label = 6;
+                _f.label = 6;
             case 6:
                 _i++;
                 return [3, 1];
             case 7:
                 if (!(opf.Manifest && opf.Manifest.length)) return [3, 11];
                 _b = 0, _c = opf.Manifest;
-                _d.label = 8;
+                _f.label = 8;
             case 8:
                 if (!(_b < _c.length)) return [3, 11];
                 item = _c[_b];
@@ -468,8 +470,8 @@ var fillSpineAndResource = function (publication, rootfile, opf, zip, addLinkDat
                 publication.Resources.push(linkItem);
                 return [4, addLinkData(publication, rootfile, opf, zip, linkItem, item)];
             case 9:
-                _d.sent();
-                _d.label = 10;
+                _f.sent();
+                _f.label = 10;
             case 10:
                 _b++;
                 return [3, 8];

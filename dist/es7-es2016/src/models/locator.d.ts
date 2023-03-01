@@ -8,6 +8,9 @@ export interface LocatorText {
     before?: string;
     highlight?: string;
     after?: string;
+    beforeRaw?: string;
+    highlightRaw?: string;
+    afterRaw?: string;
 }
 export interface LocatorLocations {
     cfi?: string;

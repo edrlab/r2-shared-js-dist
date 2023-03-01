@@ -235,13 +235,19 @@ function EpubParsePromise(filePath) {
         (0, epub_daisy_common_1.addOtherMetadata)(publication, rootfile, opf);
         (0, epub_daisy_common_1.setPublicationDirection)(publication, opf);
         (0, epub_daisy_common_1.findContributorInMeta)(publication, rootfile, opf);
-        yield (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData);
         yield addRendition(publication, opf, zip);
+        yield (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData);
         yield addCoverRel(publication, rootfile, opf, zip);
         if (encryption) {
             fillEncryptionInfo(publication, encryption, lcpl);
         }
-        yield fillTOCFromNavDoc(publication, zip);
+        try {
+            yield fillTOCFromNavDoc(publication, zip);
+        }
+        catch (ex) {
+            publication.TOC = [];
+            console.log(ex);
+        }
         if (!publication.TOC || !publication.TOC.length) {
             let ncx;
             if (opf.Manifest && opf.Spine.Toc) {
@@ -720,7 +726,7 @@ const fillEncryptionInfo = (publication, encryption, lcp) => {
         if (publication.Resources) {
             publication.Resources.forEach((l) => {
                 const filePath = l.Href;
-                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                if (filePath === (0, decodeURI_1.tryDecodeURI)(encInfo.CipherData.CipherReference.URI)) {
                     if (!l.Properties) {
                         l.Properties = new metadata_properties_1.Properties();
                     }
@@ -731,7 +737,7 @@ const fillEncryptionInfo = (publication, encryption, lcp) => {
         if (publication.Spine) {
             publication.Spine.forEach((l) => {
                 const filePath = l.Href;
-                if (filePath === encInfo.CipherData.CipherReference.URI) {
+                if (filePath === (0, decodeURI_1.tryDecodeURI)(encInfo.CipherData.CipherReference.URI)) {
                     if (!l.Properties) {
                         l.Properties = new metadata_properties_1.Properties();
                     }

@@ -396,12 +396,14 @@ const findInManifestByID = async (publication, rootfile, opf, ID, zip, addLinkDa
 };
 exports.findInManifestByID = findInManifestByID;
 const fillSpineAndResource = async (publication, rootfile, opf, zip, addLinkData) => {
+    var _a, _b;
     if (!opf.ZipPath) {
         return;
     }
     if (opf.Spine && opf.Spine.Items && opf.Spine.Items.length) {
         for (const item of opf.Spine.Items) {
-            if (!item.Linear || item.Linear === "yes") {
+            if (!item.Linear || item.Linear === "yes" ||
+                (item.Linear === "no" && ((_b = (_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.Rendition) === null || _b === void 0 ? void 0 : _b.Layout) === metadata_properties_1.LayoutEnum.Fixed)) {
                 let linkItem;
                 try {
                     linkItem = await (0, exports.findInManifestByID)(publication, rootfile, opf, item.IDref, zip, addLinkData);

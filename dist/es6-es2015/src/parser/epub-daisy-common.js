@@ -397,12 +397,14 @@ const findInManifestByID = (publication, rootfile, opf, ID, zip, addLinkData) =>
 });
 exports.findInManifestByID = findInManifestByID;
 const fillSpineAndResource = (publication, rootfile, opf, zip, addLinkData) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     if (!opf.ZipPath) {
         return;
     }
     if (opf.Spine && opf.Spine.Items && opf.Spine.Items.length) {
         for (const item of opf.Spine.Items) {
-            if (!item.Linear || item.Linear === "yes") {
+            if (!item.Linear || item.Linear === "yes" ||
+                (item.Linear === "no" && ((_b = (_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.Rendition) === null || _b === void 0 ? void 0 : _b.Layout) === metadata_properties_1.LayoutEnum.Fixed)) {
                 let linkItem;
                 try {
                     linkItem = yield (0, exports.findInManifestByID)(publication, rootfile, opf, item.IDref, zip, addLinkData);
@@ -1452,7 +1454,7 @@ const flattenDaisy2SmilAudioSeq = (_smilPathInZip, smilXmlDoc) => {
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
 const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _c;
     if (mo.initialized || !mo.SmilPathInZip) {
         return;
     }
@@ -1561,7 +1563,7 @@ const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, voi
     debug("PARSED SMIL: " + mo.SmilPathInZip);
     mo.Role = [];
     mo.Role.push("section");
-    if ((_a = smil.Head) === null || _a === void 0 ? void 0 : _a.Meta) {
+    if ((_c = smil.Head) === null || _c === void 0 ? void 0 : _c.Meta) {
         for (const m of smil.Head.Meta) {
             if (m.Content && m.Name === "dtb:totalElapsedTime") {
                 mo.totalElapsedTime = (0, media_overlay_1.timeStrToSeconds)(m.Content);
