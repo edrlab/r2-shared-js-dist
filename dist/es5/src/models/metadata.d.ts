@@ -5,6 +5,7 @@ import { MediaOverlay } from "./metadata-media-overlay";
 import { IStringMap } from "./metadata-multilang";
 import { Properties } from "./metadata-properties";
 import { Subject } from "./metadata-subject";
+import { AccessibilityMetadata } from "./metadata-accessibility";
 export declare enum DirectionEnum {
     Auto = "auto",
     RTL = "rtl",
@@ -12,6 +13,7 @@ export declare enum DirectionEnum {
 }
 export declare const MetadataSupportedKeys: string[];
 export declare class Metadata implements IWithAdditionalJSON {
+    Accessibility: AccessibilityMetadata;
     AccessMode: string[];
     AccessibilityFeature: string[];
     AccessibilityHazard: string[];

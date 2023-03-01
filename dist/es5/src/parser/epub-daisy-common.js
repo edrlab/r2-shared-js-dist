@@ -943,6 +943,16 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.CertifierCredential = [];
                 }
                 publication.Metadata.CertifierCredential.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification) {
+                    publication.Metadata.Accessibility.Certification = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification.Credential) {
+                    publication.Metadata.Accessibility.Certification.Credential = [];
+                }
+                publication.Metadata.Accessibility.Certification.Credential.push(val);
             }
             else if (metaLink.Property === "a11y:certifierReport" ||
                 metaLink.Rel === "a11y:certifierReport") {
@@ -958,6 +968,16 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.CertifierReport = [];
                 }
                 publication.Metadata.CertifierReport.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification) {
+                    publication.Metadata.Accessibility.Certification = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification.Report) {
+                    publication.Metadata.Accessibility.Certification.Report = [];
+                }
+                publication.Metadata.Accessibility.Certification.Report.push(val);
             }
             else if (metaLink.Property === "dcterms:conformsTo" ||
                 metaLink.Rel === "dcterms:conformsTo") {
@@ -973,6 +993,13 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.ConformsTo = [];
                 }
                 publication.Metadata.ConformsTo.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.ConformsTo) {
+                    publication.Metadata.Accessibility.ConformsTo = [];
+                }
+                publication.Metadata.Accessibility.ConformsTo.push(val);
             }
         });
     }
@@ -993,6 +1020,13 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.AccessMode = [];
                 }
                 publication.Metadata.AccessMode.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.AccessMode) {
+                    publication.Metadata.Accessibility.AccessMode = [];
+                }
+                publication.Metadata.Accessibility.AccessMode.push(val);
             }
             else if (metaTag.Name === "schema:accessibilityFeature" ||
                 metaTag.Property === "schema:accessibilityFeature") {
@@ -1008,6 +1042,13 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.AccessibilityFeature = [];
                 }
                 publication.Metadata.AccessibilityFeature.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Feature) {
+                    publication.Metadata.Accessibility.Feature = [];
+                }
+                publication.Metadata.Accessibility.Feature.push(val);
             }
             else if (metaTag.Name === "schema:accessibilityHazard" ||
                 metaTag.Property === "schema:accessibilityHazard") {
@@ -1023,6 +1064,13 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.AccessibilityHazard = [];
                 }
                 publication.Metadata.AccessibilityHazard.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Hazard) {
+                    publication.Metadata.Accessibility.Hazard = [];
+                }
+                publication.Metadata.Accessibility.Hazard.push(val);
             }
             else if (metaTag.Name === "schema:accessibilitySummary" ||
                 metaTag.Property === "schema:accessibilitySummary") {
@@ -1049,10 +1097,18 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                 if (!val) {
                     return;
                 }
+                var del = (0, ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient)(val);
                 if (!publication.Metadata.AccessModeSufficient) {
                     publication.Metadata.AccessModeSufficient = [];
                 }
-                publication.Metadata.AccessModeSufficient.push((0, ta_json_string_tokens_converter_1.DelinearizeAccessModeSufficient)(val));
+                publication.Metadata.AccessModeSufficient.push(del);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.AccessModeSufficient) {
+                    publication.Metadata.Accessibility.AccessModeSufficient = [];
+                }
+                publication.Metadata.Accessibility.AccessModeSufficient.push(del);
             }
             else if (metaTag.Name === "schema:accessibilityAPI" ||
                 metaTag.Property === "schema:accessibilityAPI") {
@@ -1098,6 +1154,16 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.CertifiedBy = [];
                 }
                 publication.Metadata.CertifiedBy.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification) {
+                    publication.Metadata.Accessibility.Certification = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification.CertifiedBy) {
+                    publication.Metadata.Accessibility.Certification.CertifiedBy = [];
+                }
+                publication.Metadata.Accessibility.Certification.CertifiedBy.push(val);
             }
             else if (metaTag.Name === "a11y:certifierCredential" ||
                 metaTag.Property === "a11y:certifierCredential") {
@@ -1113,6 +1179,16 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.CertifierCredential = [];
                 }
                 publication.Metadata.CertifierCredential.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification) {
+                    publication.Metadata.Accessibility.Certification = {};
+                }
+                if (!publication.Metadata.Accessibility.Certification.Credential) {
+                    publication.Metadata.Accessibility.Certification.Credential = [];
+                }
+                publication.Metadata.Accessibility.Certification.Credential.push(val);
             }
             else if (metaTag.Name === "dcterms:conformsTo" ||
                 metaTag.Property === "dcterms:conformsTo") {
@@ -1128,6 +1204,13 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                     publication.Metadata.ConformsTo = [];
                 }
                 publication.Metadata.ConformsTo.push(val);
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                if (!publication.Metadata.Accessibility.ConformsTo) {
+                    publication.Metadata.Accessibility.ConformsTo = [];
+                }
+                publication.Metadata.Accessibility.ConformsTo.push(val);
             }
         };
         if (opf.Metadata.Meta) {
@@ -1143,9 +1226,18 @@ var addOtherMetadata = function (publication, rootfile, opf) {
             if (xmlLang && (isLangOverride || (0, exports.langStringIsRTL)(xmlLang.toLowerCase()))) {
                 publication.Metadata.AccessibilitySummary = {};
                 publication.Metadata.AccessibilitySummary[xmlLang.toLowerCase()] = tuple.val;
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                publication.Metadata.Accessibility.Summary = {};
+                publication.Metadata.Accessibility.Summary[xmlLang.toLowerCase()] = tuple.val;
             }
             else {
                 publication.Metadata.AccessibilitySummary = tuple.val;
+                if (!publication.Metadata.Accessibility) {
+                    publication.Metadata.Accessibility = {};
+                }
+                publication.Metadata.Accessibility.Summary = tuple.val;
             }
         }
         else if (AccessibilitySummarys_1.length) {
@@ -1162,6 +1254,24 @@ var addOtherMetadata = function (publication, rootfile, opf) {
                 }
                 else {
                     publication.Metadata.AccessibilitySummary[exports.BCP47_UNKNOWN_LANG] = tuple.val;
+                }
+            });
+            if (!publication.Metadata.Accessibility) {
+                publication.Metadata.Accessibility = {};
+            }
+            publication.Metadata.Accessibility.Summary = {};
+            AccessibilitySummarys_1.forEach(function (tuple) {
+                var xmlLang = tuple.metaTag.Lang || opf.Lang;
+                if (xmlLang) {
+                    publication.Metadata.Accessibility.Summary[xmlLang.toLowerCase()] = tuple.val;
+                }
+                else if (publication.Metadata.Language &&
+                    publication.Metadata.Language.length &&
+                    !publication.Metadata.Accessibility.Summary[publication.Metadata.Language[0].toLowerCase()]) {
+                    publication.Metadata.Accessibility.Summary[publication.Metadata.Language[0].toLowerCase()] = tuple.val;
+                }
+                else {
+                    publication.Metadata.Accessibility.Summary[exports.BCP47_UNKNOWN_LANG] = tuple.val;
                 }
             });
         }

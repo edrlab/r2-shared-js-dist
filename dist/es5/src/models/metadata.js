@@ -11,6 +11,7 @@ var metadata_media_overlay_1 = require("./metadata-media-overlay");
 var metadata_properties_1 = require("./metadata-properties");
 var metadata_subject_1 = require("./metadata-subject");
 var metadata_subject_json_converter_1 = require("./metadata-subject-json-converter");
+var metadata_accessibility_1 = require("./metadata-accessibility");
 var DirectionEnum;
 (function (DirectionEnum) {
     DirectionEnum["Auto"] = "auto";
@@ -116,6 +117,10 @@ var Metadata = (function () {
             console.log("Metadata.Title is not set!");
         }
     };
+    tslib_1.__decorate([
+        (0, ta_json_x_1.JsonProperty)("accessibility"),
+        tslib_1.__metadata("design:type", metadata_accessibility_1.AccessibilityMetadata)
+    ], Metadata.prototype, "Accessibility", void 0);
     tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("accessMode"),
         (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
