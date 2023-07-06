@@ -142,7 +142,7 @@ var AudioBookis;
     AudioBookis["LocalExploded"] = "LocalExploded";
     AudioBookis["LocalPacked"] = "LocalPacked";
     AudioBookis["RemoteExploded"] = "RemoteExploded";
-})(AudioBookis = exports.AudioBookis || (exports.AudioBookis = {}));
+})(AudioBookis || (exports.AudioBookis = AudioBookis = {}));
 async function doRequest(u) {
     return new Promise((resolve, reject) => {
         const url = new URL(u);

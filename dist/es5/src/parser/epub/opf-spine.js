@@ -4,7 +4,7 @@ exports.Spine = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var opf_spineitem_1 = require("./opf-spineitem");
-var Spine = (function () {
+var Spine = exports.Spine = (function () {
     function Spine() {
     }
     tslib_1.__decorate([
@@ -34,5 +34,4 @@ var Spine = (function () {
     ], Spine);
     return Spine;
 }());
-exports.Spine = Spine;
 //# sourceMappingURL=opf-spine.js.map

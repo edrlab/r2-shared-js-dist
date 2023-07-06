@@ -4,7 +4,7 @@ exports.AccessibilityCertification = void 0;
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
-let AccessibilityCertification = class AccessibilityCertification {
+let AccessibilityCertification = exports.AccessibilityCertification = class AccessibilityCertification {
 };
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("certifiedBy"),
@@ -24,8 +24,7 @@ tslib_1.__decorate([
     (0, ta_json_x_1.JsonElementType)(String),
     tslib_1.__metadata("design:type", Array)
 ], AccessibilityCertification.prototype, "Report", void 0);
-AccessibilityCertification = tslib_1.__decorate([
+exports.AccessibilityCertification = AccessibilityCertification = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], AccessibilityCertification);
-exports.AccessibilityCertification = AccessibilityCertification;
 //# sourceMappingURL=metadata-accessibility-certification.js.map

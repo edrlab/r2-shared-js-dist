@@ -4,7 +4,7 @@ exports.Body = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var smil_seq_1 = require("./smil-seq");
-var Body = (function (_super) {
+var Body = exports.Body = (function (_super) {
     tslib_1.__extends(Body, _super);
     function Body() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -20,5 +20,4 @@ var Body = (function (_super) {
     ], Body);
     return Body;
 }(smil_seq_1.Seq));
-exports.Body = Body;
 //# sourceMappingURL=smil-body.js.map

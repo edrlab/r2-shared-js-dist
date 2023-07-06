@@ -70,7 +70,7 @@ function timeStrToSeconds(timeStr) {
     return (hours * 3600) + (minutes * 60) + seconds;
 }
 exports.timeStrToSeconds = timeStrToSeconds;
-let MediaOverlayNode = MediaOverlayNode_1 = class MediaOverlayNode {
+let MediaOverlayNode = exports.MediaOverlayNode = MediaOverlayNode_1 = class MediaOverlayNode {
     constructor() {
         this.initialized = false;
     }
@@ -94,8 +94,7 @@ tslib_1.__decorate([
     (0, ta_json_x_1.JsonElementType)(MediaOverlayNode_1),
     tslib_1.__metadata("design:type", Array)
 ], MediaOverlayNode.prototype, "Children", void 0);
-MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
+exports.MediaOverlayNode = MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], MediaOverlayNode);
-exports.MediaOverlayNode = MediaOverlayNode;
 //# sourceMappingURL=media-overlay.js.map

@@ -18,7 +18,7 @@ var DaisyBookis;
     DaisyBookis["LocalPacked"] = "LocalPacked";
     DaisyBookis["RemoteExploded"] = "RemoteExploded";
     DaisyBookis["RemotePacked"] = "RemotePacked";
-})(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
+})(DaisyBookis || (exports.DaisyBookis = DaisyBookis = {}));
 async function isDaisyPublication(urlOrPath) {
     let p = urlOrPath;
     const http = (0, UrlUtils_1.isHTTP)(urlOrPath);

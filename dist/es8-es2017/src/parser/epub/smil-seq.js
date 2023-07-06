@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
 const smil_seq_or_par_1 = require("./smil-seq-or-par");
-let Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
+let Seq = exports.Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
     get TextRef() {
         return this.TextRef1;
     }
@@ -44,7 +44,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@epub:textref"),
     tslib_1.__metadata("design:type", String)
 ], Seq.prototype, "TextRef1", void 0);
-Seq = tslib_1.__decorate([
+exports.Seq = Seq = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -52,5 +52,4 @@ Seq = tslib_1.__decorate([
     }),
     (0, xml_js_mapper_1.XmlDiscriminatorValue)("seq")
 ], Seq);
-exports.Seq = Seq;
 //# sourceMappingURL=smil-seq.js.map

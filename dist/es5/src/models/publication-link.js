@@ -9,7 +9,7 @@ var metadata_properties_1 = require("./metadata-properties");
 var PROPERTIES_JSON_PROP = "properties";
 var CHILDREN_JSON_PROP = "children";
 var ALTERNATE_JSON_PROP = "alternate";
-var Link = (function () {
+var Link = exports.Link = (function () {
     function Link() {
     }
     Link_1 = Link;
@@ -138,5 +138,4 @@ var Link = (function () {
     ], Link);
     return Link;
 }());
-exports.Link = Link;
 //# sourceMappingURL=publication-link.js.map

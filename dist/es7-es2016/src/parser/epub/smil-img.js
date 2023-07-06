@@ -4,7 +4,7 @@ exports.Img = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Img = class Img {
+let Img = exports.Img = class Img {
     get Src() {
         return this.Src1;
     }
@@ -42,7 +42,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
     tslib_1.__metadata("design:type", String)
 ], Img.prototype, "Src1", void 0);
-Img = tslib_1.__decorate([
+exports.Img = Img = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -50,5 +50,4 @@ Img = tslib_1.__decorate([
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], Img);
-exports.Img = Img;
 //# sourceMappingURL=smil-img.js.map

@@ -4,7 +4,7 @@ exports.DisplayOptions = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var display_options_platform_1 = require("./display-options-platform");
-var DisplayOptions = (function () {
+var DisplayOptions = exports.DisplayOptions = (function () {
     function DisplayOptions() {
     }
     tslib_1.__decorate([
@@ -17,5 +17,4 @@ var DisplayOptions = (function () {
     ], DisplayOptions);
     return DisplayOptions;
 }());
-exports.DisplayOptions = DisplayOptions;
 //# sourceMappingURL=display-options.js.map

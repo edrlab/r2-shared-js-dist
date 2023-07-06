@@ -7,7 +7,7 @@ var smil_audio_1 = require("./smil-audio");
 var smil_img_1 = require("./smil-img");
 var smil_seq_or_par_1 = require("./smil-seq-or-par");
 var smil_text_1 = require("./smil-text");
-var Par = (function (_super) {
+var Par = exports.Par = (function (_super) {
     tslib_1.__extends(Par, _super);
     function Par() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -34,5 +34,4 @@ var Par = (function (_super) {
     ], Par);
     return Par;
 }(smil_seq_or_par_1.SeqOrPar));
-exports.Par = Par;
 //# sourceMappingURL=smil-par.js.map

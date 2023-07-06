@@ -185,7 +185,7 @@ var AudioBookis;
     AudioBookis["LocalExploded"] = "LocalExploded";
     AudioBookis["LocalPacked"] = "LocalPacked";
     AudioBookis["RemoteExploded"] = "RemoteExploded";
-})(AudioBookis = exports.AudioBookis || (exports.AudioBookis = {}));
+})(AudioBookis || (exports.AudioBookis = AudioBookis = {}));
 function doRequest(u) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var _this = this;

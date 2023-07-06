@@ -4,7 +4,7 @@ exports.Spine = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const opf_spineitem_1 = require("./opf-spineitem");
-let Spine = class Spine {
+let Spine = exports.Spine = class Spine {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
@@ -23,7 +23,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlItemType)(opf_spineitem_1.SpineItem),
     tslib_1.__metadata("design:type", Array)
 ], Spine.prototype, "Items", void 0);
-Spine = tslib_1.__decorate([
+exports.Spine = Spine = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         opf: "http://www.idpf.org/2007/opf",
@@ -31,5 +31,4 @@ Spine = tslib_1.__decorate([
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], Spine);
-exports.Spine = Spine;
 //# sourceMappingURL=opf-spine.js.map

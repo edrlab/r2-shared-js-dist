@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EncryptionMethod = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var EncryptionMethod = (function () {
+var EncryptionMethod = exports.EncryptionMethod = (function () {
     function EncryptionMethod() {
     }
     tslib_1.__decorate([
@@ -20,5 +20,4 @@ var EncryptionMethod = (function () {
     ], EncryptionMethod);
     return EncryptionMethod;
 }());
-exports.EncryptionMethod = EncryptionMethod;
 //# sourceMappingURL=encryption-method.js.map

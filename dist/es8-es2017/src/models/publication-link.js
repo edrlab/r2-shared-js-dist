@@ -10,7 +10,7 @@ const metadata_properties_1 = require("./metadata-properties");
 const PROPERTIES_JSON_PROP = "properties";
 const CHILDREN_JSON_PROP = "children";
 const ALTERNATE_JSON_PROP = "alternate";
-let Link = Link_1 = class Link {
+let Link = exports.Link = Link_1 = class Link {
     get Href() {
         return this.Href1;
     }
@@ -122,8 +122,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", void 0)
 ], Link.prototype, "_OnDeserialized", null);
-Link = Link_1 = tslib_1.__decorate([
+exports.Link = Link = Link_1 = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], Link);
-exports.Link = Link;
 //# sourceMappingURL=publication-link.js.map

@@ -7,7 +7,7 @@ const smil_audio_1 = require("./smil-audio");
 const smil_img_1 = require("./smil-img");
 const smil_seq_or_par_1 = require("./smil-seq-or-par");
 const smil_text_1 = require("./smil-text");
-let Par = class Par extends smil_seq_or_par_1.SeqOrPar {
+let Par = exports.Par = class Par extends smil_seq_or_par_1.SeqOrPar {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("text"),
@@ -21,7 +21,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("img"),
     tslib_1.__metadata("design:type", smil_img_1.Img)
 ], Par.prototype, "Img", void 0);
-Par = tslib_1.__decorate([
+exports.Par = Par = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -29,5 +29,4 @@ Par = tslib_1.__decorate([
     }),
     (0, xml_js_mapper_1.XmlDiscriminatorValue)("par")
 ], Par);
-exports.Par = Par;
 //# sourceMappingURL=smil-par.js.map

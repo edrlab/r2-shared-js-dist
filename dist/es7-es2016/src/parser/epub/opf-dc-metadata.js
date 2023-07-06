@@ -8,7 +8,7 @@ const opf_date_1 = require("./opf-date");
 const opf_identifier_1 = require("./opf-identifier");
 const opf_subject_1 = require("./opf-subject");
 const opf_title_1 = require("./opf-title");
-let DCMetadata = class DCMetadata {
+let DCMetadata = exports.DCMetadata = class DCMetadata {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Title | dc2:Title | dc:title"),
@@ -85,7 +85,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlItemType)(String),
     tslib_1.__metadata("design:type", Array)
 ], DCMetadata.prototype, "Rights", void 0);
-DCMetadata = tslib_1.__decorate([
+exports.DCMetadata = DCMetadata = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         dc: "http://purl.org/dc/elements/1.1/",
         dc2: "http://purl.org/dc/elements/1.0/",
@@ -93,5 +93,4 @@ DCMetadata = tslib_1.__decorate([
         opf2: "http://openebook.org/namespaces/oeb-package/1.0/",
     })
 ], DCMetadata);
-exports.DCMetadata = DCMetadata;
 //# sourceMappingURL=opf-dc-metadata.js.map

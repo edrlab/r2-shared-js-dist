@@ -4,7 +4,7 @@ exports.Audio = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Audio = class Audio {
+let Audio = exports.Audio = class Audio {
     get Src() {
         return this.Src1;
     }
@@ -46,10 +46,9 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
     tslib_1.__metadata("design:type", String)
 ], Audio.prototype, "Src1", void 0);
-Audio = tslib_1.__decorate([
+exports.Audio = Audio = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         ncx: "http://www.daisy.org/z3986/2005/ncx/",
     })
 ], Audio);
-exports.Audio = Audio;
 //# sourceMappingURL=ncx-audio.js.map

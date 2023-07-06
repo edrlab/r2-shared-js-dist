@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var transformer_lcp_1 = require("./transformer-lcp");
 var transformer_obf_adobe_1 = require("./transformer-obf-adobe");
 var transformer_obf_idpf_1 = require("./transformer-obf-idpf");
-var Transformers = (function () {
+var Transformers = exports.Transformers = (function () {
     function Transformers() {
         this.transformers = [];
     }
@@ -69,7 +69,6 @@ var Transformers = (function () {
     Transformers._instance = new Transformers();
     return Transformers;
 }());
-exports.Transformers = Transformers;
 Transformers.instance().add(new transformer_obf_adobe_1.TransformerObfAdobe());
 Transformers.instance().add(new transformer_obf_idpf_1.TransformerObfIDPF());
 Transformers.instance().add(new transformer_lcp_1.TransformerLCP());

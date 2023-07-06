@@ -7,7 +7,7 @@ const encryption_cypherdata_1 = require("./encryption-cypherdata");
 const encryption_keyinfo_1 = require("./encryption-keyinfo");
 const encryption_method_1 = require("./encryption-method");
 const encryption_property_1 = require("./encryption-property");
-let EncryptedData = class EncryptedData {
+let EncryptedData = exports.EncryptedData = class EncryptedData {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("enc:EncryptionMethod"),
@@ -26,7 +26,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlItemType)(encryption_property_1.EncryptionProperty),
     tslib_1.__metadata("design:type", Array)
 ], EncryptedData.prototype, "EncryptionProperties", void 0);
-EncryptedData = tslib_1.__decorate([
+exports.EncryptedData = EncryptedData = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         ds: "http://www.w3.org/2000/09/xmldsig#",
         enc: "http://www.w3.org/2001/04/xmlenc#",
@@ -34,5 +34,4 @@ EncryptedData = tslib_1.__decorate([
         ns: "http://www.idpf.org/2016/encryption#compression",
     })
 ], EncryptedData);
-exports.EncryptedData = EncryptedData;
 //# sourceMappingURL=encryption-data.js.map

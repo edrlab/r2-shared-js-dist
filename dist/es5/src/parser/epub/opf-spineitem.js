@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpineItem = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var SpineItem = (function () {
+var SpineItem = exports.SpineItem = (function () {
     function SpineItem() {
     }
     tslib_1.__decorate([
@@ -31,5 +31,4 @@ var SpineItem = (function () {
     ], SpineItem);
     return SpineItem;
 }());
-exports.SpineItem = SpineItem;
 //# sourceMappingURL=opf-spineitem.js.map

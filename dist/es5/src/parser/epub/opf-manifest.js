@@ -4,7 +4,7 @@ exports.Manifest = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Manifest = (function () {
+var Manifest = exports.Manifest = (function () {
     function Manifest() {
     }
     Object.defineProperty(Manifest.prototype, "Href", {
@@ -76,5 +76,4 @@ var Manifest = (function () {
     ], Manifest);
     return Manifest;
 }());
-exports.Manifest = Manifest;
 //# sourceMappingURL=opf-manifest.js.map

@@ -17,7 +17,7 @@ var DirectionEnum;
     DirectionEnum["Auto"] = "auto";
     DirectionEnum["RTL"] = "rtl";
     DirectionEnum["LTR"] = "ltr";
-})(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
+})(DirectionEnum || (exports.DirectionEnum = DirectionEnum = {}));
 exports.MetadataSupportedKeys = [
     "cover",
     "dtb:totalTime",
@@ -70,7 +70,7 @@ exports.MetadataSupportedKeys = [
     "source",
     "subject",
 ];
-var Metadata = (function () {
+var Metadata = exports.Metadata = (function () {
     function Metadata() {
     }
     Object.defineProperty(Metadata.prototype, "SortAs", {
@@ -361,5 +361,4 @@ var Metadata = (function () {
     ], Metadata);
     return Metadata;
 }());
-exports.Metadata = Metadata;
 //# sourceMappingURL=metadata.js.map

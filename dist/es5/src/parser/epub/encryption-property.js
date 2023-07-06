@@ -4,7 +4,7 @@ exports.EncryptionProperty = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var encryption_compression_1 = require("./encryption-compression");
-var EncryptionProperty = (function () {
+var EncryptionProperty = exports.EncryptionProperty = (function () {
     function EncryptionProperty() {
     }
     tslib_1.__decorate([
@@ -21,5 +21,4 @@ var EncryptionProperty = (function () {
     ], EncryptionProperty);
     return EncryptionProperty;
 }());
-exports.EncryptionProperty = EncryptionProperty;
 //# sourceMappingURL=encryption-property.js.map

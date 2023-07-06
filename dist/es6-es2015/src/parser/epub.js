@@ -91,7 +91,7 @@ var EPUBis;
     EPUBis["LocalPacked"] = "LocalPacked";
     EPUBis["RemoteExploded"] = "RemoteExploded";
     EPUBis["RemotePacked"] = "RemotePacked";
-})(EPUBis = exports.EPUBis || (exports.EPUBis = {}));
+})(EPUBis || (exports.EPUBis = EPUBis = {}));
 function isEPUBlication(urlOrPath) {
     let p = urlOrPath;
     const http = (0, UrlUtils_1.isHTTP)(urlOrPath);

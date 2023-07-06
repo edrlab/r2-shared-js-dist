@@ -6,7 +6,7 @@ const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const publication_link_1 = require("./publication-link");
 const LINKS_JSON_PROP = "links";
-let Contributor = class Contributor {
+let Contributor = exports.Contributor = class Contributor {
     get SortAs() {
         return this.SortAs2 ? this.SortAs2 : this.SortAs1;
     }
@@ -59,8 +59,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", void 0)
 ], Contributor.prototype, "_OnDeserialized", null);
-Contributor = tslib_1.__decorate([
+exports.Contributor = Contributor = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], Contributor);
-exports.Contributor = Contributor;
 //# sourceMappingURL=metadata-contributor.js.map

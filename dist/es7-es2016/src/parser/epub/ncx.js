@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const ncx_navpoint_1 = require("./ncx-navpoint");
 const ncx_pagelist_1 = require("./ncx-pagelist");
-let NCX = class NCX {
+let NCX = exports.NCX = class NCX {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navMap/ncx:navPoint"),
@@ -16,10 +16,9 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:pageList"),
     tslib_1.__metadata("design:type", ncx_pagelist_1.PageList)
 ], NCX.prototype, "PageList", void 0);
-NCX = tslib_1.__decorate([
+exports.NCX = NCX = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         ncx: "http://www.daisy.org/z3986/2005/ncx/",
     })
 ], NCX);
-exports.NCX = NCX;
 //# sourceMappingURL=ncx.js.map

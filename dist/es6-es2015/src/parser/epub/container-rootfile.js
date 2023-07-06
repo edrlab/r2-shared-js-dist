@@ -4,7 +4,7 @@ exports.Rootfile = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Rootfile = class Rootfile {
+let Rootfile = exports.Rootfile = class Rootfile {
     get Path() {
         return this.Path1;
     }
@@ -46,8 +46,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@full-path"),
     tslib_1.__metadata("design:type", String)
 ], Rootfile.prototype, "Path1", void 0);
-Rootfile = tslib_1.__decorate([
+exports.Rootfile = Rootfile = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)()
 ], Rootfile);
-exports.Rootfile = Rootfile;
 //# sourceMappingURL=container-rootfile.js.map

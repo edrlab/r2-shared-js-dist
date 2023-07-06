@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var publication_link_1 = require("./publication-link");
 var LINKS_JSON_PROP = "links";
-var Subject = (function () {
+var Subject = exports.Subject = (function () {
     function Subject() {
     }
     Object.defineProperty(Subject.prototype, "SortAs", {
@@ -62,5 +62,4 @@ var Subject = (function () {
     ], Subject);
     return Subject;
 }());
-exports.Subject = Subject;
 //# sourceMappingURL=metadata-subject.js.map

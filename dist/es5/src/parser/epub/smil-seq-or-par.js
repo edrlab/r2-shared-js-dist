@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeqOrPar = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var SeqOrPar = (function () {
+var SeqOrPar = exports.SeqOrPar = (function () {
     function SeqOrPar() {
     }
     tslib_1.__decorate([
@@ -41,5 +41,4 @@ var SeqOrPar = (function () {
     ], SeqOrPar);
     return SeqOrPar;
 }());
-exports.SeqOrPar = SeqOrPar;
 //# sourceMappingURL=smil-seq-or-par.js.map

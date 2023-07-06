@@ -4,7 +4,7 @@ exports.AccessibilityCertification = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
-var AccessibilityCertification = (function () {
+var AccessibilityCertification = exports.AccessibilityCertification = (function () {
     function AccessibilityCertification() {
     }
     tslib_1.__decorate([
@@ -30,5 +30,4 @@ var AccessibilityCertification = (function () {
     ], AccessibilityCertification);
     return AccessibilityCertification;
 }());
-exports.AccessibilityCertification = AccessibilityCertification;
 //# sourceMappingURL=metadata-accessibility-certification.js.map

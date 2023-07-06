@@ -69,7 +69,7 @@ function timeStrToSeconds(timeStr) {
     return (hours * 3600) + (minutes * 60) + seconds;
 }
 exports.timeStrToSeconds = timeStrToSeconds;
-var MediaOverlayNode = (function () {
+var MediaOverlayNode = exports.MediaOverlayNode = (function () {
     function MediaOverlayNode() {
         this.initialized = false;
     }
@@ -99,5 +99,4 @@ var MediaOverlayNode = (function () {
     ], MediaOverlayNode);
     return MediaOverlayNode;
 }());
-exports.MediaOverlayNode = MediaOverlayNode;
 //# sourceMappingURL=media-overlay.js.map

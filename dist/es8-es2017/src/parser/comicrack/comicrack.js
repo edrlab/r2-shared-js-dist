@@ -4,7 +4,7 @@ exports.ComicInfo = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const comicrack_page_1 = require("./comicrack-page");
-let ComicInfo = class ComicInfo {
+let ComicInfo = exports.ComicInfo = class ComicInfo {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Title"),
@@ -59,11 +59,10 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlItemType)(comicrack_page_1.Page),
     tslib_1.__metadata("design:type", Array)
 ], ComicInfo.prototype, "Pages", void 0);
-ComicInfo = tslib_1.__decorate([
+exports.ComicInfo = ComicInfo = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         xsd: "http://www.w3.org/2001/XMLSchema",
         xsi: "http://www.w3.org/2001/XMLSchema-instance",
     })
 ], ComicInfo);
-exports.ComicInfo = ComicInfo;
 //# sourceMappingURL=comicrack.js.map

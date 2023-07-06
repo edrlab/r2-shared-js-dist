@@ -7,7 +7,7 @@ var opf_manifest_1 = require("./opf-manifest");
 var opf_metadata_1 = require("./opf-metadata");
 var opf_reference_1 = require("./opf-reference");
 var opf_spine_1 = require("./opf-spine");
-var OPF = (function () {
+var OPF = exports.OPF = (function () {
     function OPF() {
     }
     tslib_1.__decorate([
@@ -54,5 +54,4 @@ var OPF = (function () {
     ], OPF);
     return OPF;
 }());
-exports.OPF = OPF;
 //# sourceMappingURL=opf.js.map

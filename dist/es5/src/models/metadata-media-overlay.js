@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MediaOverlay = void 0;
 var tslib_1 = require("tslib");
 var ta_json_x_1 = require("ta-json-x");
-var MediaOverlay = (function () {
+var MediaOverlay = exports.MediaOverlay = (function () {
     function MediaOverlay() {
     }
     tslib_1.__decorate([
@@ -19,5 +19,4 @@ var MediaOverlay = (function () {
     ], MediaOverlay);
     return MediaOverlay;
 }());
-exports.MediaOverlay = MediaOverlay;
 //# sourceMappingURL=metadata-media-overlay.js.map

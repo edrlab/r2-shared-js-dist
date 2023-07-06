@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomTest = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
-let CustomTest = class CustomTest {
+let CustomTest = exports.CustomTest = class CustomTest {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
@@ -17,7 +17,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@override"),
     tslib_1.__metadata("design:type", String)
 ], CustomTest.prototype, "Override", void 0);
-CustomTest = tslib_1.__decorate([
+exports.CustomTest = CustomTest = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -25,5 +25,4 @@ CustomTest = tslib_1.__decorate([
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], CustomTest);
-exports.CustomTest = CustomTest;
 //# sourceMappingURL=smil-custom-test.js.map

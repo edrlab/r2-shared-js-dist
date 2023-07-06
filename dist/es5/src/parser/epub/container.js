@@ -4,7 +4,7 @@ exports.Container = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var container_rootfile_1 = require("./container-rootfile");
-var Container = (function () {
+var Container = exports.Container = (function () {
     function Container() {
     }
     tslib_1.__decorate([
@@ -24,5 +24,4 @@ var Container = (function () {
     ], Container);
     return Container;
 }());
-exports.Container = Container;
 //# sourceMappingURL=container.js.map

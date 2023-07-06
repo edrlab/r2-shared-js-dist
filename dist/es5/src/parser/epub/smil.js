@@ -6,7 +6,7 @@ var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var smil_body_1 = require("./smil-body");
 var smil_head_1 = require("./smil-head");
 var smil_par_1 = require("./smil-par");
-var SMIL = (function () {
+var SMIL = exports.SMIL = (function () {
     function SMIL() {
     }
     tslib_1.__decorate([
@@ -30,5 +30,4 @@ var SMIL = (function () {
     ], SMIL);
     return SMIL;
 }());
-exports.SMIL = SMIL;
 //# sourceMappingURL=smil.js.map

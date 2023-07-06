@@ -8,35 +8,35 @@ var LayoutEnum;
 (function (LayoutEnum) {
     LayoutEnum["Fixed"] = "fixed";
     LayoutEnum["Reflowable"] = "reflowable";
-})(LayoutEnum = exports.LayoutEnum || (exports.LayoutEnum = {}));
+})(LayoutEnum || (exports.LayoutEnum = LayoutEnum = {}));
 var OrientationEnum;
 (function (OrientationEnum) {
     OrientationEnum["Auto"] = "auto";
     OrientationEnum["Landscape"] = "landscape";
     OrientationEnum["Portrait"] = "portrait";
-})(OrientationEnum = exports.OrientationEnum || (exports.OrientationEnum = {}));
+})(OrientationEnum || (exports.OrientationEnum = OrientationEnum = {}));
 var OverflowEnum;
 (function (OverflowEnum) {
     OverflowEnum["Auto"] = "auto";
     OverflowEnum["Paginated"] = "paginated";
     OverflowEnum["Scrolled"] = "scrolled";
     OverflowEnum["ScrolledContinuous"] = "scrolled-continuous";
-})(OverflowEnum = exports.OverflowEnum || (exports.OverflowEnum = {}));
+})(OverflowEnum || (exports.OverflowEnum = OverflowEnum = {}));
 var PageEnum;
 (function (PageEnum) {
     PageEnum["Left"] = "left";
     PageEnum["Right"] = "right";
     PageEnum["Center"] = "center";
-})(PageEnum = exports.PageEnum || (exports.PageEnum = {}));
+})(PageEnum || (exports.PageEnum = PageEnum = {}));
 var SpreadEnum;
 (function (SpreadEnum) {
     SpreadEnum["Auto"] = "auto";
     SpreadEnum["Both"] = "both";
     SpreadEnum["None"] = "none";
     SpreadEnum["Landscape"] = "landscape";
-})(SpreadEnum = exports.SpreadEnum || (exports.SpreadEnum = {}));
+})(SpreadEnum || (exports.SpreadEnum = SpreadEnum = {}));
 exports.PropertiesSupportedKeys = ["contains", "layout", "orientation", "overflow", "page", "spread", "encrypted", "media-overlay"];
-var Properties = (function () {
+var Properties = exports.Properties = (function () {
     function Properties() {
     }
     tslib_1.__decorate([
@@ -77,5 +77,4 @@ var Properties = (function () {
     ], Properties);
     return Properties;
 }());
-exports.Properties = Properties;
 //# sourceMappingURL=metadata-properties.js.map

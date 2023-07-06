@@ -21,7 +21,7 @@ const LOI_JSON_PROP = "loi";
 const LOA_JSON_PROP = "loa";
 const LOV_JSON_PROP = "lov";
 const LOT_JSON_PROP = "lot";
-let Publication = class Publication {
+let Publication = exports.Publication = class Publication {
     get Spine() {
         return this.Spine2 ? this.Spine2 : this.Spine1;
     }
@@ -205,8 +205,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", void 0)
 ], Publication.prototype, "_OnDeserialized", null);
-Publication = tslib_1.__decorate([
+exports.Publication = Publication = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], Publication);
-exports.Publication = Publication;
 //# sourceMappingURL=publication.js.map

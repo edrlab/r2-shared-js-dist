@@ -17,7 +17,7 @@ var DirectionEnum;
     DirectionEnum["Auto"] = "auto";
     DirectionEnum["RTL"] = "rtl";
     DirectionEnum["LTR"] = "ltr";
-})(DirectionEnum = exports.DirectionEnum || (exports.DirectionEnum = {}));
+})(DirectionEnum || (exports.DirectionEnum = DirectionEnum = {}));
 exports.MetadataSupportedKeys = [
     "cover",
     "dtb:totalTime",
@@ -70,7 +70,7 @@ exports.MetadataSupportedKeys = [
     "source",
     "subject",
 ];
-let Metadata = class Metadata {
+let Metadata = exports.Metadata = class Metadata {
     get SortAs() {
         return this.SortAs2 ? this.SortAs2 : this.SortAs1;
     }
@@ -343,8 +343,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", void 0)
 ], Metadata.prototype, "_OnDeserialized", null);
-Metadata = tslib_1.__decorate([
+exports.Metadata = Metadata = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], Metadata);
-exports.Metadata = Metadata;
 //# sourceMappingURL=metadata.js.map

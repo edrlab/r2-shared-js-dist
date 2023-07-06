@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
 var smil_seq_or_par_1 = require("./smil-seq-or-par");
-var Seq = (function (_super) {
+var Seq = exports.Seq = (function (_super) {
     tslib_1.__extends(Seq, _super);
     function Seq() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -65,5 +65,4 @@ var Seq = (function (_super) {
     ], Seq);
     return Seq;
 }(smil_seq_or_par_1.SeqOrPar));
-exports.Seq = Seq;
 //# sourceMappingURL=smil-seq.js.map

@@ -4,7 +4,7 @@ exports.Audio = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Audio = class Audio {
+let Audio = exports.Audio = class Audio {
     get ClipBegin() {
         return this.ClipBegin1 ? this.ClipBegin1 : this.ClipBegin2;
     }
@@ -80,7 +80,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@src"),
     tslib_1.__metadata("design:type", String)
 ], Audio.prototype, "Src1", void 0);
-Audio = tslib_1.__decorate([
+exports.Audio = Audio = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -88,5 +88,4 @@ Audio = tslib_1.__decorate([
         xml: "http://www.w3.org/XML/1998/namespace",
     })
 ], Audio);
-exports.Audio = Audio;
 //# sourceMappingURL=smil-audio.js.map

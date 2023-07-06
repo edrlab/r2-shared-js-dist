@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let Page = class Page {
+let Page = exports.Page = class Page {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@Image"),
@@ -29,11 +29,10 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@ImageHeight"),
     tslib_1.__metadata("design:type", Number)
 ], Page.prototype, "ImageHeight", void 0);
-Page = tslib_1.__decorate([
+exports.Page = Page = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         xsd: "http://www.w3.org/2001/XMLSchema",
         xsi: "http://www.w3.org/2001/XMLSchema-instance",
     })
 ], Page);
-exports.Page = Page;
 //# sourceMappingURL=comicrack-page.js.map

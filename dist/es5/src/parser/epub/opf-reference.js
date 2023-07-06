@@ -4,7 +4,7 @@ exports.Reference = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Reference = (function () {
+var Reference = exports.Reference = (function () {
     function Reference() {
     }
     Object.defineProperty(Reference.prototype, "Href", {
@@ -63,5 +63,4 @@ var Reference = (function () {
     ], Reference);
     return Reference;
 }());
-exports.Reference = Reference;
 //# sourceMappingURL=opf-reference.js.map

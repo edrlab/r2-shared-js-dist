@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Subject = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var Subject = (function () {
+var Subject = exports.Subject = (function () {
     function Subject() {
     }
     tslib_1.__decorate([
@@ -31,5 +31,4 @@ var Subject = (function () {
     ], Subject);
     return Subject;
 }());
-exports.Subject = Subject;
 //# sourceMappingURL=opf-subject.js.map

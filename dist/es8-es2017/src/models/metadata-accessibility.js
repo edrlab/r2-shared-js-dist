@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/ta-json-string-converter");
 const metadata_accessibility_certification_1 = require("./metadata-accessibility-certification");
-let AccessibilityMetadata = class AccessibilityMetadata {
+let AccessibilityMetadata = exports.AccessibilityMetadata = class AccessibilityMetadata {
 };
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("certification"),
@@ -44,8 +44,7 @@ tslib_1.__decorate([
     (0, ta_json_x_1.JsonElementType)(String),
     tslib_1.__metadata("design:type", Array)
 ], AccessibilityMetadata.prototype, "Hazard", void 0);
-AccessibilityMetadata = tslib_1.__decorate([
+exports.AccessibilityMetadata = AccessibilityMetadata = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], AccessibilityMetadata);
-exports.AccessibilityMetadata = AccessibilityMetadata;
 //# sourceMappingURL=metadata-accessibility.js.map

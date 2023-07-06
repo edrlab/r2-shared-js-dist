@@ -19,7 +19,7 @@ var DaisyBookis;
     DaisyBookis["LocalPacked"] = "LocalPacked";
     DaisyBookis["RemoteExploded"] = "RemoteExploded";
     DaisyBookis["RemotePacked"] = "RemotePacked";
-})(DaisyBookis = exports.DaisyBookis || (exports.DaisyBookis = {}));
+})(DaisyBookis || (exports.DaisyBookis = DaisyBookis = {}));
 function isDaisyPublication(urlOrPath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var p, http, url, zip, err_1, entries, opfZipEntryPath;

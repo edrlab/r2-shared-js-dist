@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var ncx_content_1 = require("./ncx-content");
 var ncx_navlabel_1 = require("./ncx-navlabel");
-var NavPoint = (function () {
+var NavPoint = exports.NavPoint = (function () {
     function NavPoint() {
     }
     NavPoint_1 = NavPoint;
@@ -39,5 +39,4 @@ var NavPoint = (function () {
     ], NavPoint);
     return NavPoint;
 }());
-exports.NavPoint = NavPoint;
 //# sourceMappingURL=ncx-navpoint.js.map

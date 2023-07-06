@@ -7,7 +7,7 @@ var opf_dc_metadata_1 = require("./opf-dc-metadata");
 var opf_link_1 = require("./opf-link");
 var opf_metafield_1 = require("./opf-metafield");
 var opf_x_metadata_1 = require("./opf-x-metadata");
-var Metadata = (function (_super) {
+var Metadata = exports.Metadata = (function (_super) {
     tslib_1.__extends(Metadata, _super);
     function Metadata() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -39,5 +39,4 @@ var Metadata = (function (_super) {
     ], Metadata);
     return Metadata;
 }(opf_dc_metadata_1.DCMetadata));
-exports.Metadata = Metadata;
 //# sourceMappingURL=opf-metadata.js.map

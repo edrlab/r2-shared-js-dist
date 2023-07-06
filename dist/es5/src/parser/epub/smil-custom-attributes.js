@@ -4,7 +4,7 @@ exports.CustomAttributes = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var smil_custom_test_1 = require("./smil-custom-test");
-var CustomAttributes = (function () {
+var CustomAttributes = exports.CustomAttributes = (function () {
     function CustomAttributes() {
     }
     tslib_1.__decorate([
@@ -21,5 +21,4 @@ var CustomAttributes = (function () {
     ], CustomAttributes);
     return CustomAttributes;
 }());
-exports.CustomAttributes = CustomAttributes;
 //# sourceMappingURL=smil-custom-attributes.js.map

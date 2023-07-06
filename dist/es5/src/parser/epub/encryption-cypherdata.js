@@ -4,7 +4,7 @@ exports.CipherData = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var encryption_cypherreference_1 = require("./encryption-cypherreference");
-var CipherData = (function () {
+var CipherData = exports.CipherData = (function () {
     function CipherData() {
     }
     tslib_1.__decorate([
@@ -21,5 +21,4 @@ var CipherData = (function () {
     ], CipherData);
     return CipherData;
 }());
-exports.CipherData = CipherData;
 //# sourceMappingURL=encryption-cypherdata.js.map

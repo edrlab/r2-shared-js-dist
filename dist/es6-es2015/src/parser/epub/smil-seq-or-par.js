@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeqOrPar = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let SeqOrPar = class SeqOrPar {
+let SeqOrPar = exports.SeqOrPar = class SeqOrPar {
 };
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@epub:type"),
@@ -29,7 +29,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@class"),
     tslib_1.__metadata("design:type", String)
 ], SeqOrPar.prototype, "Class", void 0);
-SeqOrPar = tslib_1.__decorate([
+exports.SeqOrPar = SeqOrPar = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         epub: "http://www.idpf.org/2007/ops",
         smil: "http://www.w3.org/ns/SMIL",
@@ -38,5 +38,4 @@ SeqOrPar = tslib_1.__decorate([
     }),
     (0, xml_js_mapper_1.XmlDiscriminatorProperty)("localName")
 ], SeqOrPar);
-exports.SeqOrPar = SeqOrPar;
 //# sourceMappingURL=smil-seq-or-par.js.map

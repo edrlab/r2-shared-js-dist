@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var opf_x_metadata_1 = require("./opf-x-metadata");
 var smil_custom_attributes_1 = require("./smil-custom-attributes");
-var Head = (function (_super) {
+var Head = exports.Head = (function (_super) {
     tslib_1.__extends(Head, _super);
     function Head() {
         return _super !== null && _super.apply(this, arguments) || this;
@@ -23,5 +23,4 @@ var Head = (function (_super) {
     ], Head);
     return Head;
 }(opf_x_metadata_1.XMetadata));
-exports.Head = Head;
 //# sourceMappingURL=smil-head.js.map

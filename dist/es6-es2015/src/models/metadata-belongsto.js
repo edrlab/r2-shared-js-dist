@@ -7,7 +7,7 @@ const metadata_contributor_1 = require("./metadata-contributor");
 const metadata_contributor_json_converter_1 = require("./metadata-contributor-json-converter");
 const SERIES_JSON_PROP = "series";
 const COLLECTION_JSON_PROP = "collection";
-let BelongsTo = class BelongsTo {
+let BelongsTo = exports.BelongsTo = class BelongsTo {
 };
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(SERIES_JSON_PROP),
@@ -21,8 +21,7 @@ tslib_1.__decorate([
     (0, ta_json_x_1.JsonConverter)(metadata_contributor_json_converter_1.JsonContributorConverter),
     tslib_1.__metadata("design:type", Array)
 ], BelongsTo.prototype, "Collection", void 0);
-BelongsTo = tslib_1.__decorate([
+exports.BelongsTo = BelongsTo = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], BelongsTo);
-exports.BelongsTo = BelongsTo;
 //# sourceMappingURL=metadata-belongsto.js.map

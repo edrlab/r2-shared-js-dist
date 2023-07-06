@@ -187,7 +187,7 @@ var Divinais;
     Divinais["LocalPacked"] = "LocalPacked";
     Divinais["RemoteExploded"] = "RemoteExploded";
     Divinais["RemotePacked"] = "RemotePacked";
-})(Divinais = exports.Divinais || (exports.Divinais = {}));
+})(Divinais || (exports.Divinais = Divinais = {}));
 function doRequest(u) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var _this = this;

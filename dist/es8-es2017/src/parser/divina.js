@@ -144,7 +144,7 @@ var Divinais;
     Divinais["LocalPacked"] = "LocalPacked";
     Divinais["RemoteExploded"] = "RemoteExploded";
     Divinais["RemotePacked"] = "RemotePacked";
-})(Divinais = exports.Divinais || (exports.Divinais = {}));
+})(Divinais || (exports.Divinais = Divinais = {}));
 async function doRequest(u) {
     return new Promise((resolve, _reject) => {
         const url = new URL(u);

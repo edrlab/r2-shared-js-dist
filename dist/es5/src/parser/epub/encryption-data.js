@@ -7,7 +7,7 @@ var encryption_cypherdata_1 = require("./encryption-cypherdata");
 var encryption_keyinfo_1 = require("./encryption-keyinfo");
 var encryption_method_1 = require("./encryption-method");
 var encryption_property_1 = require("./encryption-property");
-var EncryptedData = (function () {
+var EncryptedData = exports.EncryptedData = (function () {
     function EncryptedData() {
     }
     tslib_1.__decorate([
@@ -37,5 +37,4 @@ var EncryptedData = (function () {
     ], EncryptedData);
     return EncryptedData;
 }());
-exports.EncryptedData = EncryptedData;
 //# sourceMappingURL=encryption-data.js.map
