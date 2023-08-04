@@ -1317,7 +1317,10 @@ var addOtherMetadata = function (publication, rootfile, opf) {
             opf.Metadata.XMetadata.Meta.forEach(mFunc);
         }
         if (metasDuration_1.length) {
-            publication.Metadata.Duration = (0, media_overlay_1.timeStrToSeconds)(metasDuration_1[0].Property ? metasDuration_1[0].Data : metasDuration_1[0].Content);
+            var dur = (0, media_overlay_1.timeStrToSeconds)(metasDuration_1[0].Property ? metasDuration_1[0].Data : metasDuration_1[0].Content);
+            if (dur !== 0) {
+                publication.Metadata.Duration = dur;
+            }
         }
         if (metasNarrator_1.length) {
             if (!publication.Metadata.Narrator) {
@@ -1667,7 +1670,7 @@ var flattenDaisy2SmilAudioSeq = function (_smilPathInZip, smilXmlDoc) {
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
 var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, nccZipEntry, smil, _a, _b, m, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
+    var link, err, zipInternal, zip, has, err, zipEntries, _i, zipEntries_5, zipEntry, smilZipStream_, err_9, decryptFail, transformedStream, err_10, err, smilZipStream, smilZipData, err_11, smilStr, iStart, iEnd, clip, smilXmlDoc, nccZipEntry, smil, _a, _b, m, dur, dur, roles, _c, roles_1, role, smilBodyTextRefDecoded, zipPath, getDur_1;
     var _d;
     return tslib_1.__generator(this, function (_e) {
         switch (_e.label) {
@@ -1801,14 +1804,29 @@ var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaite
                 if ((_d = smil.Head) === null || _d === void 0 ? void 0 : _d.Meta) {
                     for (_a = 0, _b = smil.Head.Meta; _a < _b.length; _a++) {
                         m = _b[_a];
-                        if (m.Content && m.Name === "dtb:totalElapsedTime") {
+                        if (!m.Content) {
+                            continue;
+                        }
+                        if (m.Name === "dtb:totalElapsedTime" || m.Name === "ncc:totalElapsedTime") {
                             mo.totalElapsedTime = (0, media_overlay_1.timeStrToSeconds)(m.Content);
+                        }
+                        if (m.Name === "ncc:timeInThisSmil") {
+                            dur = (0, media_overlay_1.timeStrToSeconds)(m.Content);
+                            if (dur !== 0) {
+                                mo.duration = dur;
+                            }
                         }
                     }
                 }
                 if (smil.Body) {
                     if (smil.Body.Duration) {
-                        mo.duration = (0, media_overlay_1.timeStrToSeconds)(smil.Body.Duration);
+                        dur = (0, media_overlay_1.timeStrToSeconds)(smil.Body.Duration);
+                        if (dur !== 0) {
+                            if (mo.duration && mo.duration !== dur) {
+                                debug("SMIL DUR DIFF 1: " + dur + " != " + mo.duration);
+                            }
+                            mo.duration = dur;
+                        }
                     }
                     if (smil.Body.EpubType) {
                         roles = (0, exports.parseSpaceSeparatedString)(smil.Body.EpubType);
@@ -1870,7 +1888,13 @@ var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaite
                         getDur_1 = !smil.Body.Duration && smil.Body.Children.length === 1;
                         smil.Body.Children.forEach(function (seqChild) {
                             if (getDur_1 && seqChild.Duration) {
-                                mo.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+                                var dur = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+                                if (dur !== 0) {
+                                    if (mo.duration && mo.duration !== dur) {
+                                        debug("SMIL DUR DIFF 2: " + dur + " != " + mo.duration);
+                                    }
+                                    mo.duration = dur;
+                                }
                             }
                             if (!mo.Children) {
                                 mo.Children = [];
@@ -1892,7 +1916,10 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
     moc.initialized = rootMO.initialized;
     var doAdd = true;
     if (seqChild.Duration) {
-        moc.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+        var dur = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+        if (dur !== 0) {
+            moc.duration = dur;
+        }
     }
     if (seqChild instanceof smil_seq_1.Seq) {
         moc.Role = [];

@@ -708,14 +708,17 @@ var addToLinkFromProperties = function (publication, link, propertiesString) { r
     });
 }); };
 var addMediaOverlay = function (link, linkEpub, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var meta, manItemSmil;
+    var meta, dur, manItemSmil;
     return tslib_1.__generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!linkEpub.MediaOverlay) return [3, 2];
                 meta = (0, epub_daisy_common_1.findMetaByRefineAndProperty)(opf, linkEpub.MediaOverlay, "media:duration");
                 if (meta) {
-                    link.Duration = (0, media_overlay_1.timeStrToSeconds)(meta.Data);
+                    dur = (0, media_overlay_1.timeStrToSeconds)(meta.Data);
+                    if (dur !== 0) {
+                        link.Duration = dur;
+                    }
                 }
                 manItemSmil = opf.Manifest.find(function (mi) {
                     if (mi.ID === linkEpub.MediaOverlay) {

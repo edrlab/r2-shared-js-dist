@@ -1249,7 +1249,10 @@ const addOtherMetadata = (publication, rootfile, opf) => {
             opf.Metadata.XMetadata.Meta.forEach(mFunc);
         }
         if (metasDuration.length) {
-            publication.Metadata.Duration = (0, media_overlay_1.timeStrToSeconds)(metasDuration[0].Property ? metasDuration[0].Data : metasDuration[0].Content);
+            const dur = (0, media_overlay_1.timeStrToSeconds)(metasDuration[0].Property ? metasDuration[0].Data : metasDuration[0].Content);
+            if (dur !== 0) {
+                publication.Metadata.Duration = dur;
+            }
         }
         if (metasNarrator.length) {
             if (!publication.Metadata.Narrator) {
@@ -1674,14 +1677,29 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
     mo.Role.push("section");
     if ((_a = smil.Head) === null || _a === void 0 ? void 0 : _a.Meta) {
         for (const m of smil.Head.Meta) {
-            if (m.Content && m.Name === "dtb:totalElapsedTime") {
+            if (!m.Content) {
+                continue;
+            }
+            if (m.Name === "dtb:totalElapsedTime" || m.Name === "ncc:totalElapsedTime") {
                 mo.totalElapsedTime = (0, media_overlay_1.timeStrToSeconds)(m.Content);
+            }
+            if (m.Name === "ncc:timeInThisSmil") {
+                const dur = (0, media_overlay_1.timeStrToSeconds)(m.Content);
+                if (dur !== 0) {
+                    mo.duration = dur;
+                }
             }
         }
     }
     if (smil.Body) {
         if (smil.Body.Duration) {
-            mo.duration = (0, media_overlay_1.timeStrToSeconds)(smil.Body.Duration);
+            const dur = (0, media_overlay_1.timeStrToSeconds)(smil.Body.Duration);
+            if (dur !== 0) {
+                if (mo.duration && mo.duration !== dur) {
+                    debug("SMIL DUR DIFF 1: " + dur + " != " + mo.duration);
+                }
+                mo.duration = dur;
+            }
         }
         if (smil.Body.EpubType) {
             const roles = (0, exports.parseSpaceSeparatedString)(smil.Body.EpubType);
@@ -1742,7 +1760,13 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
             const getDur = !smil.Body.Duration && smil.Body.Children.length === 1;
             smil.Body.Children.forEach((seqChild) => {
                 if (getDur && seqChild.Duration) {
-                    mo.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+                    const dur = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+                    if (dur !== 0) {
+                        if (mo.duration && mo.duration !== dur) {
+                            debug("SMIL DUR DIFF 2: " + dur + " != " + mo.duration);
+                        }
+                        mo.duration = dur;
+                    }
                 }
                 if (!mo.Children) {
                     mo.Children = [];
@@ -1762,7 +1786,10 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
     moc.initialized = rootMO.initialized;
     let doAdd = true;
     if (seqChild.Duration) {
-        moc.duration = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+        const dur = (0, media_overlay_1.timeStrToSeconds)(seqChild.Duration);
+        if (dur !== 0) {
+            moc.duration = dur;
+        }
     }
     if (seqChild instanceof smil_seq_1.Seq) {
         moc.Role = [];

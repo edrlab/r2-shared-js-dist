@@ -36,6 +36,15 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
         const isTextOnly = ((_c = publication.Metadata) === null || _c === void 0 ? void 0 : _c.AdditionalJSON) &&
             (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
                 publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "textNcc");
+        if (generateDaisyAudioManifestOnly) {
+            if (isTextOnly) {
+                debug("generateDaisyAudioManifestOnly FATAL! text-only publication?? ", publication.Metadata.AdditionalJSON["dtb:multimediaType"], publication.Metadata.AdditionalJSON["ncc:multimediaType"]);
+                return reject("generateDaisyAudioManifestOnly cannot process text-only publication");
+            }
+            if (!isAudioOnly || isFullTextAudio) {
+                debug("generateDaisyAudioManifestOnly WARNING! not audio-only publication?? ", publication.Metadata.AdditionalJSON["dtb:multimediaType"], publication.Metadata.AdditionalJSON["ncc:multimediaType"]);
+            }
+        }
         const zipInternal = publication.findFromInternal("zip");
         if (!zipInternal) {
             debug("No publication zip!?");
@@ -177,10 +186,16 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
             const loadOrGetCachedSmil = async (smilPathInZip) => {
                 let smilDoc = smilDocs[smilPathInZip];
                 if (!smilDoc) {
-                    const smilStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip);
+                    let smilStr = undefined;
+                    try {
+                        smilStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(smilPathInZip, smilPathInZip, zip);
+                    }
+                    catch (zipErr) {
+                        debug(zipErr);
+                    }
                     if (!smilStr) {
-                        debug("!loadFileStrFromZipPath", smilPathInZip);
-                        return Promise.reject("!loadFileStrFromZipPath " + smilPathInZip);
+                        debug("!loadFileStrFromZipPath 1", smilPathInZip);
+                        return Promise.reject("!loadFileStrFromZipPath 1 " + smilPathInZip);
                     }
                     smilDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
                     if (nccZipEntry) {
@@ -205,7 +220,19 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                 return undefined;
             };
             const createHtmlFromSmilFile = async (smilPathInZip) => {
-                const smilDoc = await loadOrGetCachedSmil(smilPathInZip);
+                if (generateDaisyAudioManifestOnly) {
+                    return undefined;
+                }
+                let smilDoc = undefined;
+                try {
+                    smilDoc = await loadOrGetCachedSmil(smilPathInZip);
+                }
+                catch (zipErr) {
+                    debug(zipErr);
+                }
+                if (!smilDoc) {
+                    return undefined;
+                }
                 const smilDocClone = smilDoc.cloneNode(true);
                 let txtCounter = 0;
                 const parEls = Array.from(smilDocClone.getElementsByTagName("par"));
@@ -267,9 +294,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
 </html>
 `;
                 const htmlFilePath = smilPathInZip.replace(/\.smil$/i, ".xhtml");
-                if (!generateDaisyAudioManifestOnly) {
-                    zipfile.addBuffer(Buffer.from(htmlDoc), htmlFilePath);
-                }
+                zipfile.addBuffer(Buffer.from(htmlDoc), htmlFilePath);
                 return htmlFilePath;
             };
             const audioOnlySmilHtmls = [];
@@ -296,7 +321,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                                 (0, epub_daisy_common_1.updateDurations)(computedDur, linkItem);
                             }
                             else {
-                                if (Math.round(linkItem.MediaOverlays.duration) !== Math.round(computedDur)) {
+                                if (linkItem.MediaOverlays.duration !== computedDur) {
                                     debug("linkItem.MediaOverlays.duration !== computedDur", linkItem.MediaOverlays.duration, computedDur);
                                 }
                             }
@@ -312,7 +337,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                                     (0, epub_daisy_common_1.updateDurations)(dur, previousLinkItem);
                                 }
                                 else {
-                                    if (Math.round(previousLinkItem.MediaOverlays.duration) !== Math.round(dur)) {
+                                    if (previousLinkItem.MediaOverlays.duration !== dur) {
                                         debug("previousLinkItem.MediaOverlays.duration !== dur", previousLinkItem.MediaOverlays.duration, dur);
                                     }
                                 }
@@ -321,7 +346,8 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                         previousLinkItem = linkItem;
                     }
                     let smilTextRef;
-                    if (isAudioOnly) {
+                    const isAudioOnly_ = isAudioOnly || (isFullTextAudio && generateDaisyAudioManifestOnly);
+                    if (isAudioOnly_) {
                         const audioOnlySmilHtmlHref = (_d = linkItem.MediaOverlays.SmilPathInZip) === null || _d === void 0 ? void 0 : _d.replace(/\.smil$/i, ".xhtml");
                         if (audioOnlySmilHtmlHref) {
                             smilTextRef = patchMediaOverlaysTextHref(linkItem.MediaOverlays, audioOnlySmilHtmlHref);
@@ -331,7 +357,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                         smilTextRef = patchMediaOverlaysTextHref(linkItem.MediaOverlays, undefined);
                     }
                     if (smilTextRef) {
-                        if (isAudioOnly && linkItem.MediaOverlays.SmilPathInZip) {
+                        if (isAudioOnly_ && linkItem.MediaOverlays.SmilPathInZip) {
                             await createHtmlFromSmilFile(linkItem.MediaOverlays.SmilPathInZip);
                             const smilHtml = new publication_link_1.Link();
                             smilHtml.Href = smilTextRef;
@@ -357,9 +383,19 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                     continue;
                 }
                 if (resLink.TypeLink === "text/css" || /\.css$/i.test(resLink.HrefDecoded)) {
-                    let cssText = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
+                    if (generateDaisyAudioManifestOnly) {
+                        debug("generateDaisyAudioManifestOnly => skip resource: ", resLink.HrefDecoded);
+                        continue;
+                    }
+                    let cssText = undefined;
+                    try {
+                        cssText = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
+                    }
+                    catch (zipErr) {
+                        debug(zipErr);
+                    }
                     if (!cssText) {
-                        debug("!loadFileStrFromZipPath", resLink.HrefDecoded);
+                        debug("!loadFileStrFromZipPath 2", resLink.HrefDecoded);
                         continue;
                     }
                     cssText = cssText.replace(/\/\*([\s\S]+?)\*\//gm, (_match, p1, _offset, _string) => {
@@ -375,15 +411,23 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                         const comment = Buffer.from(p1, "base64").toString("utf8");
                         return `/*${comment}*/`;
                     });
-                    if (!generateDaisyAudioManifestOnly) {
-                        zipfile.addBuffer(Buffer.from(cssText), resLink.HrefDecoded);
-                    }
+                    zipfile.addBuffer(Buffer.from(cssText), resLink.HrefDecoded);
                     resourcesToKeep.push(resLink);
                 }
                 else if (resLink.TypeLink === "application/x-dtbook+xml" || /\.xml$/i.test(resLink.HrefDecoded)) {
-                    let dtBookStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
+                    if (isAudioOnly || generateDaisyAudioManifestOnly) {
+                        debug("generateDaisyAudioManifestOnly or isAudioOnly => skip resource: ", resLink.HrefDecoded);
+                        continue;
+                    }
+                    let dtBookStr = undefined;
+                    try {
+                        dtBookStr = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
+                    }
+                    catch (zipErr) {
+                        debug(zipErr);
+                    }
                     if (!dtBookStr) {
-                        debug("!loadFileStrFromZipPath", dtBookStr);
+                        debug("!loadFileStrFromZipPath 3", dtBookStr);
                         continue;
                     }
                     dtBookStr = dtBookStr.replace(/xmlns=""/, " ");
@@ -483,9 +527,7 @@ ${cssHrefs.reduce((pv, cv) => {
 </head>
 `);
                     const xhtmlFilePath = resLink.HrefDecoded.replace(/\.([^\.]+)$/i, ".xhtml");
-                    if (!generateDaisyAudioManifestOnly) {
-                        zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
-                    }
+                    zipfile.addBuffer(Buffer.from(dtbookNowXHTML), xhtmlFilePath);
                     const resLinkJson = (0, serializable_1.TaJsonSerialize)(resLink);
                     const resLinkClone = (0, serializable_1.TaJsonDeserialize)(resLinkJson, publication_link_1.Link);
                     resLinkClone.setHrefDecoded(xhtmlFilePath);
@@ -496,14 +538,12 @@ ${cssHrefs.reduce((pv, cv) => {
                     !/\.res$/i.test(resLink.HrefDecoded) &&
                     !/\.ncx$/i.test(resLink.HrefDecoded) &&
                     !/ncc\.html$/i.test(resLink.HrefDecoded)) {
-                    if (!generateDaisyAudioManifestOnly) {
-                        const buff = await (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
-                        if (/\.html$/i.test(resLink.HrefDecoded)) {
-                            resLink.setHrefDecoded(resLink.HrefDecoded.replace(/\.html$/i, ".xhtml"));
-                        }
-                        if (buff) {
-                            zipfile.addBuffer(buff, resLink.HrefDecoded);
-                        }
+                    const buff = generateDaisyAudioManifestOnly ? undefined : await (0, epub_daisy_common_1.loadFileBufferFromZipPath)(resLink.Href, resLink.HrefDecoded, zip);
+                    if (/\.html$/i.test(resLink.HrefDecoded)) {
+                        resLink.setHrefDecoded(resLink.HrefDecoded.replace(/\.html$/i, ".xhtml"));
+                    }
+                    if (buff) {
+                        zipfile.addBuffer(buff, resLink.HrefDecoded);
                     }
                     resourcesToKeep.push(resLink);
                     if (/\.x?html$/i.test(resLink.HrefDecoded) ||
@@ -578,7 +618,7 @@ ${cssHrefs.reduce((pv, cv) => {
                             : false;
                     });
                     if (!dtBookLink) {
-                        debug("!!dtBookLink", JSON.stringify(dtBooks, null, 4));
+                        debug("!!dtBookLink", mediaOverlay.smilTextRef, JSON.stringify(dtBooks, null, 4));
                     }
                     else if (dtBookLink.HrefDecoded && mediaOverlay.smilTextRef &&
                         dtBookLink.HrefDecoded.toLowerCase() !== mediaOverlay.smilTextRef.toLowerCase()) {
@@ -603,9 +643,9 @@ ${cssHrefs.reduce((pv, cv) => {
                             moLink.TypeLink = "application/vnd.syncnarr+json";
                             moLink.Duration = dtBookLink.Duration;
                             dtBookLink.Alternate.push(moLink);
-                            const jsonObjMO = (0, serializable_1.TaJsonSerialize)(mediaOverlay.mo);
-                            const jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
                             if (!generateDaisyAudioManifestOnly) {
+                                const jsonObjMO = (0, serializable_1.TaJsonSerialize)(mediaOverlay.mo);
+                                const jsonStrMO = global.JSON.stringify(jsonObjMO, null, "  ");
                                 zipfile.addBuffer(Buffer.from(jsonStrMO), moURL);
                             }
                             debug("dtBookLink IN SPINE:", mediaOverlay.index, dtBookLink.HrefDecoded, dtBookLink.Duration, moURL);
@@ -656,7 +696,8 @@ ${cssHrefs.reduce((pv, cv) => {
                 if (!href) {
                     return;
                 }
-                if (isAudioOnly) {
+                const isAudioOnly_ = isAudioOnly || (isFullTextAudio && generateDaisyAudioManifestOnly);
+                if (isAudioOnly_) {
                     link.setHrefDecoded(href.replace(/\.smil(#.*)?$/i, ".xhtml$1"));
                     link.TypeLink = "application/xhtml+xml";
                     return;
@@ -670,7 +711,16 @@ ${cssHrefs.reduce((pv, cv) => {
                 if (!href) {
                     return;
                 }
-                const smilDoc = await loadOrGetCachedSmil(href);
+                let smilDoc = undefined;
+                try {
+                    smilDoc = await loadOrGetCachedSmil(href);
+                }
+                catch (zipErr) {
+                    debug(zipErr);
+                }
+                if (!smilDoc) {
+                    return;
+                }
                 let targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
                 if (!targetEl) {
                     targetEl = findFirstDescendantTextOrAudio(smilDoc.documentElement, false);
@@ -714,13 +764,14 @@ ${cssHrefs.reduce((pv, cv) => {
             if (publication.TOC) {
                 await processLinks(publication.TOC);
             }
-            const jsonObj = (0, serializable_1.TaJsonSerialize)(publication);
-            const jsonStr = global.JSON.stringify(jsonObj, null, "  ");
             if (!generateDaisyAudioManifestOnly) {
+                const jsonObj = (0, serializable_1.TaJsonSerialize)(publication);
+                const jsonStr = global.JSON.stringify(jsonObj, null, "  ");
                 zipfile.addBuffer(Buffer.from(jsonStr), "manifest.json");
             }
-            if (isAudioOnly) {
-                debug("DAISY audio only book => manifest-audio.json");
+            const isAudioOnly_ = isAudioOnly || (isFullTextAudio && generateDaisyAudioManifestOnly);
+            if (isAudioOnly_) {
+                debug("DAISY audio only book => manifest-audio.json" + (generateDaisyAudioManifestOnly ? " (generateDaisyAudioManifestOnly ***_manifest.json)" : ""));
                 const transformPublicationToAudioBook = async (pubAudio) => {
                     var _a;
                     const pubJson = (0, serializable_1.TaJsonSerialize)(pubAudio);
@@ -732,7 +783,7 @@ ${cssHrefs.reduce((pv, cv) => {
                     const processLinkAudio = async (link) => {
                         let href = link.HrefDecoded;
                         if (!href) {
-                            return;
+                            return !!link.Children;
                         }
                         let fragment;
                         if (href.indexOf("#") >= 0) {
@@ -741,17 +792,26 @@ ${cssHrefs.reduce((pv, cv) => {
                             fragment = arr[1].trim();
                         }
                         if (!href) {
-                            return;
+                            return !!link.Children;
                         }
                         const smilHref = href.replace(/\.xhtml(#.*)?$/i, ".smil$1");
-                        const smilDoc = await loadOrGetCachedSmil(smilHref);
+                        let smilDoc = undefined;
+                        try {
+                            smilDoc = await loadOrGetCachedSmil(smilHref);
+                        }
+                        catch (zipErr) {
+                            debug(zipErr);
+                        }
+                        if (!smilDoc) {
+                            return !!link.Children;
+                        }
                         let targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
                         if (!targetEl) {
                             targetEl = findFirstDescendantTextOrAudio(smilDoc.documentElement, true);
                         }
                         if (!targetEl) {
                             debug("==?? !targetEl1 ", href, new xmldom.XMLSerializer().serializeToString(smilDoc.documentElement));
-                            return;
+                            return !!link.Children;
                         }
                         const targetElOriginal = targetEl;
                         if (targetEl.nodeName !== "audio") {
@@ -761,12 +821,12 @@ ${cssHrefs.reduce((pv, cv) => {
                         }
                         if (!targetEl || targetEl.nodeName !== "audio") {
                             debug("==?? !targetEl2 ", href, new xmldom.XMLSerializer().serializeToString(targetElOriginal));
-                            return;
+                            return !!link.Children;
                         }
                         const src = targetEl.getAttribute("src");
                         if (!src) {
                             debug("==?? !src");
-                            return;
+                            return !!link.Children;
                         }
                         const clipBegin = targetEl.getAttribute("clipBegin") || targetEl.getAttribute("clip-begin");
                         let timeStamp = "#t=";
@@ -778,23 +838,42 @@ ${cssHrefs.reduce((pv, cv) => {
                         if (mediaType) {
                             link.TypeLink = mediaType;
                         }
+                        return true;
                     };
-                    const processLinksAudio = async (links) => {
-                        for (const link of links) {
-                            await processLinkAudio(link);
-                            if (link.Children) {
+                    const processLinksAudio = async (children) => {
+                        for (let i = 0; i < children.length; i++) {
+                            const link = children[i];
+                            const keep = await processLinkAudio(link);
+                            if (!keep) {
+                                children.splice(i, 1);
+                                i--;
+                                debug("LINK DELETE TOC: ", link.Href, typeof link.Children);
+                            }
+                            else if (link.Children) {
                                 await processLinksAudio(link.Children);
                             }
                         }
                     };
                     if (audioPublication.PageList) {
-                        for (const link of audioPublication.PageList) {
-                            await processLinkAudio(link);
+                        for (let i = 0; i < audioPublication.PageList.length; i++) {
+                            const link = audioPublication.PageList[i];
+                            const keep = await processLinkAudio(link);
+                            if (!keep) {
+                                audioPublication.PageList.splice(i, 1);
+                                i--;
+                                debug("LINK DELETE page list: ", link.Href, typeof link.Children);
+                            }
                         }
                     }
                     if (audioPublication.Landmarks) {
-                        for (const link of audioPublication.Landmarks) {
-                            await processLinkAudio(link);
+                        for (let i = 0; i < audioPublication.Landmarks.length; i++) {
+                            const link = audioPublication.Landmarks[i];
+                            const keep = await processLinkAudio(link);
+                            if (!keep) {
+                                audioPublication.Landmarks.splice(i, 1);
+                                i--;
+                                debug("LINK DELETE landmarks: ", link.Href, typeof link.Children);
+                            }
                         }
                     }
                     if (audioPublication.TOC) {
@@ -807,7 +886,16 @@ ${cssHrefs.reduce((pv, cv) => {
                                 debug("???- !spineLink.MediaOverlays?.SmilPathInZip");
                                 continue;
                             }
-                            const smilDoc = await loadOrGetCachedSmil(spineLink.MediaOverlays.SmilPathInZip);
+                            let smilDoc = undefined;
+                            try {
+                                smilDoc = await loadOrGetCachedSmil(spineLink.MediaOverlays.SmilPathInZip);
+                            }
+                            catch (zipErr) {
+                                debug(zipErr);
+                            }
+                            if (!smilDoc) {
+                                continue;
+                            }
                             const firstAudioElement = findFirstDescendantTextOrAudio(smilDoc.documentElement, true);
                             if (!firstAudioElement) {
                                 debug("???- !firstAudioElement ", spineLink.MediaOverlays.SmilPathInZip);
@@ -821,11 +909,23 @@ ${cssHrefs.reduce((pv, cv) => {
                             link.Href = path.join(spineLink.MediaOverlays.SmilPathInZip, "..", src).replace(/\\/g, "/");
                             link.TypeLink = "audio/?";
                             if (audioPublication.Resources) {
-                                const resAudio = audioPublication.Resources.find((l) => {
-                                    return l.Href === src;
+                                const resAudioIndex = audioPublication.Resources.findIndex((l) => {
+                                    return l.Href === path.join(spineLink.MediaOverlays.SmilPathInZip, "..", src).replace(/\\/g, "/");
                                 });
-                                if (resAudio === null || resAudio === void 0 ? void 0 : resAudio.TypeLink) {
-                                    link.TypeLink = resAudio.TypeLink;
+                                if (resAudioIndex >= 0) {
+                                    const resAudio = audioPublication.Resources[resAudioIndex];
+                                    if (resAudio.TypeLink) {
+                                        link.TypeLink = resAudio.TypeLink;
+                                    }
+                                    audioPublication.Resources.splice(resAudioIndex, 1);
+                                }
+                                else {
+                                    const resAudio = audioPublication.Spine.find((l) => {
+                                        return l.Href === link.Href;
+                                    });
+                                    if (resAudio === null || resAudio === void 0 ? void 0 : resAudio.TypeLink) {
+                                        link.TypeLink = resAudio.TypeLink;
+                                    }
                                 }
                             }
                             if (spineLink.MediaOverlays.duration) {
@@ -847,6 +947,7 @@ ${cssHrefs.reduce((pv, cv) => {
                         const outputManifestPath = path.join(outputDirPath, generateDaisyAudioManifestOnly + "_manifest.json");
                         ensureDirs(outputManifestPath);
                         fs.writeFileSync(outputManifestPath, jsonStrAudio, "utf8");
+                        debug("generateDaisyAudioManifestOnly OK: " + outputManifestPath);
                         resolve(outputManifestPath);
                     }
                 }

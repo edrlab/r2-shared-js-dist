@@ -478,7 +478,10 @@ const addMediaOverlay = async (link, linkEpub, opf, zip) => {
     if (linkEpub.MediaOverlay) {
         const meta = (0, epub_daisy_common_1.findMetaByRefineAndProperty)(opf, linkEpub.MediaOverlay, "media:duration");
         if (meta) {
-            link.Duration = (0, media_overlay_1.timeStrToSeconds)(meta.Data);
+            const dur = (0, media_overlay_1.timeStrToSeconds)(meta.Data);
+            if (dur !== 0) {
+                link.Duration = dur;
+            }
         }
         const manItemSmil = opf.Manifest.find((mi) => {
             if (mi.ID === linkEpub.MediaOverlay) {
