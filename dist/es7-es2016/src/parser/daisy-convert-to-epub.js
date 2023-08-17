@@ -155,7 +155,7 @@ const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAu
             };
             const patchMediaOverlaysTextHref = (mo, audioOnlySmilHtmlHref) => {
                 let smilTextRef;
-                if (audioOnlySmilHtmlHref && mo.Audio) {
+                if (audioOnlySmilHtmlHref) {
                     smilTextRef = audioOnlySmilHtmlHref;
                     mo.Text = `${smilTextRef}#${mo.ParID || mo.TextID || "_yyy_"}`;
                 }
@@ -784,7 +784,7 @@ ${cssHrefs.reduce((pv, cv) => {
                     const processLinkAudio = (link) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
                         let href = link.HrefDecoded;
                         if (!href) {
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         let fragment;
                         if (href.indexOf("#") >= 0) {
@@ -793,7 +793,7 @@ ${cssHrefs.reduce((pv, cv) => {
                             fragment = arr[1].trim();
                         }
                         if (!href) {
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         const smilHref = href.replace(/\.xhtml(#.*)?$/i, ".smil$1");
                         let smilDoc = undefined;
@@ -804,7 +804,7 @@ ${cssHrefs.reduce((pv, cv) => {
                             debug(zipErr);
                         }
                         if (!smilDoc) {
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         let targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
                         if (!targetEl) {
@@ -812,7 +812,7 @@ ${cssHrefs.reduce((pv, cv) => {
                         }
                         if (!targetEl) {
                             debug("==?? !targetEl1 ", href, new xmldom.XMLSerializer().serializeToString(smilDoc.documentElement));
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         const targetElOriginal = targetEl;
                         if (targetEl.nodeName !== "audio") {
@@ -822,12 +822,12 @@ ${cssHrefs.reduce((pv, cv) => {
                         }
                         if (!targetEl || targetEl.nodeName !== "audio") {
                             debug("==?? !targetEl2 ", href, new xmldom.XMLSerializer().serializeToString(targetElOriginal));
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         const src = targetEl.getAttribute("src");
                         if (!src) {
                             debug("==?? !src");
-                            return !!link.Children;
+                            return link.Children ? null : false;
                         }
                         const clipBegin = targetEl.getAttribute("clipBegin") || targetEl.getAttribute("clip-begin");
                         let timeStamp = "#t=";
@@ -846,12 +846,27 @@ ${cssHrefs.reduce((pv, cv) => {
                             const link = children[i];
                             const keep = yield processLinkAudio(link);
                             if (!keep) {
-                                children.splice(i, 1);
-                                i--;
-                                debug("LINK DELETE TOC: ", link.Href, typeof link.Children);
+                                if (keep === null) {
+                                    debug("LINK VOID TOC: ", link.Href, typeof link.Children);
+                                    link.HrefDecoded = undefined;
+                                    delete link.Href1;
+                                    delete link.TypeLink;
+                                }
+                                else {
+                                    children.splice(i, 1);
+                                    i--;
+                                    debug("LINK DELETE TOC: ", link.Href, typeof link.Children);
+                                }
                             }
-                            else if (link.Children) {
+                            if ((keep || keep === null) && link.Children) {
                                 yield processLinksAudio(link.Children);
+                                if (link.Children.length === 0) {
+                                    delete link.Children;
+                                    if (!link.Href) {
+                                        children.splice(i, 1);
+                                        i--;
+                                    }
+                                }
                             }
                         }
                     });
@@ -860,9 +875,17 @@ ${cssHrefs.reduce((pv, cv) => {
                             const link = audioPublication.PageList[i];
                             const keep = yield processLinkAudio(link);
                             if (!keep) {
-                                audioPublication.PageList.splice(i, 1);
-                                i--;
-                                debug("LINK DELETE page list: ", link.Href, typeof link.Children);
+                                if (keep === null) {
+                                    debug("LINK VOID page list: ", link.Href, typeof link.Children);
+                                    link.HrefDecoded = undefined;
+                                    delete link.Href1;
+                                    delete link.TypeLink;
+                                }
+                                else {
+                                    audioPublication.PageList.splice(i, 1);
+                                    i--;
+                                    debug("LINK DELETE page list: ", link.Href, typeof link.Children);
+                                }
                             }
                         }
                     }
@@ -871,9 +894,17 @@ ${cssHrefs.reduce((pv, cv) => {
                             const link = audioPublication.Landmarks[i];
                             const keep = yield processLinkAudio(link);
                             if (!keep) {
-                                audioPublication.Landmarks.splice(i, 1);
-                                i--;
-                                debug("LINK DELETE landmarks: ", link.Href, typeof link.Children);
+                                if (keep === null) {
+                                    debug("LINK VOID landmarks: ", link.Href, typeof link.Children);
+                                    link.HrefDecoded = undefined;
+                                    delete link.Href1;
+                                    delete link.TypeLink;
+                                }
+                                else {
+                                    audioPublication.Landmarks.splice(i, 1);
+                                    i--;
+                                    debug("LINK DELETE landmarks: ", link.Href, typeof link.Children);
+                                }
                             }
                         }
                     }

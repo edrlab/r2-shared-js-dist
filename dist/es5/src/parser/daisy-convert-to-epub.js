@@ -163,7 +163,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                             };
                             patchMediaOverlaysTextHref_1 = function (mo, audioOnlySmilHtmlHref) {
                                 var smilTextRef;
-                                if (audioOnlySmilHtmlHref && mo.Audio) {
+                                if (audioOnlySmilHtmlHref) {
                                     smilTextRef = audioOnlySmilHtmlHref;
                                     mo.Text = "".concat(smilTextRef, "#").concat(mo.ParID || mo.TextID || "_yyy_");
                                 }
@@ -913,7 +913,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                         case 0:
                                                             href = link.HrefDecoded;
                                                             if (!href) {
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             if (href.indexOf("#") >= 0) {
                                                                 arr = href.split("#");
@@ -921,7 +921,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                                 fragment = arr[1].trim();
                                                             }
                                                             if (!href) {
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             smilHref = href.replace(/\.xhtml(#.*)?$/i, ".smil$1");
                                                             smilDoc = undefined;
@@ -938,7 +938,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                             return [3, 4];
                                                         case 4:
                                                             if (!smilDoc) {
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             targetEl = fragment ? smilDoc.getElementById(fragment) : undefined;
                                                             if (!targetEl) {
@@ -946,7 +946,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                             }
                                                             if (!targetEl) {
                                                                 debug("==?? !targetEl1 ", href, new xmldom.XMLSerializer().serializeToString(smilDoc.documentElement));
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             targetElOriginal = targetEl;
                                                             if (targetEl.nodeName !== "audio") {
@@ -956,12 +956,12 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                             }
                                                             if (!targetEl || targetEl.nodeName !== "audio") {
                                                                 debug("==?? !targetEl2 ", href, new xmldom.XMLSerializer().serializeToString(targetElOriginal));
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             src = targetEl.getAttribute("src");
                                                             if (!src) {
                                                                 debug("==?? !src");
-                                                                return [2, !!link.Children];
+                                                                return [2, link.Children ? null : false];
                                                             }
                                                             clipBegin = targetEl.getAttribute("clipBegin") || targetEl.getAttribute("clip-begin");
                                                             timeStamp = "#t=";
@@ -985,26 +985,40 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                                             i = 0;
                                                             _a.label = 1;
                                                         case 1:
-                                                            if (!(i < children.length)) return [3, 6];
+                                                            if (!(i < children.length)) return [3, 5];
                                                             link = children[i];
                                                             return [4, processLinkAudio(link)];
                                                         case 2:
                                                             keep = _a.sent();
-                                                            if (!!keep) return [3, 3];
-                                                            children.splice(i, 1);
-                                                            i--;
-                                                            debug("LINK DELETE TOC: ", link.Href, typeof link.Children);
-                                                            return [3, 5];
-                                                        case 3:
-                                                            if (!link.Children) return [3, 5];
+                                                            if (!keep) {
+                                                                if (keep === null) {
+                                                                    debug("LINK VOID TOC: ", link.Href, typeof link.Children);
+                                                                    link.HrefDecoded = undefined;
+                                                                    delete link.Href1;
+                                                                    delete link.TypeLink;
+                                                                }
+                                                                else {
+                                                                    children.splice(i, 1);
+                                                                    i--;
+                                                                    debug("LINK DELETE TOC: ", link.Href, typeof link.Children);
+                                                                }
+                                                            }
+                                                            if (!((keep || keep === null) && link.Children)) return [3, 4];
                                                             return [4, processLinksAudio(link.Children)];
-                                                        case 4:
+                                                        case 3:
                                                             _a.sent();
-                                                            _a.label = 5;
-                                                        case 5:
+                                                            if (link.Children.length === 0) {
+                                                                delete link.Children;
+                                                                if (!link.Href) {
+                                                                    children.splice(i, 1);
+                                                                    i--;
+                                                                }
+                                                            }
+                                                            _a.label = 4;
+                                                        case 4:
                                                             i++;
                                                             return [3, 1];
-                                                        case 6: return [2];
+                                                        case 5: return [2];
                                                     }
                                                 });
                                             }); };
@@ -1018,9 +1032,17 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                         case 2:
                                             keep = _c.sent();
                                             if (!keep) {
-                                                audioPublication.PageList.splice(i, 1);
-                                                i--;
-                                                debug("LINK DELETE page list: ", link.Href, typeof link.Children);
+                                                if (keep === null) {
+                                                    debug("LINK VOID page list: ", link.Href, typeof link.Children);
+                                                    link.HrefDecoded = undefined;
+                                                    delete link.Href1;
+                                                    delete link.TypeLink;
+                                                }
+                                                else {
+                                                    audioPublication.PageList.splice(i, 1);
+                                                    i--;
+                                                    debug("LINK DELETE page list: ", link.Href, typeof link.Children);
+                                                }
                                             }
                                             _c.label = 3;
                                         case 3:
@@ -1037,9 +1059,17 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                                         case 6:
                                             keep = _c.sent();
                                             if (!keep) {
-                                                audioPublication.Landmarks.splice(i, 1);
-                                                i--;
-                                                debug("LINK DELETE landmarks: ", link.Href, typeof link.Children);
+                                                if (keep === null) {
+                                                    debug("LINK VOID landmarks: ", link.Href, typeof link.Children);
+                                                    link.HrefDecoded = undefined;
+                                                    delete link.Href1;
+                                                    delete link.TypeLink;
+                                                }
+                                                else {
+                                                    audioPublication.Landmarks.splice(i, 1);
+                                                    i--;
+                                                    debug("LINK DELETE landmarks: ", link.Href, typeof link.Children);
+                                                }
                                             }
                                             _c.label = 7;
                                         case 7:
