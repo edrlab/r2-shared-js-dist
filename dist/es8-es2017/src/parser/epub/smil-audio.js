@@ -4,7 +4,7 @@ exports.Audio = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Audio = exports.Audio = class Audio {
+let Audio = class Audio {
     get ClipBegin() {
         return this.ClipBegin1 ? this.ClipBegin1 : this.ClipBegin2;
     }
@@ -52,6 +52,7 @@ let Audio = exports.Audio = class Audio {
         this.SrcDecoded = href;
     }
 };
+exports.Audio = Audio;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
     tslib_1.__metadata("design:type", String)

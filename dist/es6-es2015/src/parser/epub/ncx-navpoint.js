@@ -1,16 +1,16 @@
 "use strict";
-var NavPoint_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NavPoint = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const ncx_content_1 = require("./ncx-content");
 const ncx_navlabel_1 = require("./ncx-navlabel");
-let NavPoint = exports.NavPoint = NavPoint_1 = class NavPoint {
+let NavPoint = class NavPoint {
 };
+exports.NavPoint = NavPoint;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navPoint"),
-    (0, xml_js_mapper_1.XmlItemType)(NavPoint_1),
+    (0, xml_js_mapper_1.XmlItemType)(NavPoint),
     tslib_1.__metadata("design:type", Array)
 ], NavPoint.prototype, "Points", void 0);
 tslib_1.__decorate([
@@ -29,7 +29,7 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
     tslib_1.__metadata("design:type", String)
 ], NavPoint.prototype, "ID", void 0);
-exports.NavPoint = NavPoint = NavPoint_1 = tslib_1.__decorate([
+exports.NavPoint = NavPoint = tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlObject)({
         ncx: "http://www.daisy.org/z3986/2005/ncx/",
         xml: "http://www.w3.org/XML/1998/namespace",

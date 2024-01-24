@@ -36,7 +36,7 @@ var SpreadEnum;
     SpreadEnum["Landscape"] = "landscape";
 })(SpreadEnum || (exports.SpreadEnum = SpreadEnum = {}));
 exports.PropertiesSupportedKeys = ["contains", "layout", "orientation", "overflow", "page", "spread", "encrypted", "media-overlay"];
-var Properties = exports.Properties = (function () {
+var Properties = (function () {
     function Properties() {
     }
     tslib_1.__decorate([
@@ -77,4 +77,5 @@ var Properties = exports.Properties = (function () {
     ], Properties);
     return Properties;
 }());
+exports.Properties = Properties;
 //# sourceMappingURL=metadata-properties.js.map

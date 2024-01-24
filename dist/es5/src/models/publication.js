@@ -21,7 +21,7 @@ var LOI_JSON_PROP = "loi";
 var LOA_JSON_PROP = "loa";
 var LOV_JSON_PROP = "lov";
 var LOT_JSON_PROP = "lot";
-var Publication = exports.Publication = (function () {
+var Publication = (function () {
     function Publication() {
     }
     Object.defineProperty(Publication.prototype, "Spine", {
@@ -219,4 +219,5 @@ var Publication = exports.Publication = (function () {
     ], Publication);
     return Publication;
 }());
+exports.Publication = Publication;
 //# sourceMappingURL=publication.js.map

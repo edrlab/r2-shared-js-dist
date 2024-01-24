@@ -70,7 +70,7 @@ exports.MetadataSupportedKeys = [
     "source",
     "subject",
 ];
-let Metadata = exports.Metadata = class Metadata {
+let Metadata = class Metadata {
     get SortAs() {
         return this.SortAs2 ? this.SortAs2 : this.SortAs1;
     }
@@ -104,6 +104,7 @@ let Metadata = exports.Metadata = class Metadata {
         }
     }
 };
+exports.Metadata = Metadata;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("accessibility"),
     tslib_1.__metadata("design:type", metadata_accessibility_1.AccessibilityMetadata)

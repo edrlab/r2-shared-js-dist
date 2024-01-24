@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const publication_link_1 = require("./publication-link");
 const LINKS_JSON_PROP = "links";
-let Subject = exports.Subject = class Subject {
+let Subject = class Subject {
     get SortAs() {
         return this.SortAs2 ? this.SortAs2 : this.SortAs1;
     }
@@ -21,6 +21,7 @@ let Subject = exports.Subject = class Subject {
         }
     }
 };
+exports.Subject = Subject;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("name"),
     tslib_1.__metadata("design:type", Object)

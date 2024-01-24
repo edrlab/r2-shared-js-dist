@@ -4,8 +4,9 @@ exports.CustomAttributes = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const smil_custom_test_1 = require("./smil-custom-test");
-let CustomAttributes = exports.CustomAttributes = class CustomAttributes {
+let CustomAttributes = class CustomAttributes {
 };
+exports.CustomAttributes = CustomAttributes;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("customTest"),
     (0, xml_js_mapper_1.XmlItemType)(smil_custom_test_1.CustomTest),

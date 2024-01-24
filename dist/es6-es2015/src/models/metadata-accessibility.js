@@ -5,8 +5,9 @@ const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/ta-json-string-converter");
 const metadata_accessibility_certification_1 = require("./metadata-accessibility-certification");
-let AccessibilityMetadata = exports.AccessibilityMetadata = class AccessibilityMetadata {
+let AccessibilityMetadata = class AccessibilityMetadata {
 };
+exports.AccessibilityMetadata = AccessibilityMetadata;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("certification"),
     tslib_1.__metadata("design:type", metadata_accessibility_certification_1.AccessibilityCertification)

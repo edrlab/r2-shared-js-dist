@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpineItem = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let SpineItem = exports.SpineItem = class SpineItem {
+let SpineItem = class SpineItem {
 };
+exports.SpineItem = SpineItem;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@idref"),
     tslib_1.__metadata("design:type", String)

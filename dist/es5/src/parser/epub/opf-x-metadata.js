@@ -4,7 +4,7 @@ exports.XMetadata = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var opf_metafield_1 = require("./opf-metafield");
-var XMetadata = exports.XMetadata = (function () {
+var XMetadata = (function () {
     function XMetadata() {
     }
     tslib_1.__decorate([
@@ -21,4 +21,5 @@ var XMetadata = exports.XMetadata = (function () {
     ], XMetadata);
     return XMetadata;
 }());
+exports.XMetadata = XMetadata;
 //# sourceMappingURL=opf-x-metadata.js.map

@@ -5,8 +5,9 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const ncx_content_1 = require("./ncx-content");
 const ncx_navlabel_1 = require("./ncx-navlabel");
-let PageTarget = exports.PageTarget = class PageTarget {
+let PageTarget = class PageTarget {
 };
+exports.PageTarget = PageTarget;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navLabel"),
     tslib_1.__metadata("design:type", ncx_navlabel_1.NavLabel)

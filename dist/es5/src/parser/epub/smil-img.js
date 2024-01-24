@@ -4,7 +4,7 @@ exports.Img = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Img = exports.Img = (function () {
+var Img = (function () {
     function Img() {
     }
     Object.defineProperty(Img.prototype, "Src", {
@@ -61,4 +61,5 @@ var Img = exports.Img = (function () {
     ], Img);
     return Img;
 }());
+exports.Img = Img;
 //# sourceMappingURL=smil-img.js.map

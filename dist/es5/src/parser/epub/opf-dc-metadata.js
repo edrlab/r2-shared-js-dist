@@ -8,7 +8,7 @@ var opf_date_1 = require("./opf-date");
 var opf_identifier_1 = require("./opf-identifier");
 var opf_subject_1 = require("./opf-subject");
 var opf_title_1 = require("./opf-title");
-var DCMetadata = exports.DCMetadata = (function () {
+var DCMetadata = (function () {
     function DCMetadata() {
     }
     tslib_1.__decorate([
@@ -96,4 +96,5 @@ var DCMetadata = exports.DCMetadata = (function () {
     ], DCMetadata);
     return DCMetadata;
 }());
+exports.DCMetadata = DCMetadata;
 //# sourceMappingURL=opf-dc-metadata.js.map

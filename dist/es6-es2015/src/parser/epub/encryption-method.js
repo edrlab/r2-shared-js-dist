@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EncryptionMethod = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let EncryptionMethod = exports.EncryptionMethod = class EncryptionMethod {
+let EncryptionMethod = class EncryptionMethod {
 };
+exports.EncryptionMethod = EncryptionMethod;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@Algorithm"),
     tslib_1.__metadata("design:type", String)

@@ -6,8 +6,9 @@ const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-m
 const smil_body_1 = require("./smil-body");
 const smil_head_1 = require("./smil-head");
 const smil_par_1 = require("./smil-par");
-let SMIL = exports.SMIL = class SMIL {
+let SMIL = class SMIL {
 };
+exports.SMIL = SMIL;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("head"),
     tslib_1.__metadata("design:type", smil_head_1.Head)

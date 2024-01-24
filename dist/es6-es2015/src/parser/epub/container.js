@@ -4,8 +4,9 @@ exports.Container = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const container_rootfile_1 = require("./container-rootfile");
-let Container = exports.Container = class Container {
+let Container = class Container {
 };
+exports.Container = Container;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("epub:rootfiles/epub:rootfile", {
         epub: "urn:oasis:names:tc:opendocument:xmlns:container",

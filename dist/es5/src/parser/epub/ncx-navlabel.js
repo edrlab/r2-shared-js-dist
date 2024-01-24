@@ -4,7 +4,7 @@ exports.NavLabel = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var ncx_audio_1 = require("./ncx-audio");
-var NavLabel = exports.NavLabel = (function () {
+var NavLabel = (function () {
     function NavLabel() {
     }
     tslib_1.__decorate([
@@ -22,4 +22,5 @@ var NavLabel = exports.NavLabel = (function () {
     ], NavLabel);
     return NavLabel;
 }());
+exports.NavLabel = NavLabel;
 //# sourceMappingURL=ncx-navlabel.js.map

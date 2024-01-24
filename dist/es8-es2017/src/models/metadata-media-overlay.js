@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MediaOverlay = void 0;
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
-let MediaOverlay = exports.MediaOverlay = class MediaOverlay {
+let MediaOverlay = class MediaOverlay {
 };
+exports.MediaOverlay = MediaOverlay;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("active-class"),
     tslib_1.__metadata("design:type", String)

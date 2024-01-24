@@ -5,8 +5,9 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const ncx_navpoint_1 = require("./ncx-navpoint");
 const ncx_pagelist_1 = require("./ncx-pagelist");
-let NCX = exports.NCX = class NCX {
+let NCX = class NCX {
 };
+exports.NCX = NCX;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:navMap/ncx:navPoint"),
     (0, xml_js_mapper_1.XmlItemType)(ncx_navpoint_1.NavPoint),

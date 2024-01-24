@@ -4,7 +4,7 @@ exports.Reference = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Reference = exports.Reference = class Reference {
+let Reference = class Reference {
     get Href() {
         return this.Href1;
     }
@@ -34,6 +34,7 @@ let Reference = exports.Reference = class Reference {
         this.HrefDecoded = href;
     }
 };
+exports.Reference = Reference;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@title"),
     tslib_1.__metadata("design:type", String)

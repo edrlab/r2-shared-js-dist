@@ -4,7 +4,7 @@ exports.Manifest = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Manifest = exports.Manifest = class Manifest {
+let Manifest = class Manifest {
     get Href() {
         return this.Href1;
     }
@@ -34,6 +34,7 @@ let Manifest = exports.Manifest = class Manifest {
         this.HrefDecoded = href;
     }
 };
+exports.Manifest = Manifest;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
     tslib_1.__metadata("design:type", String)

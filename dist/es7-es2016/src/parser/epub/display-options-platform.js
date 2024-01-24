@@ -4,8 +4,9 @@ exports.DisplayOptionsPlatform = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const display_options_platform_prop_1 = require("./display-options-platform-prop");
-let DisplayOptionsPlatform = exports.DisplayOptionsPlatform = class DisplayOptionsPlatform {
+let DisplayOptionsPlatform = class DisplayOptionsPlatform {
 };
+exports.DisplayOptionsPlatform = DisplayOptionsPlatform;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@name"),
     tslib_1.__metadata("design:type", String)

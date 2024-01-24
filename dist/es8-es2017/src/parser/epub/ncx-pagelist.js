@@ -4,8 +4,9 @@ exports.PageList = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const ncx_pagetarget_1 = require("./ncx-pagetarget");
-let PageList = exports.PageList = class PageList {
+let PageList = class PageList {
 };
+exports.PageList = PageList;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ncx:pageTarget"),
     (0, xml_js_mapper_1.XmlItemType)(ncx_pagetarget_1.PageTarget),

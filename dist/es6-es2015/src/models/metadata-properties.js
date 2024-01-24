@@ -36,8 +36,9 @@ var SpreadEnum;
     SpreadEnum["Landscape"] = "landscape";
 })(SpreadEnum || (exports.SpreadEnum = SpreadEnum = {}));
 exports.PropertiesSupportedKeys = ["contains", "layout", "orientation", "overflow", "page", "spread", "encrypted", "media-overlay"];
-let Properties = exports.Properties = class Properties {
+let Properties = class Properties {
 };
+exports.Properties = Properties;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("contains"),
     (0, ta_json_x_1.JsonElementType)(String),

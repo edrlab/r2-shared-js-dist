@@ -5,7 +5,7 @@ var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var ncx_navpoint_1 = require("./ncx-navpoint");
 var ncx_pagelist_1 = require("./ncx-pagelist");
-var NCX = exports.NCX = (function () {
+var NCX = (function () {
     function NCX() {
     }
     tslib_1.__decorate([
@@ -24,4 +24,5 @@ var NCX = exports.NCX = (function () {
     ], NCX);
     return NCX;
 }());
+exports.NCX = NCX;
 //# sourceMappingURL=ncx.js.map

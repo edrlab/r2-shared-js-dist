@@ -4,8 +4,9 @@ exports.AccessibilityCertification = void 0;
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/ta-json-string-converter");
-let AccessibilityCertification = exports.AccessibilityCertification = class AccessibilityCertification {
+let AccessibilityCertification = class AccessibilityCertification {
 };
+exports.AccessibilityCertification = AccessibilityCertification;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("certifiedBy"),
     (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),

@@ -6,7 +6,7 @@ var ta_json_x_1 = require("ta-json-x");
 var ta_json_string_converter_1 = require("r2-utils-js/dist/es5/src/_utils/ta-json-string-converter");
 var publication_link_1 = require("./publication-link");
 var LINKS_JSON_PROP = "links";
-var Contributor = exports.Contributor = (function () {
+var Contributor = (function () {
     function Contributor() {
     }
     Object.defineProperty(Contributor.prototype, "SortAs", {
@@ -69,4 +69,5 @@ var Contributor = exports.Contributor = (function () {
     ], Contributor);
     return Contributor;
 }());
+exports.Contributor = Contributor;
 //# sourceMappingURL=metadata-contributor.js.map

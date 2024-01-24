@@ -4,7 +4,7 @@ exports.Rootfile = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Rootfile = exports.Rootfile = (function () {
+var Rootfile = (function () {
     function Rootfile() {
     }
     Object.defineProperty(Rootfile.prototype, "Path", {
@@ -60,4 +60,5 @@ var Rootfile = exports.Rootfile = (function () {
     ], Rootfile);
     return Rootfile;
 }());
+exports.Rootfile = Rootfile;
 //# sourceMappingURL=container-rootfile.js.map

@@ -7,8 +7,9 @@ const metadata_contributor_1 = require("./metadata-contributor");
 const metadata_contributor_json_converter_1 = require("./metadata-contributor-json-converter");
 const SERIES_JSON_PROP = "series";
 const COLLECTION_JSON_PROP = "collection";
-let BelongsTo = exports.BelongsTo = class BelongsTo {
+let BelongsTo = class BelongsTo {
 };
+exports.BelongsTo = BelongsTo;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(SERIES_JSON_PROP),
     (0, ta_json_x_1.JsonElementType)(metadata_contributor_1.Contributor),

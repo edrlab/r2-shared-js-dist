@@ -4,7 +4,7 @@ exports.Audio = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Audio = exports.Audio = (function () {
+var Audio = (function () {
     function Audio() {
     }
     Object.defineProperty(Audio.prototype, "Src", {
@@ -62,4 +62,5 @@ var Audio = exports.Audio = (function () {
     ], Audio);
     return Audio;
 }());
+exports.Audio = Audio;
 //# sourceMappingURL=ncx-audio.js.map

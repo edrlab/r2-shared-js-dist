@@ -21,7 +21,7 @@ const LOI_JSON_PROP = "loi";
 const LOA_JSON_PROP = "loa";
 const LOV_JSON_PROP = "lov";
 const LOT_JSON_PROP = "lot";
-let Publication = exports.Publication = class Publication {
+let Publication = class Publication {
     get Spine() {
         return this.Spine2 ? this.Spine2 : this.Spine1;
     }
@@ -129,6 +129,7 @@ let Publication = exports.Publication = class Publication {
         }
     }
 };
+exports.Publication = Publication;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("@context"),
     (0, ta_json_x_1.JsonElementType)(String),

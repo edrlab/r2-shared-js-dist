@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CipherReference = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
-let CipherReference = exports.CipherReference = class CipherReference {
+let CipherReference = class CipherReference {
 };
+exports.CipherReference = CipherReference;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@URI"),
     tslib_1.__metadata("design:type", String)

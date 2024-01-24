@@ -4,8 +4,9 @@ exports.EncryptionProperty = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
 const encryption_compression_1 = require("./encryption-compression");
-let EncryptionProperty = exports.EncryptionProperty = class EncryptionProperty {
+let EncryptionProperty = class EncryptionProperty {
 };
+exports.EncryptionProperty = EncryptionProperty;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ns:Compression"),
     tslib_1.__metadata("design:type", encryption_compression_1.Compression)

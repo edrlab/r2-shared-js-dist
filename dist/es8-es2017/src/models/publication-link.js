@@ -1,5 +1,4 @@
 "use strict";
-var Link_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Link = void 0;
 const tslib_1 = require("tslib");
@@ -10,7 +9,7 @@ const metadata_properties_1 = require("./metadata-properties");
 const PROPERTIES_JSON_PROP = "properties";
 const CHILDREN_JSON_PROP = "children";
 const ALTERNATE_JSON_PROP = "alternate";
-let Link = exports.Link = Link_1 = class Link {
+let Link = class Link {
     get Href() {
         return this.Href1;
     }
@@ -64,6 +63,7 @@ let Link = exports.Link = Link_1 = class Link {
         }
     }
 };
+exports.Link = Link;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("type"),
     tslib_1.__metadata("design:type", String)
@@ -98,12 +98,12 @@ tslib_1.__decorate([
 ], Link.prototype, "Templated", void 0);
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(CHILDREN_JSON_PROP),
-    (0, ta_json_x_1.JsonElementType)(Link_1),
+    (0, ta_json_x_1.JsonElementType)(Link),
     tslib_1.__metadata("design:type", Array)
 ], Link.prototype, "Children", void 0);
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)(ALTERNATE_JSON_PROP),
-    (0, ta_json_x_1.JsonElementType)(Link_1),
+    (0, ta_json_x_1.JsonElementType)(Link),
     tslib_1.__metadata("design:type", Array)
 ], Link.prototype, "Alternate", void 0);
 tslib_1.__decorate([
@@ -122,7 +122,7 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", []),
     tslib_1.__metadata("design:returntype", void 0)
 ], Link.prototype, "_OnDeserialized", null);
-exports.Link = Link = Link_1 = tslib_1.__decorate([
+exports.Link = Link = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], Link);
 //# sourceMappingURL=publication-link.js.map

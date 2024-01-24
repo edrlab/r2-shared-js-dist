@@ -7,7 +7,7 @@ var metadata_contributor_1 = require("./metadata-contributor");
 var metadata_contributor_json_converter_1 = require("./metadata-contributor-json-converter");
 var SERIES_JSON_PROP = "series";
 var COLLECTION_JSON_PROP = "collection";
-var BelongsTo = exports.BelongsTo = (function () {
+var BelongsTo = (function () {
     function BelongsTo() {
     }
     tslib_1.__decorate([
@@ -27,4 +27,5 @@ var BelongsTo = exports.BelongsTo = (function () {
     ], BelongsTo);
     return BelongsTo;
 }());
+exports.BelongsTo = BelongsTo;
 //# sourceMappingURL=metadata-belongsto.js.map

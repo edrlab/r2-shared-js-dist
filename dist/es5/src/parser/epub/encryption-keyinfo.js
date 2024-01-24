@@ -4,7 +4,7 @@ exports.KeyInfo = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var encryption_retrievalmethod_1 = require("./encryption-retrievalmethod");
-var KeyInfo = exports.KeyInfo = (function () {
+var KeyInfo = (function () {
     function KeyInfo() {
     }
     tslib_1.__decorate([
@@ -21,4 +21,5 @@ var KeyInfo = exports.KeyInfo = (function () {
     ], KeyInfo);
     return KeyInfo;
 }());
+exports.KeyInfo = KeyInfo;
 //# sourceMappingURL=encryption-keyinfo.js.map

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MetaLink = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var MetaLink = exports.MetaLink = (function () {
+var MetaLink = (function () {
     function MetaLink() {
     }
     tslib_1.__decorate([
@@ -41,4 +41,5 @@ var MetaLink = exports.MetaLink = (function () {
     ], MetaLink);
     return MetaLink;
 }());
+exports.MetaLink = MetaLink;
 //# sourceMappingURL=opf-link.js.map

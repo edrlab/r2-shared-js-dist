@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Metafield = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var Metafield = exports.Metafield = (function () {
+var Metafield = (function () {
     function Metafield() {
     }
     tslib_1.__decorate([
@@ -48,4 +48,5 @@ var Metafield = exports.Metafield = (function () {
     ], Metafield);
     return Metafield;
 }());
+exports.Metafield = Metafield;
 //# sourceMappingURL=opf-metafield.js.map

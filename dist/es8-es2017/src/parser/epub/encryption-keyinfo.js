@@ -4,8 +4,9 @@ exports.KeyInfo = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const encryption_retrievalmethod_1 = require("./encryption-retrievalmethod");
-let KeyInfo = exports.KeyInfo = class KeyInfo {
+let KeyInfo = class KeyInfo {
 };
+exports.KeyInfo = KeyInfo;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("ds:RetrievalMethod"),
     tslib_1.__metadata("design:type", encryption_retrievalmethod_1.RetrievalMethod)

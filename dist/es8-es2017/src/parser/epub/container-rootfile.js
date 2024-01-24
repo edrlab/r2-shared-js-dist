@@ -4,7 +4,7 @@ exports.Rootfile = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
-let Rootfile = exports.Rootfile = class Rootfile {
+let Rootfile = class Rootfile {
     get Path() {
         return this.Path1;
     }
@@ -34,6 +34,7 @@ let Rootfile = exports.Rootfile = class Rootfile {
         this.PathDecoded = href;
     }
 };
+exports.Rootfile = Rootfile;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@media-type"),
     tslib_1.__metadata("design:type", String)

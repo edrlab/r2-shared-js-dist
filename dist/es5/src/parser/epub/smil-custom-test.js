@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomTest = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
-var CustomTest = exports.CustomTest = (function () {
+var CustomTest = (function () {
     function CustomTest() {
     }
     tslib_1.__decorate([
@@ -28,4 +28,5 @@ var CustomTest = exports.CustomTest = (function () {
     ], CustomTest);
     return CustomTest;
 }());
+exports.CustomTest = CustomTest;
 //# sourceMappingURL=smil-custom-test.js.map

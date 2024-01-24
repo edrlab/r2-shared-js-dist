@@ -5,8 +5,9 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const opf_x_metadata_1 = require("./opf-x-metadata");
 const smil_custom_attributes_1 = require("./smil-custom-attributes");
-let Head = exports.Head = class Head extends opf_x_metadata_1.XMetadata {
+let Head = class Head extends opf_x_metadata_1.XMetadata {
 };
+exports.Head = Head;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("customAttributes"),
     tslib_1.__metadata("design:type", smil_custom_attributes_1.CustomAttributes)

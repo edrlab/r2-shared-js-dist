@@ -70,7 +70,7 @@ exports.MetadataSupportedKeys = [
     "source",
     "subject",
 ];
-var Metadata = exports.Metadata = (function () {
+var Metadata = (function () {
     function Metadata() {
     }
     Object.defineProperty(Metadata.prototype, "SortAs", {
@@ -361,4 +361,5 @@ var Metadata = exports.Metadata = (function () {
     ], Metadata);
     return Metadata;
 }());
+exports.Metadata = Metadata;
 //# sourceMappingURL=metadata.js.map

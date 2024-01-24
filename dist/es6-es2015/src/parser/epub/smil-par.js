@@ -7,8 +7,9 @@ const smil_audio_1 = require("./smil-audio");
 const smil_img_1 = require("./smil-img");
 const smil_seq_or_par_1 = require("./smil-seq-or-par");
 const smil_text_1 = require("./smil-text");
-let Par = exports.Par = class Par extends smil_seq_or_par_1.SeqOrPar {
+let Par = class Par extends smil_seq_or_par_1.SeqOrPar {
 };
+exports.Par = Par;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("text"),
     tslib_1.__metadata("design:type", smil_text_1.Text)

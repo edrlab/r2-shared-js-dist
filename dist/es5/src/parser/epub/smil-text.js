@@ -4,7 +4,7 @@ exports.Text = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var decodeURI_1 = require("../../_utils/decodeURI");
-var Text = exports.Text = (function () {
+var Text = (function () {
     function Text() {
     }
     Object.defineProperty(Text.prototype, "Src", {
@@ -65,4 +65,5 @@ var Text = exports.Text = (function () {
     ], Text);
     return Text;
 }());
+exports.Text = Text;
 //# sourceMappingURL=smil-text.js.map

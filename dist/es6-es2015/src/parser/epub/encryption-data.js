@@ -7,8 +7,9 @@ const encryption_cypherdata_1 = require("./encryption-cypherdata");
 const encryption_keyinfo_1 = require("./encryption-keyinfo");
 const encryption_method_1 = require("./encryption-method");
 const encryption_property_1 = require("./encryption-property");
-let EncryptedData = exports.EncryptedData = class EncryptedData {
+let EncryptedData = class EncryptedData {
 };
+exports.EncryptedData = EncryptedData;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("enc:EncryptionMethod"),
     tslib_1.__metadata("design:type", encryption_method_1.EncryptionMethod)

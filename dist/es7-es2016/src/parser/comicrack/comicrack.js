@@ -4,8 +4,9 @@ exports.ComicInfo = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const comicrack_page_1 = require("./comicrack-page");
-let ComicInfo = exports.ComicInfo = class ComicInfo {
+let ComicInfo = class ComicInfo {
 };
+exports.ComicInfo = ComicInfo;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("Title"),
     tslib_1.__metadata("design:type", String)

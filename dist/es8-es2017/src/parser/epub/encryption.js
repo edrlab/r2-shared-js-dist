@@ -4,8 +4,9 @@ exports.Encryption = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const encryption_data_1 = require("./encryption-data");
-let Encryption = exports.Encryption = class Encryption {
+let Encryption = class Encryption {
 };
+exports.Encryption = Encryption;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("enc:EncryptedData"),
     (0, xml_js_mapper_1.XmlItemType)(encryption_data_1.EncryptedData),

@@ -69,12 +69,10 @@ function timeStrToSeconds(timeStr) {
     return (hours * 3600) + (minutes * 60) + seconds;
 }
 exports.timeStrToSeconds = timeStrToSeconds;
-var MediaOverlayNode = exports.MediaOverlayNode = (function () {
+var MediaOverlayNode = (function () {
     function MediaOverlayNode() {
         this.initialized = false;
     }
-    MediaOverlayNode_1 = MediaOverlayNode;
-    var MediaOverlayNode_1;
     tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("text"),
         tslib_1.__metadata("design:type", String)
@@ -91,12 +89,13 @@ var MediaOverlayNode = exports.MediaOverlayNode = (function () {
     ], MediaOverlayNode.prototype, "Role", void 0);
     tslib_1.__decorate([
         (0, ta_json_x_1.JsonProperty)("narration"),
-        (0, ta_json_x_1.JsonElementType)(MediaOverlayNode_1),
+        (0, ta_json_x_1.JsonElementType)(MediaOverlayNode),
         tslib_1.__metadata("design:type", Array)
     ], MediaOverlayNode.prototype, "Children", void 0);
-    MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
+    MediaOverlayNode = tslib_1.__decorate([
         (0, ta_json_x_1.JsonObject)()
     ], MediaOverlayNode);
     return MediaOverlayNode;
 }());
+exports.MediaOverlayNode = MediaOverlayNode;
 //# sourceMappingURL=media-overlay.js.map

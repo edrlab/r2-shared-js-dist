@@ -7,8 +7,9 @@ const opf_dc_metadata_1 = require("./opf-dc-metadata");
 const opf_link_1 = require("./opf-link");
 const opf_metafield_1 = require("./opf-metafield");
 const opf_x_metadata_1 = require("./opf-x-metadata");
-let Metadata = exports.Metadata = class Metadata extends opf_dc_metadata_1.DCMetadata {
+let Metadata = class Metadata extends opf_dc_metadata_1.DCMetadata {
 };
+exports.Metadata = Metadata;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("link"),
     (0, xml_js_mapper_1.XmlItemType)(opf_link_1.MetaLink),

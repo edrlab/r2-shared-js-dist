@@ -7,8 +7,9 @@ const opf_manifest_1 = require("./opf-manifest");
 const opf_metadata_1 = require("./opf-metadata");
 const opf_reference_1 = require("./opf-reference");
 const opf_spine_1 = require("./opf-spine");
-let OPF = exports.OPF = class OPF {
+let OPF = class OPF {
 };
+exports.OPF = OPF;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("opf:metadata | opf2:metadata"),
     tslib_1.__metadata("design:type", opf_metadata_1.Metadata)

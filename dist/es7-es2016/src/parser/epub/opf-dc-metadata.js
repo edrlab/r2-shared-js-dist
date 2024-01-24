@@ -8,8 +8,9 @@ const opf_date_1 = require("./opf-date");
 const opf_identifier_1 = require("./opf-identifier");
 const opf_subject_1 = require("./opf-subject");
 const opf_title_1 = require("./opf-title");
-let DCMetadata = exports.DCMetadata = class DCMetadata {
+let DCMetadata = class DCMetadata {
 };
+exports.DCMetadata = DCMetadata;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("dc:Title | dc2:Title | dc:title"),
     (0, xml_js_mapper_1.XmlItemType)(opf_title_1.Title),

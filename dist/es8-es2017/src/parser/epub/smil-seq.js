@@ -5,7 +5,7 @@ const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const decodeURI_1 = require("../../_utils/decodeURI");
 const smil_seq_or_par_1 = require("./smil-seq-or-par");
-let Seq = exports.Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
+let Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
     get TextRef() {
         return this.TextRef1;
     }
@@ -35,6 +35,7 @@ let Seq = exports.Seq = class Seq extends smil_seq_or_par_1.SeqOrPar {
         this.TextRefDecoded = href;
     }
 };
+exports.Seq = Seq;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("smil:par | smil:seq | smil2:par | smil2:seq"),
     (0, xml_js_mapper_1.XmlItemType)(smil_seq_or_par_1.SeqOrPar),

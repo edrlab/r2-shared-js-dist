@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomTest = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let CustomTest = exports.CustomTest = class CustomTest {
+let CustomTest = class CustomTest {
 };
+exports.CustomTest = CustomTest;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@id | @xml:id"),
     tslib_1.__metadata("design:type", String)

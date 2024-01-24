@@ -4,7 +4,7 @@ exports.ComicInfo = void 0;
 var tslib_1 = require("tslib");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var comicrack_page_1 = require("./comicrack-page");
-var ComicInfo = exports.ComicInfo = (function () {
+var ComicInfo = (function () {
     function ComicInfo() {
     }
     tslib_1.__decorate([
@@ -68,4 +68,5 @@ var ComicInfo = exports.ComicInfo = (function () {
     ], ComicInfo);
     return ComicInfo;
 }());
+exports.ComicInfo = ComicInfo;
 //# sourceMappingURL=comicrack.js.map

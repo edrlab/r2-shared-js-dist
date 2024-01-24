@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Page = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/xml-js-mapper");
-let Page = exports.Page = class Page {
+let Page = class Page {
 };
+exports.Page = Page;
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("@Image"),
     tslib_1.__metadata("design:type", Number)

@@ -1,5 +1,4 @@
 "use strict";
-var MediaOverlayNode_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MediaOverlayNode = exports.timeStrToSeconds = void 0;
 const tslib_1 = require("tslib");
@@ -70,11 +69,12 @@ function timeStrToSeconds(timeStr) {
     return (hours * 3600) + (minutes * 60) + seconds;
 }
 exports.timeStrToSeconds = timeStrToSeconds;
-let MediaOverlayNode = exports.MediaOverlayNode = MediaOverlayNode_1 = class MediaOverlayNode {
+let MediaOverlayNode = class MediaOverlayNode {
     constructor() {
         this.initialized = false;
     }
 };
+exports.MediaOverlayNode = MediaOverlayNode;
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("text"),
     tslib_1.__metadata("design:type", String)
@@ -91,10 +91,10 @@ tslib_1.__decorate([
 ], MediaOverlayNode.prototype, "Role", void 0);
 tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("narration"),
-    (0, ta_json_x_1.JsonElementType)(MediaOverlayNode_1),
+    (0, ta_json_x_1.JsonElementType)(MediaOverlayNode),
     tslib_1.__metadata("design:type", Array)
 ], MediaOverlayNode.prototype, "Children", void 0);
-exports.MediaOverlayNode = MediaOverlayNode = MediaOverlayNode_1 = tslib_1.__decorate([
+exports.MediaOverlayNode = MediaOverlayNode = tslib_1.__decorate([
     (0, ta_json_x_1.JsonObject)()
 ], MediaOverlayNode);
 //# sourceMappingURL=media-overlay.js.map
