@@ -1,10 +1,10 @@
 {
-  "node": "20.10.0",
-  "npm": "10.2.5",
-  "short": "2a4bf17",
-  "long": "2a4bf179081364958aa93c7b634c1c14c6f14cd7",
+  "node": "20.11.0",
+  "npm": "10.4.0",
+  "short": "095c62e",
+  "long": "095c62e1f6986f667cfbbde73517132e60ec6bb4",
   "branch": "develop",
-  "date": "2024-01-24T09:25:32.000Z",
-  "urlHistory": "https://github.com/readium/r2-shared-js/commits/2a4bf179081364958aa93c7b634c1c14c6f14cd7",
-  "urlDiff": "https://github.com/readium/r2-shared-js/compare/2a4bf179081364958aa93c7b634c1c14c6f14cd7...develop"
+  "date": "2024-02-28T00:00:41.000Z",
+  "urlHistory": "https://github.com/readium/r2-shared-js/commits/095c62e1f6986f667cfbbde73517132e60ec6bb4",
+  "urlDiff": "https://github.com/readium/r2-shared-js/compare/095c62e1f6986f667cfbbde73517132e60ec6bb4...develop"
 }

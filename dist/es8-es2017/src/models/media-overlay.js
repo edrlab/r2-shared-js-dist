@@ -84,6 +84,10 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], MediaOverlayNode.prototype, "Audio", void 0);
 tslib_1.__decorate([
+    (0, ta_json_x_1.JsonProperty)("video"),
+    tslib_1.__metadata("design:type", String)
+], MediaOverlayNode.prototype, "Video", void 0);
+tslib_1.__decorate([
     (0, ta_json_x_1.JsonProperty)("role"),
     (0, ta_json_x_1.JsonConverter)(ta_json_string_converter_1.JsonStringConverter),
     (0, ta_json_x_1.JsonElementType)(String),

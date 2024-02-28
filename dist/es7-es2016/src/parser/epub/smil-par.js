@@ -4,6 +4,7 @@ exports.Par = void 0;
 const tslib_1 = require("tslib");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/xml-js-mapper");
 const smil_audio_1 = require("./smil-audio");
+const smil_video_1 = require("./smil-video");
 const smil_img_1 = require("./smil-img");
 const smil_seq_or_par_1 = require("./smil-seq-or-par");
 const smil_text_1 = require("./smil-text");
@@ -18,6 +19,10 @@ tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("audio"),
     tslib_1.__metadata("design:type", smil_audio_1.Audio)
 ], Par.prototype, "Audio", void 0);
+tslib_1.__decorate([
+    (0, xml_js_mapper_1.XmlXPathSelector)("video"),
+    tslib_1.__metadata("design:type", smil_video_1.Video)
+], Par.prototype, "Video", void 0);
 tslib_1.__decorate([
     (0, xml_js_mapper_1.XmlXPathSelector)("img"),
     tslib_1.__metadata("design:type", smil_img_1.Img)

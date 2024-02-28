@@ -2006,6 +2006,30 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 moc.AudioID = par.Audio.ID;
             }
         }
+        if (par.Video && par.Video.Src) {
+            const parVideoSrcDcoded = par.Video.SrcDecoded;
+            if (!parVideoSrcDcoded) {
+                debug("?!parVideoSrcDcoded");
+            }
+            else {
+                const zipPath = path.join(path.dirname(smil.ZipPath), parVideoSrcDcoded)
+                    .replace(/\\/g, "/");
+                moc.Video = zipPath;
+                moc.Video += "#t=";
+                const begin = par.Video.ClipBegin ? (0, media_overlay_1.timeStrToSeconds)(par.Video.ClipBegin) : 0;
+                moc.VideoClipBegin = begin;
+                const end = par.Video.ClipEnd ? (0, media_overlay_1.timeStrToSeconds)(par.Video.ClipEnd) : 0;
+                moc.VideoClipEnd = end;
+                moc.Video += begin.toString();
+                if (par.Video.ClipEnd) {
+                    moc.Video += ",";
+                    moc.Video += end.toString();
+                }
+            }
+            if (par.Video.ID) {
+                moc.VideoID = par.Video.ID;
+            }
+        }
         if (par.Img && par.Img.Src) {
             const parImgSrcDcoded = par.Img.SrcDecoded;
             if (!parImgSrcDcoded) {
@@ -2016,7 +2040,7 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                     .replace(/\\/g, "/");
                 debug("SMIL IMG skipped: " + zipPath);
             }
-            if (!par.Audio && !par.Text) {
+            if (!par.Audio && !par.Video && !par.Text) {
                 moc.initialized = false;
                 doAdd = false;
             }
