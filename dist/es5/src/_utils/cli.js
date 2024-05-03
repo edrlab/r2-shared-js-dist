@@ -117,67 +117,105 @@ if (args[1]) {
     }
 }
 (function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
-    var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, isDaisyBook, _err_2, err_2;
-    return tslib_1.__generator(this, function (_a) {
-        switch (_a.label) {
+    var publication, err_1, isAnEPUB, isAnAudioBook, _err_1, isDaisyBook, _err_2, isFullTextAudio, err_2, err_3;
+    var _a, _b;
+    return tslib_1.__generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _c.trys.push([0, 2, , 3]);
                 return [4, (0, publication_parser_1.PublicationParsePromise)(filePath)];
             case 1:
-                publication = _a.sent();
+                publication = _c.sent();
                 return [3, 3];
             case 2:
-                err_1 = _a.sent();
+                err_1 = _c.sent();
                 console.log("== Publication Parser: reject");
                 console.log(err_1);
                 return [2];
             case 3:
                 isAnEPUB = (0, epub_1.isEPUBlication)(filePath);
-                _a.label = 4;
+                _c.label = 4;
             case 4:
-                _a.trys.push([4, 6, , 7]);
+                _c.trys.push([4, 6, , 7]);
                 return [4, (0, audiobook_1.isAudioBookPublication)(filePath)];
             case 5:
-                isAnAudioBook = _a.sent();
+                isAnAudioBook = _c.sent();
                 return [3, 7];
             case 6:
-                _err_1 = _a.sent();
+                _err_1 = _c.sent();
                 return [3, 7];
             case 7:
-                _a.trys.push([7, 9, , 10]);
+                _c.trys.push([7, 9, , 10]);
                 return [4, (0, daisy_1.isDaisyPublication)(filePath)];
             case 8:
-                isDaisyBook = _a.sent();
+                isDaisyBook = _c.sent();
                 return [3, 10];
             case 9:
-                _err_2 = _a.sent();
+                _err_2 = _c.sent();
                 return [3, 10];
             case 10:
-                if (!((isDaisyBook || isAnAudioBook || isAnEPUB) && outputDirPath)) return [3, 18];
-                _a.label = 11;
+                if (!((isDaisyBook || isAnAudioBook || isAnEPUB) && outputDirPath)) return [3, 24];
+                _c.label = 11;
             case 11:
-                _a.trys.push([11, 16, , 17]);
-                if (!isDaisyBook) return [3, 13];
+                _c.trys.push([11, 22, , 23]);
+                if (!isDaisyBook) return [3, 19];
                 return [4, (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined)];
             case 12:
-                _a.sent();
-                return [3, 15];
-            case 13: return [4, extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys)];
+                _c.sent();
+                isFullTextAudio = ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
+                    (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
+                        publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
+                        !publication.Metadata.AdditionalJSON["ncc:multimediaType"]));
+                if (!(isFullTextAudio && !((_b = publication.Spine) === null || _b === void 0 ? void 0 : _b.length))) return [3, 18];
+                console.log("%%%%% FAILED audio+text DAISY convert, trying again as audio-only ...");
+                publication.freeDestroy();
+                _c.label = 13;
+            case 13:
+                _c.trys.push([13, 15, , 16]);
+                return [4, (0, publication_parser_1.PublicationParsePromise)(filePath)];
             case 14:
-                _a.sent();
-                _a.label = 15;
-            case 15: return [3, 17];
-            case 16:
-                err_2 = _a.sent();
-                console.log("== Publication extract FAIL");
+                publication = _c.sent();
+                return [3, 16];
+            case 15:
+                err_2 = _c.sent();
+                console.log("== Publication Parser: reject");
                 console.log(err_2);
                 return [2];
-            case 17: return [3, 20];
-            case 18: return [4, dumpPublication(publication)];
-            case 19:
-                _a.sent();
-                _a.label = 20;
-            case 20: return [2];
+            case 16: return [4, new Promise(function (reso) {
+                    setTimeout(function () { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+                        var _a;
+                        return tslib_1.__generator(this, function (_b) {
+                            switch (_b.label) {
+                                case 0:
+                                    _a = reso;
+                                    return [4, (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined, true)];
+                                case 1:
+                                    _a.apply(void 0, [_b.sent()]);
+                                    return [2];
+                            }
+                        });
+                    }); }, 500);
+                })];
+            case 17:
+                _c.sent();
+                _c.label = 18;
+            case 18: return [3, 21];
+            case 19: return [4, extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys)];
+            case 20:
+                _c.sent();
+                _c.label = 21;
+            case 21: return [3, 23];
+            case 22:
+                err_3 = _c.sent();
+                console.log("== Publication extract FAIL");
+                console.log(err_3);
+                return [2];
+            case 23: return [3, 26];
+            case 24: return [4, dumpPublication(publication)];
+            case 25:
+                _c.sent();
+                _c.label = 26;
+            case 26: return [2];
         }
     });
 }); })();
@@ -257,7 +295,7 @@ function extractEPUB_ManifestJSON(pub, outDir, keys) {
 }
 function extractEPUB_Check(zip, outDir) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zipEntries, err_3, _i, zipEntries_1, zipEntry, expectedOutputPath;
+        var zipEntries, err_4, _i, zipEntries_1, zipEntry, expectedOutputPath;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -267,8 +305,8 @@ function extractEPUB_Check(zip, outDir) {
                     zipEntries = _a.sent();
                     return [3, 3];
                 case 2:
-                    err_3 = _a.sent();
-                    console.log(err_3);
+                    err_4 = _a.sent();
+                    console.log(err_4);
                     return [3, 3];
                 case 3:
                     if (zipEntries) {
@@ -297,7 +335,7 @@ function extractEPUB_Check(zip, outDir) {
 }
 function extractEPUB_ProcessKeys(pub, keys) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var keysSha256Hex, err_4;
+        var keysSha256Hex, err_5;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -335,8 +373,8 @@ function extractEPUB_ProcessKeys(pub, keys) {
                     _a.sent();
                     return [3, 4];
                 case 3:
-                    err_4 = _a.sent();
-                    console.log(err_4);
+                    err_5 = _a.sent();
+                    console.log(err_5);
                     throw Error("FAIL publication.LCP.tryUserKeys()");
                 case 4: return [2];
             }
@@ -345,7 +383,7 @@ function extractEPUB_ProcessKeys(pub, keys) {
 }
 function extractEPUB_Link(pub, zip, outDir, link) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var hrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, zipStream_, err_5, transformedStream, err_6, zipData, err_7, linkOutputPath;
+        var hrefDecoded, has, zipEntries, _i, zipEntries_2, zipEntry, zipStream_, err_6, transformedStream, err_7, zipData, err_8, linkOutputPath;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -378,9 +416,9 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                     zipStream_ = _a.sent();
                     return [3, 6];
                 case 5:
-                    err_5 = _a.sent();
+                    err_6 = _a.sent();
                     console.log(hrefDecoded);
-                    console.log(err_5);
+                    console.log(err_6);
                     return [2];
                 case 6:
                     _a.trys.push([6, 8, , 9]);
@@ -389,9 +427,9 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                     transformedStream = _a.sent();
                     return [3, 9];
                 case 8:
-                    err_6 = _a.sent();
+                    err_7 = _a.sent();
                     console.log(hrefDecoded);
-                    console.log(err_6);
+                    console.log(err_7);
                     return [2];
                 case 9:
                     zipStream_ = transformedStream;
@@ -403,9 +441,9 @@ function extractEPUB_Link(pub, zip, outDir, link) {
                     zipData = _a.sent();
                     return [3, 13];
                 case 12:
-                    err_7 = _a.sent();
+                    err_8 = _a.sent();
                     console.log(hrefDecoded);
-                    console.log(err_7);
+                    console.log(err_8);
                     return [2];
                 case 13:
                     linkOutputPath = path.join(outDir, hrefDecoded);
@@ -418,7 +456,7 @@ function extractEPUB_Link(pub, zip, outDir, link) {
 }
 function extractEPUB(isEPUB, pub, outDir, keys) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var zipInternal, zip, err_8, err_9, links, lic, has, l, _i, links_1, link, err_10, err_11;
+        var zipInternal, zip, err_9, err_10, links, lic, has, l, _i, links_1, link, err_11, err_12;
         return tslib_1.__generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -436,9 +474,9 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
                     _a.sent();
                     return [3, 4];
                 case 3:
-                    err_8 = _a.sent();
-                    console.log(err_8);
-                    throw err_8;
+                    err_9 = _a.sent();
+                    console.log(err_9);
+                    throw err_9;
                 case 4:
                     ensureDirs(path.join(outDir, "DUMMY_FILE.EXT"));
                     _a.label = 5;
@@ -449,8 +487,8 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
                     _a.sent();
                     return [3, 8];
                 case 7:
-                    err_9 = _a.sent();
-                    console.log(err_9);
+                    err_10 = _a.sent();
+                    console.log(err_10);
                     return [3, 8];
                 case 8:
                     extractEPUB_ManifestJSON(pub, outDir, keys);
@@ -486,8 +524,8 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
                     _a.sent();
                     return [3, 15];
                 case 14:
-                    err_10 = _a.sent();
-                    console.log(err_10);
+                    err_11 = _a.sent();
+                    console.log(err_11);
                     return [3, 15];
                 case 15:
                     _i++;
@@ -499,8 +537,8 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
                     _a.sent();
                     return [3, 19];
                 case 18:
-                    err_11 = _a.sent();
-                    console.log(err_11);
+                    err_12 = _a.sent();
+                    console.log(err_12);
                     return [3, 19];
                 case 19: return [2];
             }
@@ -509,7 +547,7 @@ function extractEPUB(isEPUB, pub, outDir, keys) {
 }
 function extractEPUB_MediaOverlays(pub, _zip, outDir) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var i, _i, _a, spineItem, mo, err_12, moJsonObj, moJsonStr, p, moJsonPath, _b, _c, altLink;
+        var i, _i, _a, spineItem, mo, err_13, moJsonObj, moJsonStr, p, moJsonPath, _b, _c, altLink;
         return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
@@ -532,8 +570,8 @@ function extractEPUB_MediaOverlays(pub, _zip, outDir) {
                     _d.sent();
                     return [3, 5];
                 case 4:
-                    err_12 = _d.sent();
-                    return [2, Promise.reject(err_12)];
+                    err_13 = _d.sent();
+                    return [2, Promise.reject(err_13)];
                 case 5:
                     moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                     moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");
@@ -570,7 +608,7 @@ function ensureDirs(fspath) {
 }
 function dumpPublication(publication) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var publicationJsonObj, publicationJsonStr, publicationReverse, publicationJsonObjReverse, eq, _i, _a, spineItem, _b, _c, altLink, mo, err_13, moJsonObj, moJsonStr, moReverse, moJsonObjReverse, equa;
+        var publicationJsonObj, publicationJsonStr, publicationReverse, publicationJsonObjReverse, eq, _i, _a, spineItem, _b, _c, altLink, mo, err_14, moJsonObj, moJsonStr, moReverse, moJsonObjReverse, equa;
         return tslib_1.__generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
@@ -631,8 +669,8 @@ function dumpPublication(publication) {
                     _d.sent();
                     return [3, 5];
                 case 4:
-                    err_13 = _d.sent();
-                    return [2, Promise.reject(err_13)];
+                    err_14 = _d.sent();
+                    return [2, Promise.reject(err_14)];
                 case 5:
                     moJsonObj = (0, serializable_1.TaJsonSerialize)(mo);
                     moJsonStr = global.JSON.stringify(moJsonObj, null, "  ");

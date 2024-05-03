@@ -116,6 +116,7 @@ if (args[1]) {
     }
 }
 (async () => {
+    var _a, _b;
     let publication;
     try {
         publication = await (0, publication_parser_1.PublicationParsePromise)(filePath);
@@ -142,6 +143,27 @@ if (args[1]) {
         try {
             if (isDaisyBook) {
                 await (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined);
+                const isFullTextAudio = ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) &&
+                    (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
+                        publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
+                        !publication.Metadata.AdditionalJSON["ncc:multimediaType"]));
+                if (isFullTextAudio && !((_b = publication.Spine) === null || _b === void 0 ? void 0 : _b.length)) {
+                    console.log("%%%%% FAILED audio+text DAISY convert, trying again as audio-only ...");
+                    publication.freeDestroy();
+                    try {
+                        publication = await (0, publication_parser_1.PublicationParsePromise)(filePath);
+                    }
+                    catch (err) {
+                        console.log("== Publication Parser: reject");
+                        console.log(err);
+                        return;
+                    }
+                    await new Promise((reso) => {
+                        setTimeout(async () => {
+                            reso(await (0, daisy_convert_to_epub_1.convertDaisyToReadiumWebPub)(outputDirPath, publication, generateDaisyAudioManifestOnly ? fileName : undefined, true));
+                        }, 500);
+                    });
+                }
             }
             else {
                 await extractEPUB((isAnEPUB || isDaisyBook) ? true : false, publication, outputDirPath, decryptKeys);

@@ -24,7 +24,7 @@ function ensureDirs(fspath) {
         fs.mkdirSync(dirname);
     }
 }
-var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generateDaisyAudioManifestOnly) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
+var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generateDaisyAudioManifestOnly, forceAudioOnly) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     return tslib_1.__generator(this, function (_a) {
         return [2, new Promise(function (resolve, reject) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
                 var isFullTextAudio, isAudioOnly, isTextOnly, zipInternal, zip, nccZipEntry, outputZipPath, timeoutId, zipfile, writeStream, select, elementNames, mediaOverlaysMap_1, getMediaOverlaysDuration_1, patchMediaOverlaysTextHref_1, smilDocs_1, loadOrGetCachedSmil_1, findLinkInToc_1, createHtmlFromSmilFile, audioOnlySmilHtmls, previousLinkItem, spineIndex, _i, _a, linkItem, computedDur, dur, smilTextRef, isAudioOnly_1, audioOnlySmilHtmlHref, smilHtml, resourcesToKeep, dtBooks, _b, _c, resLink, cssText, zipErr_1, _d, elementNames_1, elementName, regex, dtBookStr, zipErr_2, dtBookDoc, title, listElements, i, listElement, type, _e, elementNames_2, elementName, els, _f, els_1, el, cls, stylesheets, cssHrefs, _g, stylesheets_1, stylesheet, match, href, smilRefs, _h, smilRefs_1, smilRef, ref, dtbookNowXHTML, xhtmlFilePath, resLinkJson, resLinkClone, buff, _j, mediaOverlaysSequence, _loop_1, _k, mediaOverlaysSequence_1, mediaOverlay, findFirstDescendantTextOrAudio_1, processLink_1, processLinks_1, _l, _m, link, _o, _p, link, jsonObj, jsonStr, isAudioOnly_, transformPublicationToAudioBook, audioPublication, jsonObjAudio, jsonStrAudio, outputManifestPath, ero_1, erreur_1;
@@ -32,14 +32,14 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                 return tslib_1.__generator(this, function (_v) {
                     switch (_v.label) {
                         case 0:
-                            isFullTextAudio = ((_q = publication.Metadata) === null || _q === void 0 ? void 0 : _q.AdditionalJSON) &&
+                            isFullTextAudio = !forceAudioOnly && ((_q = publication.Metadata) === null || _q === void 0 ? void 0 : _q.AdditionalJSON) &&
                                 (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioFullText" ||
                                     publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioFullText" || (!publication.Metadata.AdditionalJSON["dtb:multimediaType"] &&
                                     !publication.Metadata.AdditionalJSON["ncc:multimediaType"]));
-                            isAudioOnly = ((_r = publication.Metadata) === null || _r === void 0 ? void 0 : _r.AdditionalJSON) &&
+                            isAudioOnly = forceAudioOnly || ((_r = publication.Metadata) === null || _r === void 0 ? void 0 : _r.AdditionalJSON) &&
                                 (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "audioNCX" ||
                                     publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "audioNcc");
-                            isTextOnly = ((_s = publication.Metadata) === null || _s === void 0 ? void 0 : _s.AdditionalJSON) &&
+                            isTextOnly = !forceAudioOnly && ((_s = publication.Metadata) === null || _s === void 0 ? void 0 : _s.AdditionalJSON) &&
                                 (publication.Metadata.AdditionalJSON["dtb:multimediaType"] === "textNCX" ||
                                     publication.Metadata.AdditionalJSON["ncc:multimediaType"] === "textNcc");
                             if (generateDaisyAudioManifestOnly) {
