@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CbzParsePromise = exports.isCBZPublication = void 0;
+exports.isCBZPublication = isCBZPublication;
+exports.CbzParsePromise = CbzParsePromise;
 const tslib_1 = require("tslib");
 const mime = require("mime-types");
 const path = require("path");
@@ -23,7 +24,6 @@ function isCBZPublication(filePath) {
     const cbz = /\.cbz$/i.test(ext);
     return cbz;
 }
-exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let zip;
@@ -89,7 +89,6 @@ function CbzParsePromise(filePath) {
         return publication;
     });
 }
-exports.CbzParsePromise = CbzParsePromise;
 const filePathToTitle = (filePath) => {
     const fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
@@ -129,7 +128,7 @@ const comicRackMetadata = (zip, entryName, publication) => tslib_1.__awaiter(voi
         return;
     }
     const comicXmlStr = comicZipData.toString("utf8");
-    const comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr);
+    const comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr, "application/xml");
     const comicMeta = xml_js_mapper_1.XML.deserialize(comicXmlDoc, comicrack_1.ComicInfo);
     comicMeta.ZipPath = entryNameDecoded;
     if (!publication.Metadata) {

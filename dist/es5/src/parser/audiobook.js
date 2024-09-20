@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAudioBookPublication = exports.AudioBookis = exports.AudioBookParsePromise = void 0;
+exports.AudioBookis = void 0;
+exports.AudioBookParsePromise = AudioBookParsePromise;
+exports.isAudioBookPublication = isAudioBookPublication;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -179,7 +181,6 @@ function AudioBookParsePromise(filePath, isAudio) {
         });
     });
 }
-exports.AudioBookParsePromise = AudioBookParsePromise;
 var AudioBookis;
 (function (AudioBookis) {
     AudioBookis["LocalExploded"] = "LocalExploded";
@@ -321,5 +322,4 @@ function isAudioBookPublication(urlOrPath) {
         });
     });
 }
-exports.isAudioBookPublication = isAudioBookPublication;
 //# sourceMappingURL=audiobook.js.map

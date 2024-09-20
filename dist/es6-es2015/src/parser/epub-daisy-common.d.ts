@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { MediaOverlayNode } from "../models/media-overlay";
 import { Publication } from "../models/publication";
 import { Link } from "../models/publication-link";

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CbzParsePromise = exports.isCBZPublication = void 0;
+exports.isCBZPublication = isCBZPublication;
+exports.CbzParsePromise = CbzParsePromise;
 var tslib_1 = require("tslib");
 var mime = require("mime-types");
 var path = require("path");
@@ -23,7 +24,6 @@ function isCBZPublication(filePath) {
     var cbz = /\.cbz$/i.test(ext);
     return cbz;
 }
-exports.isCBZPublication = isCBZPublication;
 function CbzParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zip, err_1, publication, comicInfoEntryName, entries, err_2, _i, entries_1, entryName, link, mediaType, _b, err_3;
@@ -105,7 +105,6 @@ function CbzParsePromise(filePath) {
         });
     });
 }
-exports.CbzParsePromise = CbzParsePromise;
 var filePathToTitle = function (filePath) {
     var fileName = path.basename(filePath);
     return slugify(fileName, "_").replace(/[\.]/g, "_");
@@ -160,7 +159,7 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 return [2];
             case 10:
                 comicXmlStr = comicZipData.toString("utf8");
-                comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr);
+                comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr, "application/xml");
                 comicMeta = xml_js_mapper_1.XML.deserialize(comicXmlDoc, comicrack_1.ComicInfo);
                 comicMeta.ZipPath = entryNameDecoded;
                 if (!publication.Metadata) {

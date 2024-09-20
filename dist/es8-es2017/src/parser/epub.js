@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.isEPUBlication = isEPUBlication;
+exports.EpubParsePromise = EpubParsePromise;
+exports.getAllMediaOverlays = getAllMediaOverlays;
+exports.getMediaOverlay = getMediaOverlay;
 const debug_ = require("debug");
 const fs = require("fs");
 const image_size_1 = require("image-size");
@@ -112,7 +116,6 @@ function isEPUBlication(urlOrPath) {
     }
     return undefined;
 }
-exports.isEPUBlication = isEPUBlication;
 async function EpubParsePromise(filePath) {
     const isAnEPUB = isEPUBlication(filePath);
     let filePathToLoad = filePath;
@@ -195,7 +198,7 @@ async function EpubParsePromise(filePath) {
             return Promise.reject(err);
         }
         const encryptionXmlStr = encryptionXmlZipData.toString("utf8");
-        const encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr);
+        const encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr, "application/xml");
         encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
         encryption.ZipPath = encZipPath;
     }
@@ -218,7 +221,7 @@ async function EpubParsePromise(filePath) {
         return Promise.reject(err);
     }
     const containerXmlStr = containerXmlZipData.toString("utf8");
-    const containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr);
+    const containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr, "application/xml");
     const container = xml_js_mapper_1.XML.deserialize(containerXmlDoc, container_1.Container);
     container.ZipPath = containerZipPath;
     const rootfile = container.Rootfile[0];
@@ -271,7 +274,6 @@ async function EpubParsePromise(filePath) {
     (0, epub_daisy_common_1.fillPublicationDate)(publication, rootfile, opf);
     return publication;
 }
-exports.EpubParsePromise = EpubParsePromise;
 async function getAllMediaOverlays(publication) {
     const mos = [];
     const links = [].
@@ -293,7 +295,6 @@ async function getAllMediaOverlays(publication) {
     }
     return Promise.resolve(mos);
 }
-exports.getAllMediaOverlays = getAllMediaOverlays;
 async function getMediaOverlay(publication, spineHref) {
     const links = [].
         concat(publication.Spine ? publication.Spine : []).
@@ -314,7 +315,6 @@ async function getMediaOverlay(publication, spineHref) {
     }
     return Promise.reject(`No Media Overlays ${spineHref}`);
 }
-exports.getMediaOverlay = getMediaOverlay;
 const addRelAndPropertiesToLink = async (publication, link, linkEpub, opf) => {
     if (linkEpub.Properties) {
         await addToLinkFromProperties(publication, link, linkEpub.Properties);
@@ -616,7 +616,7 @@ const addRendition = async (publication, opf, zip) => {
                     if (displayOptionsZipData) {
                         try {
                             const displayOptionsStr = displayOptionsZipData.toString("utf8");
-                            const displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr);
+                            const displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr, "application/xml");
                             const displayOptions = xml_js_mapper_1.XML.deserialize(displayOptionsDoc, display_options_1.DisplayOptions);
                             displayOptions.ZipPath = displayOptionsZipPath;
                             if (displayOptions && displayOptions.Platforms) {
@@ -751,7 +751,7 @@ const fillPageListFromAdobePageMap = async (publication, zip, l) => {
     if (!pageMapContent) {
         return;
     }
-    const pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapContent);
+    const pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapContent, "application/xml");
     const pages = pageMapXmlDoc.getElementsByTagName("page");
     if (pages && pages.length) {
         for (let i = 0; i < pages.length; i += 1) {
@@ -848,7 +848,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
         return Promise.reject(err);
     }
     const navDocStr = navDocZipData.toString("utf8");
-    const navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr);
+    const navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr, "application/xml");
     const select = xpath.useNamespaces({
         epub: "http://www.idpf.org/2007/ops",
         xhtml: "http://www.w3.org/1999/xhtml",

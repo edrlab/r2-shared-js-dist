@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MediaOverlayNode = exports.timeStrToSeconds = void 0;
+exports.MediaOverlayNode = void 0;
+exports.timeStrToSeconds = timeStrToSeconds;
 const tslib_1 = require("tslib");
 const ta_json_x_1 = require("ta-json-x");
 const ta_json_string_converter_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/ta-json-string-converter");
@@ -68,7 +69,6 @@ function timeStrToSeconds(timeStr) {
     }
     return (hours * 3600) + (minutes * 60) + seconds;
 }
-exports.timeStrToSeconds = timeStrToSeconds;
 let MediaOverlayNode = class MediaOverlayNode {
     constructor() {
         this.initialized = false;

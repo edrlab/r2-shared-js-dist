@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tryDecodeURI = void 0;
+exports.tryDecodeURI = tryDecodeURI;
 function tryDecodeURI(url) {
     if (!url) {
         return null;
@@ -14,5 +14,4 @@ function tryDecodeURI(url) {
     }
     return url;
 }
-exports.tryDecodeURI = tryDecodeURI;
 //# sourceMappingURL=decodeURI.js.map

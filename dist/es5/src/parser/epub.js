@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMediaOverlay = exports.getAllMediaOverlays = exports.EpubParsePromise = exports.isEPUBlication = exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.EPUBis = exports.addCoverDimensions = exports.mediaOverlayURLParam = exports.mediaOverlayURLPath = exports.BCP47_UNKNOWN_LANG = void 0;
+exports.isEPUBlication = isEPUBlication;
+exports.EpubParsePromise = EpubParsePromise;
+exports.getAllMediaOverlays = getAllMediaOverlays;
+exports.getMediaOverlay = getMediaOverlay;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -134,7 +138,6 @@ function isEPUBlication(urlOrPath) {
     }
     return undefined;
 }
-exports.isEPUBlication = isEPUBlication;
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ex_1, ncx, ncxManItem, pageMapLink;
@@ -249,7 +252,7 @@ function EpubParsePromise(filePath) {
                     return [2, Promise.reject(err_7)];
                 case 23:
                     encryptionXmlStr = encryptionXmlZipData.toString("utf8");
-                    encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr);
+                    encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr, "application/xml");
                     encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
                     encryption.ZipPath = encZipPath;
                     _a.label = 24;
@@ -281,7 +284,7 @@ function EpubParsePromise(filePath) {
                     return [2, Promise.reject(err_9)];
                 case 32:
                     containerXmlStr = containerXmlZipData.toString("utf8");
-                    containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr);
+                    containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr, "application/xml");
                     container = xml_js_mapper_1.XML.deserialize(containerXmlDoc, container_1.Container);
                     container.ZipPath = containerZipPath;
                     rootfile = container.Rootfile[0];
@@ -356,7 +359,6 @@ function EpubParsePromise(filePath) {
         });
     });
 }
-exports.EpubParsePromise = EpubParsePromise;
 function getAllMediaOverlays(publication) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var mos, links, _i, links_1, link, mo, err_10;
@@ -396,7 +398,6 @@ function getAllMediaOverlays(publication) {
         });
     });
 }
-exports.getAllMediaOverlays = getAllMediaOverlays;
 function getMediaOverlay(publication, spineHref) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var links, _i, links_2, link, mo, err_11;
@@ -433,7 +434,6 @@ function getMediaOverlay(publication, spineHref) {
         });
     });
 }
-exports.getMediaOverlay = getMediaOverlay;
 var addRelAndPropertiesToLink = function (publication, link, linkEpub, opf) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var spineProperties;
     return tslib_1.__generator(this, function (_a) {
@@ -878,7 +878,7 @@ var addRendition = function (publication, opf, zip) { return tslib_1.__awaiter(v
                 if (displayOptionsZipData) {
                     try {
                         displayOptionsStr = displayOptionsZipData.toString("utf8");
-                        displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr);
+                        displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr, "application/xml");
                         displayOptions = xml_js_mapper_1.XML.deserialize(displayOptionsDoc, display_options_1.DisplayOptions);
                         displayOptions.ZipPath = displayOptionsZipPath;
                         if (displayOptions && displayOptions.Platforms) {
@@ -1031,7 +1031,7 @@ var fillPageListFromAdobePageMap = function (publication, zip, l) { return tslib
                 if (!pageMapContent) {
                     return [2];
                 }
-                pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapContent);
+                pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapContent, "application/xml");
                 pages = pageMapXmlDoc.getElementsByTagName("page");
                 if (pages && pages.length) {
                     for (i = 0; i < pages.length; i += 1) {
@@ -1146,7 +1146,7 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
                 return [2, Promise.reject(err_15)];
             case 10:
                 navDocStr = navDocZipData.toString("utf8");
-                navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr);
+                navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr, "application/xml");
                 select = xpath.useNamespaces({
                     epub: "http://www.idpf.org/2007/ops",
                     xhtml: "http://www.w3.org/1999/xhtml",

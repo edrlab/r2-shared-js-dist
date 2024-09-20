@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicationParsePromise = void 0;
+exports.PublicationParsePromise = PublicationParsePromise;
 var tslib_1 = require("tslib");
 var path = require("path");
 var audiobook_1 = require("./audiobook");
@@ -64,5 +64,4 @@ function PublicationParsePromise(filePath) {
         });
     });
 }
-exports.PublicationParsePromise = PublicationParsePromise;
 //# sourceMappingURL=publication-parser.js.map

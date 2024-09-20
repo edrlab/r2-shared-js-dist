@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DaisyParsePromise = exports.isDaisyPublication = exports.DaisyBookis = void 0;
+exports.DaisyBookis = void 0;
+exports.isDaisyPublication = isDaisyPublication;
+exports.DaisyParsePromise = DaisyParsePromise;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -75,7 +77,6 @@ function isDaisyPublication(urlOrPath) {
         });
     });
 }
-exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
         var zip, err_2, publication, entries, opfZipEntryPath, daisy2NccZipEntryPath, rootfilePathDecoded, opf, ncx, ncxManItem;
@@ -163,7 +164,6 @@ function DaisyParsePromise(filePath) {
         });
     });
 }
-exports.DaisyParsePromise = DaisyParsePromise;
 var addLinkData = function (publication, _rootfile, opf, zip, linkItem, item) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {
     var isFullTextAudio, isAudioOnly, isTextOnly;
     var _a;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicationParsePromise = void 0;
+exports.PublicationParsePromise = PublicationParsePromise;
 const path = require("path");
 const audiobook_1 = require("./audiobook");
 const cbz_1 = require("./cbz");
@@ -19,5 +19,4 @@ async function PublicationParsePromise(filePath) {
                             (isAudio = await (0, audiobook_1.isAudioBookPublication)(filePath)) ? (0, audiobook_1.AudioBookParsePromise)(filePath, isAudio) :
                                 Promise.reject(`Unrecognized publication type ${filePath}`))))));
 }
-exports.PublicationParsePromise = PublicationParsePromise;
 //# sourceMappingURL=publication-parser.js.map

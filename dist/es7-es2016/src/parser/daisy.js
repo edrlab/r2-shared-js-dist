@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DaisyParsePromise = exports.isDaisyPublication = exports.DaisyBookis = void 0;
+exports.DaisyBookis = void 0;
+exports.isDaisyPublication = isDaisyPublication;
+exports.DaisyParsePromise = DaisyParsePromise;
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const fs = require("fs");
@@ -63,7 +65,6 @@ function isDaisyPublication(urlOrPath) {
         return undefined;
     });
 }
-exports.isDaisyPublication = isDaisyPublication;
 function DaisyParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         let zip;
@@ -137,7 +138,6 @@ function DaisyParsePromise(filePath) {
         return publication;
     });
 }
-exports.DaisyParsePromise = DaisyParsePromise;
 const addLinkData = (publication, _rootfile, opf, zip, linkItem, item) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isDivinaPublication = exports.Divinais = exports.DivinaParsePromise = void 0;
+exports.Divinais = void 0;
+exports.DivinaParsePromise = DivinaParsePromise;
+exports.isDivinaPublication = isDivinaPublication;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var fs = require("fs");
@@ -180,7 +182,6 @@ function DivinaParsePromise(filePath, isDivina, pubtype) {
         });
     });
 }
-exports.DivinaParsePromise = DivinaParsePromise;
 var Divinais;
 (function (Divinais) {
     Divinais["LocalExploded"] = "LocalExploded";
@@ -324,5 +325,4 @@ function isDivinaPublication(urlOrPath) {
         });
     });
 }
-exports.isDivinaPublication = isDivinaPublication;
 //# sourceMappingURL=divina.js.map

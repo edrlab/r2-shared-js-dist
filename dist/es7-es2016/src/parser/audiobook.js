@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isAudioBookPublication = exports.AudioBookis = exports.AudioBookParsePromise = void 0;
+exports.AudioBookis = void 0;
+exports.AudioBookParsePromise = AudioBookParsePromise;
+exports.isAudioBookPublication = isAudioBookPublication;
 const tslib_1 = require("tslib");
 const debug_ = require("debug");
 const fs = require("fs");
@@ -139,7 +141,6 @@ function AudioBookParsePromise(filePath, isAudio) {
         return Promise.resolve(publication);
     });
 }
-exports.AudioBookParsePromise = AudioBookParsePromise;
 var AudioBookis;
 (function (AudioBookis) {
     AudioBookis["LocalExploded"] = "LocalExploded";
@@ -265,5 +266,4 @@ function isAudioBookPublication(urlOrPath) {
         return Promise.reject("Cannot determine audiobook type");
     });
 }
-exports.isAudioBookPublication = isAudioBookPublication;
 //# sourceMappingURL=audiobook.js.map

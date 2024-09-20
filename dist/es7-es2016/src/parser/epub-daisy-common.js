@@ -740,7 +740,7 @@ const getNcx_ = (ncxStr, ncxFilePath) => {
             }
         }
     }
-    const ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
+    const ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr, "application/xml");
     const ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
     ncx.ZipPath = ncxFilePath;
     return ncx;
@@ -792,7 +792,7 @@ const getOpf_ = (opfStr, rootfilePathDecoded) => {
             }
         }
     }
-    const opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
+    const opfDoc = new xmldom.DOMParser().parseFromString(opfStr, "application/xml");
     const opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
     opf.ZipPath = rootfilePathDecoded;
     return opf;
@@ -1567,7 +1567,7 @@ const flattenDaisy2SmilAudioSeq = (_smilPathInZip, smilXmlDoc) => {
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
 const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+    var _a;
     if (mo.initialized || !mo.SmilPathInZip) {
         return;
     }
@@ -1663,7 +1663,7 @@ const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, voi
             }
         }
     }
-    const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+    const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
     const nccZipEntry = (yield zip.getEntries()).find((entry) => {
         return /ncc\.html$/i.test(entry);
     });
@@ -1676,7 +1676,7 @@ const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, voi
     debug("PARSED SMIL: " + mo.SmilPathInZip);
     mo.Role = [];
     mo.Role.push("section");
-    if ((_c = smil.Head) === null || _c === void 0 ? void 0 : _c.Meta) {
+    if ((_a = smil.Head) === null || _a === void 0 ? void 0 : _a.Meta) {
         for (const m of smil.Head.Meta) {
             if (!m.Content) {
                 continue;

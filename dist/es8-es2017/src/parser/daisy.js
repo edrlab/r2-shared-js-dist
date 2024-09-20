@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DaisyParsePromise = exports.isDaisyPublication = exports.DaisyBookis = void 0;
+exports.DaisyBookis = void 0;
+exports.isDaisyPublication = isDaisyPublication;
+exports.DaisyParsePromise = DaisyParsePromise;
 const debug_ = require("debug");
 const fs = require("fs");
 const path = require("path");
@@ -60,7 +62,6 @@ async function isDaisyPublication(urlOrPath) {
     }
     return undefined;
 }
-exports.isDaisyPublication = isDaisyPublication;
 async function DaisyParsePromise(filePath) {
     let zip;
     try {
@@ -132,7 +133,6 @@ async function DaisyParsePromise(filePath) {
     (0, epub_daisy_common_1.fillPublicationDate)(publication, undefined, opf);
     return publication;
 }
-exports.DaisyParsePromise = DaisyParsePromise;
 const addLinkData = async (publication, _rootfile, opf, zip, linkItem, item) => {
     var _a;
     if ((_a = publication.Metadata) === null || _a === void 0 ? void 0 : _a.AdditionalJSON) {

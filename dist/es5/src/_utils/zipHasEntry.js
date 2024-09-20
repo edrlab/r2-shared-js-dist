@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zipHasEntry = void 0;
+exports.zipHasEntry = zipHasEntry;
 var tslib_1 = require("tslib");
 var debug_ = require("debug");
 var debug = debug_("r2:shared#utils/zipHasEntry");
@@ -44,5 +44,4 @@ function zipHasEntry(zip, zipPath, zipPathOther) {
         });
     });
 }
-exports.zipHasEntry = zipHasEntry;
 //# sourceMappingURL=zipHasEntry.js.map

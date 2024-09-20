@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isDivinaPublication = exports.Divinais = exports.DivinaParsePromise = void 0;
+exports.Divinais = void 0;
+exports.DivinaParsePromise = DivinaParsePromise;
+exports.isDivinaPublication = isDivinaPublication;
 const debug_ = require("debug");
 const fs = require("fs");
 const http = require("http");
@@ -137,7 +139,6 @@ async function DivinaParsePromise(filePath, isDivina, pubtype) {
     }
     return Promise.resolve(publication);
 }
-exports.DivinaParsePromise = DivinaParsePromise;
 var Divinais;
 (function (Divinais) {
     Divinais["LocalExploded"] = "LocalExploded";
@@ -261,5 +262,4 @@ async function isDivinaPublication(urlOrPath) {
     }
     return Promise.resolve(undefined);
 }
-exports.isDivinaPublication = isDivinaPublication;
 //# sourceMappingURL=divina.js.map

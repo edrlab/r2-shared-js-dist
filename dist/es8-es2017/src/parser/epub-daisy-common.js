@@ -739,7 +739,7 @@ const getNcx_ = (ncxStr, ncxFilePath) => {
             }
         }
     }
-    const ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
+    const ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr, "application/xml");
     const ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
     ncx.ZipPath = ncxFilePath;
     return ncx;
@@ -791,7 +791,7 @@ const getOpf_ = (opfStr, rootfilePathDecoded) => {
             }
         }
     }
-    const opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
+    const opfDoc = new xmldom.DOMParser().parseFromString(opfStr, "application/xml");
     const opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
     opf.ZipPath = rootfilePathDecoded;
     return opf;
@@ -1662,7 +1662,7 @@ const lazyLoadMediaOverlays = async (publication, mo) => {
             }
         }
     }
-    const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+    const smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
     const nccZipEntry = (await zip.getEntries()).find((entry) => {
         return /ncc\.html$/i.test(entry);
     });

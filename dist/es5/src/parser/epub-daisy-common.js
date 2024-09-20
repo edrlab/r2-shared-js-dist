@@ -791,7 +791,7 @@ var getNcx_ = function (ncxStr, ncxFilePath) {
             }
         }
     }
-    var ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr);
+    var ncxDoc = new xmldom.DOMParser().parseFromString(ncxStr, "application/xml");
     var ncx = xml_js_mapper_1.XML.deserialize(ncxDoc, ncx_1.NCX);
     ncx.ZipPath = ncxFilePath;
     return ncx;
@@ -859,7 +859,7 @@ var getOpf_ = function (opfStr, rootfilePathDecoded) {
             }
         }
     }
-    var opfDoc = new xmldom.DOMParser().parseFromString(opfStr);
+    var opfDoc = new xmldom.DOMParser().parseFromString(opfStr, "application/xml");
     var opf = xml_js_mapper_1.XML.deserialize(opfDoc, opf_1.OPF);
     opf.ZipPath = rootfilePathDecoded;
     return opf;
@@ -1786,7 +1786,7 @@ var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaite
                         }
                     }
                 }
-                smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr);
+                smilXmlDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
                 return [4, zip.getEntries()];
             case 16:
                 nccZipEntry = (_e.sent()).find(function (entry) {

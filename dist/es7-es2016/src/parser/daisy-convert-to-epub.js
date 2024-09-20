@@ -774,7 +774,7 @@ ${cssHrefs.reduce((pv, cv) => {
             if (isAudioOnly_) {
                 debug("DAISY audio only book => manifest-audio.json" + (generateDaisyAudioManifestOnly ? " (generateDaisyAudioManifestOnly ***_manifest.json)" : ""));
                 const transformPublicationToAudioBook = (pubAudio) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-                    var _f;
+                    var _a;
                     const pubJson = (0, serializable_1.TaJsonSerialize)(pubAudio);
                     const audioPublication = (0, serializable_1.TaJsonDeserialize)(pubJson, publication_1.Publication);
                     if (!audioPublication.Metadata) {
@@ -914,7 +914,7 @@ ${cssHrefs.reduce((pv, cv) => {
                     audioPublication.Spine = [];
                     if (pubAudio.Spine) {
                         for (const spineLink of pubAudio.Spine) {
-                            if (!((_f = spineLink.MediaOverlays) === null || _f === void 0 ? void 0 : _f.SmilPathInZip)) {
+                            if (!((_a = spineLink.MediaOverlays) === null || _a === void 0 ? void 0 : _a.SmilPathInZip)) {
                                 debug("???- !spineLink.MediaOverlays?.SmilPathInZip");
                                 continue;
                             }
