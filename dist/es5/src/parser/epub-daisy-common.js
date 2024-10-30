@@ -1605,67 +1605,55 @@ var addMediaOverlaySMIL = function (link, manItemSmil, opf, zip) { return tslib_
 }); };
 exports.addMediaOverlaySMIL = addMediaOverlaySMIL;
 var flattenDaisy2SmilAudioSeq = function (_smilPathInZip, smilXmlDoc) {
-    var iClone = 0;
     var pars = Array.from(smilXmlDoc.getElementsByTagName("par"));
     for (var _i = 0, pars_1 = pars; _i < pars_1.length; _i++) {
         var par = pars_1[_i];
         var seq = par.getElementsByTagName("seq")[0];
-        if (seq) {
-            var text = par.getElementsByTagName("text")[0];
-            var audios = Array.from(seq.getElementsByTagName("audio"));
-            for (var j = 0; j < audios.length; j++) {
-                var audio = audios[j];
+        if (!seq) {
+            continue;
+        }
+        var prevAudio = undefined;
+        var audios = Array.from(seq.getElementsByTagName("audio"));
+        for (var j = 0; j < audios.length; j++) {
+            var audio = audios[j];
+            if (prevAudio === undefined) {
                 seq.removeChild(audio);
-                if (j === 0) {
-                    if (text) {
-                        if (text.insertAdjacentElement) {
-                            text.insertAdjacentElement("afterend", audio);
+                par.appendChild(audio);
+                prevAudio = audio;
+            }
+            else {
+                var prevSrc = prevAudio.getAttribute("src");
+                var thisSrc = audio.getAttribute("src");
+                if (thisSrc === prevSrc) {
+                    var prevCeAttr = prevAudio.getAttribute("clip-end");
+                    var thisCbAttr = audio.getAttribute("clip-begin");
+                    var contiguous = prevCeAttr && thisCbAttr && prevCeAttr === thisCbAttr;
+                    if (prevCeAttr && thisCbAttr && !contiguous) {
+                        var prevT = (0, media_overlay_1.timeStrToSeconds)(prevCeAttr);
+                        var thisT = (0, media_overlay_1.timeStrToSeconds)(thisCbAttr);
+                        if (prevT === thisT || Math.abs(prevT - thisT) <= 0.5) {
+                            contiguous = true;
                         }
-                        else if (text.parentNode) {
-                            text.parentNode.insertBefore(audio, text.nextElementSibling);
+                    }
+                    if (contiguous) {
+                        var thisCeAttr = audio.getAttribute("clip-end");
+                        if (thisCeAttr) {
+                            prevAudio.setAttribute("clip-end", thisCeAttr);
                         }
-                        var parId = par.getAttribute("id");
-                        if (!parId) {
-                            var txtId = text.getAttribute("id");
-                            if (txtId) {
-                                par.setAttribute("id", txtId);
-                                text.removeAttribute("id");
-                            }
+                        else if (prevAudio.getAttribute("clip-end")) {
+                            prevAudio.removeAttribute("clip-end");
                         }
                     }
                     else {
-                        par.appendChild(audio);
+                        debug("NCC SMIL AUDIO not contiguous!! ", thisSrc, prevCeAttr, thisCbAttr);
                     }
                 }
                 else {
-                    var newPar = par.namespaceURI ?
-                        smilXmlDoc.createElementNS(par.namespaceURI, "par") :
-                        smilXmlDoc.createElement("par");
-                    iClone++;
-                    if (text) {
-                        var cloneText = text.cloneNode(false);
-                        var tId = cloneText.getAttribute("id");
-                        if (tId) {
-                            cloneText.removeAttribute("id");
-                        }
-                        newPar.setAttribute("id", (tId ? tId : "id") + "r2__" + iClone);
-                        newPar.appendChild(cloneText);
-                    }
-                    else {
-                        newPar.setAttribute("id", "id" + "r2__" + iClone);
-                    }
-                    newPar.appendChild(audio);
-                    newPar.appendChild(smilXmlDoc.createTextNode("\n"));
-                    if (par.insertAdjacentElement) {
-                        par.insertAdjacentElement("afterend", newPar);
-                    }
-                    else if (par.parentNode) {
-                        par.parentNode.insertBefore(newPar, par.nextElementSibling);
-                    }
+                    debug("NCC SMIL AUDIO thisSrc !== prevSrc!! ", thisSrc, prevSrc);
                 }
             }
-            par.removeChild(seq);
         }
+        par.removeChild(seq);
     }
 };
 exports.flattenDaisy2SmilAudioSeq = flattenDaisy2SmilAudioSeq;
