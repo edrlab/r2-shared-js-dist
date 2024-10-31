@@ -1860,6 +1860,12 @@ var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaite
                         if (smil.Body.SystemRequired.indexOf("pagenumber-on") >= 0) {
                             mo.Role.push("pagebreak");
                         }
+                        else if (smil.Body.SystemRequired.indexOf("note-on") >= 0) {
+                            mo.Role.push("note");
+                        }
+                        else if (smil.Body.SystemRequired.indexOf("sidebar-on") >= 0) {
+                            mo.Role.push("sidebar");
+                        }
                     }
                     if (smil.Body.TextRef) {
                         smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
@@ -1987,6 +1993,18 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                 }
                 moc.Role.push("pagebreak");
             }
+            else if (seq.SystemRequired.indexOf("note-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (seq.SystemRequired.indexOf("sidebar-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
         }
         if (seq.TextRef) {
             var seqTextRefDecoded = seq.TextRefDecoded;
@@ -2086,6 +2104,18 @@ var addSeqToMediaOverlay = function (smil, publication, rootMO, mo, seqChild) {
                     moc.Role = [];
                 }
                 moc.Role.push("pagebreak");
+            }
+            else if (par.SystemRequired.indexOf("note-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (par.SystemRequired.indexOf("sidebar-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
             }
         }
         if (par.Text && par.Text.Src) {

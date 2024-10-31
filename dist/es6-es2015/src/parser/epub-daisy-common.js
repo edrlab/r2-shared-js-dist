@@ -1733,6 +1733,12 @@ const lazyLoadMediaOverlays = (publication, mo) => tslib_1.__awaiter(void 0, voi
             if (smil.Body.SystemRequired.indexOf("pagenumber-on") >= 0) {
                 mo.Role.push("pagebreak");
             }
+            else if (smil.Body.SystemRequired.indexOf("note-on") >= 0) {
+                mo.Role.push("note");
+            }
+            else if (smil.Body.SystemRequired.indexOf("sidebar-on") >= 0) {
+                mo.Role.push("sidebar");
+            }
         }
         if (smil.Body.TextRef) {
             const smilBodyTextRefDecoded = smil.Body.TextRefDecoded;
@@ -1857,6 +1863,18 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                 }
                 moc.Role.push("pagebreak");
             }
+            else if (seq.SystemRequired.indexOf("note-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (seq.SystemRequired.indexOf("sidebar-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
+            }
         }
         if (seq.TextRef) {
             const seqTextRefDecoded = seq.TextRefDecoded;
@@ -1955,6 +1973,18 @@ const addSeqToMediaOverlay = (smil, publication, rootMO, mo, seqChild) => {
                     moc.Role = [];
                 }
                 moc.Role.push("pagebreak");
+            }
+            else if (par.SystemRequired.indexOf("note-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("note");
+            }
+            else if (par.SystemRequired.indexOf("sidebar-on") >= 0) {
+                if (!moc.Role) {
+                    moc.Role = [];
+                }
+                moc.Role.push("sidebar");
             }
         }
         if (par.Text && par.Text.Src) {
