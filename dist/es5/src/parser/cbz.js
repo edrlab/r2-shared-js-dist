@@ -14,6 +14,7 @@ var publication_link_1 = require("../models/publication-link");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
 var xml_js_mapper_1 = require("r2-utils-js/dist/es5/src/_utils/xml-js-mapper");
 var zipFactory_1 = require("r2-utils-js/dist/es5/src/_utils/zip/zipFactory");
+var bom_1 = require("r2-utils-js/dist/es5/src/_utils/bom");
 var decodeURI_1 = require("../_utils/decodeURI");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var comicrack_1 = require("./comicrack/comicrack");
@@ -158,7 +159,7 @@ var comicRackMetadata = function (zip, entryName, publication) { return tslib_1.
                 console.log(err_5);
                 return [2];
             case 10:
-                comicXmlStr = comicZipData.toString("utf8");
+                comicXmlStr = (0, bom_1.removeUTF8BOM)(comicZipData.toString("utf8"));
                 comicXmlDoc = new xmldom.DOMParser().parseFromString(comicXmlStr, "application/xml");
                 comicMeta = xml_js_mapper_1.XML.deserialize(comicXmlDoc, comicrack_1.ComicInfo);
                 comicMeta.ZipPath = entryNameDecoded;

@@ -26,6 +26,7 @@ const UrlUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/http/UrlUtils
 const BufferUtils_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/stream/BufferUtils");
 const xml_js_mapper_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/xml-js-mapper");
 const zipFactory_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/zip/zipFactory");
+const bom_1 = require("r2-utils-js/dist/es8-es2017/src/_utils/bom");
 const decodeURI_1 = require("../_utils/decodeURI");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const epub_daisy_common_1 = require("./epub-daisy-common");
@@ -197,7 +198,7 @@ async function EpubParsePromise(filePath) {
             debug(err);
             return Promise.reject(err);
         }
-        const encryptionXmlStr = encryptionXmlZipData.toString("utf8");
+        const encryptionXmlStr = (0, bom_1.removeUTF8BOM)(encryptionXmlZipData.toString("utf8"));
         const encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr, "application/xml");
         encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
         encryption.ZipPath = encZipPath;
@@ -220,7 +221,7 @@ async function EpubParsePromise(filePath) {
         debug(err);
         return Promise.reject(err);
     }
-    const containerXmlStr = containerXmlZipData.toString("utf8");
+    const containerXmlStr = (0, bom_1.removeUTF8BOM)(containerXmlZipData.toString("utf8"));
     const containerXmlDoc = new xmldom.DOMParser().parseFromString(containerXmlStr, "application/xml");
     const container = xml_js_mapper_1.XML.deserialize(containerXmlDoc, container_1.Container);
     container.ZipPath = containerZipPath;
@@ -615,7 +616,7 @@ const addRendition = async (publication, opf, zip) => {
                     }
                     if (displayOptionsZipData) {
                         try {
-                            const displayOptionsStr = displayOptionsZipData.toString("utf8");
+                            const displayOptionsStr = (0, bom_1.removeUTF8BOM)(displayOptionsZipData.toString("utf8"));
                             const displayOptionsDoc = new xmldom.DOMParser().parseFromString(displayOptionsStr, "application/xml");
                             const displayOptions = xml_js_mapper_1.XML.deserialize(displayOptionsDoc, display_options_1.DisplayOptions);
                             displayOptions.ZipPath = displayOptionsZipPath;
@@ -747,10 +748,11 @@ const fillPageListFromAdobePageMap = async (publication, zip, l) => {
     if (!l.HrefDecoded) {
         return;
     }
-    const pageMapContent = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(l.Href, l.HrefDecoded, zip);
+    let pageMapContent = await (0, epub_daisy_common_1.loadFileStrFromZipPath)(l.Href, l.HrefDecoded, zip);
     if (!pageMapContent) {
         return;
     }
+    pageMapContent = (0, bom_1.removeUTF8BOM)(pageMapContent);
     const pageMapXmlDoc = new xmldom.DOMParser().parseFromString(pageMapContent, "application/xml");
     const pages = pageMapXmlDoc.getElementsByTagName("page");
     if (pages && pages.length) {
@@ -847,7 +849,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
         debug(err);
         return Promise.reject(err);
     }
-    const navDocStr = navDocZipData.toString("utf8");
+    const navDocStr = (0, bom_1.removeUTF8BOM)(navDocZipData.toString("utf8"));
     const navXmlDoc = new xmldom.DOMParser().parseFromString(navDocStr, "application/xml");
     const select = xpath.useNamespaces({
         epub: "http://www.idpf.org/2007/ops",

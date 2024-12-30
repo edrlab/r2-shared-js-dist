@@ -9,6 +9,7 @@ const path = require("path");
 const xmldom = require("@xmldom/xmldom");
 const media_overlay_1 = require("../models/media-overlay");
 const BufferUtils_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/stream/BufferUtils");
+const bom_1 = require("r2-utils-js/dist/es6-es2015/src/_utils/bom");
 const zipHasEntry_1 = require("../_utils/zipHasEntry");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const debug = debug_("r2:shared#parser/daisy-convert-to-epub");
@@ -87,7 +88,7 @@ const convertNccToOpfAndNcx = (zip, rootfilePathDecoded, rootfilePath) => tslib_
         debug(err);
         return Promise.reject(err);
     }
-    const nccStr = nccZipData.toString("utf8");
+    const nccStr = (0, bom_1.removeUTF8BOM)(nccZipData.toString("utf8"));
     const nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
     const metas = Array.from(nccDoc.getElementsByTagName("meta")).
         reduce((prevVal, curVal) => {

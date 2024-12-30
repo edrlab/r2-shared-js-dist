@@ -25,6 +25,7 @@ var opf_1 = require("./epub/opf");
 var opf_author_1 = require("./epub/opf-author");
 var smil_1 = require("./epub/smil");
 var smil_seq_1 = require("./epub/smil-seq");
+var bom_1 = require("r2-utils-js/dist/es5/src/_utils/bom");
 var debug = debug_("r2:shared#parser/epub-daisy-common");
 var epub3 = "3.0";
 var epub301 = "3.0.1";
@@ -774,7 +775,7 @@ var getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, 
                 debug(err_3);
                 return [2, Promise.reject(err_3)];
             case 10:
-                ncxStr = ncxZipData.toString("utf8");
+                ncxStr = (0, bom_1.removeUTF8BOM)(ncxZipData.toString("utf8"));
                 return [2, (0, exports.getNcx_)(ncxStr, ncxFilePath)];
         }
     });
@@ -842,7 +843,7 @@ var getOpf = function (zip, rootfilePathDecoded, rootfilePath) { return tslib_1.
                 debug(err_5);
                 return [2, Promise.reject(err_5)];
             case 10:
-                opfStr = opfZipData.toString("utf8");
+                opfStr = (0, bom_1.removeUTF8BOM)(opfZipData.toString("utf8"));
                 return [2, (0, exports.getOpf_)(opfStr, rootfilePathDecoded)];
         }
     });
@@ -1763,7 +1764,7 @@ var lazyLoadMediaOverlays = function (publication, mo) { return tslib_1.__awaite
                 debug(err_11);
                 return [2, Promise.reject(err_11)];
             case 15:
-                smilStr = smilZipData.toString("utf8");
+                smilStr = (0, bom_1.removeUTF8BOM)(smilZipData.toString("utf8"));
                 iStart = smilStr.indexOf("<smil");
                 if (iStart >= 0) {
                     iEnd = smilStr.indexOf(">", iStart);

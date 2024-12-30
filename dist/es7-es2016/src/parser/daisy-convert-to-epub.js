@@ -15,6 +15,7 @@ const metadata_properties_1 = require("../models/metadata-properties");
 const publication_1 = require("../models/publication");
 const publication_link_1 = require("../models/publication-link");
 const serializable_1 = require("r2-lcp-js/dist/es7-es2016/src/serializable");
+const bom_1 = require("r2-utils-js/dist/es7-es2016/src/_utils/bom");
 const epub_daisy_common_1 = require("./epub-daisy-common");
 const debug = debug_("r2:shared#parser/daisy-convert-to-epub");
 function ensureDirs(fspath) {
@@ -198,7 +199,7 @@ const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAu
                         debug("!loadFileStrFromZipPath 1", smilPathInZip);
                         return Promise.reject("!loadFileStrFromZipPath 1 " + smilPathInZip);
                     }
-                    smilDoc = new xmldom.DOMParser().parseFromString(smilStr, "application/xml");
+                    smilDoc = new xmldom.DOMParser().parseFromString((0, bom_1.removeUTF8BOM)(smilStr), "application/xml");
                     if (nccZipEntry) {
                         (0, epub_daisy_common_1.flattenDaisy2SmilAudioSeq)(smilPathInZip, smilDoc);
                     }
@@ -431,6 +432,7 @@ const convertDaisyToReadiumWebPub = (outputDirPath, publication, generateDaisyAu
                         debug("!loadFileStrFromZipPath 3", dtBookStr);
                         continue;
                     }
+                    dtBookStr = (0, bom_1.removeUTF8BOM)(dtBookStr);
                     dtBookStr = dtBookStr.replace(/xmlns=""/, " ");
                     dtBookStr = dtBookStr.replace(/<dtbook/, "<dtbook xmlns:epub=\"http://www.idpf.org/2007/ops\" ");
                     const dtBookDoc = new xmldom.DOMParser().parseFromString(dtBookStr, "application/xml");

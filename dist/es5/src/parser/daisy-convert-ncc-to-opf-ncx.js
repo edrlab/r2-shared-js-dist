@@ -9,6 +9,7 @@ var path = require("path");
 var xmldom = require("@xmldom/xmldom");
 var media_overlay_1 = require("../models/media-overlay");
 var BufferUtils_1 = require("r2-utils-js/dist/es5/src/_utils/stream/BufferUtils");
+var bom_1 = require("r2-utils-js/dist/es5/src/_utils/bom");
 var zipHasEntry_1 = require("../_utils/zipHasEntry");
 var epub_daisy_common_1 = require("./epub-daisy-common");
 var debug = debug_("r2:shared#parser/daisy-convert-to-epub");
@@ -101,7 +102,7 @@ var convertNccToOpfAndNcx = function (zip, rootfilePathDecoded, rootfilePath) { 
                 debug(err_2);
                 return [2, Promise.reject(err_2)];
             case 10:
-                nccStr = nccZipData.toString("utf8");
+                nccStr = (0, bom_1.removeUTF8BOM)(nccZipData.toString("utf8"));
                 nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
                 metas = Array.from(nccDoc.getElementsByTagName("meta")).
                     reduce(function (prevVal, curVal) {
