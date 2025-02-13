@@ -103,7 +103,22 @@ var convertNccToOpfAndNcx = function (zip, rootfilePathDecoded, rootfilePath) { 
                 return [2, Promise.reject(err_2)];
             case 10:
                 nccStr = (0, bom_1.removeUTF8BOM)(nccZipData.toString("utf8"));
-                nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
+                try {
+                    nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
+                }
+                catch (err1) {
+                    console.log("xmldom.DOMParser().parseFromString text/html ERROR1, attempting DOCTYPE fix...");
+                    console.log(err1);
+                    nccStr = nccStr.replace(/(<!DOCTYPE\s+[^>]+\s*)\[\s*\]\s*>/, "$1>");
+                    try {
+                        nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "text/html");
+                    }
+                    catch (err2) {
+                        console.log("xmldom.DOMParser().parseFromString text/html ERROR2, fallback to application/xml...");
+                        console.log(err2);
+                        nccDoc = new xmldom.DOMParser().parseFromString(nccStr, "application/xml");
+                    }
+                }
                 metas = Array.from(nccDoc.getElementsByTagName("meta")).
                     reduce(function (prevVal, curVal) {
                     var name = curVal.getAttribute("name");
