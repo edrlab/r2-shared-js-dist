@@ -503,6 +503,14 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                             cssHrefs.push(href);
                         }
                     }
+                    for (const stylesheet of stylesheets) {
+                        if (typeof stylesheet.remove === "function") {
+                            stylesheet.remove();
+                        }
+                        else if (stylesheet.parentNode) {
+                            stylesheet.parentNode.removeChild(stylesheet);
+                        }
+                    }
                     const smilRefs = select("//*[@smilref]", dtBookDoc);
                     for (const smilRef of smilRefs) {
                         const ref = smilRef.getAttribute("smilref");
@@ -514,15 +522,15 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                     const dtbookNowXHTML = new xmldom.XMLSerializer().serializeToString(dtBookDoc)
                         .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/, "xmlns=\"http://www.w3.org/1999/xhtml\"")
                         .replace(/xmlns="http:\/\/www\.daisy\.org\/z3986\/2005\/dtbook\/"/g, " ")
-                        .replace(/^([\s\S]*)<html/gm, `<?xml version="1.0" encoding="UTF-8"?>
+                        .replace(/^([\s\S]*)<html/m, `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html `)
-                        .replace(/<head([\s\S]*?)>/gm, `
+                        .replace(/<head([\s\S]*?)>/m, `
 <head$1>
 <meta charset="UTF-8" />
 ${title ? `<title>${title}</title>` : ""}
 `)
-                        .replace(/<\/head[\s\S]*?>/gm, `
+                        .replace(/<\/head[\s\S]*?>/m, `
 ${cssHrefs.reduce((pv, cv) => {
                         return pv + "\n" + `<link rel="stylesheet" type="text/css" href="${cv}" />`;
                     }, "")}
