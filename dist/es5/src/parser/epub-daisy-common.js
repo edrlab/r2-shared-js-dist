@@ -715,9 +715,7 @@ exports.setPublicationDirection = setPublicationDirection;
 var langStringIsRTL = function (lang) {
     return lang === "ar" || lang.startsWith("ar-") ||
         lang === "he" || lang.startsWith("he-") ||
-        lang === "fa" || lang.startsWith("fa-") ||
-        lang === "zh-Hant" ||
-        lang === "zh-TW";
+        lang === "fa" || lang.startsWith("fa-");
 };
 exports.langStringIsRTL = langStringIsRTL;
 var getNcx = function (ncxManItem, opf, zip) { return tslib_1.__awaiter(void 0, void 0, void 0, function () {

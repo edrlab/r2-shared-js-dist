@@ -681,9 +681,7 @@ exports.setPublicationDirection = setPublicationDirection;
 const langStringIsRTL = (lang) => {
     return lang === "ar" || lang.startsWith("ar-") ||
         lang === "he" || lang.startsWith("he-") ||
-        lang === "fa" || lang.startsWith("fa-") ||
-        lang === "zh-Hant" ||
-        lang === "zh-TW";
+        lang === "fa" || lang.startsWith("fa-");
 };
 exports.langStringIsRTL = langStringIsRTL;
 const getNcx = (ncxManItem, opf, zip) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {

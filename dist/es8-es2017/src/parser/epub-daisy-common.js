@@ -680,9 +680,7 @@ exports.setPublicationDirection = setPublicationDirection;
 const langStringIsRTL = (lang) => {
     return lang === "ar" || lang.startsWith("ar-") ||
         lang === "he" || lang.startsWith("he-") ||
-        lang === "fa" || lang.startsWith("fa-") ||
-        lang === "zh-Hant" ||
-        lang === "zh-TW";
+        lang === "fa" || lang.startsWith("fa-");
 };
 exports.langStringIsRTL = langStringIsRTL;
 const getNcx = async (ncxManItem, opf, zip) => {
