@@ -118,6 +118,7 @@ function isEPUBlication(urlOrPath) {
     return undefined;
 }
 async function EpubParsePromise(filePath) {
+    var _a;
     const isAnEPUB = isEPUBlication(filePath);
     let filePathToLoad = filePath;
     if (isAnEPUB === EPUBis.LocalExploded) {
@@ -267,7 +268,15 @@ async function EpubParsePromise(filePath) {
             return item.TypeLink === "application/oebps-page-map+xml";
         });
         if (pageMapLink) {
-            await fillPageListFromAdobePageMap(publication, zip, pageMapLink);
+            if ((_a = pageMapLink.Properties) === null || _a === void 0 ? void 0 : _a.Encrypted) {
+                debug("page.xml application/oebps-page-map+xml ENCRYPTED?! (cannot parse page list)");
+            }
+            try {
+                await fillPageListFromAdobePageMap(publication, zip, pageMapLink);
+            }
+            catch (e) {
+                debug(e);
+            }
         }
     }
     fillCalibreSerieInfo(publication, opf);
@@ -764,7 +773,7 @@ const fillPageListFromAdobePageMap = async (publication, zip, l) => {
             const link = new publication_link_1.Link();
             const href = page.getAttribute("href");
             const title = page.getAttribute("name");
-            if (href === null || title === null) {
+            if (!href || !title) {
                 continue;
             }
             if (!publication.PageList) {
@@ -873,7 +882,7 @@ const fillTOCFromNavDoc = async (publication, zip) => {
                             }
                             case "page-list": {
                                 publication.PageList = [];
-                                fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
+                                fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded, true);
                                 break;
                             }
                             case "landmarks": {
@@ -911,13 +920,12 @@ const fillTOCFromNavDoc = async (publication, zip) => {
         });
     }
 };
-const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
+const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath, requireTitle = false) => {
     olElems.forEach((olElem) => {
         const liElems = select("xhtml:li", olElem);
         if (liElems && liElems.length) {
             liElems.forEach((liElem) => {
                 const link = new publication_link_1.Link();
-                children.push(link);
                 const aElems = select("xhtml:a", liElem);
                 if (aElems && aElems.length > 0) {
                     const epubType = select("@epub:type", aElems[0]);
@@ -955,6 +963,9 @@ const fillTOCFromNavDocWithOL = (select, olElems, children, navDocPath) => {
                     if (liFirstChild && liFirstChild.length && liFirstChild[0].textContent) {
                         link.Title = liFirstChild[0].textContent.trim();
                     }
+                }
+                if (!requireTitle || !!link.Title) {
+                    children.push(link);
                 }
                 const olElemsNext = select("xhtml:ol", liElem);
                 if (olElemsNext && olElemsNext.length) {

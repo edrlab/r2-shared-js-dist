@@ -141,9 +141,10 @@ function isEPUBlication(urlOrPath) {
 }
 function EpubParsePromise(filePath) {
     return tslib_1.__awaiter(this, void 0, void 0, function () {
-        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ex_1, ncx, ncxManItem, pageMapLink;
-        return tslib_1.__generator(this, function (_a) {
-            switch (_a.label) {
+        var isAnEPUB, filePathToLoad, url, zip, err_3, publication, lcpl, lcplZipPath, has, lcplZipStream_, err_4, lcplZipStream, lcplZipData, err_5, lcplStr, lcplJson, mime, encryption, encZipPath, encryptionXmlZipStream_, err_6, encryptionXmlZipStream, encryptionXmlZipData, err_7, encryptionXmlStr, encryptionXmlDoc, containerZipPath, containerXmlZipStream_, err_8, containerXmlZipStream, containerXmlZipData, err_9, containerXmlStr, containerXmlDoc, container, rootfile, rootfilePathDecoded, opf, ex_1, ncx, ncxManItem, pageMapLink, e_1;
+        var _a;
+        return tslib_1.__generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     isAnEPUB = isEPUBlication(filePath);
                     filePathToLoad = filePath;
@@ -155,15 +156,15 @@ function EpubParsePromise(filePath) {
                         url.pathname = url.pathname.replace(/META-INF[\/|\\]container.xml$/, "");
                         filePathToLoad = url.toString();
                     }
-                    _a.label = 1;
+                    _b.label = 1;
                 case 1:
-                    _a.trys.push([1, 3, , 4]);
+                    _b.trys.push([1, 3, , 4]);
                     return [4, (0, zipFactory_1.zipLoadPromise)(filePathToLoad)];
                 case 2:
-                    zip = _a.sent();
+                    zip = _b.sent();
                     return [3, 4];
                 case 3:
-                    err_3 = _a.sent();
+                    err_3 = _b.sent();
                     debug(err_3);
                     return [2, Promise.reject(err_3)];
                 case 4:
@@ -180,32 +181,32 @@ function EpubParsePromise(filePath) {
                     lcplZipPath = "META-INF/license.lcpl";
                     return [4, (0, zipHasEntry_1.zipHasEntry)(zip, lcplZipPath, undefined)];
                 case 5:
-                    has = _a.sent();
+                    has = _b.sent();
                     if (!has) return [3, 14];
                     lcplZipStream_ = void 0;
-                    _a.label = 6;
+                    _b.label = 6;
                 case 6:
-                    _a.trys.push([6, 8, , 9]);
+                    _b.trys.push([6, 8, , 9]);
                     return [4, zip.entryStreamPromise(lcplZipPath)];
                 case 7:
-                    lcplZipStream_ = _a.sent();
+                    lcplZipStream_ = _b.sent();
                     return [3, 9];
                 case 8:
-                    err_4 = _a.sent();
+                    err_4 = _b.sent();
                     debug(err_4);
                     return [2, Promise.reject(err_4)];
                 case 9:
                     lcplZipStream = lcplZipStream_.stream;
                     lcplZipData = void 0;
-                    _a.label = 10;
+                    _b.label = 10;
                 case 10:
-                    _a.trys.push([10, 12, , 13]);
+                    _b.trys.push([10, 12, , 13]);
                     return [4, (0, BufferUtils_1.streamToBufferPromise)(lcplZipStream)];
                 case 11:
-                    lcplZipData = _a.sent();
+                    lcplZipData = _b.sent();
                     return [3, 13];
                 case 12:
-                    err_5 = _a.sent();
+                    err_5 = _b.sent();
                     debug(err_5);
                     return [2, Promise.reject(err_5)];
                 case 13:
@@ -218,37 +219,37 @@ function EpubParsePromise(filePath) {
                     publication.LCP = lcpl;
                     mime = "application/vnd.readium.lcp.license.v1.0+json";
                     publication.AddLink(mime, ["license"], lcpl.ZipPath, undefined);
-                    _a.label = 14;
+                    _b.label = 14;
                 case 14:
                     encZipPath = "META-INF/encryption.xml";
                     return [4, (0, zipHasEntry_1.zipHasEntry)(zip, encZipPath, undefined)];
                 case 15:
-                    has = _a.sent();
+                    has = _b.sent();
                     if (!has) return [3, 24];
                     encryptionXmlZipStream_ = void 0;
-                    _a.label = 16;
+                    _b.label = 16;
                 case 16:
-                    _a.trys.push([16, 18, , 19]);
+                    _b.trys.push([16, 18, , 19]);
                     return [4, zip.entryStreamPromise(encZipPath)];
                 case 17:
-                    encryptionXmlZipStream_ = _a.sent();
+                    encryptionXmlZipStream_ = _b.sent();
                     return [3, 19];
                 case 18:
-                    err_6 = _a.sent();
+                    err_6 = _b.sent();
                     debug(err_6);
                     return [2, Promise.reject(err_6)];
                 case 19:
                     encryptionXmlZipStream = encryptionXmlZipStream_.stream;
                     encryptionXmlZipData = void 0;
-                    _a.label = 20;
+                    _b.label = 20;
                 case 20:
-                    _a.trys.push([20, 22, , 23]);
+                    _b.trys.push([20, 22, , 23]);
                     return [4, (0, BufferUtils_1.streamToBufferPromise)(encryptionXmlZipStream)];
                 case 21:
-                    encryptionXmlZipData = _a.sent();
+                    encryptionXmlZipData = _b.sent();
                     return [3, 23];
                 case 22:
-                    err_7 = _a.sent();
+                    err_7 = _b.sent();
                     debug(err_7);
                     return [2, Promise.reject(err_7)];
                 case 23:
@@ -256,31 +257,31 @@ function EpubParsePromise(filePath) {
                     encryptionXmlDoc = new xmldom.DOMParser().parseFromString(encryptionXmlStr, "application/xml");
                     encryption = xml_js_mapper_1.XML.deserialize(encryptionXmlDoc, encryption_1.Encryption);
                     encryption.ZipPath = encZipPath;
-                    _a.label = 24;
+                    _b.label = 24;
                 case 24:
                     containerZipPath = "META-INF/container.xml";
-                    _a.label = 25;
+                    _b.label = 25;
                 case 25:
-                    _a.trys.push([25, 27, , 28]);
+                    _b.trys.push([25, 27, , 28]);
                     return [4, zip.entryStreamPromise(containerZipPath)];
                 case 26:
-                    containerXmlZipStream_ = _a.sent();
+                    containerXmlZipStream_ = _b.sent();
                     return [3, 28];
                 case 27:
-                    err_8 = _a.sent();
+                    err_8 = _b.sent();
                     debug(err_8);
                     return [2, Promise.reject(err_8)];
                 case 28:
                     containerXmlZipStream = containerXmlZipStream_.stream;
-                    _a.label = 29;
+                    _b.label = 29;
                 case 29:
-                    _a.trys.push([29, 31, , 32]);
+                    _b.trys.push([29, 31, , 32]);
                     return [4, (0, BufferUtils_1.streamToBufferPromise)(containerXmlZipStream)];
                 case 30:
-                    containerXmlZipData = _a.sent();
+                    containerXmlZipData = _b.sent();
                     return [3, 32];
                 case 31:
-                    err_9 = _a.sent();
+                    err_9 = _b.sent();
                     debug(err_9);
                     return [2, Promise.reject(err_9)];
                 case 32:
@@ -295,7 +296,7 @@ function EpubParsePromise(filePath) {
                     }
                     return [4, (0, epub_daisy_common_1.getOpf)(zip, rootfilePathDecoded, rootfile.Path)];
                 case 33:
-                    opf = _a.sent();
+                    opf = _b.sent();
                     (0, epub_daisy_common_1.addLanguage)(publication, opf);
                     (0, epub_daisy_common_1.addTitle)(publication, rootfile, opf);
                     (0, epub_daisy_common_1.addIdentifier)(publication, opf);
@@ -304,25 +305,25 @@ function EpubParsePromise(filePath) {
                     (0, epub_daisy_common_1.findContributorInMeta)(publication, rootfile, opf);
                     return [4, addRendition(publication, opf, zip)];
                 case 34:
-                    _a.sent();
+                    _b.sent();
                     return [4, (0, epub_daisy_common_1.fillSpineAndResource)(publication, rootfile, opf, zip, addLinkData)];
                 case 35:
-                    _a.sent();
+                    _b.sent();
                     return [4, addCoverRel(publication, rootfile, opf, zip)];
                 case 36:
-                    _a.sent();
+                    _b.sent();
                     if (encryption) {
                         fillEncryptionInfo(publication, encryption, lcpl);
                     }
-                    _a.label = 37;
+                    _b.label = 37;
                 case 37:
-                    _a.trys.push([37, 39, , 40]);
+                    _b.trys.push([37, 39, , 40]);
                     return [4, fillTOCFromNavDoc(publication, zip)];
                 case 38:
-                    _a.sent();
+                    _b.sent();
                     return [3, 40];
                 case 39:
-                    ex_1 = _a.sent();
+                    ex_1 = _b.sent();
                     publication.TOC = [];
                     console.log(ex_1);
                     return [3, 40];
@@ -336,22 +337,32 @@ function EpubParsePromise(filePath) {
                     if (!ncxManItem) return [3, 42];
                     return [4, (0, epub_daisy_common_1.getNcx)(ncxManItem, opf, zip)];
                 case 41:
-                    ncx = _a.sent();
-                    _a.label = 42;
+                    ncx = _b.sent();
+                    _b.label = 42;
                 case 42:
                     (0, epub_daisy_common_1.fillTOC)(publication, opf, ncx);
-                    _a.label = 43;
+                    _b.label = 43;
                 case 43:
-                    if (!(!publication.PageList && publication.Resources)) return [3, 45];
+                    if (!(!publication.PageList && publication.Resources)) return [3, 47];
                     pageMapLink = publication.Resources.find(function (item) {
                         return item.TypeLink === "application/oebps-page-map+xml";
                     });
-                    if (!pageMapLink) return [3, 45];
-                    return [4, fillPageListFromAdobePageMap(publication, zip, pageMapLink)];
+                    if (!pageMapLink) return [3, 47];
+                    if ((_a = pageMapLink.Properties) === null || _a === void 0 ? void 0 : _a.Encrypted) {
+                        debug("page.xml application/oebps-page-map+xml ENCRYPTED?! (cannot parse page list)");
+                    }
+                    _b.label = 44;
                 case 44:
-                    _a.sent();
-                    _a.label = 45;
+                    _b.trys.push([44, 46, , 47]);
+                    return [4, fillPageListFromAdobePageMap(publication, zip, pageMapLink)];
                 case 45:
+                    _b.sent();
+                    return [3, 47];
+                case 46:
+                    e_1 = _b.sent();
+                    debug(e_1);
+                    return [3, 47];
+                case 47:
                     fillCalibreSerieInfo(publication, opf);
                     (0, epub_daisy_common_1.fillSubject)(publication, opf);
                     (0, epub_daisy_common_1.fillPublicationDate)(publication, rootfile, opf);
@@ -1044,7 +1055,7 @@ var fillPageListFromAdobePageMap = function (publication, zip, l) { return tslib
                         link = new publication_link_1.Link();
                         href = page.getAttribute("href");
                         title = page.getAttribute("name");
-                        if (href === null || title === null) {
+                        if (!href || !title) {
                             continue;
                         }
                         if (!publication.PageList) {
@@ -1172,7 +1183,7 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
                                         }
                                         case "page-list": {
                                             publication.PageList = [];
-                                            fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded);
+                                            fillTOCFromNavDocWithOL(select, olElem, publication.PageList, navLinkHrefDecoded, true);
                                             break;
                                         }
                                         case "landmarks": {
@@ -1213,13 +1224,13 @@ var fillTOCFromNavDoc = function (publication, zip) { return tslib_1.__awaiter(v
         }
     });
 }); };
-var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
+var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath, requireTitle) {
+    if (requireTitle === void 0) { requireTitle = false; }
     olElems.forEach(function (olElem) {
         var liElems = select("xhtml:li", olElem);
         if (liElems && liElems.length) {
             liElems.forEach(function (liElem) {
                 var link = new publication_link_1.Link();
-                children.push(link);
                 var aElems = select("xhtml:a", liElem);
                 if (aElems && aElems.length > 0) {
                     var epubType = select("@epub:type", aElems[0]);
@@ -1257,6 +1268,9 @@ var fillTOCFromNavDocWithOL = function (select, olElems, children, navDocPath) {
                     if (liFirstChild && liFirstChild.length && liFirstChild[0].textContent) {
                         link.Title = liFirstChild[0].textContent.trim();
                     }
+                }
+                if (!requireTitle || !!link.Title) {
+                    children.push(link);
                 }
                 var olElemsNext = select("xhtml:ol", liElem);
                 if (olElemsNext && olElemsNext.length) {

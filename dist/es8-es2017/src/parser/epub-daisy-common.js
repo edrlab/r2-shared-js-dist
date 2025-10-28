@@ -1434,6 +1434,9 @@ const fillPageListFromNCX = (publication, ncx) => {
                 .replace(/\\/g, "/");
             link.setHrefDecoded(zipPath);
             link.Title = (_a = pageTarget.NavLabel) === null || _a === void 0 ? void 0 : _a.Text;
+            if (!link.Title) {
+                return;
+            }
             addAlternateAudioLinkFromNCX(ncx, link, pageTarget.NavLabel);
             if (!publication.PageList) {
                 publication.PageList = [];

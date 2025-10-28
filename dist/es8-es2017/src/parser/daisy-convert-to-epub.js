@@ -439,7 +439,7 @@ const convertDaisyToReadiumWebPub = async (outputDirPath, publication, generateD
                     if (title) {
                         title = title.trim();
                         if (!title.length) {
-                            title = null;
+                            title = undefined;
                         }
                     }
                     const listElements = dtBookDoc.getElementsByTagName("list");

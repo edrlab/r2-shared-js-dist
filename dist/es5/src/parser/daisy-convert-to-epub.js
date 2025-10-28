@@ -499,7 +499,7 @@ var convertDaisyToReadiumWebPub = function (outputDirPath, publication, generate
                             if (title) {
                                 title = title.trim();
                                 if (!title.length) {
-                                    title = null;
+                                    title = undefined;
                                 }
                             }
                             listElements = dtBookDoc.getElementsByTagName("list");
